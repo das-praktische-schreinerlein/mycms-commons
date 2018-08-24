@@ -9,7 +9,7 @@ import {GenericFacetAdapter, GenericSearchAdapter} from './generic-search.adapte
 import {AdapterOpts, AdapterQuery} from './mapper.utils';
 import {ItemsJsConfig, ItemsJsQueryBuilder, ItemsJsSelectQueryData} from './itemsjs-query.builder';
 import {GenericAdapterResponseMapper} from './generic-adapter-response.mapper';
-import itemsjs from 'itemsjs';
+import * as itemsjs from 'itemsjs';
 
 export interface ItemJsResultPagination {
     per_page: number;

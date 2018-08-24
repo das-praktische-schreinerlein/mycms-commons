@@ -6,7 +6,7 @@ import {GenericSearchForm} from '../model/forms/generic-searchform';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import {Adapter} from 'js-data-adapter';
-import knex from 'knex';
+import * as knex from 'knex';
 import {GenericFacetAdapter} from './generic-search.adapter';
 import {isArray} from 'util';
 import {AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
