@@ -1,0 +1,35 @@
+import { Mapper, Record, Schema } from 'js-data';
+import { Adapter } from 'js-data-adapter';
+import { Facets } from '../model/container/facets';
+import { GenericSearchResult } from '../model/container/generic-searchresult';
+import { GenericSearchForm } from '../model/forms/generic-searchform';
+import { ActionTagForm } from '../../commons/utils/actiontag.utils';
+export declare abstract class GenericDataStore<R extends Record, F extends GenericSearchForm, S extends GenericSearchResult<R, F>> {
+    private updateRelations;
+    private store;
+    private mappers;
+    private mapperAdapters;
+    static convertToDate(record: any): void;
+    constructor(updateRelations: string[]);
+    defineMapper(mapperName: string, recordClass: any, schema: Schema, relations: any): Mapper;
+    setAdapter(adapterName: string, adapter: Adapter, mapperName: string, options: any): void;
+    count(mapperName: string, query?: any, opts?: any): Promise<number>;
+    createRecord(mapperName: string, props: any, opts: any): R;
+    create(mapperName: string, record: any, opts?: any): Promise<R>;
+    createMany(mapperName: string, records: any[], opts?: any): Promise<R[]>;
+    destroy(mapperName: string, id: any, opts?: any): Promise<R>;
+    doActionTag(mapperName: string, record: R, actionTagForm: ActionTagForm, opts?: any): Promise<R>;
+    clearLocalStore(mapperName: string): void;
+    facets(mapperName: string, query?: any, opts?: any): Promise<Facets>;
+    getFromLocalStore(mapperName: string, id: any): R;
+    find(mapperName: string, id: any, opts?: any): Promise<R>;
+    findAll(mapperName: string, query?: any, opts?: any): Promise<R[]>;
+    search(mapperName: string, searchForm: F, opts?: any): Promise<S>;
+    update(mapperName: string, id: string | number, record: any, opts?: any): Promise<R>;
+    updateAll(mapperName: string, props: any, query?: any, opts?: any): Promise<R[]>;
+    updateMany(mapperName: string, records: any[], opts?: any): Promise<R[]>;
+    abstract createQueryFromForm(searchForm: F): Object;
+    abstract createSearchResult(searchForm: F, recordCount: number, records: R[], facets: Facets): S;
+    getMapper(mapperName: string): Mapper;
+    getAdapterForMapper(mapperName: string): Adapter;
+}
