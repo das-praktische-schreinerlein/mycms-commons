@@ -29,7 +29,7 @@ var DateUtils = /** @class */ (function () {
         var dateParts = date.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):{0,1}(\d{2}){0,1}$/);
         if (dateParts !== null) {
             dateParts = dateParts.slice(1);
-            dateParts[1] -= 1; // months are zero-based
+            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
             date = new Date();
             date.setFullYear(dateParts[0], dateParts[1], dateParts[2]);
             date.setHours(dateParts[3], dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined ? dateParts[5] : 0);

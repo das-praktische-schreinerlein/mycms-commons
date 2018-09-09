@@ -1,6 +1,6 @@
 {
   "name": "@dps/mycms-commons",
-  "version": "1.1.0",
+  "version": "2.0.0-alpha",
   "license": "Apache-2.0",
   "angular-cli": {},
   "main": "dist/",
@@ -10,22 +10,22 @@
   },
   "private": true,
   "dependencies": {
-    "geo-coder": "0.2.1",
-    "itemsjs": "1.0.36",
-    "js-data": "3.0.1",
-    "js-data-http": "3.0.0",
-    "js-data-sql": "1.0.1",
-    "knex": "0.13.0",
-    "promise-serial": "0.1.5",
-    "rxjs": "5.5.2",
-    "ts-loader": "3.1.1",
-    "xregexp": "4.1.1"
+    "geo-coder": "~0.2.1",
+    "itemsjs": "~1.0.39",
+    "js-data": "~3.0.1",
+    "js-data-http": "~3.0.0",
+    "js-data-sql": "~1.0.1",
+    "knex": "~0.15.2",
+    "promise-serial": "~0.1.5",
+    "rxjs": "~5.5.2",
+    "xregexp": "~4.2.0"
   },
   "devDependencies": {
-    "@types/node": "6.0.74",
-    "enhanced-resolve": "3.3.0",
-    "ts-node": "2.0.0",
-    "tslint": "4.5.1",
-    "typescript": "2.6.1"
+    "@types/node": "~8.10.26",
+    "codelyzer": "~4.4.0",
+    "enhanced-resolve": "~4.1.0",
+    "ts-node": "~2.0.0",
+    "tslint": "~4.5.1",
+    "typescript": "~2.6.1"
   }
 }
