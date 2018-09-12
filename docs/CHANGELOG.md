@@ -2,14 +2,15 @@
  
 # Versions
  
-## 1.1.0
+## 2.0.0
 - improved dependencies
 
 ### new features
-- none
+- added string-utils
  
 ### improvements
 - bumped up and improved dependencies
+- improved actiontag-utils
  
 ### bug fixes
 - none

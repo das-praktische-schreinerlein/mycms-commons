@@ -36,6 +36,21 @@ export abstract class ActionTagUtils {
         return lTags;
     }
 
+    public static generateTagsForRecords(tagConfigs: ActionTagConfig[], records: {}[], config: {}): ActionTag[] {
+        const lTags: ActionTag[] = [];
+        for (const tagConfig of tagConfigs) {
+            for (const record of records) {
+                const tag = ActionTagUtils.generateTag(tagConfig, record, config);
+                if (tag.available) {
+                    lTags.push(tag);
+                    break;
+                }
+            }
+        }
+
+        return lTags;
+    }
+
     public static generateTag(tagConfig: ActionTagConfig, record: {}, config: {}): ActionTag {
         let available = FilterUtils.checkFilters(tagConfig.configAvailability, config);
         available = available && FilterUtils.checkFilters(tagConfig.recordAvailability, record);

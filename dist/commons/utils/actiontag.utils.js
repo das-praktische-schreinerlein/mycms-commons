@@ -15,6 +15,21 @@ var ActionTagUtils = /** @class */ (function () {
         }
         return lTags;
     };
+    ActionTagUtils.generateTagsForRecords = function (tagConfigs, records, config) {
+        var lTags = [];
+        for (var _i = 0, tagConfigs_2 = tagConfigs; _i < tagConfigs_2.length; _i++) {
+            var tagConfig = tagConfigs_2[_i];
+            for (var _a = 0, records_1 = records; _a < records_1.length; _a++) {
+                var record = records_1[_a];
+                var tag = ActionTagUtils.generateTag(tagConfig, record, config);
+                if (tag.available) {
+                    lTags.push(tag);
+                    break;
+                }
+            }
+        }
+        return lTags;
+    };
     ActionTagUtils.generateTag = function (tagConfig, record, config) {
         var available = filter_utils_1.FilterUtils.checkFilters(tagConfig.configAvailability, config);
         available = available && filter_utils_1.FilterUtils.checkFilters(tagConfig.recordAvailability, record);

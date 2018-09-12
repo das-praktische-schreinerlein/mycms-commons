@@ -22,5 +22,6 @@ export interface ActionTagForm {
 }
 export declare abstract class ActionTagUtils {
     static generateTags(tagConfigs: ActionTagConfig[], record: {}, config: {}): ActionTag[];
+    static generateTagsForRecords(tagConfigs: ActionTagConfig[], records: {}[], config: {}): ActionTag[];
     static generateTag(tagConfig: ActionTagConfig, record: {}, config: {}): ActionTag;
 }
