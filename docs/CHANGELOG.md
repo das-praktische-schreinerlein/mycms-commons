@@ -4,6 +4,7 @@
  
 ## 2.0.0
 - improved dependencies
+- improved utils
 
 ### new features
 - added string-utils
