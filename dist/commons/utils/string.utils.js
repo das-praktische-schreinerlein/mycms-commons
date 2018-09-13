@@ -7,11 +7,11 @@ var StringUtils = /** @class */ (function () {
         if (src === undefined) {
             return '';
         }
-        return src.replace(/[^a-zA-Z0-9üÜäÄöÖß_,]+/g, '').replace(/^,*/g, '').replace(/,*$/g, '');
+        return src.replace(/[^-a-zA-Z_0-9äöüßÄÖÜ,:.]+/g, '').replace(/^[,;]*/g, '').replace(/[,;]*$/g, '');
     };
     StringUtils.uniqueKeywords = function (src) {
         var keywordsList = [];
-        StringUtils.trimKeywords(src).split(',').map(function (keyword) {
+        StringUtils.trimKeywords(src).split(/[,;]+/).map(function (keyword) {
             if (keyword !== '' && keywordsList.indexOf(keyword) < 0) {
                 keywordsList.push(keyword);
             }

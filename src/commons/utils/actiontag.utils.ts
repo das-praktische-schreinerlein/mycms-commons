@@ -10,6 +10,14 @@ export interface ActionTagConfig {
     recordAvailability: SimpleFilter[];
     configAvailability: SimpleFilter[];
 }
+export interface MultiActionTagConfig extends ActionTagConfig {
+    flgUseInput: boolean;
+    flgUseSelect: boolean;
+    selectParameterConstants?: string[][];
+    selectParameterValueListKey?: string;
+    selectFieldName?: string;
+    inputFieldName?: string;
+}
 export interface ActionTag {
     config: ActionTagConfig;
     active: boolean;

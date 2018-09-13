@@ -4,12 +4,12 @@ export class StringUtils {
             return '';
         }
 
-        return src.replace(/[^a-zA-Z0-9üÜäÄöÖß_,]+/g, '').replace(/^,*/g, '').replace(/,*$/g, '');
+        return src.replace(/[^-a-zA-Z_0-9äöüßÄÖÜ,:.]+/g, '').replace(/^[,;]*/g, '').replace(/[,;]*$/g, '');
     }
 
     public static uniqueKeywords(src: string): string[] {
         const keywordsList = [];
-        StringUtils.trimKeywords(src).split(',').map(keyword => {
+        StringUtils.trimKeywords(src).split(/[,;]+/).map(keyword => {
             if (keyword !== '' && keywordsList.indexOf(keyword) < 0) {
                 keywordsList.push(keyword);
             }
