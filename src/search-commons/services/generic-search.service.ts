@@ -100,6 +100,14 @@ export abstract class GenericSearchService <R extends Record, F extends GenericS
         return <R>this.dataStore.getFromLocalStore(this.searchMapperName, id);
     }
 
+    sortRecords(records: R[], sortType: string): void {
+        throw new Error ('sortRecords not implemented');
+    }
+
+    getAvailableSorts(): string[] {
+        return ['relevance'];
+    }
+
     abstract doMultiSearch(searchForm: F, ids: string[]): Promise<S>;
 
     abstract createDefaultSearchForm(): F;

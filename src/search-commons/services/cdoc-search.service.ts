@@ -67,23 +67,7 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
                     }
                 }
 
-                if (searchForm.sort === 'dateAsc') {
-                    records.sort((a, b) => {
-                        const dateA = DateUtils.parseDate(a['dateshow']);
-                        const dateB = DateUtils.parseDate(b['dateshow']);
-                        const nameA = (dateA !== undefined ? dateA.getTime() : 0);
-                        const nameB = (dateB !== undefined ? dateB.getTime() : 0);
-
-                        if (nameA < nameB) {
-                            return -1;
-                        }
-                        if (nameA > nameB) {
-                            return 1;
-                        }
-
-                        return 0;
-                    });
-                }
+                me.sortRecords(records, searchForm.sort);
 
                 const docSearchResult = me.newSearchResult(searchForm, records.length, records, undefined);
                 resolve(docSearchResult);
@@ -91,5 +75,54 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
                 reject(reason);
             });
         });
+    }
+
+    sortRecords(records: R[], sortType: string): void {
+        if (sortType === 'relevance') {
+        } else if (sortType === 'dateAsc' || sortType === 'dateDesc') {
+            const retLt = sortType === 'dateAsc' ? -1 : 1;
+            records.sort((a, b) => {
+                const dateA = DateUtils.parseDate(a.dateshow);
+                const dateB = DateUtils.parseDate(b.dateshow);
+                const nameA = (dateA !== undefined ? dateA.getTime() : 0);
+                const nameB = (dateB !== undefined ? dateB.getTime() : 0);
+
+                if (nameA < nameB) {
+                    return retLt;
+                }
+                if (nameA > nameB) {
+                    return -retLt;
+                }
+
+                return 0;
+            });
+        } else if (sortType === 'name') {
+            records.sort((a, b) => {
+                const nameA = (a.name !== undefined ? a.name : '');
+                const nameB = (a.name !== undefined ? a.name : '');
+
+                return nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
+            });
+        } else if (sortType === 'type') {
+            records.sort((a, b) => {
+                const nameA = (a.type !== undefined ? a.type : '');
+                const nameB = (a.type !== undefined ? a.type : '');
+
+                return nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
+            });
+        } else if (sortType === 'subtype') {
+            records.sort((a, b) => {
+                const nameA = (a.subtype !== undefined ? a.subtype : '');
+                const nameB = (a.subtype !== undefined ? a.subtype : '');
+
+                return nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
+            });
+        } else {
+            console.warn('unknown sortType', sortType);
+        }
+    }
+
+    getAvailableSorts(): string[] {
+        return ['relevance', 'dateAsc', 'dateDesc', 'name', 'type', 'subtype'];
     }
 }

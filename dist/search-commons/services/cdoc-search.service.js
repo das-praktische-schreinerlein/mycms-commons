@@ -71,27 +71,60 @@ var CommonDocSearchService = /** @class */ (function (_super) {
                         records.push(idTypeMap[type]['records'][id]);
                     }
                 }
-                if (searchForm.sort === 'dateAsc') {
-                    records.sort(function (a, b) {
-                        var dateA = date_utils_1.DateUtils.parseDate(a['dateshow']);
-                        var dateB = date_utils_1.DateUtils.parseDate(b['dateshow']);
-                        var nameA = (dateA !== undefined ? dateA.getTime() : 0);
-                        var nameB = (dateB !== undefined ? dateB.getTime() : 0);
-                        if (nameA < nameB) {
-                            return -1;
-                        }
-                        if (nameA > nameB) {
-                            return 1;
-                        }
-                        return 0;
-                    });
-                }
+                me.sortRecords(records, searchForm.sort);
                 var docSearchResult = me.newSearchResult(searchForm, records.length, records, undefined);
                 resolve(docSearchResult);
             }).catch(function errorSearch(reason) {
                 reject(reason);
             });
         });
+    };
+    CommonDocSearchService.prototype.sortRecords = function (records, sortType) {
+        if (sortType === 'relevance') {
+        }
+        else if (sortType === 'dateAsc' || sortType === 'dateDesc') {
+            var retLt_1 = sortType === 'dateAsc' ? -1 : 1;
+            records.sort(function (a, b) {
+                var dateA = date_utils_1.DateUtils.parseDate(a.dateshow);
+                var dateB = date_utils_1.DateUtils.parseDate(b.dateshow);
+                var nameA = (dateA !== undefined ? dateA.getTime() : 0);
+                var nameB = (dateB !== undefined ? dateB.getTime() : 0);
+                if (nameA < nameB) {
+                    return retLt_1;
+                }
+                if (nameA > nameB) {
+                    return -retLt_1;
+                }
+                return 0;
+            });
+        }
+        else if (sortType === 'name') {
+            records.sort(function (a, b) {
+                var nameA = (a.name !== undefined ? a.name : '');
+                var nameB = (a.name !== undefined ? a.name : '');
+                return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
+            });
+        }
+        else if (sortType === 'type') {
+            records.sort(function (a, b) {
+                var nameA = (a.type !== undefined ? a.type : '');
+                var nameB = (a.type !== undefined ? a.type : '');
+                return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
+            });
+        }
+        else if (sortType === 'subtype') {
+            records.sort(function (a, b) {
+                var nameA = (a.subtype !== undefined ? a.subtype : '');
+                var nameB = (a.subtype !== undefined ? a.subtype : '');
+                return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
+            });
+        }
+        else {
+            console.warn('unknown sortType', sortType);
+        }
+    };
+    CommonDocSearchService.prototype.getAvailableSorts = function () {
+        return ['relevance', 'dateAsc', 'dateDesc', 'name', 'type', 'subtype'];
     };
     return CommonDocSearchService;
 }(generic_search_service_1.GenericSearchService));

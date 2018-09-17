@@ -30,6 +30,8 @@ export declare abstract class GenericSearchService<R extends Record, F extends G
     search(searchForm: F, opts?: GenericSearchOptions): Promise<S>;
     getById(id: string, opts?: any): Promise<R>;
     getByIdFromLocalStore(id: string): R;
+    sortRecords(records: R[], sortType: string): void;
+    getAvailableSorts(): string[];
     abstract doMultiSearch(searchForm: F, ids: string[]): Promise<S>;
     abstract createDefaultSearchForm(): F;
 }

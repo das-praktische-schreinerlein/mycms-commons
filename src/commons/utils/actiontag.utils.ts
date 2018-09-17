@@ -9,6 +9,7 @@ export interface ActionTagConfig {
     payload?: {};
     recordAvailability: SimpleFilter[];
     configAvailability: SimpleFilter[];
+    profileAvailability?: SimpleFilter[];
 }
 export interface MultiActionTagConfig extends ActionTagConfig {
     flgUseInput: boolean;
@@ -32,10 +33,10 @@ export interface ActionTagForm {
 }
 
 export abstract class ActionTagUtils {
-    public static generateTags(tagConfigs: ActionTagConfig[], record: {}, config: {}): ActionTag[] {
+    public static generateTags(tagConfigs: ActionTagConfig[], record: {}, config: {}, profile: {}): ActionTag[] {
         const lTags: ActionTag[] = [];
         for (const tagConfig of tagConfigs) {
-            const tag = ActionTagUtils.generateTag(tagConfig, record, config);
+            const tag = ActionTagUtils.generateTag(tagConfig, record, config, profile);
             if (tag.available) {
                 lTags.push(tag);
             }
@@ -44,11 +45,11 @@ export abstract class ActionTagUtils {
         return lTags;
     }
 
-    public static generateTagsForRecords(tagConfigs: ActionTagConfig[], records: {}[], config: {}): ActionTag[] {
+    public static generateTagsForRecords(tagConfigs: ActionTagConfig[], records: {}[], config: {}, profile: {}): ActionTag[] {
         const lTags: ActionTag[] = [];
         for (const tagConfig of tagConfigs) {
             for (const record of records) {
-                const tag = ActionTagUtils.generateTag(tagConfig, record, config);
+                const tag = ActionTagUtils.generateTag(tagConfig, record, config, profile);
                 if (tag.available) {
                     lTags.push(tag);
                     break;
@@ -59,8 +60,10 @@ export abstract class ActionTagUtils {
         return lTags;
     }
 
-    public static generateTag(tagConfig: ActionTagConfig, record: {}, config: {}): ActionTag {
+    public static generateTag(tagConfig: ActionTagConfig, record: {}, config: {}, profile: {}): ActionTag {
         let available = FilterUtils.checkFilters(tagConfig.configAvailability, config);
+        available = available && FilterUtils.checkFilters(
+            tagConfig.profileAvailability ? tagConfig.profileAvailability : [], profile);
         available = available && FilterUtils.checkFilters(tagConfig.recordAvailability, record);
         const active = available && FilterUtils.checkFilters(tagConfig.showFilter, record);
 

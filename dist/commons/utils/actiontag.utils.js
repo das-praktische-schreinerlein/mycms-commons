@@ -4,24 +4,24 @@ var filter_utils_1 = require("./filter.utils");
 var ActionTagUtils = /** @class */ (function () {
     function ActionTagUtils() {
     }
-    ActionTagUtils.generateTags = function (tagConfigs, record, config) {
+    ActionTagUtils.generateTags = function (tagConfigs, record, config, profile) {
         var lTags = [];
         for (var _i = 0, tagConfigs_1 = tagConfigs; _i < tagConfigs_1.length; _i++) {
             var tagConfig = tagConfigs_1[_i];
-            var tag = ActionTagUtils.generateTag(tagConfig, record, config);
+            var tag = ActionTagUtils.generateTag(tagConfig, record, config, profile);
             if (tag.available) {
                 lTags.push(tag);
             }
         }
         return lTags;
     };
-    ActionTagUtils.generateTagsForRecords = function (tagConfigs, records, config) {
+    ActionTagUtils.generateTagsForRecords = function (tagConfigs, records, config, profile) {
         var lTags = [];
         for (var _i = 0, tagConfigs_2 = tagConfigs; _i < tagConfigs_2.length; _i++) {
             var tagConfig = tagConfigs_2[_i];
             for (var _a = 0, records_1 = records; _a < records_1.length; _a++) {
                 var record = records_1[_a];
-                var tag = ActionTagUtils.generateTag(tagConfig, record, config);
+                var tag = ActionTagUtils.generateTag(tagConfig, record, config, profile);
                 if (tag.available) {
                     lTags.push(tag);
                     break;
@@ -30,8 +30,9 @@ var ActionTagUtils = /** @class */ (function () {
         }
         return lTags;
     };
-    ActionTagUtils.generateTag = function (tagConfig, record, config) {
+    ActionTagUtils.generateTag = function (tagConfig, record, config, profile) {
         var available = filter_utils_1.FilterUtils.checkFilters(tagConfig.configAvailability, config);
+        available = available && filter_utils_1.FilterUtils.checkFilters(tagConfig.profileAvailability ? tagConfig.profileAvailability : [], profile);
         available = available && filter_utils_1.FilterUtils.checkFilters(tagConfig.recordAvailability, record);
         var active = available && filter_utils_1.FilterUtils.checkFilters(tagConfig.showFilter, record);
         return {

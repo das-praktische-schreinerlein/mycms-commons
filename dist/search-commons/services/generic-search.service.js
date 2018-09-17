@@ -55,6 +55,12 @@ var GenericSearchService = /** @class */ (function () {
     GenericSearchService.prototype.getByIdFromLocalStore = function (id) {
         return this.dataStore.getFromLocalStore(this.searchMapperName, id);
     };
+    GenericSearchService.prototype.sortRecords = function (records, sortType) {
+        throw new Error('sortRecords not implemented');
+    };
+    GenericSearchService.prototype.getAvailableSorts = function () {
+        return ['relevance'];
+    };
     return GenericSearchService;
 }());
 exports.GenericSearchService = GenericSearchService;

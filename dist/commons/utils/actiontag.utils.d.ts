@@ -8,6 +8,7 @@ export interface ActionTagConfig {
     payload?: {};
     recordAvailability: SimpleFilter[];
     configAvailability: SimpleFilter[];
+    profileAvailability?: SimpleFilter[];
 }
 export interface MultiActionTagConfig extends ActionTagConfig {
     flgUseInput: boolean;
@@ -29,7 +30,7 @@ export interface ActionTagForm {
     payload: any;
 }
 export declare abstract class ActionTagUtils {
-    static generateTags(tagConfigs: ActionTagConfig[], record: {}, config: {}): ActionTag[];
-    static generateTagsForRecords(tagConfigs: ActionTagConfig[], records: {}[], config: {}): ActionTag[];
-    static generateTag(tagConfig: ActionTagConfig, record: {}, config: {}): ActionTag;
+    static generateTags(tagConfigs: ActionTagConfig[], record: {}, config: {}, profile: {}): ActionTag[];
+    static generateTagsForRecords(tagConfigs: ActionTagConfig[], records: {}[], config: {}, profile: {}): ActionTag[];
+    static generateTag(tagConfig: ActionTagConfig, record: {}, config: {}, profile: {}): ActionTag;
 }

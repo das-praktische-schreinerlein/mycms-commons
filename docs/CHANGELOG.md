@@ -2,17 +2,18 @@
  
 # Versions
  
-## 2.1.0
-- none 
+## 3.0.0
+- improvements for album/action-functionality
 
 ### new features
-- none 
+- commons: added CommonDocPlaylistService
  
 ### improvements
-- none 
-
+- commons: added sortRecords and getAvailableSorts SearchService 
+- commons: check profileConfigs on actiontags
+ 
 ### bug fixes
-- none
+- none 
  
 ### breaking changes
 - none
