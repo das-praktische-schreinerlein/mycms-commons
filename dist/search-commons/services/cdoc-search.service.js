@@ -101,21 +101,21 @@ var CommonDocSearchService = /** @class */ (function (_super) {
         else if (sortType === 'name') {
             records.sort(function (a, b) {
                 var nameA = (a.name !== undefined ? a.name : '');
-                var nameB = (a.name !== undefined ? a.name : '');
+                var nameB = (b.name !== undefined ? b.name : '');
                 return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
             });
         }
         else if (sortType === 'type') {
             records.sort(function (a, b) {
                 var nameA = (a.type !== undefined ? a.type : '');
-                var nameB = (a.type !== undefined ? a.type : '');
+                var nameB = (b.type !== undefined ? b.type : '');
                 return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
             });
         }
         else if (sortType === 'subtype') {
             records.sort(function (a, b) {
                 var nameA = (a.subtype !== undefined ? a.subtype : '');
-                var nameB = (a.subtype !== undefined ? a.subtype : '');
+                var nameB = (b.subtype !== undefined ? b.subtype : '');
                 return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
             });
         }

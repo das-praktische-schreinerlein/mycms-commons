@@ -1,12 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var CommonDocPlaylistServiceExportType;
-(function (CommonDocPlaylistServiceExportType) {
-    CommonDocPlaylistServiceExportType[CommonDocPlaylistServiceExportType["USEASSETSONLY"] = 0] = "USEASSETSONLY";
-    CommonDocPlaylistServiceExportType[CommonDocPlaylistServiceExportType["USEPATHONLY"] = 1] = "USEPATHONLY";
-    CommonDocPlaylistServiceExportType[CommonDocPlaylistServiceExportType["PREFERASSETS"] = 2] = "PREFERASSETS";
-    CommonDocPlaylistServiceExportType[CommonDocPlaylistServiceExportType["PREFERPATH"] = 3] = "PREFERPATH";
-})(CommonDocPlaylistServiceExportType = exports.CommonDocPlaylistServiceExportType || (exports.CommonDocPlaylistServiceExportType = {}));
 var CommonDocPlaylistService = /** @class */ (function () {
     function CommonDocPlaylistService() {
     }

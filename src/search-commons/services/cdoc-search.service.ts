@@ -99,21 +99,21 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
         } else if (sortType === 'name') {
             records.sort((a, b) => {
                 const nameA = (a.name !== undefined ? a.name : '');
-                const nameB = (a.name !== undefined ? a.name : '');
+                const nameB = (b.name !== undefined ? b.name : '');
 
                 return nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
             });
         } else if (sortType === 'type') {
             records.sort((a, b) => {
                 const nameA = (a.type !== undefined ? a.type : '');
-                const nameB = (a.type !== undefined ? a.type : '');
+                const nameB = (b.type !== undefined ? b.type : '');
 
                 return nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
             });
         } else if (sortType === 'subtype') {
             records.sort((a, b) => {
                 const nameA = (a.subtype !== undefined ? a.subtype : '');
-                const nameB = (a.subtype !== undefined ? a.subtype : '');
+                const nameB = (b.subtype !== undefined ? b.subtype : '');
 
                 return nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
             });
