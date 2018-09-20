@@ -40,9 +40,13 @@ export declare class CommonDocRecord extends BaseEntityRecord implements CommonD
     toSerializableJsonObj(anonymizeMedia?: boolean): {};
     isValid(): boolean;
 }
+export declare class CommonDocRecordFactory {
+    static getSanitizedValues(values: {}): any;
+    static getSanitizedValuesFromObj(doc: CommonDocRecord): any;
+}
 export declare class CommonDocRecordValidator {
     static isValidValues(values: {}): boolean;
     static validateValues(values: {}): string[];
-    static isValid(cdoc: CommonDocRecord): boolean;
-    static validate(cdoc: CommonDocRecord): string[];
+    static isValid(doc: CommonDocRecord): boolean;
+    static validate(doc: CommonDocRecord): string[];
 }

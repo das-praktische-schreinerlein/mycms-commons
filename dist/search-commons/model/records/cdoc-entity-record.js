@@ -67,6 +67,42 @@ var CommonDocRecord = /** @class */ (function (_super) {
     return CommonDocRecord;
 }(base_entity_record_1.BaseEntityRecord));
 exports.CommonDocRecord = CommonDocRecord;
+var CommonDocRecordFactory = /** @class */ (function () {
+    function CommonDocRecordFactory() {
+    }
+    CommonDocRecordFactory.getSanitizedValues = function (values) {
+        var sanitizedValues = {};
+        sanitizedValues.id = base_entity_record_1.BaseEntityRecord.genericFields.id.validator.sanitize(values['id']) || undefined;
+        sanitizedValues.blocked = CommonDocRecord.cdocFields.blocked.validator.sanitize(values['blocked']) || undefined;
+        sanitizedValues.dateshow = CommonDocRecord.cdocFields.dateshow.validator.sanitize(values['dateshow']) || undefined;
+        sanitizedValues.descTxt = CommonDocRecord.cdocFields.descTxt.validator.sanitize(values['descTxt']) || undefined;
+        sanitizedValues.descMd = CommonDocRecord.cdocFields.descMd.validator.sanitize(values['descMd']) || undefined;
+        sanitizedValues.descHtml = CommonDocRecord.cdocFields.descHtml.validator.sanitize(values['descHtml']) || undefined;
+        sanitizedValues.keywords = CommonDocRecord.cdocFields.keywords.validator.sanitize(values['keywords']) || undefined;
+        sanitizedValues.name = CommonDocRecord.cdocFields.name.validator.sanitize(values['name']) || undefined;
+        sanitizedValues.playlists = CommonDocRecord.cdocFields.playlists.validator.sanitize(values['playlists']) || undefined;
+        sanitizedValues.subtype = CommonDocRecord.cdocFields.subtype.validator.sanitize(values['subtype']) || undefined;
+        sanitizedValues.type = CommonDocRecord.cdocFields.type.validator.sanitize(values['type']) || undefined;
+        return sanitizedValues;
+    };
+    CommonDocRecordFactory.getSanitizedValuesFromObj = function (doc) {
+        var sanitizedValues = {};
+        sanitizedValues.id = base_entity_record_1.BaseEntityRecord.genericFields.id.validator.sanitize(doc.id) || undefined;
+        sanitizedValues.blocked = CommonDocRecord.cdocFields.blocked.validator.sanitize(doc.blocked) || undefined;
+        sanitizedValues.dateshow = CommonDocRecord.cdocFields.dateshow.validator.sanitize(doc.dateshow) || undefined;
+        sanitizedValues.descTxt = CommonDocRecord.cdocFields.descTxt.validator.sanitize(doc.descTxt) || undefined;
+        sanitizedValues.descMd = CommonDocRecord.cdocFields.descMd.validator.sanitize(doc.descMd) || undefined;
+        sanitizedValues.descHtml = CommonDocRecord.cdocFields.descHtml.validator.sanitize(doc.descHtml) || undefined;
+        sanitizedValues.keywords = CommonDocRecord.cdocFields.keywords.validator.sanitize(doc.keywords) || undefined;
+        sanitizedValues.name = CommonDocRecord.cdocFields.name.validator.sanitize(doc.name) || undefined;
+        sanitizedValues.playlists = CommonDocRecord.cdocFields.playlists.validator.sanitize(doc.playlists) || undefined;
+        sanitizedValues.subtype = CommonDocRecord.cdocFields.subtype.validator.sanitize(doc.subtype) || undefined;
+        sanitizedValues.type = CommonDocRecord.cdocFields.type.validator.sanitize(doc.type) || undefined;
+        return sanitizedValues;
+    };
+    return CommonDocRecordFactory;
+}());
+exports.CommonDocRecordFactory = CommonDocRecordFactory;
 var CommonDocRecordValidator = /** @class */ (function () {
     function CommonDocRecordValidator() {
     }
@@ -89,22 +125,22 @@ var CommonDocRecordValidator = /** @class */ (function () {
         state = !CommonDocRecord.cdocFields.type.validator.isValid(values['type']) ? errors.push('type') && false : true;
         return errors;
     };
-    CommonDocRecordValidator.isValid = function (cdoc) {
-        return CommonDocRecordValidator.validate(cdoc).length > 0;
+    CommonDocRecordValidator.isValid = function (doc) {
+        return CommonDocRecordValidator.validate(doc).length > 0;
     };
-    CommonDocRecordValidator.validate = function (cdoc) {
+    CommonDocRecordValidator.validate = function (doc) {
         var errors = [];
-        var state = base_entity_record_1.BaseEntityRecord.genericFields.id.validator.isValid(cdoc.id) ? errors.push('id') && false : true;
-        state = !CommonDocRecord.cdocFields.blocked.validator.isValid(cdoc.blocked) ? errors.push('blocked') && false : true;
-        state = !CommonDocRecord.cdocFields.dateshow.validator.isValid(cdoc.dateshow) ? errors.push('dateshow') && false : true;
-        state = !CommonDocRecord.cdocFields.descTxt.validator.isValid(cdoc.descTxt) ? errors.push('descTxt') && false : true;
-        state = !CommonDocRecord.cdocFields.descMd.validator.isValid(cdoc.descMd) ? errors.push('descMd') && false : true;
-        state = !CommonDocRecord.cdocFields.descHtml.validator.isValid(cdoc.descHtml) ? errors.push('descHtml') && false : true;
-        state = !CommonDocRecord.cdocFields.keywords.validator.isValid(cdoc.keywords) ? errors.push('keywords') && false : true;
-        state = !CommonDocRecord.cdocFields.name.validator.isValid(cdoc.name) ? errors.push('name') && false : true;
-        state = !CommonDocRecord.cdocFields.playlists.validator.isValid(cdoc.playlists) ? errors.push('playlists') && false : true;
-        state = !CommonDocRecord.cdocFields.subtype.validator.isValid(cdoc.subtype) ? errors.push('subtype') && false : true;
-        state = !CommonDocRecord.cdocFields.type.validator.isValid(cdoc.type) ? errors.push('type') && false : true;
+        var state = base_entity_record_1.BaseEntityRecord.genericFields.id.validator.isValid(doc.id) ? errors.push('id') && false : true;
+        state = !CommonDocRecord.cdocFields.blocked.validator.isValid(doc.blocked) ? errors.push('blocked') && false : true;
+        state = !CommonDocRecord.cdocFields.dateshow.validator.isValid(doc.dateshow) ? errors.push('dateshow') && false : true;
+        state = !CommonDocRecord.cdocFields.descTxt.validator.isValid(doc.descTxt) ? errors.push('descTxt') && false : true;
+        state = !CommonDocRecord.cdocFields.descMd.validator.isValid(doc.descMd) ? errors.push('descMd') && false : true;
+        state = !CommonDocRecord.cdocFields.descHtml.validator.isValid(doc.descHtml) ? errors.push('descHtml') && false : true;
+        state = !CommonDocRecord.cdocFields.keywords.validator.isValid(doc.keywords) ? errors.push('keywords') && false : true;
+        state = !CommonDocRecord.cdocFields.name.validator.isValid(doc.name) ? errors.push('name') && false : true;
+        state = !CommonDocRecord.cdocFields.playlists.validator.isValid(doc.playlists) ? errors.push('playlists') && false : true;
+        state = !CommonDocRecord.cdocFields.subtype.validator.isValid(doc.subtype) ? errors.push('subtype') && false : true;
+        state = !CommonDocRecord.cdocFields.type.validator.isValid(doc.type) ? errors.push('type') && false : true;
         return errors;
     };
     return CommonDocRecordValidator;
