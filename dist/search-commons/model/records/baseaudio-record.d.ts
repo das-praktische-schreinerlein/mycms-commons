@@ -1,18 +1,14 @@
-import { BaseEntityRecord, BaseEntityRecordType } from './base-entity-record';
-export interface BaseAudioRecordType extends BaseEntityRecordType {
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
-    fileName: string;
-    name: string;
-    getMediaId(): string;
+import { BaseMediaRecord, BaseMediaRecordType, BaseMediaRecordValidator } from "./basemedia-record";
+export interface BaseAudioRecordType extends BaseMediaRecordType {
 }
-export declare class BaseAudioRecord extends BaseEntityRecord implements BaseAudioRecordType {
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
-    fileName: string;
-    name: string;
+export declare class BaseAudioRecord extends BaseMediaRecord implements BaseAudioRecordType {
     getMediaId(): string;
     toString(): string;
+}
+export declare class BaseAudioRecordFactory {
+    static getSanitizedValues(values: {}): any;
+    static getSanitizedValuesFromObj(doc: BaseAudioRecord): any;
+}
+export declare class BaseAudioRecordValidator extends BaseMediaRecordValidator {
+    static instance: BaseAudioRecordValidator;
 }

@@ -1,7 +1,14 @@
-import { BaseImageRecord, BaseImageRecordType } from './baseimage-record';
-export interface BaseVideoRecordType extends BaseImageRecordType {
+import { BaseMediaRecord, BaseMediaRecordType, BaseMediaRecordValidator } from "./basemedia-record";
+export interface BaseVideoRecordType extends BaseMediaRecordType {
     toString(): string;
 }
-export declare class BaseVideoRecord extends BaseImageRecord implements BaseVideoRecordType {
+export declare class BaseVideoRecord extends BaseMediaRecord implements BaseVideoRecordType {
     toString(): string;
+}
+export declare class BaseVideoRecordFactory {
+    static getSanitizedValues(values: {}): any;
+    static getSanitizedValuesFromObj(doc: BaseVideoRecord): any;
+}
+export declare class BaseVideoRecordValidator extends BaseMediaRecordValidator {
+    static instance: BaseVideoRecordValidator;
 }

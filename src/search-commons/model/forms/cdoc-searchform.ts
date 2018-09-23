@@ -71,20 +71,7 @@ export class CommonDocSearchFormFactory {
     }
 
     static getSanitizedValuesFromForm(searchForm: CommonDocSearchForm): any {
-        const sanitizedValues: any = {};
-        sanitizedValues.fulltext = GenericSearchForm.genericFields.fulltext.validator.sanitize(searchForm.fulltext) || '';
-        sanitizedValues.sort = GenericSearchForm.genericFields.sort.validator.sanitize(searchForm.sort) || '';
-        sanitizedValues.perPage = GenericSearchForm.genericFields.perPage.validator.sanitize(searchForm.perPage) || 10;
-        sanitizedValues.pageNum = GenericSearchForm.genericFields.pageNum.validator.sanitize(searchForm.pageNum) || 1;
-        sanitizedValues.when = CommonDocSearchForm.cdocFields.when.validator.sanitize(searchForm.when) || '';
-        sanitizedValues.what = CommonDocSearchForm.cdocFields.what.validator.sanitize(searchForm.what) || '';
-        sanitizedValues.initial = CommonDocSearchForm.cdocFields.initial.validator.sanitize(searchForm.initial) || '';
-        sanitizedValues.moreFilter = CommonDocSearchForm.cdocFields.moreFilter.validator.sanitize(searchForm.moreFilter) || '';
-        sanitizedValues.playlists = CommonDocSearchForm.cdocFields.playlists.validator.sanitize(searchForm.playlists) || '';
-        sanitizedValues.theme = CommonDocSearchForm.cdocFields.theme.validator.sanitize(searchForm.theme) || '';
-        sanitizedValues.type = CommonDocSearchForm.cdocFields.type.validator.sanitize(searchForm.type) || '';
-
-        return sanitizedValues;
+        return CommonDocSearchFormFactory.getSanitizedValues(searchForm);
     }
 
     static createSanitized(values: {}): CommonDocSearchForm {
@@ -103,35 +90,22 @@ export class CommonDocSearchFormFactory {
 export class CommonDocSearchFormValidator {
     static isValidValues(values: {}): boolean {
         let state = true;
-        state = state && GenericSearchForm.genericFields.fulltext.validator.isValid(values['fulltext']);
-        state = state && GenericSearchForm.genericFields.sort.validator.isValid(values['sort']);
-        state = state && GenericSearchForm.genericFields.perPage.validator.isValid(values['perPage']);
-        state = state && GenericSearchForm.genericFields.pageNum.validator.isValid(values['pageNum']);
-        state = state && CommonDocSearchForm.cdocFields.when.validator.isValid(values['when']);
-        state = state && CommonDocSearchForm.cdocFields.what.validator.isValid(values['what']);
-        state = state && CommonDocSearchForm.cdocFields.initial.validator.isValid(values['initial']);
-        state = state && CommonDocSearchForm.cdocFields.moreFilter.validator.isValid(values['moreFilter']);
-        state = state && CommonDocSearchForm.cdocFields.playlists.validator.isValid(values['playlists']);
-        state = state && CommonDocSearchForm.cdocFields.theme.validator.isValid(values['theme']);
-        state = state && CommonDocSearchForm.cdocFields.type.validator.isValid(values['type']);
+        state = GenericSearchForm.genericFields.fulltext.validator.isValid(values['fulltext']) && state;
+        state = GenericSearchForm.genericFields.sort.validator.isValid(values['sort']) && state;
+        state = GenericSearchForm.genericFields.perPage.validator.isValid(values['perPage']) && state;
+        state = GenericSearchForm.genericFields.pageNum.validator.isValid(values['pageNum']) && state;
+        state = CommonDocSearchForm.cdocFields.when.validator.isValid(values['when']) && state;
+        state = CommonDocSearchForm.cdocFields.what.validator.isValid(values['what']) && state;
+        state = CommonDocSearchForm.cdocFields.initial.validator.isValid(values['initial']) && state;
+        state = CommonDocSearchForm.cdocFields.moreFilter.validator.isValid(values['moreFilter']) && state;
+        state = CommonDocSearchForm.cdocFields.playlists.validator.isValid(values['playlists']) && state;
+        state = CommonDocSearchForm.cdocFields.theme.validator.isValid(values['theme']) && state;
+        state = CommonDocSearchForm.cdocFields.type.validator.isValid(values['type']) && state;
 
         return state;
     }
 
     static isValid(searchForm: CommonDocSearchForm): boolean {
-        let state = true;
-        state = state && GenericSearchForm.genericFields.fulltext.validator.isValid(searchForm.fulltext);
-        state = state && GenericSearchForm.genericFields.sort.validator.isValid(searchForm.sort);
-        state = state && GenericSearchForm.genericFields.perPage.validator.isValid(searchForm.perPage);
-        state = state && GenericSearchForm.genericFields.pageNum.validator.isValid(searchForm.pageNum);
-        state = state && CommonDocSearchForm.cdocFields.when.validator.isValid(searchForm.when);
-        state = state && CommonDocSearchForm.cdocFields.what.validator.isValid(searchForm.what);
-        state = state && CommonDocSearchForm.cdocFields.initial.validator.isValid(searchForm.initial);
-        state = state && CommonDocSearchForm.cdocFields.moreFilter.validator.isValid(searchForm.moreFilter);
-        state = state && CommonDocSearchForm.cdocFields.playlists.validator.isValid(searchForm.playlists);
-        state = state && CommonDocSearchForm.cdocFields.theme.validator.isValid(searchForm.theme);
-        state = state && CommonDocSearchForm.cdocFields.type.validator.isValid(searchForm.type);
-
-        return state;
+        return CommonDocSearchFormValidator.isValidValues(searchForm);
     }
 }

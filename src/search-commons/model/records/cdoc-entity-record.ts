@@ -10,7 +10,12 @@ import {
     NumberValidationRule,
     TextValidationRule
 } from '../forms/generic-validator.util';
-import {BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordType} from './base-entity-record';
+import {
+    BaseEntityRecord,
+    BaseEntityRecordFieldConfig,
+    BaseEntityRecordType,
+    BaseEntityRecordValidator
+} from './base-entity-record';
 import {isArray} from 'util';
 
 export interface CommonDocRecordType extends BaseEntityRecordType {
@@ -89,7 +94,7 @@ export class CommonDocRecord extends BaseEntityRecord implements CommonDocRecord
     }
 
     isValid(): boolean {
-        return CommonDocRecordValidator.isValid(this);
+        return CommonDocRecordValidator.instance.isValid(this);
     }
 }
 
@@ -112,66 +117,30 @@ export class CommonDocRecordFactory {
     }
 
     static getSanitizedValuesFromObj(doc: CommonDocRecord): any {
-        const sanitizedValues: any = {};
-        sanitizedValues.id = BaseEntityRecord.genericFields.id.validator.sanitize(doc.id) || undefined;
-        sanitizedValues.blocked = CommonDocRecord.cdocFields.blocked.validator.sanitize(doc.blocked) || undefined;
-        sanitizedValues.dateshow = CommonDocRecord.cdocFields.dateshow.validator.sanitize(doc.dateshow) || undefined;
-        sanitizedValues.descTxt = CommonDocRecord.cdocFields.descTxt.validator.sanitize(doc.descTxt) || undefined;
-        sanitizedValues.descMd = CommonDocRecord.cdocFields.descMd.validator.sanitize(doc.descMd) || undefined;
-        sanitizedValues.descHtml = CommonDocRecord.cdocFields.descHtml.validator.sanitize(doc.descHtml) || undefined;
-        sanitizedValues.keywords = CommonDocRecord.cdocFields.keywords.validator.sanitize(doc.keywords) || undefined;
-        sanitizedValues.name = CommonDocRecord.cdocFields.name.validator.sanitize(doc.name) || undefined;
-        sanitizedValues.playlists = CommonDocRecord.cdocFields.playlists.validator.sanitize(doc.playlists) || undefined;
-        sanitizedValues.subtype = CommonDocRecord.cdocFields.subtype.validator.sanitize(doc.subtype) || undefined;
-        sanitizedValues.type = CommonDocRecord.cdocFields.type.validator.sanitize(doc.type) || undefined;
-
-        return sanitizedValues;
+        return CommonDocRecordFactory.getSanitizedValues(doc);
     }
 }
 
-export class CommonDocRecordValidator {
-    static isValidValues(values: {}): boolean {
-        return CommonDocRecordValidator.validateValues(values).length > 0;
-    }
+export class CommonDocRecordValidator extends BaseEntityRecordValidator {
+    public static instance = new CommonDocRecordValidator();
 
-    static validateValues(values: {}): string[] {
-        const errors = [];
-        let state = true;
-        state = !BaseEntityRecord.genericFields.id.validator.isValid(values['id']) ? errors.push('id') &&  false : true;
+    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
 
-        state = !CommonDocRecord.cdocFields.blocked.validator.isValid(values['blocked']) ? errors.push('blocked') &&  false : true;
-        state = !CommonDocRecord.cdocFields.dateshow.validator.isValid(values['dateshow']) ? errors.push('dateshow') &&  false : true;
-        state = !CommonDocRecord.cdocFields.descTxt.validator.isValid(values['descTxt']) ? errors.push('descTxt') &&  false : true;
-        state = !CommonDocRecord.cdocFields.descMd.validator.isValid(values['descMd']) ? errors.push('descMd') &&  false : true;
-        state = !CommonDocRecord.cdocFields.descHtml.validator.isValid(values['descHtml']) ? errors.push('descHtml') &&  false : true;
-        state = !CommonDocRecord.cdocFields.keywords.validator.isValid(values['keywords']) ? errors.push('keywords') &&  false : true;
-        state = !CommonDocRecord.cdocFields.name.validator.isValid(values['name']) ? errors.push('name') &&  false : true;
-        state = !CommonDocRecord.cdocFields.playlists.validator.isValid(values['playlists']) ? errors.push('playlists') &&  false : true;
-        state = !CommonDocRecord.cdocFields.subtype.validator.isValid(values['subtype']) ? errors.push('subtype') &&  false : true;
-        state = !CommonDocRecord.cdocFields.type.validator.isValid(values['type']) ? errors.push('type') &&  false : true;
+        let state = super.validateMyRules(values, errors, fieldPrefix, errFieldPrefix);
 
-        return errors;
-    }
+        state = this.validateRule(values, CommonDocRecord.cdocFields.blocked.validator, fieldPrefix + 'blocked', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.dateshow.validator, fieldPrefix + 'dateshow', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.descTxt.validator, fieldPrefix + 'descTxt', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.descMd.validator, fieldPrefix + 'descMd', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.descHtml.validator, fieldPrefix + 'descHtml', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.keywords.validator, fieldPrefix + 'keywords', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.name.validator, fieldPrefix + 'name', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.playlists.validator, fieldPrefix + 'playlists', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.subtype.validator, fieldPrefix + 'subtype', errors, errFieldPrefix) && state;
+        state = this.validateRule(values, CommonDocRecord.cdocFields.type.validator, fieldPrefix + 'type', errors, errFieldPrefix) && state;
 
-    static isValid(doc: CommonDocRecord): boolean {
-        return CommonDocRecordValidator.validate(doc).length > 0;
-    }
-
-    static validate(doc: CommonDocRecord): string[] {
-        const errors = [];
-        let state = BaseEntityRecord.genericFields.id.validator.isValid(doc.id) ? errors.push('id') && false : true;
-
-        state = !CommonDocRecord.cdocFields.blocked.validator.isValid(doc.blocked) ? errors.push('blocked') &&  false : true;
-        state = !CommonDocRecord.cdocFields.dateshow.validator.isValid(doc.dateshow) ? errors.push('dateshow') &&  false : true;
-        state = !CommonDocRecord.cdocFields.descTxt.validator.isValid(doc.descTxt) ? errors.push('descTxt') &&  false : true;
-        state = !CommonDocRecord.cdocFields.descMd.validator.isValid(doc.descMd) ? errors.push('descMd') &&  false : true;
-        state = !CommonDocRecord.cdocFields.descHtml.validator.isValid(doc.descHtml) ? errors.push('descHtml') &&  false : true;
-        state = !CommonDocRecord.cdocFields.keywords.validator.isValid(doc.keywords) ? errors.push('keywords') &&  false : true;
-        state = !CommonDocRecord.cdocFields.name.validator.isValid(doc.name) ? errors.push('name') &&  false : true;
-        state = !CommonDocRecord.cdocFields.playlists.validator.isValid(doc.playlists) ? errors.push('playlists') &&  false : true;
-        state = !CommonDocRecord.cdocFields.subtype.validator.isValid(doc.subtype) ? errors.push('subtype') &&  false : true;
-        state = !CommonDocRecord.cdocFields.type.validator.isValid(doc.type) ? errors.push('type') &&  false : true;
-
-        return errors;
+        return state;
     }
 }

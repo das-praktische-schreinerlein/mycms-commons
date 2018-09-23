@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var base_entity_record_1 = require("./base-entity-record");
+var basemedia_record_1 = require("./basemedia-record");
 var BaseImageRecord = /** @class */ (function (_super) {
     __extends(BaseImageRecord, _super);
     function BaseImageRecord() {
@@ -27,6 +27,27 @@ var BaseImageRecord = /** @class */ (function (_super) {
             '}';
     };
     return BaseImageRecord;
-}(base_entity_record_1.BaseEntityRecord));
+}(basemedia_record_1.BaseMediaRecord));
 exports.BaseImageRecord = BaseImageRecord;
+var BaseImageRecordFactory = /** @class */ (function () {
+    function BaseImageRecordFactory() {
+    }
+    BaseImageRecordFactory.getSanitizedValues = function (values) {
+        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValues(values);
+    };
+    BaseImageRecordFactory.getSanitizedValuesFromObj = function (doc) {
+        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValuesFromObj(doc);
+    };
+    return BaseImageRecordFactory;
+}());
+exports.BaseImageRecordFactory = BaseImageRecordFactory;
+var BaseImageRecordValidator = /** @class */ (function (_super) {
+    __extends(BaseImageRecordValidator, _super);
+    function BaseImageRecordValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BaseImageRecordValidator.instance = new BaseImageRecordValidator();
+    return BaseImageRecordValidator;
+}(basemedia_record_1.BaseMediaRecordValidator));
+exports.BaseImageRecordValidator = BaseImageRecordValidator;
 //# sourceMappingURL=baseimage-record.js.map

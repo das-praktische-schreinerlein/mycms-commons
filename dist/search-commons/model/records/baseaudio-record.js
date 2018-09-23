@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var base_entity_record_1 = require("./base-entity-record");
+var basemedia_record_1 = require("./basemedia-record");
 var BaseAudioRecord = /** @class */ (function (_super) {
     __extends(BaseAudioRecord, _super);
     function BaseAudioRecord() {
@@ -27,6 +27,27 @@ var BaseAudioRecord = /** @class */ (function (_super) {
             '}';
     };
     return BaseAudioRecord;
-}(base_entity_record_1.BaseEntityRecord));
+}(basemedia_record_1.BaseMediaRecord));
 exports.BaseAudioRecord = BaseAudioRecord;
+var BaseAudioRecordFactory = /** @class */ (function () {
+    function BaseAudioRecordFactory() {
+    }
+    BaseAudioRecordFactory.getSanitizedValues = function (values) {
+        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValues(values);
+    };
+    BaseAudioRecordFactory.getSanitizedValuesFromObj = function (doc) {
+        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValuesFromObj(doc);
+    };
+    return BaseAudioRecordFactory;
+}());
+exports.BaseAudioRecordFactory = BaseAudioRecordFactory;
+var BaseAudioRecordValidator = /** @class */ (function (_super) {
+    __extends(BaseAudioRecordValidator, _super);
+    function BaseAudioRecordValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BaseAudioRecordValidator.instance = new BaseAudioRecordValidator();
+    return BaseAudioRecordValidator;
+}(basemedia_record_1.BaseMediaRecordValidator));
+exports.BaseAudioRecordValidator = BaseAudioRecordValidator;
 //# sourceMappingURL=baseaudio-record.js.map

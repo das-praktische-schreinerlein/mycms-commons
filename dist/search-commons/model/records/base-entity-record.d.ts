@@ -22,8 +22,13 @@ export declare class BaseEntityRecord extends Record implements BaseEntityRecord
     isValid(): boolean;
 }
 export declare class BaseEntityRecordValidator {
-    static isValidValues(values: {}): boolean;
-    static validateValues(values: {}): string[];
-    static isValid(record: BaseEntityRecord): boolean;
-    static validate(record: BaseEntityRecord): string[];
+    static instance: BaseEntityRecordValidator;
+    isValidValues(values: {}, fieldPrefix?: string, errFieldPrefix?: string): boolean;
+    validateValues(values: {}, fieldPrefix?: string, errFieldPrefix?: string): string[];
+    isValid(doc: BaseEntityRecord, errFieldPrefix?: string): boolean;
+    validate(doc: BaseEntityRecord, errFieldPrefix?: string): string[];
+    validateMyValueRelationRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean;
+    validateMyRelationRules(doc: BaseEntityRecord, errors: string[], errFieldPrefix?: string): boolean;
+    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean;
+    protected validateRule(record: {}, rule: ValidationRule, fieldName: string, errors: string[], errFieldPrefix?: string): boolean;
 }

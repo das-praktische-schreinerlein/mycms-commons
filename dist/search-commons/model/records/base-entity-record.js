@@ -48,7 +48,7 @@ var BaseEntityRecord = /** @class */ (function (_super) {
             (useWrapper ? '\n}' : '');
     };
     BaseEntityRecord.prototype.isValid = function () {
-        return BaseEntityRecordValidator.isValid(this);
+        return BaseEntityRecordValidator.instance.isValid(this);
     };
     BaseEntityRecord.genericFields = {
         id: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID, new generic_validator_util_1.IdValidationRule(false))
@@ -59,23 +59,42 @@ exports.BaseEntityRecord = BaseEntityRecord;
 var BaseEntityRecordValidator = /** @class */ (function () {
     function BaseEntityRecordValidator() {
     }
-    BaseEntityRecordValidator.isValidValues = function (values) {
-        return BaseEntityRecordValidator.validateValues(values).length > 0;
+    BaseEntityRecordValidator.prototype.isValidValues = function (values, fieldPrefix, errFieldPrefix) {
+        return this.validateValues(values, fieldPrefix, errFieldPrefix).length === 0;
     };
-    BaseEntityRecordValidator.validateValues = function (values) {
+    BaseEntityRecordValidator.prototype.validateValues = function (values, fieldPrefix, errFieldPrefix) {
         var errors = [];
+        this.validateMyRules(values, errors, fieldPrefix, errFieldPrefix);
+        this.validateMyValueRelationRules(values, errors, fieldPrefix, errFieldPrefix);
+        return errors;
+    };
+    BaseEntityRecordValidator.prototype.isValid = function (doc, errFieldPrefix) {
+        return this.validate(doc, errFieldPrefix).length === 0;
+    };
+    BaseEntityRecordValidator.prototype.validate = function (doc, errFieldPrefix) {
+        var errors = [];
+        this.validateMyRules(doc, errors, '', errFieldPrefix);
+        this.validateMyRelationRules(doc, errors, errFieldPrefix);
+        return errors;
+    };
+    BaseEntityRecordValidator.prototype.validateMyValueRelationRules = function (values, errors, fieldPrefix, errFieldPrefix) {
+        return true;
+    };
+    BaseEntityRecordValidator.prototype.validateMyRelationRules = function (doc, errors, errFieldPrefix) {
+        return true;
+    };
+    BaseEntityRecordValidator.prototype.validateMyRules = function (values, errors, fieldPrefix, errFieldPrefix) {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
         var state = true;
-        state = !BaseEntityRecord.genericFields.id.validator.isValid(values['id']) ? errors.push('id') && false : true;
-        return errors;
+        state = this.validateRule(values, BaseEntityRecord.genericFields.id.validator, fieldPrefix + 'id', errors, errFieldPrefix) && state;
+        return state;
     };
-    BaseEntityRecordValidator.isValid = function (record) {
-        return BaseEntityRecordValidator.validate(record).length > 0;
+    BaseEntityRecordValidator.prototype.validateRule = function (record, rule, fieldName, errors, errFieldPrefix) {
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
+        return !rule.isValid(record[fieldName]) ? errors.push(errFieldPrefix + fieldName) && false : true;
     };
-    BaseEntityRecordValidator.validate = function (record) {
-        var errors = [];
-        var state = !BaseEntityRecord.genericFields.id.validator.isValid(record.id) ? errors.push('id') && false : true;
-        return errors;
-    };
+    BaseEntityRecordValidator.instance = new BaseEntityRecordValidator();
     return BaseEntityRecordValidator;
 }());
 exports.BaseEntityRecordValidator = BaseEntityRecordValidator;

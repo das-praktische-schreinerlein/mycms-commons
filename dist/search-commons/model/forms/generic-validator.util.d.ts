@@ -167,3 +167,6 @@ export declare class DescValidationRule extends MarkdownValidationRule {
 export declare class FilenameValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean);
 }
+export declare class PathValidationRule extends RegExValidationReplaceRule {
+    constructor(required: boolean);
+}

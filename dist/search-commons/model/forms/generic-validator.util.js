@@ -467,4 +467,12 @@ var FilenameValidationRule = /** @class */ (function (_super) {
     return FilenameValidationRule;
 }(RegExValidationReplaceRule));
 exports.FilenameValidationRule = FilenameValidationRule;
+var PathValidationRule = /** @class */ (function (_super) {
+    __extends(PathValidationRule, _super);
+    function PathValidationRule(required) {
+        return _super.call(this, required, new XRegExp('^[^\$\&\"\*]*$', 'gi'), new XRegExp('[\$\&\"\*]*', 'gi'), '', 250) || this;
+    }
+    return PathValidationRule;
+}(RegExValidationReplaceRule));
+exports.PathValidationRule = PathValidationRule;
 //# sourceMappingURL=generic-validator.util.js.map

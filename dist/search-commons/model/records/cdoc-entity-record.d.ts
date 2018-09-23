@@ -1,4 +1,4 @@
-import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordType } from './base-entity-record';
+import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordType, BaseEntityRecordValidator } from './base-entity-record';
 export interface CommonDocRecordType extends BaseEntityRecordType {
     blocked: number;
     dateshow: Date;
@@ -44,9 +44,7 @@ export declare class CommonDocRecordFactory {
     static getSanitizedValues(values: {}): any;
     static getSanitizedValuesFromObj(doc: CommonDocRecord): any;
 }
-export declare class CommonDocRecordValidator {
-    static isValidValues(values: {}): boolean;
-    static validateValues(values: {}): string[];
-    static isValid(doc: CommonDocRecord): boolean;
-    static validate(doc: CommonDocRecord): string[];
+export declare class CommonDocRecordValidator extends BaseEntityRecordValidator {
+    static instance: CommonDocRecordValidator;
+    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean;
 }

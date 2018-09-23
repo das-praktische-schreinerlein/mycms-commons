@@ -41,31 +41,58 @@ export class BaseEntityRecord extends Record implements BaseEntityRecordType {
     }
 
     isValid(): boolean {
-        return BaseEntityRecordValidator.isValid(this);
+        return BaseEntityRecordValidator.instance.isValid(this);
     }
 }
 
 export class BaseEntityRecordValidator {
-    static isValidValues(values: {}): boolean {
-        return BaseEntityRecordValidator.validateValues(values).length > 0;
+    public static instance = new BaseEntityRecordValidator();
+
+    isValidValues(values: {}, fieldPrefix?: string, errFieldPrefix?: string): boolean {
+        return this.validateValues(values, fieldPrefix, errFieldPrefix).length === 0;
     }
 
-    static validateValues(values: {}): string[] {
+    validateValues(values: {}, fieldPrefix?: string, errFieldPrefix?: string): string[] {
         const errors = [];
+        this.validateMyRules(values, errors, fieldPrefix, errFieldPrefix);
+        this.validateMyValueRelationRules(values, errors, fieldPrefix, errFieldPrefix);
+
+        return errors;
+    }
+
+    isValid(doc: BaseEntityRecord, errFieldPrefix?: string): boolean {
+        return this.validate(doc, errFieldPrefix).length === 0;
+    }
+
+    validate(doc: BaseEntityRecord, errFieldPrefix?: string): string[] {
+        const errors = [];
+        this.validateMyRules(doc, errors, '', errFieldPrefix);
+        this.validateMyRelationRules(doc, errors, errFieldPrefix);
+
+        return errors;
+    }
+
+    validateMyValueRelationRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+        return true;
+    }
+
+    validateMyRelationRules(doc: BaseEntityRecord, errors: string[], errFieldPrefix?: string): boolean {
+        return true;
+    }
+
+    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
+
         let state = true;
-        state = !BaseEntityRecord.genericFields.id.validator.isValid(values['id']) ? errors.push('id') && false : true;
+        state = this.validateRule(values, BaseEntityRecord.genericFields.id.validator, fieldPrefix + 'id', errors, errFieldPrefix) && state;
 
-        return errors;
+        return state;
     }
 
-    static isValid(record: BaseEntityRecord): boolean {
-        return BaseEntityRecordValidator.validate(record).length > 0;
-    }
+    protected validateRule(record: {}, rule: ValidationRule, fieldName: string, errors: string[], errFieldPrefix?: string): boolean {
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
 
-    static validate(record: BaseEntityRecord): string[] {
-        const errors = [];
-        const state = !BaseEntityRecord.genericFields.id.validator.isValid(record.id) ? errors.push('id') && false : true;
-
-        return errors;
+        return !rule.isValid(record[fieldName]) ? errors.push(errFieldPrefix + fieldName) && false : true;
     }
 }

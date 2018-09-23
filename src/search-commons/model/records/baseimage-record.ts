@@ -1,21 +1,14 @@
-import {BaseEntityRecord, BaseEntityRecordType} from './base-entity-record';
+import {
+    BaseMediaRecord,
+    BaseMediaRecordFactory,
+    BaseMediaRecordType,
+    BaseMediaRecordValidator
+} from "./basemedia-record";
 
-export interface BaseImageRecordType extends BaseEntityRecordType {
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
-    fileName: string;
-    name: string;
-    getMediaId(): string;
+export interface BaseImageRecordType extends BaseMediaRecordType {
 }
 
-export class BaseImageRecord extends BaseEntityRecord implements BaseImageRecordType {
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
-    fileName: string;
-    name: string;
-
+export class BaseImageRecord extends BaseMediaRecord implements BaseImageRecordType {
     getMediaId(): string {
         return 'notimplemented';
     }
@@ -26,4 +19,18 @@ export class BaseImageRecord extends BaseEntityRecord implements BaseImageRecord
             '  name: ' + this.name + ',\n' +
             '}';
     }
+}
+
+export class BaseImageRecordFactory {
+    static getSanitizedValues(values: {}): any {
+        return BaseMediaRecordFactory.getSanitizedValues(values);
+    }
+
+    static getSanitizedValuesFromObj(doc: BaseImageRecord): any {
+        return BaseMediaRecordFactory.getSanitizedValuesFromObj(doc);
+    }
+}
+
+export class BaseImageRecordValidator extends BaseMediaRecordValidator {
+    public static instance = new BaseImageRecordValidator();
 }
