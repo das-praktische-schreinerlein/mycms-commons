@@ -4,6 +4,7 @@
  
 ## 3.0.0
 - improvements for album/action-functionality
+- improvements on validation
 
 ### new features
 - commons: added CommonDocPlaylistService
@@ -11,12 +12,13 @@
 ### improvements
 - commons: added sortRecords and getAvailableSorts SearchService 
 - commons: check profileConfigs on actiontags
- 
+- commons: improved validation
+
 ### bug fixes
 - none 
  
 ### breaking changes
-- none
+- commons: changed validation
 
 
 ## 2.0.0
