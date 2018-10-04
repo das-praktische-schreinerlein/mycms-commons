@@ -11,6 +11,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var basemedia_record_1 = require("./basemedia-record");
+var base_entity_record_1 = require("./base-entity-record");
+var generic_validator_util_1 = require("../forms/generic-validator.util");
 var BaseVideoRecord = /** @class */ (function (_super) {
     __extends(BaseVideoRecord, _super);
     function BaseVideoRecord() {
@@ -23,26 +25,45 @@ var BaseVideoRecord = /** @class */ (function (_super) {
             '  name: ' + this.name + ',\n' +
             '}';
     };
+    BaseVideoRecord.baseVideoFields = {
+        dur: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 0, 999999, undefined))
+    };
     return BaseVideoRecord;
 }(basemedia_record_1.BaseMediaRecord));
 exports.BaseVideoRecord = BaseVideoRecord;
-var BaseVideoRecordFactory = /** @class */ (function () {
+var BaseVideoRecordFactory = /** @class */ (function (_super) {
+    __extends(BaseVideoRecordFactory, _super);
     function BaseVideoRecordFactory() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    BaseVideoRecordFactory.getSanitizedValues = function (values) {
-        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValues(values);
+    BaseVideoRecordFactory.createSanitized = function (values) {
+        var sanitizedValues = BaseVideoRecordFactory.instance.getSanitizedValues(values, {});
+        return new BaseVideoRecord(sanitizedValues);
     };
-    BaseVideoRecordFactory.getSanitizedValuesFromObj = function (doc) {
-        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValuesFromObj(doc);
+    BaseVideoRecordFactory.cloneSanitized = function (doc) {
+        var sanitizedValues = BaseVideoRecordFactory.instance.getSanitizedValuesFromObj(doc);
+        return new BaseVideoRecord(sanitizedValues);
     };
+    BaseVideoRecordFactory.prototype.getSanitizedValues = function (values, result) {
+        _super.prototype.getSanitizedValues.call(this, values, result);
+        this.sanitizeFieldValues(values, BaseVideoRecord.baseVideoFields, result, '');
+        return result;
+    };
+    BaseVideoRecordFactory.instance = new BaseVideoRecordFactory();
     return BaseVideoRecordFactory;
-}());
+}(basemedia_record_1.BaseMediaRecordFactory));
 exports.BaseVideoRecordFactory = BaseVideoRecordFactory;
 var BaseVideoRecordValidator = /** @class */ (function (_super) {
     __extends(BaseVideoRecordValidator, _super);
     function BaseVideoRecordValidator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    BaseVideoRecordValidator.prototype.validateMyFieldRules = function (values, errors, fieldPrefix, errFieldPrefix) {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
+        var state = _super.prototype.validateMyFieldRules.call(this, values, errors, fieldPrefix, errFieldPrefix);
+        return this.validateFieldRules(values, BaseVideoRecord.baseVideoFields, fieldPrefix, errors, errFieldPrefix) && state;
+    };
     BaseVideoRecordValidator.instance = new BaseVideoRecordValidator();
     return BaseVideoRecordValidator;
 }(basemedia_record_1.BaseMediaRecordValidator));

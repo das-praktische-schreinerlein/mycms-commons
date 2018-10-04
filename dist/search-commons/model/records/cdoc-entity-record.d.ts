@@ -1,4 +1,4 @@
-import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordType, BaseEntityRecordValidator } from './base-entity-record';
+import { BaseEntityRecord, BaseEntityRecordFactory, BaseEntityRecordFieldConfig, BaseEntityRecordType, BaseEntityRecordValidator } from './base-entity-record';
 export interface CommonDocRecordType extends BaseEntityRecordType {
     blocked: number;
     dateshow: Date;
@@ -40,11 +40,13 @@ export declare class CommonDocRecord extends BaseEntityRecord implements CommonD
     toSerializableJsonObj(anonymizeMedia?: boolean): {};
     isValid(): boolean;
 }
-export declare class CommonDocRecordFactory {
-    static getSanitizedValues(values: {}): any;
-    static getSanitizedValuesFromObj(doc: CommonDocRecord): any;
+export declare class CommonDocRecordFactory extends BaseEntityRecordFactory {
+    static instance: CommonDocRecordFactory;
+    static createSanitized(values: {}): CommonDocRecord;
+    static cloneSanitized(doc: CommonDocRecord): CommonDocRecord;
+    getSanitizedValues(values: {}, result: {}): {};
 }
 export declare class CommonDocRecordValidator extends BaseEntityRecordValidator {
     static instance: CommonDocRecordValidator;
-    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean;
+    validateMyFieldRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean;
 }

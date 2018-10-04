@@ -6,6 +6,7 @@ export interface ActionTagConfig {
     showFilter: SimpleFilter[];
     type: string;
     payload?: {};
+    multiRecordTag?: boolean;
     recordAvailability: SimpleFilter[];
     configAvailability: SimpleFilter[];
     profileAvailability?: SimpleFilter[];

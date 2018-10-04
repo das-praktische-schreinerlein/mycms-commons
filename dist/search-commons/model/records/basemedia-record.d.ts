@@ -1,4 +1,4 @@
-import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordType, BaseEntityRecordValidator } from './base-entity-record';
+import { BaseEntityRecord, BaseEntityRecordFactory, BaseEntityRecordFieldConfig, BaseEntityRecordType, BaseEntityRecordValidator } from './base-entity-record';
 export interface BaseMediaRecordType extends BaseEntityRecordType {
     descTxt: string;
     descMd: string;
@@ -23,11 +23,13 @@ export declare class BaseMediaRecord extends BaseEntityRecord implements BaseMed
     getMediaId(): string;
     toString(): string;
 }
-export declare class BaseMediaRecordFactory {
-    static getSanitizedValues(values: {}): any;
-    static getSanitizedValuesFromObj(doc: BaseMediaRecord): any;
+export declare class BaseMediaRecordFactory extends BaseEntityRecordFactory {
+    static instance: BaseMediaRecordFactory;
+    static createSanitized(values: {}): BaseMediaRecord;
+    static cloneSanitized(doc: BaseMediaRecord): BaseMediaRecord;
+    getSanitizedValues(values: {}, result: {}): {};
 }
 export declare class BaseMediaRecordValidator extends BaseEntityRecordValidator {
     static instance: BaseMediaRecordValidator;
-    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean;
+    validateMyFieldRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean;
 }

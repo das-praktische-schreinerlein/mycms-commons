@@ -3,7 +3,7 @@ import {CommonDocRecord} from '../model/records/cdoc-entity-record';
 export abstract class CommonDocPlaylistService<R extends CommonDocRecord> {
 
     public generateM3uForRecords(pathPrefix: string, records: R[]): string {
-        const values: string[] = ['#EXTM3U'];
+        const values: string[] = [this.generateM3uHeader()];
         if (records) {
             records.forEach(record => {
                 values.push(this.generateM3uEntryForRecord(pathPrefix, record));
@@ -14,6 +14,10 @@ export abstract class CommonDocPlaylistService<R extends CommonDocRecord> {
             return value !== undefined && value !== '';
         }).join('\n');
 
+    }
+
+    public generateM3uHeader(): string {
+        return '#EXTM3U';
     }
 
     public generateM3uEntryForRecord(pathPrefix: string, record: R): string {

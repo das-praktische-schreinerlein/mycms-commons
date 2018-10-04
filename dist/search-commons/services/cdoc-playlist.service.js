@@ -5,7 +5,7 @@ var CommonDocPlaylistService = /** @class */ (function () {
     }
     CommonDocPlaylistService.prototype.generateM3uForRecords = function (pathPrefix, records) {
         var _this = this;
-        var values = ['#EXTM3U'];
+        var values = [this.generateM3uHeader()];
         if (records) {
             records.forEach(function (record) {
                 values.push(_this.generateM3uEntryForRecord(pathPrefix, record));
@@ -14,6 +14,9 @@ var CommonDocPlaylistService = /** @class */ (function () {
         return values.filter(function (value) {
             return value !== undefined && value !== '';
         }).join('\n');
+    };
+    CommonDocPlaylistService.prototype.generateM3uHeader = function () {
+        return '#EXTM3U';
     };
     CommonDocPlaylistService.prototype.generateM3uEntryForRecord = function (pathPrefix, record) {
         if (!record) {

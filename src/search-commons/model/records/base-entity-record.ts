@@ -1,6 +1,7 @@
 import {Record} from 'js-data';
 import {GenericValidatorDatatypes, IdValidationRule, ValidationRule} from '../forms/generic-validator.util';
 import {GenericSearchFormFieldConfig} from '../forms/generic-searchform';
+import {isArray} from "util";
 
 export class BaseEntityRecordFieldConfig {
     private _datatype: GenericValidatorDatatypes;
@@ -45,6 +46,54 @@ export class BaseEntityRecord extends Record implements BaseEntityRecordType {
     }
 }
 
+export class BaseEntityRecordFactory {
+    public static instance = new BaseEntityRecordFactory();
+
+    static createSanitized(values: {}): BaseEntityRecord {
+        const sanitizedValues = BaseEntityRecordFactory.instance.getSanitizedValues(values, {});
+        return new BaseEntityRecord(sanitizedValues);
+    }
+
+    static cloneSanitized(doc: BaseEntityRecord): BaseEntityRecord {
+        const sanitizedValues = BaseEntityRecordFactory.instance.getSanitizedValuesFromObj(doc);
+        return new BaseEntityRecord(sanitizedValues);
+    }
+
+    getSanitizedValues(values: {}, result: {}): {} {
+        return this.sanitizeFieldValues(values, BaseEntityRecord.genericFields, result, '');
+    }
+
+    getSanitizedValuesFromObj(doc: BaseEntityRecord): any {
+        return this.getSanitizedValues(doc, {});
+    }
+
+    getSanitizedRelationValues(relation: string, values: {}): {} {
+        throw new Error('unknown relation:' + relation);
+    }
+
+    sanitizeFieldValues(values: {}, fieldConfigs: {}, result: {}, fieldPrefix?: string): {} {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
+        const sanitizedValues = result;
+        for (const fieldConfigName in fieldConfigs) {
+            const fieldConfig = <GenericSearchFormFieldConfig>fieldConfigs[fieldConfigName];
+            sanitizedValues[fieldPrefix + fieldConfigName] =
+                this.sanitizeFieldValue(values, fieldConfig.validator, fieldPrefix + fieldConfigName);
+        }
+
+        return sanitizedValues;
+    }
+
+    sanitizeFieldValue(record: {}, rule: ValidationRule, fieldName: string): any {
+        return this.sanitizeValue(record[fieldName], rule);
+
+    }
+
+    sanitizeValue(value: any, rule: ValidationRule): any {
+        return rule.sanitize(value) || undefined;
+
+    }
+}
+
 export class BaseEntityRecordValidator {
     public static instance = new BaseEntityRecordValidator();
 
@@ -54,7 +103,7 @@ export class BaseEntityRecordValidator {
 
     validateValues(values: {}, fieldPrefix?: string, errFieldPrefix?: string): string[] {
         const errors = [];
-        this.validateMyRules(values, errors, fieldPrefix, errFieldPrefix);
+        this.validateMyFieldRules(values, errors, fieldPrefix, errFieldPrefix);
         this.validateMyValueRelationRules(values, errors, fieldPrefix, errFieldPrefix);
 
         return errors;
@@ -66,7 +115,7 @@ export class BaseEntityRecordValidator {
 
     validate(doc: BaseEntityRecord, errFieldPrefix?: string): string[] {
         const errors = [];
-        this.validateMyRules(doc, errors, '', errFieldPrefix);
+        this.validateMyFieldRules(doc, errors, '', errFieldPrefix);
         this.validateMyRelationRules(doc, errors, errFieldPrefix);
 
         return errors;
@@ -80,12 +129,58 @@ export class BaseEntityRecordValidator {
         return true;
     }
 
-    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+    validateMyFieldRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
         fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
         errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
 
+        return this.validateFieldRules(values, BaseEntityRecord.genericFields, fieldPrefix, errors, errFieldPrefix);
+    }
+
+    protected validateValueRelationRules(values: {}, relations: string[],  errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
+
+        const relErrors = [];
+        for (const relation of relations) {
+            relErrors.push(...this.validateValueRelationDoc(relation, values,
+                fieldPrefix + relation + '.', errFieldPrefix));
+        }
+        errors.push(...relErrors);
+
+        return relErrors.length === 0;
+    }
+
+    protected validateRelationRules(doc: BaseEntityRecord, relations: string[], errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+        const relErrors = [];
+        for (const relation of relations) {
+            const subRecords = doc.get(relation) || doc[relation];
+            if (isArray(subRecords)) {
+                for (const subRecord of subRecords) {
+                    relErrors.push(...this.validateRelationDoc(relation, subRecord, errFieldPrefix + relation + '.'));
+                }
+            } else if (subRecords) {
+                relErrors.push(...this.validateRelationDoc(relation, subRecords, errFieldPrefix + relation + '.'));
+            }
+        }
+        errors.push(...relErrors);
+
+        return relErrors.length === 0;
+    }
+
+    protected validateRelationDoc(relation: string, doc: BaseEntityRecord, errFieldPrefix?: string): string[] {
+        throw new Error('unknown relation:' + relation);
+    };
+
+    protected validateValueRelationDoc(relation: string, values: {}, fieldPrefix?: string, errFieldPrefix?: string): string[] {
+        throw new Error('unknown relation:' + relation);
+    };
+
+    protected validateFieldRules(values: {}, fieldConfigs: {}, fieldPrefix: string, errors: string[], errFieldPrefix?: string): boolean {
         let state = true;
-        state = this.validateRule(values, BaseEntityRecord.genericFields.id.validator, fieldPrefix + 'id', errors, errFieldPrefix) && state;
+        for (const fieldConfigName in fieldConfigs) {
+            const fieldConfig = <GenericSearchFormFieldConfig>fieldConfigs[fieldConfigName];
+            state = this.validateRule(values, fieldConfig.validator, fieldPrefix + fieldConfigName, errors, errFieldPrefix) && state;
+        }
 
         return state;
     }

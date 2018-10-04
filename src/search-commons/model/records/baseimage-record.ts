@@ -21,13 +21,17 @@ export class BaseImageRecord extends BaseMediaRecord implements BaseImageRecordT
     }
 }
 
-export class BaseImageRecordFactory {
-    static getSanitizedValues(values: {}): any {
-        return BaseMediaRecordFactory.getSanitizedValues(values);
+export class BaseImageRecordFactory extends BaseMediaRecordFactory {
+    public static instance = new BaseImageRecordFactory();
+
+    static createSanitized(values: {}): BaseImageRecord {
+        const sanitizedValues = BaseImageRecordFactory.instance.getSanitizedValues(values, {});
+        return new BaseImageRecord(sanitizedValues);
     }
 
-    static getSanitizedValuesFromObj(doc: BaseImageRecord): any {
-        return BaseMediaRecordFactory.getSanitizedValuesFromObj(doc);
+    static cloneSanitized(doc: BaseImageRecord): BaseImageRecord {
+        const sanitizedValues = BaseImageRecordFactory.instance.getSanitizedValuesFromObj(doc);
+        return new BaseImageRecord(sanitizedValues);
     }
 }
 

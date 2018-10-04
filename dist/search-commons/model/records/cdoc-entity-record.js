@@ -67,50 +67,38 @@ var CommonDocRecord = /** @class */ (function (_super) {
     return CommonDocRecord;
 }(base_entity_record_1.BaseEntityRecord));
 exports.CommonDocRecord = CommonDocRecord;
-var CommonDocRecordFactory = /** @class */ (function () {
+var CommonDocRecordFactory = /** @class */ (function (_super) {
+    __extends(CommonDocRecordFactory, _super);
     function CommonDocRecordFactory() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    CommonDocRecordFactory.getSanitizedValues = function (values) {
-        var sanitizedValues = {};
-        sanitizedValues.id = base_entity_record_1.BaseEntityRecord.genericFields.id.validator.sanitize(values['id']) || undefined;
-        sanitizedValues.blocked = CommonDocRecord.cdocFields.blocked.validator.sanitize(values['blocked']) || undefined;
-        sanitizedValues.dateshow = CommonDocRecord.cdocFields.dateshow.validator.sanitize(values['dateshow']) || undefined;
-        sanitizedValues.descTxt = CommonDocRecord.cdocFields.descTxt.validator.sanitize(values['descTxt']) || undefined;
-        sanitizedValues.descMd = CommonDocRecord.cdocFields.descMd.validator.sanitize(values['descMd']) || undefined;
-        sanitizedValues.descHtml = CommonDocRecord.cdocFields.descHtml.validator.sanitize(values['descHtml']) || undefined;
-        sanitizedValues.keywords = CommonDocRecord.cdocFields.keywords.validator.sanitize(values['keywords']) || undefined;
-        sanitizedValues.name = CommonDocRecord.cdocFields.name.validator.sanitize(values['name']) || undefined;
-        sanitizedValues.playlists = CommonDocRecord.cdocFields.playlists.validator.sanitize(values['playlists']) || undefined;
-        sanitizedValues.subtype = CommonDocRecord.cdocFields.subtype.validator.sanitize(values['subtype']) || undefined;
-        sanitizedValues.type = CommonDocRecord.cdocFields.type.validator.sanitize(values['type']) || undefined;
-        return sanitizedValues;
+    CommonDocRecordFactory.createSanitized = function (values) {
+        var sanitizedValues = CommonDocRecordFactory.instance.getSanitizedValues(values, {});
+        return new CommonDocRecord(sanitizedValues);
     };
-    CommonDocRecordFactory.getSanitizedValuesFromObj = function (doc) {
-        return CommonDocRecordFactory.getSanitizedValues(doc);
+    CommonDocRecordFactory.cloneSanitized = function (doc) {
+        var sanitizedValues = CommonDocRecordFactory.instance.getSanitizedValuesFromObj(doc);
+        return new CommonDocRecord(sanitizedValues);
     };
+    CommonDocRecordFactory.prototype.getSanitizedValues = function (values, result) {
+        _super.prototype.getSanitizedValues.call(this, values, result);
+        this.sanitizeFieldValues(values, CommonDocRecord.cdocFields, result, '');
+        return result;
+    };
+    CommonDocRecordFactory.instance = new CommonDocRecordFactory();
     return CommonDocRecordFactory;
-}());
+}(base_entity_record_1.BaseEntityRecordFactory));
 exports.CommonDocRecordFactory = CommonDocRecordFactory;
 var CommonDocRecordValidator = /** @class */ (function (_super) {
     __extends(CommonDocRecordValidator, _super);
     function CommonDocRecordValidator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CommonDocRecordValidator.prototype.validateMyRules = function (values, errors, fieldPrefix, errFieldPrefix) {
+    CommonDocRecordValidator.prototype.validateMyFieldRules = function (values, errors, fieldPrefix, errFieldPrefix) {
         fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
         errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
-        var state = _super.prototype.validateMyRules.call(this, values, errors, fieldPrefix, errFieldPrefix);
-        state = this.validateRule(values, CommonDocRecord.cdocFields.blocked.validator, fieldPrefix + 'blocked', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.dateshow.validator, fieldPrefix + 'dateshow', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.descTxt.validator, fieldPrefix + 'descTxt', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.descMd.validator, fieldPrefix + 'descMd', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.descHtml.validator, fieldPrefix + 'descHtml', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.keywords.validator, fieldPrefix + 'keywords', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.name.validator, fieldPrefix + 'name', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.playlists.validator, fieldPrefix + 'playlists', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.subtype.validator, fieldPrefix + 'subtype', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, CommonDocRecord.cdocFields.type.validator, fieldPrefix + 'type', errors, errFieldPrefix) && state;
-        return state;
+        var state = _super.prototype.validateMyFieldRules.call(this, values, errors, fieldPrefix, errFieldPrefix);
+        return this.validateFieldRules(values, CommonDocRecord.cdocFields, fieldPrefix, errors, errFieldPrefix) && state;
     };
     CommonDocRecordValidator.instance = new CommonDocRecordValidator();
     return CommonDocRecordValidator;

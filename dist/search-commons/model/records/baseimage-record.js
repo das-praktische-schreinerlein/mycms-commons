@@ -29,17 +29,22 @@ var BaseImageRecord = /** @class */ (function (_super) {
     return BaseImageRecord;
 }(basemedia_record_1.BaseMediaRecord));
 exports.BaseImageRecord = BaseImageRecord;
-var BaseImageRecordFactory = /** @class */ (function () {
+var BaseImageRecordFactory = /** @class */ (function (_super) {
+    __extends(BaseImageRecordFactory, _super);
     function BaseImageRecordFactory() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    BaseImageRecordFactory.getSanitizedValues = function (values) {
-        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValues(values);
+    BaseImageRecordFactory.createSanitized = function (values) {
+        var sanitizedValues = BaseImageRecordFactory.instance.getSanitizedValues(values, {});
+        return new BaseImageRecord(sanitizedValues);
     };
-    BaseImageRecordFactory.getSanitizedValuesFromObj = function (doc) {
-        return basemedia_record_1.BaseMediaRecordFactory.getSanitizedValuesFromObj(doc);
+    BaseImageRecordFactory.cloneSanitized = function (doc) {
+        var sanitizedValues = BaseImageRecordFactory.instance.getSanitizedValuesFromObj(doc);
+        return new BaseImageRecord(sanitizedValues);
     };
+    BaseImageRecordFactory.instance = new BaseImageRecordFactory();
     return BaseImageRecordFactory;
-}());
+}(basemedia_record_1.BaseMediaRecordFactory));
 exports.BaseImageRecordFactory = BaseImageRecordFactory;
 var BaseImageRecordValidator = /** @class */ (function (_super) {
     __extends(BaseImageRecordValidator, _super);

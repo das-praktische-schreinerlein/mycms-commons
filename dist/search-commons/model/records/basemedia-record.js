@@ -37,40 +37,38 @@ var BaseMediaRecord = /** @class */ (function (_super) {
     return BaseMediaRecord;
 }(base_entity_record_1.BaseEntityRecord));
 exports.BaseMediaRecord = BaseMediaRecord;
-var BaseMediaRecordFactory = /** @class */ (function () {
+var BaseMediaRecordFactory = /** @class */ (function (_super) {
+    __extends(BaseMediaRecordFactory, _super);
     function BaseMediaRecordFactory() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    BaseMediaRecordFactory.getSanitizedValues = function (values) {
-        var sanitizedValues = {};
-        sanitizedValues.id = base_entity_record_1.BaseEntityRecord.genericFields.id.validator.sanitize(values['id']) || undefined;
-        sanitizedValues.descTxt = BaseMediaRecord.baseMediaFields.descTxt.validator.sanitize(values['descTxt']) || undefined;
-        sanitizedValues.descMd = BaseMediaRecord.baseMediaFields.descMd.validator.sanitize(values['descMd']) || undefined;
-        sanitizedValues.descHtml = BaseMediaRecord.baseMediaFields.descHtml.validator.sanitize(values['descHtml']) || undefined;
-        sanitizedValues.name = BaseMediaRecord.baseMediaFields.name.validator.sanitize(values['name']) || undefined;
-        sanitizedValues.fileName = BaseMediaRecord.baseMediaFields.fileName.validator.sanitize(values['fileName']) || undefined;
-        return sanitizedValues;
+    BaseMediaRecordFactory.createSanitized = function (values) {
+        var sanitizedValues = BaseMediaRecordFactory.instance.getSanitizedValues(values, {});
+        return new BaseMediaRecord(sanitizedValues);
     };
-    BaseMediaRecordFactory.getSanitizedValuesFromObj = function (doc) {
-        return BaseMediaRecordFactory.getSanitizedValues(doc);
+    BaseMediaRecordFactory.cloneSanitized = function (doc) {
+        var sanitizedValues = BaseMediaRecordFactory.instance.getSanitizedValuesFromObj(doc);
+        return new BaseMediaRecord(sanitizedValues);
     };
+    BaseMediaRecordFactory.prototype.getSanitizedValues = function (values, result) {
+        _super.prototype.getSanitizedValues.call(this, values, result);
+        this.sanitizeFieldValues(values, BaseMediaRecord.baseMediaFields, result, '');
+        return result;
+    };
+    BaseMediaRecordFactory.instance = new BaseMediaRecordFactory();
     return BaseMediaRecordFactory;
-}());
+}(base_entity_record_1.BaseEntityRecordFactory));
 exports.BaseMediaRecordFactory = BaseMediaRecordFactory;
 var BaseMediaRecordValidator = /** @class */ (function (_super) {
     __extends(BaseMediaRecordValidator, _super);
     function BaseMediaRecordValidator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    BaseMediaRecordValidator.prototype.validateMyRules = function (values, errors, fieldPrefix, errFieldPrefix) {
+    BaseMediaRecordValidator.prototype.validateMyFieldRules = function (values, errors, fieldPrefix, errFieldPrefix) {
         fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
         errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
-        var state = _super.prototype.validateMyRules.call(this, values, errors, fieldPrefix, errFieldPrefix);
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.descTxt.validator, fieldPrefix + 'descTxt', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.descMd.validator, fieldPrefix + 'descMd', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.descHtml.validator, fieldPrefix + 'descHtml', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.name.validator, fieldPrefix + 'name', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.fileName.validator, fieldPrefix + 'fileName', errors, errFieldPrefix) && state;
-        return state;
+        var state = _super.prototype.validateMyFieldRules.call(this, values, errors, fieldPrefix, errFieldPrefix);
+        return this.validateFieldRules(values, BaseMediaRecord.baseMediaFields, fieldPrefix, errors, errFieldPrefix) && state;
     };
     BaseMediaRecordValidator.instance = new BaseMediaRecordValidator();
     return BaseMediaRecordValidator;

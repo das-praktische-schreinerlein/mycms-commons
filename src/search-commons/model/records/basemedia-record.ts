@@ -1,5 +1,6 @@
 import {
     BaseEntityRecord,
+    BaseEntityRecordFactory,
     BaseEntityRecordFieldConfig,
     BaseEntityRecordType,
     BaseEntityRecordValidator
@@ -48,39 +49,35 @@ export class BaseMediaRecord extends BaseEntityRecord implements BaseMediaRecord
     }
 }
 
-export class BaseMediaRecordFactory {
-    static getSanitizedValues(values: {}): any {
-        const sanitizedValues: any = {};
-        sanitizedValues.id = BaseEntityRecord.genericFields.id.validator.sanitize(values['id']) || undefined;
-        sanitizedValues.descTxt = BaseMediaRecord.baseMediaFields.descTxt.validator.sanitize(values['descTxt']) || undefined;
-        sanitizedValues.descMd = BaseMediaRecord.baseMediaFields.descMd.validator.sanitize(values['descMd']) || undefined;
-        sanitizedValues.descHtml = BaseMediaRecord.baseMediaFields.descHtml.validator.sanitize(values['descHtml']) || undefined;
-        sanitizedValues.name = BaseMediaRecord.baseMediaFields.name.validator.sanitize(values['name']) || undefined;
-        sanitizedValues.fileName = BaseMediaRecord.baseMediaFields.fileName.validator.sanitize(values['fileName']) || undefined;
+export class BaseMediaRecordFactory extends BaseEntityRecordFactory {
+    public static instance = new BaseMediaRecordFactory();
 
-        return sanitizedValues;
+    static createSanitized(values: {}): BaseMediaRecord {
+        const sanitizedValues = BaseMediaRecordFactory.instance.getSanitizedValues(values, {});
+        return new BaseMediaRecord(sanitizedValues);
     }
 
-    static getSanitizedValuesFromObj(doc: BaseMediaRecord): any {
-        return BaseMediaRecordFactory.getSanitizedValues(doc);
+    static cloneSanitized(doc: BaseMediaRecord): BaseMediaRecord {
+        const sanitizedValues = BaseMediaRecordFactory.instance.getSanitizedValuesFromObj(doc);
+        return new BaseMediaRecord(sanitizedValues);
+    }
+
+    getSanitizedValues(values: {}, result: {}): {} {
+        super.getSanitizedValues(values, result);
+        this.sanitizeFieldValues(values, BaseMediaRecord.baseMediaFields, result, '');
+        return result;
     }
 }
 
 export class BaseMediaRecordValidator extends BaseEntityRecordValidator {
     public static instance = new BaseMediaRecordValidator();
 
-    validateMyRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+    validateMyFieldRules(values: {}, errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
         fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
         errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
 
-        let state = super.validateMyRules(values, errors, fieldPrefix, errFieldPrefix);
+        const state = super.validateMyFieldRules(values, errors, fieldPrefix, errFieldPrefix);
 
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.descTxt.validator, fieldPrefix + 'descTxt', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.descMd.validator, fieldPrefix + 'descMd', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.descHtml.validator, fieldPrefix + 'descHtml', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.name.validator, fieldPrefix + 'name', errors, errFieldPrefix) && state;
-        state = this.validateRule(values, BaseMediaRecord.baseMediaFields.fileName.validator, fieldPrefix + 'fileName', errors, errFieldPrefix) && state;
-
-        return state;
+        return this.validateFieldRules(values, BaseMediaRecord.baseMediaFields, fieldPrefix, errors, errFieldPrefix) && state;
     }
 }
