@@ -92,6 +92,25 @@ export abstract class GenericSearchService <R extends Record, F extends GenericS
         return result;
     }
 
+    export(searchForm: F, format: string, opts?: GenericSearchOptions): Promise<string> {
+        // console.log('export for form', searchForm);
+        const exportResultObs = this.dataStore.export(this.searchMapperName, searchForm, format, opts);
+
+        const me = this;
+        const result = new Promise<string>((resolve, reject) => {
+            exportResultObs.then(function doneExport(exportResultData: string) {
+                    // console.log('export exportResultData', exportResultData);
+                    return resolve(exportResultData);
+                },
+                function errorExport(reason) {
+                    console.error('export failed:', reason);
+                    return reject(reason);
+                });
+        });
+
+        return result;
+    }
+
     getById(id: string, opts?: any): Promise<R> {
         return this.dataStore.find(this.searchMapperName, id, opts);
     }

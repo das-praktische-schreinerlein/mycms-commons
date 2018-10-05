@@ -60,6 +60,9 @@ var CommonDocDataService = /** @class */ (function () {
     CommonDocDataService.prototype.doMultiSearch = function (searchForm, ids) {
         return this.searchService.doMultiSearch(searchForm, ids);
     };
+    CommonDocDataService.prototype.export = function (searchForm, format, opts) {
+        return this.searchService.export(searchForm, format, opts);
+    };
     CommonDocDataService.prototype.search = function (searchForm, opts) {
         return this.searchService.search(searchForm, opts);
     };
@@ -151,16 +154,8 @@ var CommonDocDataService = /** @class */ (function () {
         if (!this.isWritable()) {
             throw new Error('CommonDocDataService configured: not writable');
         }
-        var query = {
-            where: {
-                name_s: {
-                    'in': [record.name]
-                },
-                type_txt: {
-                    'in': [record.type.toLowerCase()]
-                }
-            }
-        };
+        var query = this.generateImportRecordQuery(record);
+        var logName = this.generateImportRecordName(record);
         var myMappings = {};
         var me = this;
         return adapter.findAll(mapper, query, opts)
@@ -171,7 +166,7 @@ var CommonDocDataService = /** @class */ (function () {
             return js_data_1.utils.resolve(searchResult[0]);
         }).then(function recordsDone(docRecord) {
             if (docRecord !== undefined) {
-                console.log('EXISTING - record', record.type + ' ' + record.name);
+                console.log('EXISTING - record', logName);
                 var idFieldName = me.typeMapping[record.type.toLowerCase()];
                 myMappings[idFieldName] = record[idFieldName];
                 return js_data_1.utils.resolve(docRecord);
@@ -194,7 +189,7 @@ var CommonDocDataService = /** @class */ (function () {
                     record[refIdFieldName] = undefined;
                 }
             }
-            console.log('ADD - record', record.type + ' ' + record.name);
+            console.log('ADD - record', logName);
             return me.add(record).then(function onFullfilled(newCdocRecord) {
                 docRecord = newCdocRecord;
                 return me.doImportActionTags(record, docRecord, opts);
@@ -277,6 +272,21 @@ var CommonDocDataService = /** @class */ (function () {
         }
         console.log('ACTIONTAGS - record', origRecord.type + ' ' + origRecord.name, actionTagForms);
         return this.doActionTags(newRecord, actionTagForms, opts);
+    };
+    CommonDocDataService.prototype.generateImportRecordQuery = function (record) {
+        return {
+            where: {
+                name_s: {
+                    'in': [record.name]
+                },
+                type_txt: {
+                    'in': [record.type.toLowerCase()]
+                }
+            }
+        };
+    };
+    CommonDocDataService.prototype.generateImportRecordName = function (record) {
+        return record.type + ' ' + record.name;
     };
     return CommonDocDataService;
 }());

@@ -25,6 +25,7 @@ export declare abstract class GenericDataStore<R extends Record, F extends Gener
     find(mapperName: string, id: any, opts?: any): Promise<R>;
     findAll(mapperName: string, query?: any, opts?: any): Promise<R[]>;
     search(mapperName: string, searchForm: F, opts?: any): Promise<S>;
+    export(mapperName: string, searchForm: F, format: string, opts?: any): Promise<string>;
     update(mapperName: string, id: string | number, record: any, opts?: any): Promise<R>;
     updateAll(mapperName: string, props: any, query?: any, opts?: any): Promise<R[]>;
     updateMany(mapperName: string, records: any[], opts?: any): Promise<R[]>;

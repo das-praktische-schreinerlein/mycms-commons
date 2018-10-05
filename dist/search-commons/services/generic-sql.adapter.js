@@ -73,6 +73,9 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         });
         return result;
     };
+    GenericSqlAdapter.prototype.export = function (mapper, query, format, opts) {
+        throw new Error('export not implemented');
+    };
     GenericSqlAdapter.prototype.find = function (mapper, id, opts) {
         var adapterQuery = {
             loadTrack: false,

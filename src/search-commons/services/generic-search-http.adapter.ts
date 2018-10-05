@@ -128,6 +128,29 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
             });
     }
 
+    export(mapper: Mapper, query: any, format: string, opts: any): Promise<string> {
+        query = query || {};
+        opts = opts || {};
+
+        const me = this;
+
+        opts.params = this.getParams(opts);
+        opts.suffix = this.getSuffix(mapper, opts);
+        utils.deepMixIn(opts.params, query);
+        opts.params = me.queryTransformToHttpQuery(mapper, opts.params, opts);
+
+        const result = new Promise<string>((resolve, reject) => {
+            me._export(mapper, query, format, opts).then(result => {
+                resolve(result);
+            }).catch(reason => {
+                console.error('export failed:', reason);
+                return reject(reason);
+            });
+        });
+
+        return result;
+    }
+
     beforeFacets(mapper: Mapper, query: IDict, opts: IDict): any {
         return utils.Promise.resolve(true);
     }
@@ -224,7 +247,23 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
             });
     }
 
-    abstract getHttpEndpoint(method: string): string;
+    protected _export(mapper: Mapper, query: any, format: string, opts: any): Promise<string> {
+        const me = this;
+        opts = opts || {};
+        opts.endpoint = this.getHttpEndpoint('export', format);
+        return super.GET(this.getPath('export', mapper, opts.params, opts), opts)
+            .then(response => {
+                if (response) {
+                    return utils.resolve(response.text());
+                } else {
+                    return utils.reject('export no valid response');
+                }
+            }).catch(reason => {
+                return utils.reject('export something went wrong' + reason);
+            });
+    }
+
+    abstract getHttpEndpoint(method: string, format?: string): string;
 
     private queryTransformToHttpQuery(mapper: Mapper, params: any, opts: any): any {
         const ret = {};
@@ -233,9 +272,9 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
                 ret[i] = opts.originalSearchForm[i];
             }
         }
-        ret['showForm'] = opts.showForm;
-        ret['showFacets'] = opts.showFacets;
-        ret['loadTrack'] = opts.loadTrack;
+        ret['showForm'] = opts.showForm || false;
+        ret['showFacets'] = opts.showFacets || false;
+        ret['loadTrack'] = opts.loadTrack || false;
         return ret;
     }
 

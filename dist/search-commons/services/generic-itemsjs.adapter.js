@@ -39,6 +39,9 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
     GenericItemsJsAdapter.prototype.destroyAll = function (mapper, query, opts) {
         throw new Error('destroyAll not implemented');
     };
+    GenericItemsJsAdapter.prototype.export = function (mapper, query, format, opts) {
+        throw new Error('export not implemented');
+    };
     GenericItemsJsAdapter.prototype.find = function (mapper, id, opts) {
         throw new Error('find not implemented');
     };

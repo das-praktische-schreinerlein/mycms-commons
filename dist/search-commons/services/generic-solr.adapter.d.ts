@@ -21,6 +21,7 @@ export declare abstract class GenericSolrAdapter<R extends Record, F extends Gen
     createMany(mapper: Mapper, props: any, opts: any): Promise<R>;
     destroy(mapper: Mapper, id: string | number, opts?: any): Promise<any>;
     destroyAll(mapper: Mapper, query: any, opts: any): Promise<any>;
+    export(mapper: Mapper, query: any, format: string, opts: any): Promise<string>;
     find(mapper: Mapper, id: string | number, opts: any): Promise<R>;
     findAll(mapper: Mapper, query: any, opts: any): Promise<R[]>;
     facets(mapper: Mapper, query: any, opts: any): Promise<Facets>;

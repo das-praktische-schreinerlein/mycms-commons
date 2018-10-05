@@ -62,6 +62,10 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
         throw new Error('destroyAll not implemented');
     }
 
+    export(mapper: Mapper, query: any, format: string, opts: any): Promise<string> {
+        throw new Error('export not implemented');
+    }
+
     find(mapper: Mapper, id: string | number, opts: any): Promise<R> {
         throw new Error('find not implemented');
     }

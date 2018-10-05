@@ -23,6 +23,7 @@ export declare abstract class GenericSqlAdapter<R extends Record, F extends Gene
     destroy(mapper: Mapper, id: string | number, opts?: any): Promise<any>;
     destroyAll(mapper: Mapper, query: any, opts: any): Promise<any>;
     doActionTag(mapper: Mapper, record: R, actionTagForm: ActionTagForm, opts: any): Promise<R>;
+    export(mapper: Mapper, query: any, format: string, opts: any): Promise<string>;
     find(mapper: Mapper, id: string | number, opts: any): Promise<R>;
     sum(mapper: Mapper, field: string, query: any, opts?: any): Promise<any>;
     update(mapper: Mapper, id: string | number, props: any, opts: any): Promise<R>;

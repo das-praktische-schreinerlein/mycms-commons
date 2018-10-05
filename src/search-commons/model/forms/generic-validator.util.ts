@@ -444,7 +444,7 @@ export class FilenameValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean) {
         super(required,
             new XRegExp('^[-A-Za-z0-9_]*$', 'gi'),
-            new XRegExp('[^-A-Za-z0-9_]*', 'gi'), '', 250);
+            new XRegExp('[^-A-Za-z0-9_]*', 'gi'), '', 260);
     }
 }
 
@@ -452,6 +452,6 @@ export class PathValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean) {
         super(required,
             new XRegExp('^[^\$\&\"\*]*$', 'gi'),
-            new XRegExp('[\$\&\"\*]*', 'gi'), '', 250);
+            new XRegExp('[\$\&\"\*]*', 'gi'), '', 4096);
     }
 }

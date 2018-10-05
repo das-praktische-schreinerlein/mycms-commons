@@ -14,7 +14,7 @@ var CommonDocPlaylistExporter = /** @class */ (function () {
         var createNextPlaylist = function () {
             return me.dataService.search(searchForm).then(function searchDone(searchResult) {
                 if (playlistExportConfig.maxAllowed < searchResult.recordCount) {
-                    console.error('to much record');
+                    console.error('to much records');
                     throw new Error('records to export as playlist exceeds maximum allowed '
                         + searchResult.recordCount + '>' + playlistExportConfig.maxAllowed);
                 }

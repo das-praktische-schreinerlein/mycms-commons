@@ -8,6 +8,7 @@
 
 ### new features
 - commons: added CommonDocPlaylistService, CommonDocPlaylistExporter
+- commons: added export-functionality to dataservice
  
 ### improvements
 - commons: added sortRecords and getAvailableSorts SearchService 

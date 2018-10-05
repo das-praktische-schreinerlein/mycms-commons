@@ -34,6 +34,7 @@ export declare abstract class CommonDocDataService<R extends CommonDocRecord, F 
     getAll(opts?: any): Promise<R[]>;
     findCurList(searchForm: F, opts?: any): Promise<R[]>;
     doMultiSearch(searchForm: F, ids: string[]): Promise<S>;
+    export(searchForm: F, format: string, opts?: GenericSearchOptions): Promise<string>;
     search(searchForm: F, opts?: GenericSearchOptions): Promise<S>;
     getById(id: string, opts?: any): Promise<R>;
     getByIdFromLocalStore(id: string): R;
@@ -49,6 +50,8 @@ export declare abstract class CommonDocDataService<R extends CommonDocRecord, F 
     setWritable(writable: boolean): void;
     isWritable(): boolean;
     protected doImportActionTags(origRecord: R, newRecord: R, opts?: {}): Promise<R>;
+    protected generateImportRecordQuery(record: R): {};
+    protected generateImportRecordName(record: R): {};
     protected abstract defineDatastoreMapper(): void;
     protected abstract defineIdMappings(): string[];
     protected abstract defineIdMappingAlliases(): {};

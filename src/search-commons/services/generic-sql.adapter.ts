@@ -78,6 +78,10 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         return result;
     }
 
+    export(mapper: Mapper, query: any, format: string, opts: any): Promise<string> {
+        throw new Error('export not implemented');
+    }
+
     find(mapper: Mapper, id: string | number, opts: any): Promise<R> {
         const adapterQuery: AdapterQuery = {
             loadTrack: false,

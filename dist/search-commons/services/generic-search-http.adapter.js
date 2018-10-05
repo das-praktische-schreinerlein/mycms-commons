@@ -131,6 +131,24 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
                 .then(function (_response) { return _response === undefined ? response : _response; });
         });
     };
+    GenericSearchHttpAdapter.prototype.export = function (mapper, query, format, opts) {
+        query = query || {};
+        opts = opts || {};
+        var me = this;
+        opts.params = this.getParams(opts);
+        opts.suffix = this.getSuffix(mapper, opts);
+        js_data_1.utils.deepMixIn(opts.params, query);
+        opts.params = me.queryTransformToHttpQuery(mapper, opts.params, opts);
+        var result = new Promise(function (resolve, reject) {
+            me._export(mapper, query, format, opts).then(function (result) {
+                resolve(result);
+            }).catch(function (reason) {
+                console.error('export failed:', reason);
+                return reject(reason);
+            });
+        });
+        return result;
+    };
     GenericSearchHttpAdapter.prototype.beforeFacets = function (mapper, query, opts) {
         return js_data_1.utils.Promise.resolve(true);
     };
@@ -214,6 +232,22 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.reject('doActionTag something went wrong' + reason);
         });
     };
+    GenericSearchHttpAdapter.prototype._export = function (mapper, query, format, opts) {
+        var me = this;
+        opts = opts || {};
+        opts.endpoint = this.getHttpEndpoint('export', format);
+        return _super.prototype.GET.call(this, this.getPath('export', mapper, opts.params, opts), opts)
+            .then(function (response) {
+            if (response) {
+                return js_data_1.utils.resolve(response.text());
+            }
+            else {
+                return js_data_1.utils.reject('export no valid response');
+            }
+        }).catch(function (reason) {
+            return js_data_1.utils.reject('export something went wrong' + reason);
+        });
+    };
     GenericSearchHttpAdapter.prototype.queryTransformToHttpQuery = function (mapper, params, opts) {
         var ret = {};
         for (var i in opts.originalSearchForm) {
@@ -221,9 +255,9 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
                 ret[i] = opts.originalSearchForm[i];
             }
         }
-        ret['showForm'] = opts.showForm;
-        ret['showFacets'] = opts.showFacets;
-        ret['loadTrack'] = opts.loadTrack;
+        ret['showForm'] = opts.showForm || false;
+        ret['showFacets'] = opts.showFacets || false;
+        ret['loadTrack'] = opts.loadTrack || false;
         return ret;
     };
     GenericSearchHttpAdapter.prototype.buildUrl = function (url, params) {

@@ -28,6 +28,7 @@ export declare abstract class GenericSearchService<R extends Record, F extends G
     getAll(opts?: any): Promise<R[]>;
     findCurList(searchForm: F, opts?: any): Promise<R[]>;
     search(searchForm: F, opts?: GenericSearchOptions): Promise<S>;
+    export(searchForm: F, format: string, opts?: GenericSearchOptions): Promise<string>;
     getById(id: string, opts?: any): Promise<R>;
     getByIdFromLocalStore(id: string): R;
     sortRecords(records: R[], sortType: string): void;

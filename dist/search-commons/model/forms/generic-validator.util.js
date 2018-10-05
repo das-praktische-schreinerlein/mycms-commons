@@ -462,7 +462,7 @@ exports.DescValidationRule = DescValidationRule;
 var FilenameValidationRule = /** @class */ (function (_super) {
     __extends(FilenameValidationRule, _super);
     function FilenameValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9_]*$', 'gi'), new XRegExp('[^-A-Za-z0-9_]*', 'gi'), '', 250) || this;
+        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9_]*$', 'gi'), new XRegExp('[^-A-Za-z0-9_]*', 'gi'), '', 260) || this;
     }
     return FilenameValidationRule;
 }(RegExValidationReplaceRule));
@@ -470,7 +470,7 @@ exports.FilenameValidationRule = FilenameValidationRule;
 var PathValidationRule = /** @class */ (function (_super) {
     __extends(PathValidationRule, _super);
     function PathValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[^\$\&\"\*]*$', 'gi'), new XRegExp('[\$\&\"\*]*', 'gi'), '', 250) || this;
+        return _super.call(this, required, new XRegExp('^[^\$\&\"\*]*$', 'gi'), new XRegExp('[\$\&\"\*]*', 'gi'), '', 4096) || this;
     }
     return PathValidationRule;
 }(RegExValidationReplaceRule));

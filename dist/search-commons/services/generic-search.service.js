@@ -49,6 +49,21 @@ var GenericSearchService = /** @class */ (function () {
         });
         return result;
     };
+    GenericSearchService.prototype.export = function (searchForm, format, opts) {
+        // console.log('export for form', searchForm);
+        var exportResultObs = this.dataStore.export(this.searchMapperName, searchForm, format, opts);
+        var me = this;
+        var result = new Promise(function (resolve, reject) {
+            exportResultObs.then(function doneExport(exportResultData) {
+                // console.log('export exportResultData', exportResultData);
+                return resolve(exportResultData);
+            }, function errorExport(reason) {
+                console.error('export failed:', reason);
+                return reject(reason);
+            });
+        });
+        return result;
+    };
     GenericSearchService.prototype.getById = function (id, opts) {
         return this.dataStore.find(this.searchMapperName, id, opts);
     };

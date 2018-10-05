@@ -80,6 +80,10 @@ export abstract class GenericSolrAdapter <R extends Record, F extends GenericSea
         throw new Error('destroyAll not implemented');
     }
 
+    export(mapper: Mapper, query: any, format: string, opts: any): Promise<string> {
+        throw new Error('export not implemented');
+    }
+
     find(mapper: Mapper, id: string | number, opts: any): Promise<R> {
         opts = opts || {};
 

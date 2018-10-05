@@ -90,6 +90,10 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
         return this.searchService.doMultiSearch(searchForm, ids);
     }
 
+    export(searchForm: F, format: string, opts?: GenericSearchOptions): Promise<string> {
+        return this.searchService.export(searchForm, format, opts);
+    }
+
     search(searchForm: F, opts?: GenericSearchOptions): Promise<S> {
         return this.searchService.search(searchForm, opts);
     }
@@ -200,16 +204,8 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
             throw new Error('CommonDocDataService configured: not writable');
         }
 
-        const query = {
-            where: {
-                name_s: {
-                    'in': [record.name]
-                },
-                type_txt: {
-                    'in': [record.type.toLowerCase()]
-                }
-            }
-        };
+        const query = this.generateImportRecordQuery(record);
+        const logName = this.generateImportRecordName(record);
 
         const myMappings = {};
         const me = this;
@@ -221,7 +217,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
                 return utils.resolve(searchResult[0]);
             }).then(function recordsDone(docRecord: R) {
                 if (docRecord !== undefined) {
-                    console.log('EXISTING - record', record.type + ' ' + record.name);
+                    console.log('EXISTING - record', logName);
                     const idFieldName = me.typeMapping[record.type.toLowerCase()];
                     myMappings[idFieldName] = record[idFieldName];
                     return utils.resolve(docRecord);
@@ -244,7 +240,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
                     }
                 }
 
-                console.log('ADD - record', record.type + ' ' + record.name);
+                console.log('ADD - record', logName);
                 return me.add(record).then(function onFullfilled(newCdocRecord: R) {
                     docRecord = newCdocRecord;
                     return me.doImportActionTags(record, docRecord, opts);
@@ -341,6 +337,22 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
         return this.doActionTags(newRecord, actionTagForms, opts);
     }
 
+    protected generateImportRecordQuery(record: R): {} {
+        return {
+            where: {
+                name_s: {
+                    'in': [record.name]
+                },
+                type_txt: {
+                    'in': [record.type.toLowerCase()]
+                }
+            }
+        };
+    }
+
+    protected generateImportRecordName(record: R): {} {
+        return record.type + ' ' + record.name;
+    }
 
     protected abstract defineDatastoreMapper(): void;
 

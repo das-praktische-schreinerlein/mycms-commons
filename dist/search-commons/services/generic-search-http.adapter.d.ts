@@ -15,6 +15,7 @@ export declare abstract class GenericSearchHttpAdapter<R extends Record, F exten
     doActionTag(mapper: Mapper, record: R, actionTagForm: ActionTagForm, opts: any): Promise<R>;
     facets(mapper: Mapper, query: any, opts: any): Promise<Facets>;
     search(mapper: Mapper, query: any, opts: any): Promise<S>;
+    export(mapper: Mapper, query: any, format: string, opts: any): Promise<string>;
     beforeFacets(mapper: Mapper, query: IDict, opts: IDict): any;
     beforeSearch(mapper: Mapper, query: IDict, opts: IDict): any;
     afterFacets(mapper: Mapper, props: IDict, opts: any, result: any): Promise<Facets>;
@@ -28,7 +29,8 @@ export declare abstract class GenericSearchHttpAdapter<R extends Record, F exten
     extractRecordsFromRequestResult(mapper: Mapper, result: any): R[];
     extractFacetsFromRequestResult(mapper: Mapper, result: any): Facets;
     protected _doActionTag(mapper: Mapper, record: R, actionTagForm: ActionTagForm, opts: any): Promise<R>;
-    abstract getHttpEndpoint(method: string): string;
+    protected _export(mapper: Mapper, query: any, format: string, opts: any): Promise<string>;
+    abstract getHttpEndpoint(method: string, format?: string): string;
     private queryTransformToHttpQuery(mapper, params, opts);
     buildUrl(url: any, params: any): any;
 }

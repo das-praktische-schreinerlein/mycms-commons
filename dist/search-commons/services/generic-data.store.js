@@ -258,6 +258,38 @@ var GenericDataStore = /** @class */ (function () {
         });
         return result;
     };
+    GenericDataStore.prototype.export = function (mapperName, searchForm, format, opts) {
+        var _this = this;
+        var query = this.createQueryFromForm(searchForm);
+        // console.log('export for form', searchForm);
+        var me = this;
+        var result = new Promise(function (resolve, reject) {
+            var options = {
+                originalSearchForm: searchForm
+            };
+            if (_this.getAdapterForMapper(mapperName) === undefined ||
+                (!(typeof me.getAdapterForMapper(mapperName)['export'] === 'function')) ||
+                (opts && opts.forceLocalStore)) {
+                // the resolve / reject functions control the fate of the promise
+                var reason = 'export not supported';
+                console.error('export failed:', reason);
+                return reject(reason);
+            }
+            else {
+                opts = opts || {};
+                var mapper = _this.store.getMapper(mapperName);
+                var adapter = me.getAdapterForMapper(mapperName);
+                adapter.export(mapper, query, format, options)
+                    .then(function doneExport(genericExportResult) {
+                    return resolve(genericExportResult);
+                }).catch(function errorHandling(reason) {
+                    console.error('export failed:', reason);
+                    return reject(reason);
+                });
+            }
+        });
+        return result;
+    };
     GenericDataStore.prototype.update = function (mapperName, id, record, opts) {
         if (this.getAdapterForMapper(mapperName) === undefined || (opts && opts.forceLocalStore)) {
             if (id === undefined || id === null) {

@@ -80,6 +80,9 @@ var GenericSolrAdapter = /** @class */ (function (_super) {
     GenericSolrAdapter.prototype.destroyAll = function (mapper, query, opts) {
         throw new Error('destroyAll not implemented');
     };
+    GenericSolrAdapter.prototype.export = function (mapper, query, format, opts) {
+        throw new Error('export not implemented');
+    };
     GenericSolrAdapter.prototype.find = function (mapper, id, opts) {
         opts = opts || {};
         opts.endpoint = this.getHttpEndpoint('find');

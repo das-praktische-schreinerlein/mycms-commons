@@ -277,6 +277,39 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
         return result;
     }
 
+    public export(mapperName: string, searchForm: F, format: string, opts?: any): Promise<string> {
+        const query = this.createQueryFromForm(searchForm);
+
+        // console.log('export for form', searchForm);
+
+        const me = this;
+        const result = new Promise<string>((resolve, reject) => {
+            const options = {
+                originalSearchForm: searchForm
+            };
+            if (this.getAdapterForMapper(mapperName) === undefined ||
+                (!(typeof me.getAdapterForMapper(mapperName)['export'] === 'function')) ||
+                (opts && opts.forceLocalStore)) {
+                // the resolve / reject functions control the fate of the promise
+                const reason = 'export not supported';
+                console.error('export failed:', reason);
+                return reject(reason);
+            } else {
+                opts = opts || {};
+                const mapper = this.store.getMapper(mapperName);
+                const adapter: any = me.getAdapterForMapper(mapperName);
+                (<GenericSearchAdapter<R, F, S>>adapter).export(mapper, query, format, options)
+                    .then(function doneExport(genericExportResult: string) {
+                        return resolve(genericExportResult);
+                    }).catch(function errorHandling(reason) {
+                    console.error('export failed:', reason);
+                    return reject(reason);
+                });
+            }
+        });
+
+        return result;
+    }
 
     public update(mapperName: string, id: string | number, record: any, opts?: any): Promise<R> {
         if (this.getAdapterForMapper(mapperName) === undefined || (opts && opts.forceLocalStore)) {
