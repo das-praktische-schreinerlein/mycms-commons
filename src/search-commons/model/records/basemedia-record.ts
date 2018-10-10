@@ -11,7 +11,7 @@ import {
     HtmlValidationRule,
     MarkdownValidationRule,
     NameValidationRule,
-    PathValidationRule
+    SimpleInsecurePathValidationRule
 } from "../forms/generic-validator.util";
 
 export interface BaseMediaRecordType extends BaseEntityRecordType {
@@ -29,7 +29,7 @@ export class BaseMediaRecord extends BaseEntityRecord implements BaseMediaRecord
         descMd: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
         descHtml: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.HTML, new HtmlValidationRule(false)),
         name: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NAME, new NameValidationRule(true)),
-        fileName: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.FILENAME, new PathValidationRule(true))
+        fileName: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.FILENAME, new SimpleInsecurePathValidationRule(true))
     };
     descTxt: string;
     descMd: string;

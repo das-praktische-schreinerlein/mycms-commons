@@ -467,12 +467,12 @@ var FilenameValidationRule = /** @class */ (function (_super) {
     return FilenameValidationRule;
 }(RegExValidationReplaceRule));
 exports.FilenameValidationRule = FilenameValidationRule;
-var PathValidationRule = /** @class */ (function (_super) {
-    __extends(PathValidationRule, _super);
-    function PathValidationRule(required) {
+var SimpleInsecurePathValidationRule = /** @class */ (function (_super) {
+    __extends(SimpleInsecurePathValidationRule, _super);
+    function SimpleInsecurePathValidationRule(required) {
         return _super.call(this, required, new XRegExp('^[^\$\&\"\*]*$', 'gi'), new XRegExp('[\$\&\"\*]*', 'gi'), '', 4096) || this;
     }
-    return PathValidationRule;
+    return SimpleInsecurePathValidationRule;
 }(RegExValidationReplaceRule));
-exports.PathValidationRule = PathValidationRule;
+exports.SimpleInsecurePathValidationRule = SimpleInsecurePathValidationRule;
 //# sourceMappingURL=generic-validator.util.js.map

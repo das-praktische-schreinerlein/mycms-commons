@@ -32,7 +32,7 @@ var BaseMediaRecord = /** @class */ (function (_super) {
         descMd: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.MARKDOWN, new generic_validator_util_1.MarkdownValidationRule(false)),
         descHtml: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.HTML, new generic_validator_util_1.HtmlValidationRule(false)),
         name: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NAME, new generic_validator_util_1.NameValidationRule(true)),
-        fileName: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.FILENAME, new generic_validator_util_1.PathValidationRule(true))
+        fileName: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.FILENAME, new generic_validator_util_1.SimpleInsecurePathValidationRule(true))
     };
     return BaseMediaRecord;
 }(base_entity_record_1.BaseEntityRecord));

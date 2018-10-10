@@ -448,7 +448,7 @@ export class FilenameValidationRule extends RegExValidationReplaceRule {
     }
 }
 
-export class PathValidationRule extends RegExValidationReplaceRule {
+export class SimpleInsecurePathValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean) {
         super(required,
             new XRegExp('^[^\$\&\"\*]*$', 'gi'),
