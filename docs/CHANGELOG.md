@@ -2,6 +2,22 @@
  
 # Versions
  
+## 4.0.0
+- bumped version up to be in sync with mycms
+
+### new features
+- none
+ 
+### improvements
+- none
+
+### bug fixes
+- none 
+ 
+### breaking changes
+- commons: set subtype for CommonDocRecords to not required
+
+
 ## 3.0.0
 - improvements for album/action/playlist-functionality
 - improvements on validation
