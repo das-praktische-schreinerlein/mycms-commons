@@ -3,7 +3,7 @@
 # Versions
  
 ## Planned
-- improved build-process
+- none
 
 ### new features
 - none
