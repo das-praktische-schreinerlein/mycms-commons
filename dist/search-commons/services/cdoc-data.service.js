@@ -174,7 +174,6 @@ var CommonDocDataService = /** @class */ (function () {
                 // return dataService.updateById(docRecord.id, record);
             }
             // new record: map refIds
-            record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
             me.onImportRecordNewRecordProcessDefaults(record);
             for (var _i = 0, _a = me.idMappings; _i < _a.length; _i++) {
                 var refIdFieldName = _a[_i];

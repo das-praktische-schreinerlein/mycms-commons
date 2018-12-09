@@ -226,7 +226,6 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
                 }
 
                 // new record: map refIds
-                record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
                 me.onImportRecordNewRecordProcessDefaults(record);
                 for (const refIdFieldName of me.idMappings) {
                     if (recordIdMapping[refIdFieldName] && recordIdMapping[refIdFieldName][record[refIdFieldName]]) {
