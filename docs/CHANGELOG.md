@@ -20,9 +20,10 @@
 
 ## 4.1.0
 - improved build-process
+- added new functions to strings and math-utils
 
 ### new features
-- none
+- frontend: added new functions to strings and math-utils
 
 ### improvements
 - improved build-process: cross-platform rm/mkdir/copy/patch

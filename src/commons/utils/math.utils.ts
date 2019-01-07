@@ -50,4 +50,9 @@ export class MathUtils {
 
         return i - o;
     }
+
+
+    static calcRate(rate: number, max: number, newBase: number): number {
+        return Math.round((rate / max * newBase) + 0.5);
+    }
 }

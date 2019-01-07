@@ -4,4 +4,5 @@ export declare class MathUtils {
     static max(i: number, o: number): number;
     static sum(i: number, o: number): number;
     static sub(i: number, o: number): number;
+    static calcRate(rate: number, max: number, newBase: number): number;
 }

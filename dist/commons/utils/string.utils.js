@@ -35,6 +35,23 @@ var StringUtils = /** @class */ (function () {
         });
         return keywordsList.join(',');
     };
+    StringUtils.calcCharCodeForListIndex = function (code) {
+        var baseChar = ('A').charCodeAt(0);
+        var res = '';
+        do {
+            code -= 1;
+            res = String.fromCharCode(baseChar + (code % 26)) + res;
+            code = (code / 26) >> 0;
+        } while (code > 0);
+        return res;
+    };
+    StringUtils.generateTechnicalName = function (name) {
+        return name ? name.replace(/[^-a-zA-Z0-9.+]+/g, ' ')
+            .replace(/ +/g, ' ')
+            .replace(/ /g, '-')
+            .trim()
+            .toLowerCase() : '';
+    };
     return StringUtils;
 }());
 exports.StringUtils = StringUtils;

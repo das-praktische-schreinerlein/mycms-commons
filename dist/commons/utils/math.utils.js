@@ -45,6 +45,9 @@ var MathUtils = /** @class */ (function () {
         }
         return i - o;
     };
+    MathUtils.calcRate = function (rate, max, newBase) {
+        return Math.round((rate / max * newBase) + 0.5);
+    };
     return MathUtils;
 }());
 exports.MathUtils = MathUtils;
