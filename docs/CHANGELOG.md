@@ -18,6 +18,25 @@
 - none
 
 
+## 3.1.0
+- added new type+features for managing object-detection image-objects
+
+### new features
+- common: added new type+features for managing object-detection image-objects
+
+### improvements
+- none
+
+### bug fixes
+- none
+ 
+### breaking changes
+- none
+
+### known issues
+- none
+
+
 ## 4.1.0
 - improved build-process
 - added new functions to strings and math-utils
