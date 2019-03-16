@@ -3,10 +3,10 @@ import {GenericValidatorDatatypes, NameValidationRule, NumberValidationRule} fro
 import {BaseImageRecord, BaseImageRecordType} from './baseimage-record';
 
 export enum BaseObjectDetectionState {
-    'UNKNOWN', 'OPEN', 'ERROR',
-    'RUNNING_SUGGESTED',
-    'RUNNING_MANUAL_APPROVED', 'RUNNING_MANUAL_REJECTED', 'RUNNING_MANUAL_CORRECTION_NEEDED', 'RUNNING_MANUAL_CORRECTED',
-    'DONE_APPROVAL_PROCESSED', 'DONE_REJECTION_PROCESSED', 'DONE_CORRECTION_PROCESSED'
+    UNKNOWN='UNKNOWN', OPEN='OPEN', ERROR='ERROR',
+    RUNNING_SUGGESTED='RUNNING_SUGGESTED',
+    RUNNING_MANUAL_APPROVED='RUNNING_MANUAL_APPROVED', RUNNING_MANUAL_REJECTED='RUNNING_MANUAL_REJECTED', RUNNING_MANUAL_CORRECTION_NEEDED='RUNNING_MANUAL_CORRECTION_NEEDED', RUNNING_MANUAL_CORRECTED='RUNNING_MANUAL_CORRECTED',
+    DONE_APPROVAL_PROCESSED='DONE_APPROVAL_PROCESSED', DONE_REJECTION_PROCESSED='DONE_REJECTION_PROCESSED', DONE_CORRECTION_PROCESSED='DONE_CORRECTION_PROCESSED'
 }
 export interface BaseObjectDetectionImageObjectRecordType extends BaseImageRecordType {
     detector: string;
@@ -20,6 +20,7 @@ export interface BaseObjectDetectionImageObjectRecordType extends BaseImageRecor
     objY: number;
     objWidth: number;
     objHeight: number;
+    precision: number;
 }
 
 export class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implements BaseObjectDetectionImageObjectRecordType {
@@ -34,7 +35,8 @@ export class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implem
         objX: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
         objY: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
         objWidth: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
-        objHeight: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0))
+        objHeight: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
+        precision: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0))
     };
 
     detector: string;
@@ -48,6 +50,7 @@ export class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implem
     objY: number;
     objWidth: number;
     objHeight: number;
+    precision: number;
 
     toString() {
         return 'BaseObjectDetectionImageObjectRecord Record {\n' +

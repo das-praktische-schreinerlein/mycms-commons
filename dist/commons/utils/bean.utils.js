@@ -16,6 +16,7 @@ var BeanUtils = /** @class */ (function () {
                 if (!parent_1) {
                     break;
                 }
+                // TODO: check for arrays
                 if (parent_1[element] !== undefined) {
                     parent_1 = parent_1[element];
                 }

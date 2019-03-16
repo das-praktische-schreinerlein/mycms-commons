@@ -15,17 +15,17 @@ var generic_validator_util_1 = require("../forms/generic-validator.util");
 var baseimage_record_1 = require("./baseimage-record");
 var BaseObjectDetectionState;
 (function (BaseObjectDetectionState) {
-    BaseObjectDetectionState[BaseObjectDetectionState["UNKNOWN"] = 0] = "UNKNOWN";
-    BaseObjectDetectionState[BaseObjectDetectionState["OPEN"] = 1] = "OPEN";
-    BaseObjectDetectionState[BaseObjectDetectionState["ERROR"] = 2] = "ERROR";
-    BaseObjectDetectionState[BaseObjectDetectionState["RUNNING_SUGGESTED"] = 3] = "RUNNING_SUGGESTED";
-    BaseObjectDetectionState[BaseObjectDetectionState["RUNNING_MANUAL_APPROVED"] = 4] = "RUNNING_MANUAL_APPROVED";
-    BaseObjectDetectionState[BaseObjectDetectionState["RUNNING_MANUAL_REJECTED"] = 5] = "RUNNING_MANUAL_REJECTED";
-    BaseObjectDetectionState[BaseObjectDetectionState["RUNNING_MANUAL_CORRECTION_NEEDED"] = 6] = "RUNNING_MANUAL_CORRECTION_NEEDED";
-    BaseObjectDetectionState[BaseObjectDetectionState["RUNNING_MANUAL_CORRECTED"] = 7] = "RUNNING_MANUAL_CORRECTED";
-    BaseObjectDetectionState[BaseObjectDetectionState["DONE_APPROVAL_PROCESSED"] = 8] = "DONE_APPROVAL_PROCESSED";
-    BaseObjectDetectionState[BaseObjectDetectionState["DONE_REJECTION_PROCESSED"] = 9] = "DONE_REJECTION_PROCESSED";
-    BaseObjectDetectionState[BaseObjectDetectionState["DONE_CORRECTION_PROCESSED"] = 10] = "DONE_CORRECTION_PROCESSED";
+    BaseObjectDetectionState["UNKNOWN"] = "UNKNOWN";
+    BaseObjectDetectionState["OPEN"] = "OPEN";
+    BaseObjectDetectionState["ERROR"] = "ERROR";
+    BaseObjectDetectionState["RUNNING_SUGGESTED"] = "RUNNING_SUGGESTED";
+    BaseObjectDetectionState["RUNNING_MANUAL_APPROVED"] = "RUNNING_MANUAL_APPROVED";
+    BaseObjectDetectionState["RUNNING_MANUAL_REJECTED"] = "RUNNING_MANUAL_REJECTED";
+    BaseObjectDetectionState["RUNNING_MANUAL_CORRECTION_NEEDED"] = "RUNNING_MANUAL_CORRECTION_NEEDED";
+    BaseObjectDetectionState["RUNNING_MANUAL_CORRECTED"] = "RUNNING_MANUAL_CORRECTED";
+    BaseObjectDetectionState["DONE_APPROVAL_PROCESSED"] = "DONE_APPROVAL_PROCESSED";
+    BaseObjectDetectionState["DONE_REJECTION_PROCESSED"] = "DONE_REJECTION_PROCESSED";
+    BaseObjectDetectionState["DONE_CORRECTION_PROCESSED"] = "DONE_CORRECTION_PROCESSED";
 })(BaseObjectDetectionState = exports.BaseObjectDetectionState || (exports.BaseObjectDetectionState = {}));
 var BaseObjectDetectionImageObjectRecord = /** @class */ (function (_super) {
     __extends(BaseObjectDetectionImageObjectRecord, _super);
@@ -51,7 +51,8 @@ var BaseObjectDetectionImageObjectRecord = /** @class */ (function (_super) {
         objX: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 0, 999999, 0)),
         objY: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 0, 999999, 0)),
         objWidth: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 0, 999999, 0)),
-        objHeight: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 0, 999999, 0))
+        objHeight: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 0, 999999, 0)),
+        precision: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 0, 999999, 0))
     };
     return BaseObjectDetectionImageObjectRecord;
 }(baseimage_record_1.BaseImageRecord));

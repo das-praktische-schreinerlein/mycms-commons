@@ -1,17 +1,17 @@
 import { BaseEntityRecordFieldConfig } from './base-entity-record';
 import { BaseImageRecord, BaseImageRecordType } from './baseimage-record';
 export declare enum BaseObjectDetectionState {
-    'UNKNOWN' = 0,
-    'OPEN' = 1,
-    'ERROR' = 2,
-    'RUNNING_SUGGESTED' = 3,
-    'RUNNING_MANUAL_APPROVED' = 4,
-    'RUNNING_MANUAL_REJECTED' = 5,
-    'RUNNING_MANUAL_CORRECTION_NEEDED' = 6,
-    'RUNNING_MANUAL_CORRECTED' = 7,
-    'DONE_APPROVAL_PROCESSED' = 8,
-    'DONE_REJECTION_PROCESSED' = 9,
-    'DONE_CORRECTION_PROCESSED' = 10,
+    UNKNOWN = "UNKNOWN",
+    OPEN = "OPEN",
+    ERROR = "ERROR",
+    RUNNING_SUGGESTED = "RUNNING_SUGGESTED",
+    RUNNING_MANUAL_APPROVED = "RUNNING_MANUAL_APPROVED",
+    RUNNING_MANUAL_REJECTED = "RUNNING_MANUAL_REJECTED",
+    RUNNING_MANUAL_CORRECTION_NEEDED = "RUNNING_MANUAL_CORRECTION_NEEDED",
+    RUNNING_MANUAL_CORRECTED = "RUNNING_MANUAL_CORRECTED",
+    DONE_APPROVAL_PROCESSED = "DONE_APPROVAL_PROCESSED",
+    DONE_REJECTION_PROCESSED = "DONE_REJECTION_PROCESSED",
+    DONE_CORRECTION_PROCESSED = "DONE_CORRECTION_PROCESSED",
 }
 export interface BaseObjectDetectionImageObjectRecordType extends BaseImageRecordType {
     detector: string;
@@ -25,6 +25,7 @@ export interface BaseObjectDetectionImageObjectRecordType extends BaseImageRecor
     objY: number;
     objWidth: number;
     objHeight: number;
+    precision: number;
 }
 export declare class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implements BaseObjectDetectionImageObjectRecordType {
     static objectDetectionImageObjectFields: {
@@ -39,6 +40,7 @@ export declare class BaseObjectDetectionImageObjectRecord extends BaseImageRecor
         objY: BaseEntityRecordFieldConfig;
         objWidth: BaseEntityRecordFieldConfig;
         objHeight: BaseEntityRecordFieldConfig;
+        precision: BaseEntityRecordFieldConfig;
     };
     detector: string;
     key: string;
@@ -51,5 +53,6 @@ export declare class BaseObjectDetectionImageObjectRecord extends BaseImageRecor
     objY: number;
     objWidth: number;
     objHeight: number;
+    precision: number;
     toString(): string;
 }

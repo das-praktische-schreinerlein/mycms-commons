@@ -18,7 +18,7 @@
 - none
 
 
-## 3.1.0
+## 4.2.0
 - added new type+features for managing object-detection image-objects
 
 ### new features

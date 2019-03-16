@@ -14,6 +14,7 @@ export abstract class BeanUtils {
                     break;
                 }
 
+                // TODO: check for arrays
                 if (parent[element] !== undefined) {
                     parent = parent[element];
                 } else if (typeof parent['get'] === 'function' && parent.get(element) !== undefined) {
