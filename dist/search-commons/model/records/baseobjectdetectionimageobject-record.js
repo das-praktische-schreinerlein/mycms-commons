@@ -13,20 +13,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var base_entity_record_1 = require("./base-entity-record");
 var generic_validator_util_1 = require("../forms/generic-validator.util");
 var baseimage_record_1 = require("./baseimage-record");
-var BaseObjectDetectionState;
-(function (BaseObjectDetectionState) {
-    BaseObjectDetectionState["UNKNOWN"] = "UNKNOWN";
-    BaseObjectDetectionState["OPEN"] = "OPEN";
-    BaseObjectDetectionState["ERROR"] = "ERROR";
-    BaseObjectDetectionState["RUNNING_SUGGESTED"] = "RUNNING_SUGGESTED";
-    BaseObjectDetectionState["RUNNING_MANUAL_APPROVED"] = "RUNNING_MANUAL_APPROVED";
-    BaseObjectDetectionState["RUNNING_MANUAL_REJECTED"] = "RUNNING_MANUAL_REJECTED";
-    BaseObjectDetectionState["RUNNING_MANUAL_CORRECTION_NEEDED"] = "RUNNING_MANUAL_CORRECTION_NEEDED";
-    BaseObjectDetectionState["RUNNING_MANUAL_CORRECTED"] = "RUNNING_MANUAL_CORRECTED";
-    BaseObjectDetectionState["DONE_APPROVAL_PROCESSED"] = "DONE_APPROVAL_PROCESSED";
-    BaseObjectDetectionState["DONE_REJECTION_PROCESSED"] = "DONE_REJECTION_PROCESSED";
-    BaseObjectDetectionState["DONE_CORRECTION_PROCESSED"] = "DONE_CORRECTION_PROCESSED";
-})(BaseObjectDetectionState = exports.BaseObjectDetectionState || (exports.BaseObjectDetectionState = {}));
 var BaseObjectDetectionImageObjectRecord = /** @class */ (function (_super) {
     __extends(BaseObjectDetectionImageObjectRecord, _super);
     function BaseObjectDetectionImageObjectRecord() {

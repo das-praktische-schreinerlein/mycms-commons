@@ -12,7 +12,7 @@ import {
     MarkdownValidationRule,
     NameValidationRule,
     SimpleInsecurePathValidationRule
-} from "../forms/generic-validator.util";
+} from '../forms/generic-validator.util';
 
 export interface BaseMediaRecordType extends BaseEntityRecordType {
     descTxt: string;

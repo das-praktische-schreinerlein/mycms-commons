@@ -1,7 +1,7 @@
 import {Record} from 'js-data';
 import {GenericValidatorDatatypes, IdValidationRule, ValidationRule} from '../forms/generic-validator.util';
 import {GenericSearchFormFieldConfig} from '../forms/generic-searchform';
-import {isArray} from "util";
+import {isArray} from 'util';
 
 export class BaseEntityRecordFieldConfig {
     private _datatype: GenericValidatorDatatypes;

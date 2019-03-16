@@ -1,26 +1,9 @@
 import {BaseEntityRecordFieldConfig} from './base-entity-record';
 import {GenericValidatorDatatypes, NameValidationRule, NumberValidationRule} from '../forms/generic-validator.util';
 import {BaseImageRecord, BaseImageRecordType} from './baseimage-record';
+import {ObjectDetectionDetectedObjectType, ObjectDetectionState} from '../../../commons/model/objectdetection-model';
 
-export enum BaseObjectDetectionState {
-    UNKNOWN='UNKNOWN', OPEN='OPEN', ERROR='ERROR',
-    RUNNING_SUGGESTED='RUNNING_SUGGESTED',
-    RUNNING_MANUAL_APPROVED='RUNNING_MANUAL_APPROVED', RUNNING_MANUAL_REJECTED='RUNNING_MANUAL_REJECTED', RUNNING_MANUAL_CORRECTION_NEEDED='RUNNING_MANUAL_CORRECTION_NEEDED', RUNNING_MANUAL_CORRECTED='RUNNING_MANUAL_CORRECTED',
-    DONE_APPROVAL_PROCESSED='DONE_APPROVAL_PROCESSED', DONE_REJECTION_PROCESSED='DONE_REJECTION_PROCESSED', DONE_CORRECTION_PROCESSED='DONE_CORRECTION_PROCESSED'
-}
-export interface BaseObjectDetectionImageObjectRecordType extends BaseImageRecordType {
-    detector: string;
-    key: string;
-    keySuggestion: string;
-    keyCorrection: string;
-    state: BaseObjectDetectionState;
-    imgWidth: number;
-    imgHeight: number;
-    objX: number;
-    objY: number;
-    objWidth: number;
-    objHeight: number;
-    precision: number;
+export interface BaseObjectDetectionImageObjectRecordType extends BaseImageRecordType, ObjectDetectionDetectedObjectType {
 }
 
 export class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implements BaseObjectDetectionImageObjectRecordType {
@@ -43,7 +26,7 @@ export class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implem
     key: string;
     keySuggestion: string;
     keyCorrection: string;
-    state: BaseObjectDetectionState;
+    state: ObjectDetectionState;
     imgWidth: number;
     imgHeight: number;
     objX: number;

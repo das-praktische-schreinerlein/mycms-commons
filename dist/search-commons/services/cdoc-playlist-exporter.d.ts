@@ -1,8 +1,8 @@
-import { CommonDocDataService } from "./cdoc-data.service";
-import { CommonDocSearchResult } from "../model/container/cdoc-searchresult";
-import { CommonDocSearchForm } from "../model/forms/cdoc-searchform";
-import { CommonDocRecord } from "../model/records/cdoc-entity-record";
-import { CommonDocPlaylistService } from "./cdoc-playlist.service";
+import { CommonDocDataService } from './cdoc-data.service';
+import { CommonDocSearchResult } from '../model/container/cdoc-searchresult';
+import { CommonDocSearchForm } from '../model/forms/cdoc-searchform';
+import { CommonDocRecord } from '../model/records/cdoc-entity-record';
+import { CommonDocPlaylistService } from './cdoc-playlist.service';
 export interface CommonDocPlaylistExporterConfig {
     maxAllowed: number;
 }
