@@ -41,9 +41,9 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
         const result = new Promise<R>((resolve, reject) => {
             me._doActionTag(mapper, record, actionTagForm, opts).then(resultRecord => {
                 if (resultRecord === undefined) {
-                    reject('record not found');
+                    return reject('record not found');
                 } else {
-                    resolve(resultRecord);
+                    return resolve(resultRecord);
                 }
             }).catch(reason => {
                 console.error('doActionTag failed:', reason);
@@ -141,7 +141,7 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
 
         const result = new Promise<string>((resolve, reject) => {
             me._export(mapper, query, format, opts).then(result => {
-                resolve(result);
+                return resolve(result);
             }).catch(reason => {
                 console.error('export failed:', reason);
                 return reject(reason);

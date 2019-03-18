@@ -50,7 +50,7 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
         }
 
         return new Promise<S>((resolve, reject) => {
-            Promise.all(promises).then(function doneSearch(docSearchResults: S[]) {
+            return Promise.all(promises).then(function doneSearch(docSearchResults: S[]) {
                 const records: R[] = [];
                 docSearchResults.forEach(docSearchResult => {
                     for (const doc of docSearchResult.currentRecords) {
@@ -70,9 +70,9 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
                 me.sortRecords(records, searchForm.sort);
 
                 const docSearchResult = me.newSearchResult(searchForm, records.length, records, undefined);
-                resolve(docSearchResult);
+                return resolve(docSearchResult);
             }).catch(function errorSearch(reason) {
-                reject(reason);
+                return reject(reason);
             });
         });
     }

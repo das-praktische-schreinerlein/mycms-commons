@@ -77,7 +77,7 @@ export class GeoLocationService {
 
                         inputEl.value = el.formatted;
                         listEl.style.display = 'none';
-                        resolve(customEvent);
+                        return resolve(customEvent);
                     });
 
                     liEl.innerHTML = el.formatted;

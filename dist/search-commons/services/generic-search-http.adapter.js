@@ -43,10 +43,10 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         var result = new Promise(function (resolve, reject) {
             me._doActionTag(mapper, record, actionTagForm, opts).then(function (resultRecord) {
                 if (resultRecord === undefined) {
-                    reject('record not found');
+                    return reject('record not found');
                 }
                 else {
-                    resolve(resultRecord);
+                    return resolve(resultRecord);
                 }
             }).catch(function (reason) {
                 console.error('doActionTag failed:', reason);
@@ -141,7 +141,7 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         opts.params = me.queryTransformToHttpQuery(mapper, opts.params, opts);
         var result = new Promise(function (resolve, reject) {
             me._export(mapper, query, format, opts).then(function (result) {
-                resolve(result);
+                return resolve(result);
             }).catch(function (reason) {
                 console.error('export failed:', reason);
                 return reject(reason);

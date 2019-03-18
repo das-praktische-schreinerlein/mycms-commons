@@ -61,10 +61,10 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             }).then(function (value) {
                 var records = value[0];
                 if (records.length === 1) {
-                    resolve(records[0]);
+                    return resolve(records[0]);
                 }
                 else {
-                    reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(function (reason) {
                 console.error('doActionTag failed:', reason);
@@ -90,10 +90,10 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             me._findAll(mapper, adapterQuery, opts).then(function (value) {
                 var records = value[0];
                 if (records.length === 1) {
-                    resolve(records[0]);
+                    return resolve(records[0]);
                 }
                 else {
-                    reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(function (reason) {
                 console.error('_find failed:', reason);
@@ -304,7 +304,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     });
                 }));
             });
-            Promise.all(promises).then(function doneSearch(facetResults) {
+            return Promise.all(promises).then(function doneSearch(facetResults) {
                 var facets = new facets_1.Facets();
                 facetResults.forEach(function (facet) {
                     facets.facets.set(facet[0], facet[1]);
@@ -525,7 +525,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     }));
                 });
             });
-            Promise.all(promises).then(function doneSearch(loadDetailsResults) {
+            return Promise.all(promises).then(function doneSearch(loadDetailsResults) {
                 loadDetailsResults.forEach(function (loadDetailsResult) {
                     var profile = loadDetailsResult[0], record = loadDetailsResult[1], dbresults = loadDetailsResult[2];
                     me.mapper.mapDetailDataToAdapterDocument(mapper, profile, record, dbresults);

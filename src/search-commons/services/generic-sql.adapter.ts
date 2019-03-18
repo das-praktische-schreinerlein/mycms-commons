@@ -65,9 +65,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             }).then(value => {
                 const [records] = value;
                 if (records.length === 1) {
-                    resolve(records[0]);
+                    return resolve(records[0]);
                 } else {
-                    reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(reason => {
                 console.error('doActionTag failed:', reason);
@@ -97,9 +97,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             me._findAll(mapper, adapterQuery, opts).then(value => {
                 const [records] = value;
                 if (records.length === 1) {
-                    resolve(records[0]);
+                    return resolve(records[0]);
                 } else {
-                    reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(reason => {
                 console.error('_find failed:', reason);
@@ -347,7 +347,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                 }));
             });
 
-            Promise.all(promises).then(function doneSearch(facetResults: any[]) {
+            return Promise.all(promises).then(function doneSearch(facetResults: any[]) {
                     const facets = new Facets();
                     facetResults.forEach(facet => {
                         facets.facets.set(facet[0], facet[1]);
@@ -597,7 +597,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                 });
             });
 
-            Promise.all(promises).then(function doneSearch(loadDetailsResults: any[]) {
+            return Promise.all(promises).then(function doneSearch(loadDetailsResults: any[]) {
                 loadDetailsResults.forEach(loadDetailsResult => {
                     const [profile, record, dbresults] = loadDetailsResult;
                     me.mapper.mapDetailDataToAdapterDocument(mapper, profile, record, dbresults);

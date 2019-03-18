@@ -53,7 +53,7 @@ var CommonDocSearchService = /** @class */ (function (_super) {
             }
         }
         return new Promise(function (resolve, reject) {
-            Promise.all(promises).then(function doneSearch(docSearchResults) {
+            return Promise.all(promises).then(function doneSearch(docSearchResults) {
                 var records = [];
                 docSearchResults.forEach(function (docSearchResult) {
                     for (var _i = 0, _a = docSearchResult.currentRecords; _i < _a.length; _i++) {
@@ -73,9 +73,9 @@ var CommonDocSearchService = /** @class */ (function (_super) {
                 }
                 me.sortRecords(records, searchForm.sort);
                 var docSearchResult = me.newSearchResult(searchForm, records.length, records, undefined);
-                resolve(docSearchResult);
+                return resolve(docSearchResult);
             }).catch(function errorSearch(reason) {
-                reject(reason);
+                return reject(reason);
             });
         });
     };
