@@ -68,6 +68,9 @@ export declare class SqlQueryBuilder {
     queryTransformToAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     getFacetSql(tableConfig: TableConfig, adapterOpts: AdapterOpts): Map<string, string>;
     isSpatialQuery(tableConfig: TableConfig, adapterQuery: AdapterQuery): boolean;
+    generateFilter(fieldName: string, action: string, value: any, throwOnUnknown?: boolean): string;
+    sanitizeSqlFilterValue(value: any): string;
+    sanitizeSqlFilterValuesToSingleValue(value: any, splitter: string, joiner: string): string;
     protected createAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     protected getAdapterFrom(tableConfig: TableConfig): string;
     protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[];
@@ -77,5 +80,4 @@ export declare class SqlQueryBuilder {
     protected generateGroupByForQuery(tableConfig: TableConfig, method: string, query: SelectQueryData, adapterQuery: AdapterQuery): void;
     protected mapToAdapterFieldName(tableConfig: TableConfig, fieldName: string): string;
     protected mapFilterToAdapterQuery(tableConfig: TableConfig, fieldName: string, action: string, value: any): string;
-    protected generateFilter(fieldName: string, action: string, value: any): string;
 }

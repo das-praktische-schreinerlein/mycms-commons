@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mapper_utils_1 = require("./mapper.utils");
 var util_1 = require("util");
 var date_utils_1 = require("../../commons/utils/date.utils");
+var log_utils_1 = require("../../commons/utils/log.utils");
 var SqlQueryBuilder = /** @class */ (function () {
     function SqlQueryBuilder() {
         this.mapperUtils = new mapper_utils_1.MapperUtils();
@@ -183,6 +184,73 @@ var SqlQueryBuilder = /** @class */ (function () {
         return false;
     };
     ;
+    SqlQueryBuilder.prototype.generateFilter = function (fieldName, action, value, throwOnUnknown) {
+        var _this = this;
+        var query = '';
+        if (action === mapper_utils_1.AdapterFilterActions.LIKEI || action === mapper_utils_1.AdapterFilterActions.LIKE) {
+            query = fieldName + ' LIKE "%'
+                + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', '%" AND ' + fieldName + ' LIKE "%') + '%" ';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.EQ1 || action === mapper_utils_1.AdapterFilterActions.EQ2) {
+            query = fieldName + ' = "'
+                + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', '" AND ' + fieldName + ' =  "') + '" ';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.GT) {
+            query = fieldName + ' > "'
+                + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' > ') + '"';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.GE) {
+            query = fieldName + ' >= "'
+                + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' >= ') + '"';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.LT) {
+            query = fieldName + ' < "'
+                + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' < ') + '"';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.LE) {
+            query = fieldName + ' <= "'
+                + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' <= ') + '"';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.IN) {
+            query = fieldName + ' in ("' + value.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue.toString()); }).join('", "') + '")';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.IN_NUMBER) {
+            query = fieldName + ' in (CAST("' + value.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue.toString()); }).join('" AS INT), CAST("') + '" AS INT))';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {
+            query = fieldName + ' not in ("' + value.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue.toString()); }).join('", "') + '")';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.LIKEIN) {
+            query = '(' + value.map(function (inValue) {
+                return fieldName + ' LIKE "%'
+                    + _this.sanitizeSqlFilterValue(inValue.toString()) + '%" ';
+            }).join(' OR ') + ')';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.IN_CSV) {
+            query = '(' + value.map(function (inValue) {
+                return fieldName + ' LIKE "%,' + _this.sanitizeSqlFilterValue(inValue.toString()) + ',%" OR '
+                    + fieldName + ' LIKE "%,' + _this.sanitizeSqlFilterValue(inValue.toString()) + '" OR '
+                    + fieldName + ' LIKE "' + _this.sanitizeSqlFilterValue(inValue.toString()) + ',%" OR '
+                    + fieldName + ' LIKE "' + _this.sanitizeSqlFilterValue(inValue.toString()) + '" ';
+            }).join(' OR ') + ')';
+        }
+        else if (throwOnUnknown) {
+            throw new Error('unknown actiontype:' + log_utils_1.LogUtils.sanitizeLogMsg(action));
+        }
+        return query;
+    };
+    SqlQueryBuilder.prototype.sanitizeSqlFilterValue = function (value) {
+        // TODO: clean from all non letter....
+        value = this.mapperUtils.escapeAdapterValue(value);
+        return value;
+    };
+    SqlQueryBuilder.prototype.sanitizeSqlFilterValuesToSingleValue = function (value, splitter, joiner) {
+        var _this = this;
+        value = this.mapperUtils.prepareSingleValue(value, ' ');
+        var values = this.mapperUtils.prepareValueToArray(value, splitter);
+        value = values.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue); }).join(joiner);
+        return value;
+    };
     SqlQueryBuilder.prototype.createAdapterSelectQuery = function (tableConfig, method, adapterQuery, adapterOpts) {
         // console.error('createAdapterSelectQuery adapterQuery:', adapterQuery);
         // console.log('createAdapterSelectQuery adapterOpts:', adapterOpts);
@@ -374,58 +442,6 @@ var SqlQueryBuilder = /** @class */ (function () {
             realFieldName = this.mapToAdapterFieldName(tableConfig, fieldName);
         }
         return this.generateFilter(realFieldName, action, value);
-    };
-    SqlQueryBuilder.prototype.generateFilter = function (fieldName, action, value) {
-        var _this = this;
-        var query = '';
-        if (action === mapper_utils_1.AdapterFilterActions.LIKEI || action === mapper_utils_1.AdapterFilterActions.LIKE) {
-            query = fieldName + ' LIKE "%'
-                + this.mapperUtils.prepareEscapedSingleValue(value, ' ', '%" AND ' + fieldName + ' LIKE "%') + '%" ';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.EQ1 || action === mapper_utils_1.AdapterFilterActions.EQ2) {
-            query = fieldName + ' = "'
-                + this.mapperUtils.prepareEscapedSingleValue(value, ' ', '" AND ' + fieldName + ' =  "') + '" ';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.GT) {
-            query = fieldName + ' > "'
-                + this.mapperUtils.prepareEscapedSingleValue(value, ' ', ' AND ' + fieldName + ' > ') + '"';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.GE) {
-            query = fieldName + ' >= "'
-                + this.mapperUtils.prepareEscapedSingleValue(value, ' ', ' AND ' + fieldName + ' >= ') + '"';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.LT) {
-            query = fieldName + ' < "'
-                + this.mapperUtils.prepareEscapedSingleValue(value, ' ', ' AND ' + fieldName + ' < ') + '"';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.LE) {
-            query = fieldName + ' <= "'
-                + this.mapperUtils.prepareEscapedSingleValue(value, ' ', ' AND ' + fieldName + ' <= ') + '"';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.IN) {
-            query = fieldName + ' in ("' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('", "') + '")';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.IN_NUMBER) {
-            query = fieldName + ' in (CAST("' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('" AS INT), CAST("') + '" AS INT))';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {
-            query = fieldName + ' not in ("' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('", "') + '")';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.LIKEIN) {
-            query = '(' + value.map(function (inValue) {
-                return fieldName + ' LIKE "%'
-                    + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + '%" ';
-            }).join(' OR ') + ')';
-        }
-        else if (action === mapper_utils_1.AdapterFilterActions.IN_CSV) {
-            query = '(' + value.map(function (inValue) {
-                return fieldName + ' LIKE "%,' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + ',%" OR '
-                    + fieldName + ' LIKE "%,' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + '" OR '
-                    + fieldName + ' LIKE "' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + ',%" OR '
-                    + fieldName + ' LIKE "' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + '" ';
-            }).join(' OR ') + ')';
-        }
-        return query;
     };
     return SqlQueryBuilder;
 }());
