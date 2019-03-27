@@ -443,6 +443,12 @@ var SqlQueryBuilder = /** @class */ (function () {
         }
         return this.generateFilter(realFieldName, action, value);
     };
+    SqlQueryBuilder.prototype.extractDbResult = function (dbresult, client) {
+        if (client === 'mysql') {
+            return dbresult[0];
+        }
+        return dbresult;
+    };
     return SqlQueryBuilder;
 }());
 exports.SqlQueryBuilder = SqlQueryBuilder;

@@ -555,10 +555,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         return this.sqlQueryBuilder.transformToSqlDialect(sql, this.config.knexOpts.client);
     };
     GenericSqlAdapter.prototype.extractDbResult = function (dbresult) {
-        if (this.config.knexOpts.client === 'mysql') {
-            return dbresult[0];
-        }
-        return dbresult;
+        return this.sqlQueryBuilder.extractDbResult(dbresult, this.config.knexOpts.client);
     };
     GenericSqlAdapter.prototype.queryTransformToAdapterSelectQuery = function (method, mapper, params, opts) {
         var tableConfig = this.getTableConfig(params);

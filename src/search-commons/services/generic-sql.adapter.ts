@@ -640,11 +640,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
     }
 
     protected extractDbResult(dbresult: any): any {
-        if (this.config.knexOpts.client === 'mysql') {
-            return dbresult[0];
-        }
-
-        return dbresult;
+        return this.sqlQueryBuilder.extractDbResult(dbresult, this.config.knexOpts.client);
     }
 
     protected queryTransformToAdapterSelectQuery(method: string, mapper: Mapper, params: any, opts: any): SelectQueryData {

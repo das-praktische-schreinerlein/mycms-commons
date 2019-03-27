@@ -80,4 +80,5 @@ export declare class SqlQueryBuilder {
     protected generateGroupByForQuery(tableConfig: TableConfig, method: string, query: SelectQueryData, adapterQuery: AdapterQuery): void;
     protected mapToAdapterFieldName(tableConfig: TableConfig, fieldName: string): string;
     protected mapFilterToAdapterQuery(tableConfig: TableConfig, fieldName: string, action: string, value: any): string;
+    extractDbResult(dbresult: any, client: string): any;
 }

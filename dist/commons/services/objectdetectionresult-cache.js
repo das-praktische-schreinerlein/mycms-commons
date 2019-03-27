@@ -38,6 +38,7 @@ var AbstractDetectorResultCacheService = /** @class */ (function () {
                 results: []
             };
         }
+        detectorResultCache.updateDate = new Date();
         detectorResultCache.detectors[detectorId].updateDate = new Date();
         detectorResultCache.detectors[detectorId].images[imagePath].updateDate = new Date();
         detectorResultCache.detectors[detectorId].images[imagePath].results = detectedObjects;

@@ -545,5 +545,13 @@ export class SqlQueryBuilder {
 
         return this.generateFilter(realFieldName, action, value);
     }
+
+    public extractDbResult(dbresult: any, client: string): any {
+        if (client === 'mysql') {
+            return dbresult[0];
+        }
+
+        return dbresult;
+    }
 }
 
