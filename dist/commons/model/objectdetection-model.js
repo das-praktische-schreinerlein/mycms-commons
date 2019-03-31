@@ -16,6 +16,14 @@ var ObjectDetectionState;
     ObjectDetectionState["DONE_REJECTION_PROCESSED"] = "DONE_REJECTION_PROCESSED";
     ObjectDetectionState["DONE_CORRECTION_PROCESSED"] = "DONE_CORRECTION_PROCESSED";
 })(ObjectDetectionState = exports.ObjectDetectionState || (exports.ObjectDetectionState = {}));
+var ObjectDetectionResponseCode;
+(function (ObjectDetectionResponseCode) {
+    ObjectDetectionResponseCode["OK"] = "OK";
+    ObjectDetectionResponseCode["OK_WITH_HINTS"] = "OK_WITH_HINT";
+    ObjectDetectionResponseCode["OK_WITH_WARNING"] = "OK_WITH_WARNING";
+    ObjectDetectionResponseCode["RECOVERABLE_ERROR"] = "RECOVERABLE_ERROR";
+    ObjectDetectionResponseCode["NONRECOVERABLE_ERROR"] = "NONRECOVERABLE_ERROR";
+})(ObjectDetectionResponseCode = exports.ObjectDetectionResponseCode || (exports.ObjectDetectionResponseCode = {}));
 var ObjectDetectionRequest = /** @class */ (function () {
     function ObjectDetectionRequest() {
     }

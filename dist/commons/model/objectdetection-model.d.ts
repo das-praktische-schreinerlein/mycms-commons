@@ -42,9 +42,18 @@ export interface ObjectDetectionDetectedObjectType {
     precision: number;
     fileName: string;
 }
+export declare enum ObjectDetectionResponseCode {
+    OK = "OK",
+    OK_WITH_HINTS = "OK_WITH_HINT",
+    OK_WITH_WARNING = "OK_WITH_WARNING",
+    RECOVERABLE_ERROR = "RECOVERABLE_ERROR",
+    NONRECOVERABLE_ERROR = "NONRECOVERABLE_ERROR",
+}
 export interface ObjectDetectionResponseType {
     request: ObjectDetectionRequestType;
     results: ObjectDetectionDetectedObjectType[];
+    responseCode: ObjectDetectionResponseCode;
+    responseMessages: string[];
 }
 export declare class ObjectDetectionRequest implements ObjectDetectionRequestType {
     detectors: string[];
@@ -75,7 +84,9 @@ export declare class ObjectDetectionDetectedObject implements ObjectDetectionDet
     precision: number;
     fileName: string;
 }
-export declare class ObjectDetectionResponse {
+export declare class ObjectDetectionResponse implements ObjectDetectionResponseType {
     request: ObjectDetectionRequestType;
     results: ObjectDetectionDetectedObjectType[];
+    responseCode: ObjectDetectionResponseCode;
+    responseMessages: string[];
 }

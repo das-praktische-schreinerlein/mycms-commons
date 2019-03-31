@@ -36,9 +36,16 @@ export interface ObjectDetectionDetectedObjectType {
     fileName: string;
 }
 
+export enum ObjectDetectionResponseCode {
+    OK='OK', OK_WITH_HINTS='OK_WITH_HINT', OK_WITH_WARNING='OK_WITH_WARNING', RECOVERABLE_ERROR='RECOVERABLE_ERROR',
+    NONRECOVERABLE_ERROR='NONRECOVERABLE_ERROR'
+}
+
 export interface ObjectDetectionResponseType {
     request: ObjectDetectionRequestType;
     results: ObjectDetectionDetectedObjectType[];
+    responseCode: ObjectDetectionResponseCode;
+    responseMessages: string[];
 }
 
 export class ObjectDetectionRequest implements ObjectDetectionRequestType {
@@ -72,7 +79,9 @@ export class ObjectDetectionDetectedObject implements ObjectDetectionDetectedObj
     fileName: string;
 }
 
-export class ObjectDetectionResponse {
+export class ObjectDetectionResponse implements ObjectDetectionResponseType{
     request: ObjectDetectionRequestType;
     results: ObjectDetectionDetectedObjectType[];
+    responseCode: ObjectDetectionResponseCode;
+    responseMessages: string[];
 }
