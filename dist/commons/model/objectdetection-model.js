@@ -12,9 +12,12 @@ var ObjectDetectionState;
     ObjectDetectionState["RUNNING_MANUAL_REJECTED"] = "RUNNING_MANUAL_REJECTED";
     ObjectDetectionState["RUNNING_MANUAL_CORRECTION_NEEDED"] = "RUNNING_MANUAL_CORRECTION_NEEDED";
     ObjectDetectionState["RUNNING_MANUAL_CORRECTED"] = "RUNNING_MANUAL_CORRECTED";
+    ObjectDetectionState["RUNNING_MANUAL_DETAIL_NEEDED"] = "RUNNING_MANUAL_DETAILS_NEEDED";
+    ObjectDetectionState["RUNNING_MANUAL_DETAILED"] = "RUNNING_MANUAL_DETAILED";
     ObjectDetectionState["DONE_APPROVAL_PROCESSED"] = "DONE_APPROVAL_PROCESSED";
     ObjectDetectionState["DONE_REJECTION_PROCESSED"] = "DONE_REJECTION_PROCESSED";
     ObjectDetectionState["DONE_CORRECTION_PROCESSED"] = "DONE_CORRECTION_PROCESSED";
+    ObjectDetectionState["DONE_DETAIL_PROCESSED"] = "DONE_DETAIL_PROCESSED";
 })(ObjectDetectionState = exports.ObjectDetectionState || (exports.ObjectDetectionState = {}));
 var ObjectDetectionResponseCode;
 (function (ObjectDetectionResponseCode) {
