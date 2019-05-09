@@ -88,7 +88,9 @@ export class SqlQueryBuilder {
             sql = sql.replace(/GREATEST\(/g, 'MAX(');
             sql = sql.replace(/SUBSTRING_INDEX\(/g, 'SUBSTR(');
             sql = sql.replace(/CHAR_LENGTH\(/g, 'LENGTH(');
+            sql = sql.replace(/GROUP_CONCAT\(DISTINCT CONCAT\((.*?)\) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT( CONCAT($1), $2)');
             sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) ORDER BY (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $3)');
+            sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
             sql = sql.replace(/GROUP_CONCAT\((.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
             sql = sql.replace(/MONTH\((.*?)\)/g, 'CAST(STRFTIME("%m", $1) AS INT)');
             sql = sql.replace(/WEEK\((.*?)\)/g, 'CAST(STRFTIME("%W", $1) AS INT)');
@@ -116,7 +118,7 @@ export class SqlQueryBuilder {
     }
 
     public queryTransformToAdapterWriteQuery(tableConfig: TableConfig, method: string, props: any,
-                                              adapterOpts: AdapterOpts): WriteQueryData {
+                                             adapterOpts: AdapterOpts): WriteQueryData {
         const query: WriteQueryData = {
             from: tableConfig.tableName,
             fields: {},
@@ -263,6 +265,8 @@ export class SqlQueryBuilder {
 
     public generateFilter(fieldName: string, action: string, value: any, throwOnUnknown?: boolean): string {
         let query = '';
+        let containsNull = false;
+        const me = this;
 
         if (action === AdapterFilterActions.LIKEI || action === AdapterFilterActions.LIKE) {
             query = fieldName + ' LIKE "%'
@@ -283,17 +287,14 @@ export class SqlQueryBuilder {
             query = fieldName + ' <= "'
                 + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' <= ') + '"';
         } else if (action === AdapterFilterActions.IN) {
-            query = fieldName + ' in ("' + value.map(
-                inValue => this.sanitizeSqlFilterValue(inValue.toString())
-            ).join('", "') + '")';
+            query = this.createInValueList(fieldName, value,' IN ("', '", "', '")',
+                ' OR ' + fieldName + ' IS NULL');
         } else if (action === AdapterFilterActions.IN_NUMBER) {
-            query = fieldName + ' in (CAST("' + value.map(
-                inValue => this.sanitizeSqlFilterValue(inValue.toString())
-            ).join('" AS INT), CAST("') + '" AS INT))';
+            query = this.createInValueList(fieldName, value,' IN (CAST("', '" AS INT), CAST("',
+                '" AS INT))', ' OR ' + fieldName + ' IS NULL');
         } else if (action === AdapterFilterActions.NOTIN) {
-            query = fieldName + ' not in ("' + value.map(
-                inValue => this.sanitizeSqlFilterValue(inValue.toString())
-            ).join('", "') + '")';
+            query = this.createInValueList(fieldName, value,' NOT IN ("', '", "', '")',
+                ' AND ' + fieldName + ' IS NOT NULL');
         } else if (action === AdapterFilterActions.LIKEIN) {
             query = '(' + value.map(
                 inValue => {
@@ -328,6 +329,19 @@ export class SqlQueryBuilder {
         const values = this.mapperUtils.prepareValueToArray(value, splitter);
         value = values.map(inValue => this.sanitizeSqlFilterValue(inValue)).join(joiner);
         return value;
+    }
+
+    protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string,
+                                suffix: string, nullAction: string): string {
+        const me = this;
+        let containsNull = false;
+        return ' ( ' + fieldName + ' ' +
+            prefix + fieldValues.map(function(inValue) {
+                containsNull = containsNull || inValue === null || inValue === 'null';
+                return me.sanitizeSqlFilterValue(inValue !== null ? inValue.toString(): null);
+            }).join(joiner) + suffix +
+            (containsNull ? nullAction : '') +
+            ')';
     }
 
     protected createAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery,

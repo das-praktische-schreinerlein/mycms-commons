@@ -25,7 +25,7 @@
 - common: added new type+features for managing object-detection image-objects
 
 ### improvements
-- none
+- common: improved null-handling for sql-filter
 
 ### bug fixes
 - none

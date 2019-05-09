@@ -23,7 +23,9 @@ var SqlQueryBuilder = /** @class */ (function () {
             sql = sql.replace(/GREATEST\(/g, 'MAX(');
             sql = sql.replace(/SUBSTRING_INDEX\(/g, 'SUBSTR(');
             sql = sql.replace(/CHAR_LENGTH\(/g, 'LENGTH(');
+            sql = sql.replace(/GROUP_CONCAT\(DISTINCT CONCAT\((.*?)\) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT( CONCAT($1), $2)');
             sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) ORDER BY (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $3)');
+            sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
             sql = sql.replace(/GROUP_CONCAT\((.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
             sql = sql.replace(/MONTH\((.*?)\)/g, 'CAST(STRFTIME("%m", $1) AS INT)');
             sql = sql.replace(/WEEK\((.*?)\)/g, 'CAST(STRFTIME("%W", $1) AS INT)');
@@ -187,6 +189,8 @@ var SqlQueryBuilder = /** @class */ (function () {
     SqlQueryBuilder.prototype.generateFilter = function (fieldName, action, value, throwOnUnknown) {
         var _this = this;
         var query = '';
+        var containsNull = false;
+        var me = this;
         if (action === mapper_utils_1.AdapterFilterActions.LIKEI || action === mapper_utils_1.AdapterFilterActions.LIKE) {
             query = fieldName + ' LIKE "%'
                 + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', '%" AND ' + fieldName + ' LIKE "%') + '%" ';
@@ -212,13 +216,13 @@ var SqlQueryBuilder = /** @class */ (function () {
                 + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' <= ') + '"';
         }
         else if (action === mapper_utils_1.AdapterFilterActions.IN) {
-            query = fieldName + ' in ("' + value.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue.toString()); }).join('", "') + '")';
+            query = this.createInValueList(fieldName, value, ' IN ("', '", "', '")', ' OR ' + fieldName + ' IS NULL');
         }
         else if (action === mapper_utils_1.AdapterFilterActions.IN_NUMBER) {
-            query = fieldName + ' in (CAST("' + value.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue.toString()); }).join('" AS INT), CAST("') + '" AS INT))';
+            query = this.createInValueList(fieldName, value, ' IN (CAST("', '" AS INT), CAST("', '" AS INT))', ' OR ' + fieldName + ' IS NULL');
         }
         else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {
-            query = fieldName + ' not in ("' + value.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue.toString()); }).join('", "') + '")';
+            query = this.createInValueList(fieldName, value, ' NOT IN ("', '", "', '")', ' AND ' + fieldName + ' IS NOT NULL');
         }
         else if (action === mapper_utils_1.AdapterFilterActions.LIKEIN) {
             query = '(' + value.map(function (inValue) {
@@ -250,6 +254,17 @@ var SqlQueryBuilder = /** @class */ (function () {
         var values = this.mapperUtils.prepareValueToArray(value, splitter);
         value = values.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue); }).join(joiner);
         return value;
+    };
+    SqlQueryBuilder.prototype.createInValueList = function (fieldName, fieldValues, prefix, joiner, suffix, nullAction) {
+        var me = this;
+        var containsNull = false;
+        return ' ( ' + fieldName + ' ' +
+            prefix + fieldValues.map(function (inValue) {
+            containsNull = containsNull || inValue === null || inValue === 'null';
+            return me.sanitizeSqlFilterValue(inValue !== null ? inValue.toString() : null);
+        }).join(joiner) + suffix +
+            (containsNull ? nullAction : '') +
+            ')';
     };
     SqlQueryBuilder.prototype.createAdapterSelectQuery = function (tableConfig, method, adapterQuery, adapterOpts) {
         // console.error('createAdapterSelectQuery adapterQuery:', adapterQuery);

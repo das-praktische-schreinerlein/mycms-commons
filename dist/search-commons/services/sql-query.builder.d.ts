@@ -71,6 +71,7 @@ export declare class SqlQueryBuilder {
     generateFilter(fieldName: string, action: string, value: any, throwOnUnknown?: boolean): string;
     sanitizeSqlFilterValue(value: any): string;
     sanitizeSqlFilterValuesToSingleValue(value: any, splitter: string, joiner: string): string;
+    protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string, suffix: string, nullAction: string): string;
     protected createAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     protected getAdapterFrom(tableConfig: TableConfig): string;
     protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[];
