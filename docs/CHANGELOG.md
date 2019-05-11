@@ -26,6 +26,7 @@
 
 ### improvements
 - common: improved null-handling for sql-filter
+- common: improved beanutils to get array-values too
 
 ### bug fixes
 - none

@@ -1,40 +1,64 @@
 export abstract class BeanUtils {
+    public static getAttributeValue(object: any, attribute: string): any {
+        if (object === undefined || object === null || attribute === undefined) {
+            return undefined;
+        }
+        if (object[attribute] !== undefined) {
+            return object[attribute];
+        }
+        if (typeof object['get'] === 'function' && object.get(attribute) !== undefined) {
+            return object.get(attribute);
+        }
+
+        return object[attribute];
+    }
+
     public static getValue(record: any, property: string): any {
         if (record === undefined) {
             return undefined;
         }
 
-        let value = record[property];
-        if (value === undefined) {
-            const hierarchy = property.split('.');
-            let parent = record;
-            for (let i = 0; i < hierarchy.length; i++) {
-                const element = hierarchy[i];
-                if (!parent) {
-                    break;
+        if (record[property] !== undefined) {
+            return record[property];
+        }
+
+        const hierarchy = property.split('.');
+        let context = record;
+        let arrayRegexp = /([a-zA-Z]+)(\[(\d)\])+/; // matches:  item[0]
+        let arrayMatch = null;
+        let key, idx, arrayKey, arrayValue, value, propName;
+        for (let i = 0; i < hierarchy.length; i++) {
+            if (context === undefined) {
+                return undefined;
+            }
+
+            key = hierarchy[i];
+            arrayMatch = arrayRegexp.exec(key);
+            if (arrayMatch !== null) {
+                // check for array
+                idx = arrayMatch[3];
+                arrayKey = arrayMatch[1];
+
+                arrayValue = BeanUtils.getAttributeValue(context, arrayKey);
+                if (!Array.isArray(arrayValue)) {
+                    return undefined;
+                }
+                if (!arrayValue.length > idx) {
+                    return undefined;
                 }
 
-                // TODO: check for arrays
-                if (parent[element] !== undefined) {
-                    parent = parent[element];
-                } else if (typeof parent['get'] === 'function' && parent.get(element) !== undefined) {
-                    parent = parent.get(element);
-                } else {
-                    parent = parent[element];
-                }
+                context = arrayValue[idx];
+            } else {
+                context = BeanUtils.getAttributeValue(context, key);
+            }
 
-                if (!parent) {
-                    break;
-                }
-
-                const propName = hierarchy.slice(i + 1, hierarchy.length).join('.');
-                if (parent && parent[propName]) {
-                    value = parent[propName];
-                    break;
-                }
+            propName = hierarchy.slice(i + 1, hierarchy.length).join('.');
+            value = BeanUtils.getAttributeValue(context, propName);
+            if (value) {
+                return value;
             }
         }
 
-        return value;
+        return context;
     }
 }

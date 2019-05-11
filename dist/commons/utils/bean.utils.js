@@ -3,40 +3,59 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var BeanUtils = /** @class */ (function () {
     function BeanUtils() {
     }
+    BeanUtils.getAttributeValue = function (object, attribute) {
+        if (object === undefined || object === null || attribute === undefined) {
+            return undefined;
+        }
+        if (object[attribute] !== undefined) {
+            return object[attribute];
+        }
+        if (typeof object['get'] === 'function' && object.get(attribute) !== undefined) {
+            return object.get(attribute);
+        }
+        return object[attribute];
+    };
     BeanUtils.getValue = function (record, property) {
         if (record === undefined) {
             return undefined;
         }
-        var value = record[property];
-        if (value === undefined) {
-            var hierarchy = property.split('.');
-            var parent_1 = record;
-            for (var i = 0; i < hierarchy.length; i++) {
-                var element = hierarchy[i];
-                if (!parent_1) {
-                    break;
+        if (record[property] !== undefined) {
+            return record[property];
+        }
+        var hierarchy = property.split('.');
+        var context = record;
+        var arrayRegexp = /([a-zA-Z]+)(\[(\d)\])+/; // matches:  item[0]
+        var arrayMatch = null;
+        var key, idx, arrayKey, arrayValue, value, propName;
+        for (var i = 0; i < hierarchy.length; i++) {
+            if (context === undefined) {
+                return undefined;
+            }
+            key = hierarchy[i];
+            arrayMatch = arrayRegexp.exec(key);
+            if (arrayMatch !== null) {
+                // check for array
+                idx = arrayMatch[3];
+                arrayKey = arrayMatch[1];
+                arrayValue = BeanUtils.getAttributeValue(context, arrayKey);
+                if (!Array.isArray(arrayValue)) {
+                    return undefined;
                 }
-                // TODO: check for arrays
-                if (parent_1[element] !== undefined) {
-                    parent_1 = parent_1[element];
+                if (!arrayValue.length > idx) {
+                    return undefined;
                 }
-                else if (typeof parent_1['get'] === 'function' && parent_1.get(element) !== undefined) {
-                    parent_1 = parent_1.get(element);
-                }
-                else {
-                    parent_1 = parent_1[element];
-                }
-                if (!parent_1) {
-                    break;
-                }
-                var propName = hierarchy.slice(i + 1, hierarchy.length).join('.');
-                if (parent_1 && parent_1[propName]) {
-                    value = parent_1[propName];
-                    break;
-                }
+                context = arrayValue[idx];
+            }
+            else {
+                context = BeanUtils.getAttributeValue(context, key);
+            }
+            propName = hierarchy.slice(i + 1, hierarchy.length).join('.');
+            value = BeanUtils.getAttributeValue(context, propName);
+            if (value) {
+                return value;
             }
         }
-        return value;
+        return context;
     };
     return BeanUtils;
 }());
