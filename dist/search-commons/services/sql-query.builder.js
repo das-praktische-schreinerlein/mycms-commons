@@ -149,11 +149,15 @@ var SqlQueryBuilder = /** @class */ (function () {
         var facetConfigs = tableConfig.facetConfigs;
         var facets = new Map();
         var _loop_1 = function (key) {
+            var facetConfig = facetConfigs[key];
+            if (!facetConfig) {
+                return "continue";
+            }
+            if (facetConfig.ignoreIfNotExplicitNamed === true &&
+                !(adapterOpts.showFacets instanceof Array && adapterOpts.showFacets.indexOf(key) >= 0)) {
+                return "continue";
+            }
             if (adapterOpts.showFacets === true || (adapterOpts.showFacets instanceof Array && adapterOpts.showFacets.indexOf(key) >= 0)) {
-                var facetConfig = facetConfigs[key];
-                if (!facetConfig) {
-                    return "continue";
-                }
                 if (facetConfig.selectField !== undefined) {
                     var orderBy = facetConfig.orderBy ? facetConfig.orderBy : 'count desc';
                     var from = facetConfig.selectFrom !== undefined ? facetConfig.selectFrom : tableConfig.tableName;

@@ -22,6 +22,7 @@ export interface WriteQueryData {
 }
 
 export interface TableFacetConfig {
+    ignoreIfNotExplicitNamed?: boolean;
     selectField?: string;
     selectFrom?: string;
     orderBy?: string;
@@ -227,11 +228,16 @@ export class SqlQueryBuilder {
 
         const facets = new Map<string, string>();
         for (const key in facetConfigs) {
+            const facetConfig: TableFacetConfig = facetConfigs[key];
+            if (!facetConfig) {
+                continue;
+            }
+
+            if (facetConfig.ignoreIfNotExplicitNamed === true &&
+                !(adapterOpts.showFacets instanceof Array && adapterOpts.showFacets.indexOf(key) >= 0)) {
+                continue;
+            }
             if (adapterOpts.showFacets === true || (adapterOpts.showFacets instanceof Array && adapterOpts.showFacets.indexOf(key) >= 0)) {
-                const facetConfig: TableFacetConfig = facetConfigs[key];
-                if (!facetConfig) {
-                    continue;
-                }
 
                 if (facetConfig.selectField !== undefined) {
                     const orderBy = facetConfig.orderBy ? facetConfig.orderBy : 'count desc';

@@ -27,6 +27,7 @@
 ### improvements
 - common: improved null-handling for sql-filter
 - common: improved beanutils to get array-values too
+- common: added flag for special facets to read only if explicitly named
 
 ### bug fixes
 - none

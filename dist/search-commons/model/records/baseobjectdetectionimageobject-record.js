@@ -21,12 +21,14 @@ var BaseObjectDetectionImageObjectRecord = /** @class */ (function (_super) {
     BaseObjectDetectionImageObjectRecord.prototype.toString = function () {
         return 'BaseObjectDetectionImageObjectRecord Record {\n' +
             '  id: ' + this.id + ',\n' +
-            '  class: ' + this.detector + ',\n' +
+            '  detector: ' + this.detector + ',\n' +
+            '  category: ' + this.category + ',\n' +
             '  key: ' + this.key + ',\n' +
             '  pos: ' + this.objX + ',' + this.objY + '(' + this.objWidth + ',' + this.objHeight + ')\n' +
             '}';
     };
     BaseObjectDetectionImageObjectRecord.objectDetectionImageObjectFields = {
+        category: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NAME, new generic_validator_util_1.NameValidationRule(true)),
         detector: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NAME, new generic_validator_util_1.NameValidationRule(true)),
         key: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NAME, new generic_validator_util_1.NameValidationRule(true)),
         keySuggestion: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NAME, new generic_validator_util_1.NameValidationRule(false)),

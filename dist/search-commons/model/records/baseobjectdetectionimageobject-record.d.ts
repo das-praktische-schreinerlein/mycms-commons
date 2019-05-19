@@ -5,6 +5,7 @@ export interface BaseObjectDetectionImageObjectRecordType extends BaseImageRecor
 }
 export declare class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implements BaseObjectDetectionImageObjectRecordType {
     static objectDetectionImageObjectFields: {
+        category: BaseEntityRecordFieldConfig;
         detector: BaseEntityRecordFieldConfig;
         key: BaseEntityRecordFieldConfig;
         keySuggestion: BaseEntityRecordFieldConfig;
@@ -18,6 +19,7 @@ export declare class BaseObjectDetectionImageObjectRecord extends BaseImageRecor
         objHeight: BaseEntityRecordFieldConfig;
         precision: BaseEntityRecordFieldConfig;
     };
+    category: string;
     detector: string;
     key: string;
     keySuggestion: string;

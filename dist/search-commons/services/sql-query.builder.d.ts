@@ -16,6 +16,7 @@ export interface WriteQueryData {
     fields: {};
 }
 export interface TableFacetConfig {
+    ignoreIfNotExplicitNamed?: boolean;
     selectField?: string;
     selectFrom?: string;
     orderBy?: string;
