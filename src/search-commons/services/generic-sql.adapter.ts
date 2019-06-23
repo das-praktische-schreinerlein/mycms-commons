@@ -242,9 +242,12 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         opts.queryData = queryData;
 
         const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
-        const raw = sqlBuilder.raw(this.queryTransformToSql(queryData));
+        const sql = this.queryTransformToSql(queryData);
+        const start = (new Date()).getTime();
+        const raw = sqlBuilder.raw(sql);
         const result = new Promise((resolve, reject) => {
             raw.then(function doneSearch(dbresults: any) {
+                    // console.error("sql _count: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                     const response = me.extractDbResult(dbresults);
                     const count = me.extractCountFromRequestResult(response);
                     return resolve(count);
@@ -284,9 +287,11 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
         const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
         const sql = this.queryTransformToSql(queryData);
+        const start = (new Date()).getTime();
         const raw = sqlBuilder.raw(sql);
         const result = new Promise((resolve, reject) => {
             raw.then(function doneSearch(dbresults: any) {
+                // console.error("sql _findAll: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                 const response = me.extractDbResult(dbresults);
                 const records: R[] = me.extractRecordsFromRequestResult(mapper, response, queryData);
                 return utils.resolve(records);
@@ -326,8 +331,10 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             queries.forEach((value, key) => {
                 const sql = this.transformToSqlDialect(value);
                 const raw = sqlBuilder.raw(sql);
+                const start = (new Date()).getTime();
                 promises.push(new Promise((resolve, reject) => {
                     raw.then(function doneSearch(dbresults: any) {
+                        // console.error("sql _facets: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                         const response = me.extractDbResult(dbresults);
                         let facet: Facet = me.extractFacetFromRequestResult(response);
                         if (!facet) {
@@ -583,8 +590,10 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                         sql = sql.replace(':' + parameterName, value);
                     });
                     const raw = sqlBuilder.raw(sql);
+                    const start = (new Date()).getTime();
                     promises.push(new Promise((resolve, reject) => {
                         raw.then(function doneSearch(dbresults: any) {
+                            // console.error("sql loadDetailData: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                             const response = me.extractDbResult(dbresults);
                             return resolve([loadDetailDataConfig.profile, record, response]);
                         },

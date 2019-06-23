@@ -210,9 +210,12 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         }
         opts.queryData = queryData;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
-        var raw = sqlBuilder.raw(this.queryTransformToSql(queryData));
+        var sql = this.queryTransformToSql(queryData);
+        var start = (new Date()).getTime();
+        var raw = sqlBuilder.raw(sql);
         var result = new Promise(function (resolve, reject) {
             raw.then(function doneSearch(dbresults) {
+                // console.error("sql _count: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                 var response = me.extractDbResult(dbresults);
                 var count = me.extractCountFromRequestResult(response);
                 return resolve(count);
@@ -247,9 +250,11 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         opts.queryData = queryData;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
         var sql = this.queryTransformToSql(queryData);
+        var start = (new Date()).getTime();
         var raw = sqlBuilder.raw(sql);
         var result = new Promise(function (resolve, reject) {
             raw.then(function doneSearch(dbresults) {
+                // console.error("sql _findAll: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                 var response = me.extractDbResult(dbresults);
                 var records = me.extractRecordsFromRequestResult(mapper, response, queryData);
                 return js_data_1.utils.resolve(records);
@@ -287,8 +292,10 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             queries.forEach(function (value, key) {
                 var sql = _this.transformToSqlDialect(value);
                 var raw = sqlBuilder.raw(sql);
+                var start = (new Date()).getTime();
                 promises.push(new Promise(function (resolve, reject) {
                     raw.then(function doneSearch(dbresults) {
+                        // console.error("sql _facets: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                         var response = me.extractDbResult(dbresults);
                         var facet = me.extractFacetFromRequestResult(response);
                         if (!facet) {
@@ -514,8 +521,10 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                         sql = sql.replace(':' + parameterName, value);
                     });
                     var raw = sqlBuilder.raw(sql);
+                    var start = (new Date()).getTime();
                     promises.push(new Promise(function (resolve, reject) {
                         raw.then(function doneSearch(dbresults) {
+                            // console.error("sql loadDetailData: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                             var response = me.extractDbResult(dbresults);
                             return resolve([loadDetailDataConfig.profile, record, response]);
                         }, function errorSearch(reason) {
