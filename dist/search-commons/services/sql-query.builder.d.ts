@@ -1,4 +1,5 @@
-import { AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
+import { AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
+import { FacetValueType } from '../model/container/facets';
 export interface SelectQueryData {
     where: string[];
     offset: number;
@@ -23,8 +24,15 @@ export interface TableFacetConfig {
     selectLimit?: number;
     noFacet?: boolean;
     selectSql?: string;
+    cache?: {
+        useCache: false | 'EVER' | 'IF_VALID';
+        cachedSelectSql?: string;
+    };
+    withLabelField?: boolean;
+    triggerTables?: string[];
+    valueType?: FacetValueType;
     constValues?: string[];
-    action: string;
+    action?: AdapterFilterActions;
     filterField?: string;
     filterFields?: string[];
 }
@@ -34,7 +42,7 @@ export interface OptionalGroupByConfig {
     groupByFields?: string[];
 }
 export interface LoadDetailDataConfig {
-    profile: string[];
+    profile: string | string[];
     sql: string;
     parameterNames: string[];
     modes?: string[];
@@ -44,11 +52,21 @@ export interface TableConfig {
     tableName: string;
     selectFrom: string;
     selectFieldList: string[];
-    facetConfigs: {};
-    filterMapping: {};
-    fieldMapping: {};
-    sortMapping: {};
-    writeMapping?: {};
+    facetConfigs: {
+        [key: string]: TableFacetConfig;
+    };
+    filterMapping: {
+        [key: string]: string;
+    };
+    fieldMapping: {
+        [key: string]: string;
+    };
+    sortMapping: {
+        [key: string]: string;
+    };
+    writeMapping?: {
+        [key: string]: string;
+    };
     actionTags?: {};
     groupbBySelectFieldList?: boolean;
     groupbBySelectFieldListIgnore?: string[];
@@ -61,17 +79,31 @@ export interface TableConfig {
         spatialSortKey: string;
     };
 }
+export interface TableConfigs {
+    [key: string]: TableConfig;
+}
+export interface FacetCacheUsageConfiguration {
+    facetKeys: string[];
+}
+export interface FacetCacheUsageConfigurations {
+    [key: string]: FacetCacheUsageConfiguration;
+}
 export declare class SqlQueryBuilder {
     protected mapperUtils: MapperUtils;
+    extendTableConfigs(tableConfigs: TableConfigs): void;
+    extendTableConfig(tableConfig: TableConfig): void;
     transformToSqlDialect(sql: string, client: string): string;
     selectQueryTransformToSql(query: SelectQueryData): string;
     queryTransformToAdapterWriteQuery(tableConfig: TableConfig, method: string, props: any, adapterOpts: AdapterOpts): WriteQueryData;
     queryTransformToAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
-    getFacetSql(tableConfig: TableConfig, adapterOpts: AdapterOpts): Map<string, string>;
+    getFacetSql(tableConfig: TableConfig, facetCacheUsageConfiguration: FacetCacheUsageConfigurations, adapterOpts: AdapterOpts): Map<string, string>;
+    protected generateFacetUseCacheSql(useFacetCache: FacetCacheUsageConfigurations, tableConfig: TableConfig, facetKey: string, facetConfig: TableFacetConfig): string;
+    protected generateFacetCacheSql(tableConfig: TableConfig, facetKey: string, facetConfig: TableFacetConfig): string;
     isSpatialQuery(tableConfig: TableConfig, adapterQuery: AdapterQuery): boolean;
-    generateFilter(fieldName: string, action: string, value: any, throwOnUnknown?: boolean): string;
+    generateFilter(fieldName: string, action: string | AdapterFilterActions, value: any, throwOnUnknown?: boolean): string;
     sanitizeSqlFilterValue(value: any): string;
     sanitizeSqlFilterValuesToSingleValue(value: any, splitter: string, joiner: string): string;
+    extractDbResult(dbresult: any, client: string): any;
     protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string, suffix: string, nullAction: string): string;
     protected createAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     protected getAdapterFrom(tableConfig: TableConfig): string;
@@ -81,6 +113,5 @@ export declare class SqlQueryBuilder {
     protected getAdapterSelectFields(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery): string[];
     protected generateGroupByForQuery(tableConfig: TableConfig, method: string, query: SelectQueryData, adapterQuery: AdapterQuery): void;
     protected mapToAdapterFieldName(tableConfig: TableConfig, fieldName: string): string;
-    protected mapFilterToAdapterQuery(tableConfig: TableConfig, fieldName: string, action: string, value: any): string;
-    extractDbResult(dbresult: any, client: string): any;
+    protected mapFilterToAdapterQuery(tableConfig: TableConfig, fieldName: string, action: string | AdapterFilterActions, value: any): string;
 }

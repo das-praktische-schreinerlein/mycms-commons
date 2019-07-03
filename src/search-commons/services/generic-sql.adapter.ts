@@ -11,7 +11,7 @@ import {GenericFacetAdapter} from './generic-search.adapter';
 import {isArray} from 'util';
 import {AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
 import {GenericAdapterResponseMapper} from './generic-adapter-response.mapper';
-import {SelectQueryData, SqlQueryBuilder, TableConfig, WriteQueryData} from './sql-query.builder';
+import {FacetCacheUsageConfigurations, SelectQueryData, SqlQueryBuilder, TableConfig, WriteQueryData} from './sql-query.builder';
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {LogUtils} from '../../commons/utils/log.utils';
 
@@ -22,12 +22,14 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
     protected sqlQueryBuilder: SqlQueryBuilder = new SqlQueryBuilder();
     protected mapper: GenericAdapterResponseMapper;
     protected config;
+    protected facetCacheConfig: FacetCacheUsageConfigurations;
 
-    constructor(config: any, mapper: GenericAdapterResponseMapper) {
+    constructor(config: any, mapper: GenericAdapterResponseMapper, facetCacheConfig?: FacetCacheUsageConfigurations) {
         super(config);
         this.config = config;
         this.knex = knex(config.knexOpts);
         this.mapper = mapper;
+        this.facetCacheConfig = facetCacheConfig;
     }
 
     create(mapper: Mapper, props: any, opts?: any): Promise<R> {
@@ -635,7 +637,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             return undefined;
         }
 
-        return this.sqlQueryBuilder.getFacetSql(tableConfig, adapterOpts);
+        return this.sqlQueryBuilder.getFacetSql(tableConfig, this.facetCacheConfig, adapterOpts);
     };
 
     protected queryTransformToSql(query: SelectQueryData): string {

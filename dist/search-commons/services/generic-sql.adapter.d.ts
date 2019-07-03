@@ -9,7 +9,7 @@ import { Adapter } from 'js-data-adapter';
 import { GenericFacetAdapter } from './generic-search.adapter';
 import { AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
 import { GenericAdapterResponseMapper } from './generic-adapter-response.mapper';
-import { SelectQueryData, SqlQueryBuilder, TableConfig, WriteQueryData } from './sql-query.builder';
+import { FacetCacheUsageConfigurations, SelectQueryData, SqlQueryBuilder, TableConfig, WriteQueryData } from './sql-query.builder';
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
 export declare abstract class GenericSqlAdapter<R extends Record, F extends GenericSearchForm, S extends GenericSearchResult<R, F>> extends Adapter implements GenericFacetAdapter<R, F, S> {
     protected knex: any;
@@ -17,7 +17,8 @@ export declare abstract class GenericSqlAdapter<R extends Record, F extends Gene
     protected sqlQueryBuilder: SqlQueryBuilder;
     protected mapper: GenericAdapterResponseMapper;
     protected config: any;
-    constructor(config: any, mapper: GenericAdapterResponseMapper);
+    protected facetCacheConfig: FacetCacheUsageConfigurations;
+    constructor(config: any, mapper: GenericAdapterResponseMapper, facetCacheConfig?: FacetCacheUsageConfigurations);
     create(mapper: Mapper, props: any, opts?: any): Promise<R>;
     createMany(mapper: Mapper, props: any, opts: any): Promise<R>;
     destroy(mapper: Mapper, id: string | number, opts?: any): Promise<any>;

@@ -22,13 +22,14 @@ var sql_query_builder_1 = require("./sql-query.builder");
 var log_utils_1 = require("../../commons/utils/log.utils");
 var GenericSqlAdapter = /** @class */ (function (_super) {
     __extends(GenericSqlAdapter, _super);
-    function GenericSqlAdapter(config, mapper) {
+    function GenericSqlAdapter(config, mapper, facetCacheConfig) {
         var _this = _super.call(this, config) || this;
         _this.mapperUtils = new mapper_utils_1.MapperUtils();
         _this.sqlQueryBuilder = new sql_query_builder_1.SqlQueryBuilder();
         _this.config = config;
         _this.knex = knex(config.knexOpts);
         _this.mapper = mapper;
+        _this.facetCacheConfig = facetCacheConfig;
         return _this;
     }
     GenericSqlAdapter.prototype.create = function (mapper, props, opts) {
@@ -552,7 +553,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         if (tableConfig === undefined) {
             return undefined;
         }
-        return this.sqlQueryBuilder.getFacetSql(tableConfig, adapterOpts);
+        return this.sqlQueryBuilder.getFacetSql(tableConfig, this.facetCacheConfig, adapterOpts);
     };
     ;
     GenericSqlAdapter.prototype.queryTransformToSql = function (query) {

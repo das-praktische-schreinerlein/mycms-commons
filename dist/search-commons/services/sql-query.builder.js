@@ -4,10 +4,42 @@ var mapper_utils_1 = require("./mapper.utils");
 var util_1 = require("util");
 var date_utils_1 = require("../../commons/utils/date.utils");
 var log_utils_1 = require("../../commons/utils/log.utils");
+var facets_1 = require("../model/container/facets");
+var sql_utils_1 = require("./sql-utils");
 var SqlQueryBuilder = /** @class */ (function () {
     function SqlQueryBuilder() {
         this.mapperUtils = new mapper_utils_1.MapperUtils();
     }
+    SqlQueryBuilder.prototype.extendTableConfigs = function (tableConfigs) {
+        for (var key in tableConfigs) {
+            this.extendTableConfig(tableConfigs[key]);
+        }
+    };
+    SqlQueryBuilder.prototype.extendTableConfig = function (tableConfig) {
+        for (var facetKey in tableConfig.facetConfigs) {
+            var facetConfig = tableConfig.facetConfigs[facetKey];
+            var sql = facetConfig.selectSql;
+            if (facetConfig.valueType === undefined) {
+                facetConfig.valueType = facets_1.FacetUtils.calcFacetValueType(facetConfig.valueType);
+            }
+            if (sql) {
+                var sqlParts = sql_utils_1.SqlUtils.analyzeSimpleSql(sql);
+                if (facetConfig.triggerTables === undefined) {
+                    facetConfig.triggerTables = sqlParts.tables;
+                }
+                if (facetConfig.withLabelField === undefined) {
+                    facetConfig.withLabelField =
+                        sqlParts.fields.indexOf('label') >= 0 || sqlParts.fieldAliases.indexOf('label') >= 0;
+                }
+                if (facetConfig.cache === undefined) {
+                    facetConfig.cache = { cachedSelectSql: undefined, useCache: "IF_VALID" };
+                }
+                if (facetConfig.cache.cachedSelectSql === undefined) {
+                    facetConfig.cache.cachedSelectSql = this.generateFacetCacheSql(tableConfig, facetKey, facetConfig);
+                }
+            }
+        }
+    };
     SqlQueryBuilder.prototype.transformToSqlDialect = function (sql, client) {
         if (client === 'sqlite3') {
             var replace = ' CONCAT(';
@@ -145,7 +177,7 @@ var SqlQueryBuilder = /** @class */ (function () {
         this.generateGroupByForQuery(tableConfig, method, query, adapterQuery);
         return query;
     };
-    SqlQueryBuilder.prototype.getFacetSql = function (tableConfig, adapterOpts) {
+    SqlQueryBuilder.prototype.getFacetSql = function (tableConfig, facetCacheUsageConfiguration, adapterOpts) {
         var facetConfigs = tableConfig.facetConfigs;
         var facets = new Map();
         var _loop_1 = function (key) {
@@ -158,7 +190,11 @@ var SqlQueryBuilder = /** @class */ (function () {
                 return "continue";
             }
             if (adapterOpts.showFacets === true || (adapterOpts.showFacets instanceof Array && adapterOpts.showFacets.indexOf(key) >= 0)) {
-                if (facetConfig.selectField !== undefined) {
+                var useCacheSql = this_1.generateFacetUseCacheSql(facetCacheUsageConfiguration, tableConfig, key, facetConfig);
+                if (useCacheSql !== undefined) {
+                    facets.set(key, useCacheSql);
+                }
+                else if (facetConfig.selectField !== undefined) {
                     var orderBy = facetConfig.orderBy ? facetConfig.orderBy : 'count desc';
                     var from = facetConfig.selectFrom !== undefined ? facetConfig.selectFrom : tableConfig.tableName;
                     facets.set(key, 'SELECT count(*) AS count, ' + facetConfig.selectField + ' AS value '
@@ -176,12 +212,33 @@ var SqlQueryBuilder = /** @class */ (function () {
                 }
             }
         };
+        var this_1 = this;
         for (var key in facetConfigs) {
             _loop_1(key);
         }
         return facets;
     };
     ;
+    SqlQueryBuilder.prototype.generateFacetUseCacheSql = function (useFacetCache, tableConfig, facetKey, facetConfig) {
+        if (useFacetCache === undefined || facetConfig.cache === undefined
+            || facetConfig.cache.useCache === false || facetConfig.cache.cachedSelectSql === undefined
+            || useFacetCache[tableConfig.key] === undefined
+            || useFacetCache[tableConfig.key].facetKeys.indexOf(facetKey) < 0) {
+            return undefined;
+        }
+        return facetConfig.cache.cachedSelectSql;
+    };
+    SqlQueryBuilder.prototype.generateFacetCacheSql = function (tableConfig, facetKey, facetConfig) {
+        if (facetConfig.cache === undefined || facetConfig.cache.useCache === false) {
+            return undefined;
+        }
+        var fields = ['count', 'value'];
+        if (facetConfig.withLabelField === true) {
+            fields.push('label');
+        }
+        var sql = 'SELECT ' + fields.join(', ') + ' FROM fc_real_' + facets_1.FacetUtils.generateFacetCacheKey(tableConfig.key, facetKey);
+        return sql;
+    };
     SqlQueryBuilder.prototype.isSpatialQuery = function (tableConfig, adapterQuery) {
         if (adapterQuery !== undefined && adapterQuery.spatial !== undefined && adapterQuery.spatial.geo_loc_p !== undefined &&
             adapterQuery.spatial.geo_loc_p.nearby !== undefined && tableConfig.spartialConfig !== undefined) {
@@ -258,6 +315,9 @@ var SqlQueryBuilder = /** @class */ (function () {
         var values = this.mapperUtils.prepareValueToArray(value, splitter);
         value = values.map(function (inValue) { return _this.sanitizeSqlFilterValue(inValue); }).join(joiner);
         return value;
+    };
+    SqlQueryBuilder.prototype.extractDbResult = function (dbresult, client) {
+        return sql_utils_1.SqlUtils.extractDbResult(dbresult, client);
     };
     SqlQueryBuilder.prototype.createInValueList = function (fieldName, fieldValues, prefix, joiner, suffix, nullAction) {
         var me = this;
@@ -461,12 +521,6 @@ var SqlQueryBuilder = /** @class */ (function () {
             realFieldName = this.mapToAdapterFieldName(tableConfig, fieldName);
         }
         return this.generateFilter(realFieldName, action, value);
-    };
-    SqlQueryBuilder.prototype.extractDbResult = function (dbresult, client) {
-        if (client === 'mysql') {
-            return dbresult[0];
-        }
-        return dbresult;
     };
     return SqlQueryBuilder;
 }());

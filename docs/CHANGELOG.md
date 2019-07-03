@@ -20,9 +20,11 @@
 
 ## 4.2.0
 - added new type+features for managing object-detection image-objects
+- added facetcache
 
 ### new features
 - common: added new type+features for managing object-detection image-objects
+- common: added facetcache
 
 ### improvements
 - common: improved null-handling for sql-filter

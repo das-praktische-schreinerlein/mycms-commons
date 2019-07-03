@@ -1,7 +1,9 @@
 import {AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
 import {isDate} from 'util';
 import {DateUtils} from '../../commons/utils/date.utils';
-import {LogUtils} from "../../commons/utils/log.utils";
+import {LogUtils} from '../../commons/utils/log.utils';
+import {FacetUtils, FacetValueType} from '../model/container/facets';
+import {SqlUtils} from "./sql-utils";
 
 export interface SelectQueryData {
     where: string[];
@@ -29,8 +31,15 @@ export interface TableFacetConfig {
     selectLimit?: number;
     noFacet?: boolean;
     selectSql?: string;
+    cache?: {
+        useCache: false | 'EVER' | 'IF_VALID';
+        cachedSelectSql?: string;
+    };
+    withLabelField?: boolean;
+    triggerTables?: string[];
+    valueType?: FacetValueType;
     constValues?: string [];
-    action: string;
+    action?: AdapterFilterActions;
     filterField?: string;
     filterFields?: string[];
 }
@@ -42,7 +51,7 @@ export interface OptionalGroupByConfig {
 }
 
 export interface LoadDetailDataConfig {
-    profile: string[];
+    profile: string | string[];
     sql: string;
     parameterNames: string[];
     modes?: string[];
@@ -53,11 +62,11 @@ export interface TableConfig {
     tableName: string;
     selectFrom: string;
     selectFieldList: string[];
-    facetConfigs: {};
-    filterMapping: {};
-    fieldMapping: {};
-    sortMapping: {};
-    writeMapping?: {};
+    facetConfigs: {[key: string]: TableFacetConfig};
+    filterMapping: {[key: string]: string};
+    fieldMapping: {[key: string]: string};
+    sortMapping: {[key: string]: string};
+    writeMapping?: {[key: string]: string};
     actionTags?: {};
     groupbBySelectFieldList?: boolean;
     groupbBySelectFieldListIgnore?: string[];
@@ -71,8 +80,52 @@ export interface TableConfig {
     };
 }
 
+export interface TableConfigs {
+    [key: string]: TableConfig
+}
+
+export interface FacetCacheUsageConfiguration {
+    facetKeys: string[];
+}
+
+export interface FacetCacheUsageConfigurations {
+    [key: string]: FacetCacheUsageConfiguration;
+}
+
 export class SqlQueryBuilder {
     protected mapperUtils = new MapperUtils();
+
+    public extendTableConfigs(tableConfigs: TableConfigs) {
+        for (const key in tableConfigs) {
+            this.extendTableConfig(tableConfigs[key]);
+        }
+    }
+
+    public extendTableConfig(tableConfig: TableConfig) {
+        for (const facetKey in tableConfig.facetConfigs) {
+            const facetConfig: TableFacetConfig = tableConfig.facetConfigs[facetKey];
+            const sql = facetConfig.selectSql;
+            if (facetConfig.valueType === undefined) {
+                facetConfig.valueType = FacetUtils.calcFacetValueType(facetConfig.valueType);
+            }
+            if (sql) {
+                const sqlParts = SqlUtils.analyzeSimpleSql(sql);
+                if (facetConfig.triggerTables === undefined) {
+                    facetConfig.triggerTables = sqlParts.tables;
+                }
+                if (facetConfig.withLabelField === undefined) {
+                    facetConfig.withLabelField =
+                        sqlParts.fields.indexOf('label') >= 0 || sqlParts.fieldAliases.indexOf('label') >= 0;
+                }
+                if (facetConfig.cache === undefined) {
+                    facetConfig.cache = {cachedSelectSql: undefined, useCache: "IF_VALID"};
+                }
+                if (facetConfig.cache.cachedSelectSql === undefined) {
+                    facetConfig.cache.cachedSelectSql = this.generateFacetCacheSql(tableConfig, facetKey, facetConfig);
+                }
+            }
+        }
+    }
 
     public transformToSqlDialect(sql: string, client: string): string {
         if (client === 'sqlite3') {
@@ -223,7 +276,8 @@ export class SqlQueryBuilder {
         return query;
     }
 
-    public getFacetSql(tableConfig: TableConfig, adapterOpts: AdapterOpts): Map<string, string> {
+    public getFacetSql(tableConfig: TableConfig, facetCacheUsageConfiguration: FacetCacheUsageConfigurations,
+                       adapterOpts: AdapterOpts): Map<string, string> {
         const facetConfigs = tableConfig.facetConfigs;
 
         const facets = new Map<string, string>();
@@ -238,8 +292,10 @@ export class SqlQueryBuilder {
                 continue;
             }
             if (adapterOpts.showFacets === true || (adapterOpts.showFacets instanceof Array && adapterOpts.showFacets.indexOf(key) >= 0)) {
-
-                if (facetConfig.selectField !== undefined) {
+                const useCacheSql = this.generateFacetUseCacheSql(facetCacheUsageConfiguration, tableConfig, key, facetConfig);
+                if (useCacheSql !== undefined) {
+                    facets.set(key, useCacheSql);
+                } else if (facetConfig.selectField !== undefined) {
                     const orderBy = facetConfig.orderBy ? facetConfig.orderBy : 'count desc';
                     const from = facetConfig.selectFrom !== undefined ? facetConfig.selectFrom : tableConfig.tableName;
                     facets.set(key, 'SELECT count(*) AS count, ' + facetConfig.selectField + ' AS value '
@@ -260,6 +316,33 @@ export class SqlQueryBuilder {
         return facets;
     };
 
+    protected generateFacetUseCacheSql(useFacetCache: FacetCacheUsageConfigurations, tableConfig: TableConfig,
+                                       facetKey: string, facetConfig: TableFacetConfig): string {
+        if (useFacetCache === undefined || facetConfig.cache === undefined
+            || facetConfig.cache.useCache === false || facetConfig.cache.cachedSelectSql === undefined
+            || useFacetCache[tableConfig.key] === undefined
+            || useFacetCache[tableConfig.key].facetKeys.indexOf(facetKey) < 0) {
+            return undefined;
+        }
+
+        return facetConfig.cache.cachedSelectSql;
+    }
+
+    protected generateFacetCacheSql(tableConfig: TableConfig, facetKey: string, facetConfig: TableFacetConfig): string {
+        if (facetConfig.cache === undefined || facetConfig.cache.useCache === false) {
+            return undefined;
+        }
+
+        const fields: string[] = ['count', 'value'];
+        if (facetConfig.withLabelField === true) {
+            fields.push('label');
+        }
+
+        const sql = 'SELECT ' + fields.join(', ') + ' FROM fc_real_' + FacetUtils.generateFacetCacheKey(tableConfig.key, facetKey);
+
+        return sql;
+    }
+
     public isSpatialQuery(tableConfig: TableConfig, adapterQuery: AdapterQuery): boolean {
         if (adapterQuery !== undefined && adapterQuery.spatial !== undefined && adapterQuery.spatial.geo_loc_p !== undefined &&
             adapterQuery.spatial.geo_loc_p.nearby !== undefined && tableConfig.spartialConfig !== undefined) {
@@ -269,7 +352,7 @@ export class SqlQueryBuilder {
         return false;
     };
 
-    public generateFilter(fieldName: string, action: string, value: any, throwOnUnknown?: boolean): string {
+    public generateFilter(fieldName: string, action: string | AdapterFilterActions, value: any, throwOnUnknown?: boolean): string {
         let query = '';
         let containsNull = false;
         const me = this;
@@ -335,6 +418,11 @@ export class SqlQueryBuilder {
         const values = this.mapperUtils.prepareValueToArray(value, splitter);
         value = values.map(inValue => this.sanitizeSqlFilterValue(inValue)).join(joiner);
         return value;
+    }
+
+
+    public extractDbResult(dbresult: any, client: string): any {
+        return SqlUtils.extractDbResult(dbresult, client);
     }
 
     protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string,
@@ -526,7 +614,7 @@ export class SqlQueryBuilder {
         return this.mapperUtils.mapToAdapterFieldName(tableConfig.fieldMapping, fieldName);
     }
 
-    protected mapFilterToAdapterQuery(tableConfig: TableConfig, fieldName: string, action: string, value: any): string {
+    protected mapFilterToAdapterQuery(tableConfig: TableConfig, fieldName: string, action: string | AdapterFilterActions, value: any): string {
         let realFieldName = undefined;
         if (fieldName === 'id') {
             const values = [];
@@ -564,14 +652,6 @@ export class SqlQueryBuilder {
 
 
         return this.generateFilter(realFieldName, action, value);
-    }
-
-    public extractDbResult(dbresult: any, client: string): any {
-        if (client === 'mysql') {
-            return dbresult[0];
-        }
-
-        return dbresult;
     }
 }
 
