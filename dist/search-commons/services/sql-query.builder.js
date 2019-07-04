@@ -31,6 +31,10 @@ var SqlQueryBuilder = /** @class */ (function () {
                     facetConfig.withLabelField =
                         sqlParts.fields.indexOf('label') >= 0 || sqlParts.fieldAliases.indexOf('label') >= 0;
                 }
+                if (facetConfig.withIdField === undefined) {
+                    facetConfig.withIdField =
+                        sqlParts.fields.indexOf('id') >= 0 || sqlParts.fieldAliases.indexOf('id') >= 0;
+                }
                 if (facetConfig.cache === undefined) {
                     facetConfig.cache = { cachedSelectSql: undefined, useCache: "IF_VALID" };
                 }
@@ -222,11 +226,18 @@ var SqlQueryBuilder = /** @class */ (function () {
     SqlQueryBuilder.prototype.generateFacetUseCacheSql = function (useFacetCache, tableConfig, facetKey, facetConfig) {
         if (useFacetCache === undefined || facetConfig.cache === undefined
             || facetConfig.cache.useCache === false || facetConfig.cache.cachedSelectSql === undefined
-            || useFacetCache[tableConfig.key] === undefined
-            || useFacetCache[tableConfig.key].facetKeys.indexOf(facetKey) < 0) {
+            || useFacetCache[tableConfig.key] === undefined) {
             return undefined;
         }
-        return facetConfig.cache.cachedSelectSql;
+        var found = false;
+        for (var _i = 0, _a = useFacetCache[tableConfig.key].facetKeyPatterns; _i < _a.length; _i++) {
+            var pattern = _a[_i];
+            if (facetKey.match(new RegExp(pattern))) {
+                found = true;
+                break;
+            }
+        }
+        return found ? facetConfig.cache.cachedSelectSql : undefined;
     };
     SqlQueryBuilder.prototype.generateFacetCacheSql = function (tableConfig, facetKey, facetConfig) {
         if (facetConfig.cache === undefined || facetConfig.cache.useCache === false) {
@@ -235,6 +246,9 @@ var SqlQueryBuilder = /** @class */ (function () {
         var fields = ['count', 'value'];
         if (facetConfig.withLabelField === true) {
             fields.push('label');
+        }
+        if (facetConfig.withIdField === true) {
+            fields.push('id');
         }
         var sql = 'SELECT ' + fields.join(', ') + ' FROM fc_real_' + facets_1.FacetUtils.generateFacetCacheKey(tableConfig.key, facetKey);
         return sql;

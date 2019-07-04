@@ -29,6 +29,7 @@ export interface TableFacetConfig {
         cachedSelectSql?: string;
     };
     withLabelField?: boolean;
+    withIdField?: boolean;
     triggerTables?: string[];
     valueType?: FacetValueType;
     constValues?: string[];
@@ -83,7 +84,7 @@ export interface TableConfigs {
     [key: string]: TableConfig;
 }
 export interface FacetCacheUsageConfiguration {
-    facetKeys: string[];
+    facetKeyPatterns: string[];
 }
 export interface FacetCacheUsageConfigurations {
     [key: string]: FacetCacheUsageConfiguration;

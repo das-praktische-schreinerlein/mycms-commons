@@ -36,6 +36,7 @@ export interface TableFacetConfig {
         cachedSelectSql?: string;
     };
     withLabelField?: boolean;
+    withIdField?: boolean;
     triggerTables?: string[];
     valueType?: FacetValueType;
     constValues?: string [];
@@ -85,7 +86,7 @@ export interface TableConfigs {
 }
 
 export interface FacetCacheUsageConfiguration {
-    facetKeys: string[];
+    facetKeyPatterns: string[];
 }
 
 export interface FacetCacheUsageConfigurations {
@@ -116,6 +117,10 @@ export class SqlQueryBuilder {
                 if (facetConfig.withLabelField === undefined) {
                     facetConfig.withLabelField =
                         sqlParts.fields.indexOf('label') >= 0 || sqlParts.fieldAliases.indexOf('label') >= 0;
+                }
+                if (facetConfig.withIdField === undefined) {
+                    facetConfig.withIdField =
+                        sqlParts.fields.indexOf('id') >= 0 || sqlParts.fieldAliases.indexOf('id') >= 0;
                 }
                 if (facetConfig.cache === undefined) {
                     facetConfig.cache = {cachedSelectSql: undefined, useCache: "IF_VALID"};
@@ -320,12 +325,20 @@ export class SqlQueryBuilder {
                                        facetKey: string, facetConfig: TableFacetConfig): string {
         if (useFacetCache === undefined || facetConfig.cache === undefined
             || facetConfig.cache.useCache === false || facetConfig.cache.cachedSelectSql === undefined
-            || useFacetCache[tableConfig.key] === undefined
-            || useFacetCache[tableConfig.key].facetKeys.indexOf(facetKey) < 0) {
+            || useFacetCache[tableConfig.key] === undefined) {
             return undefined;
         }
 
-        return facetConfig.cache.cachedSelectSql;
+
+        let found = false;
+        for (const pattern of useFacetCache[tableConfig.key].facetKeyPatterns) {
+            if (facetKey.match(new RegExp(pattern))) {
+                found = true;
+                break;
+            }
+        }
+
+        return found ? facetConfig.cache.cachedSelectSql : undefined;
     }
 
     protected generateFacetCacheSql(tableConfig: TableConfig, facetKey: string, facetConfig: TableFacetConfig): string {
@@ -336,6 +349,9 @@ export class SqlQueryBuilder {
         const fields: string[] = ['count', 'value'];
         if (facetConfig.withLabelField === true) {
             fields.push('label');
+        }
+        if (facetConfig.withIdField === true) {
+            fields.push('id');
         }
 
         const sql = 'SELECT ' + fields.join(', ') + ' FROM fc_real_' + FacetUtils.generateFacetCacheKey(tableConfig.key, facetKey);
