@@ -87,7 +87,10 @@ export interface FacetCacheUsageConfiguration {
     facetKeyPatterns: string[];
 }
 export interface FacetCacheUsageConfigurations {
-    [key: string]: FacetCacheUsageConfiguration;
+    active: boolean;
+    entities: {
+        [key: string]: FacetCacheUsageConfiguration;
+    };
 }
 export declare class SqlQueryBuilder {
     protected mapperUtils: MapperUtils;
@@ -97,9 +100,9 @@ export declare class SqlQueryBuilder {
     selectQueryTransformToSql(query: SelectQueryData): string;
     queryTransformToAdapterWriteQuery(tableConfig: TableConfig, method: string, props: any, adapterOpts: AdapterOpts): WriteQueryData;
     queryTransformToAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
-    getFacetSql(tableConfig: TableConfig, facetCacheUsageConfiguration: FacetCacheUsageConfigurations, adapterOpts: AdapterOpts): Map<string, string>;
-    protected generateFacetUseCacheSql(useFacetCache: FacetCacheUsageConfigurations, tableConfig: TableConfig, facetKey: string, facetConfig: TableFacetConfig): string;
-    protected generateFacetCacheSql(tableConfig: TableConfig, facetKey: string, facetConfig: TableFacetConfig): string;
+    getFacetSql(tableConfig: TableConfig, facetCacheUsageConfigurations: FacetCacheUsageConfigurations, adapterOpts: AdapterOpts): Map<string, string>;
+    protected generateFacetUseCacheSql(facetCacheUsageConfigurations: FacetCacheUsageConfigurations, tableConfig: TableConfig, facetKey: string, tableFacetConfig: TableFacetConfig): string;
+    protected generateFacetCacheSql(tableConfig: TableConfig, facetKey: string, tableFacetConfig: TableFacetConfig): string;
     isSpatialQuery(tableConfig: TableConfig, adapterQuery: AdapterQuery): boolean;
     generateFilter(fieldName: string, action: string | AdapterFilterActions, value: any, throwOnUnknown?: boolean): string;
     sanitizeSqlFilterValue(value: any): string;

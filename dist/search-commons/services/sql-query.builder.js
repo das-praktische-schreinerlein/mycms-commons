@@ -181,7 +181,7 @@ var SqlQueryBuilder = /** @class */ (function () {
         this.generateGroupByForQuery(tableConfig, method, query, adapterQuery);
         return query;
     };
-    SqlQueryBuilder.prototype.getFacetSql = function (tableConfig, facetCacheUsageConfiguration, adapterOpts) {
+    SqlQueryBuilder.prototype.getFacetSql = function (tableConfig, facetCacheUsageConfigurations, adapterOpts) {
         var facetConfigs = tableConfig.facetConfigs;
         var facets = new Map();
         var _loop_1 = function (key) {
@@ -194,7 +194,7 @@ var SqlQueryBuilder = /** @class */ (function () {
                 return "continue";
             }
             if (adapterOpts.showFacets === true || (adapterOpts.showFacets instanceof Array && adapterOpts.showFacets.indexOf(key) >= 0)) {
-                var useCacheSql = this_1.generateFacetUseCacheSql(facetCacheUsageConfiguration, tableConfig, key, facetConfig);
+                var useCacheSql = this_1.generateFacetUseCacheSql(facetCacheUsageConfigurations, tableConfig, key, facetConfig);
                 if (useCacheSql !== undefined) {
                     facets.set(key, useCacheSql);
                 }
@@ -223,31 +223,32 @@ var SqlQueryBuilder = /** @class */ (function () {
         return facets;
     };
     ;
-    SqlQueryBuilder.prototype.generateFacetUseCacheSql = function (useFacetCache, tableConfig, facetKey, facetConfig) {
-        if (useFacetCache === undefined || facetConfig.cache === undefined
-            || facetConfig.cache.useCache === false || facetConfig.cache.cachedSelectSql === undefined
-            || useFacetCache[tableConfig.key] === undefined) {
+    SqlQueryBuilder.prototype.generateFacetUseCacheSql = function (facetCacheUsageConfigurations, tableConfig, facetKey, tableFacetConfig) {
+        if (facetCacheUsageConfigurations === undefined || tableFacetConfig.cache === undefined
+            || facetCacheUsageConfigurations.active === false || facetCacheUsageConfigurations.entities === undefined
+            || tableFacetConfig.cache.useCache === false || tableFacetConfig.cache.cachedSelectSql === undefined
+            || facetCacheUsageConfigurations.entities[tableConfig.key] === undefined) {
             return undefined;
         }
         var found = false;
-        for (var _i = 0, _a = useFacetCache[tableConfig.key].facetKeyPatterns; _i < _a.length; _i++) {
+        for (var _i = 0, _a = facetCacheUsageConfigurations.entities[tableConfig.key].facetKeyPatterns; _i < _a.length; _i++) {
             var pattern = _a[_i];
             if (facetKey.match(new RegExp(pattern))) {
                 found = true;
                 break;
             }
         }
-        return found ? facetConfig.cache.cachedSelectSql : undefined;
+        return found ? tableFacetConfig.cache.cachedSelectSql : undefined;
     };
-    SqlQueryBuilder.prototype.generateFacetCacheSql = function (tableConfig, facetKey, facetConfig) {
-        if (facetConfig.cache === undefined || facetConfig.cache.useCache === false) {
+    SqlQueryBuilder.prototype.generateFacetCacheSql = function (tableConfig, facetKey, tableFacetConfig) {
+        if (tableFacetConfig.cache === undefined || tableFacetConfig.cache.useCache === false) {
             return undefined;
         }
         var fields = ['count', 'value'];
-        if (facetConfig.withLabelField === true) {
+        if (tableFacetConfig.withLabelField === true) {
             fields.push('label');
         }
-        if (facetConfig.withIdField === true) {
+        if (tableFacetConfig.withIdField === true) {
             fields.push('id');
         }
         var sql = 'SELECT ' + fields.join(', ') + ' FROM fc_real_' + facets_1.FacetUtils.generateFacetCacheKey(tableConfig.key, facetKey);
