@@ -6,6 +6,35 @@ export interface SqlParts {
 }
 
 export class SqlUtils {
+    public static transformToSqliteDialect(sql: string): string {
+        const replace = ' CONCAT(';
+        while (sql.indexOf(replace) > 0) {
+            const start = sql.indexOf(replace);
+            const end = sql.indexOf(')', start);
+            const sqlPre = sql.substr(0, start + 1);
+            const sqlAfter = sql.substr(end + 1);
+            const toBeConverted = sql.substr(start + replace.length, end - start - replace.length);
+            // TODO: check security
+            sql = sqlPre + toBeConverted.replace(/, /g, ' || ') + sqlAfter;
+        }
+
+        sql = sql.replace(/GREATEST\(/g, 'MAX(');
+        sql = sql.replace(/SUBSTRING_INDEX\(/g, 'SUBSTR(');
+        sql = sql.replace(/CHAR_LENGTH\(/g, 'LENGTH(');
+        sql = sql.replace(/GROUP_CONCAT\(DISTINCT CONCAT\((.*?)\) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT( CONCAT($1), $2)');
+        sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) ORDER BY (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $3)');
+        sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
+        sql = sql.replace(/GROUP_CONCAT\((.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
+        sql = sql.replace(/MONTH\((.*?)\)/g, 'CAST(STRFTIME("%m", $1) AS INT)');
+        sql = sql.replace(/WEEK\((.*?)\)/g, 'CAST(STRFTIME("%W", $1) AS INT)');
+        sql = sql.replace(/YEAR\((.*?)\)/g, 'CAST(STRFTIME("%Y", $1) AS INT)');
+        sql = sql.replace(/DATE_FORMAT\((.+?), GET_FORMAT\(DATE, "ISO"\)\)/g, 'DATETIME($1)');
+        sql = sql.replace(/TIME_TO_SEC\(TIMEDIFF\((.*?), (.*?)\)\)\/3600/g, '(JULIANDAY($1) - JULIANDAY($2)) * 24');
+        sql = sql.replace(/ FROM DUAL /gi, ' ');
+
+        return  sql;
+    }
+
     public static extractDbResult(dbresult: any, client: string): any {
         if (client === 'mysql') {
             return dbresult[0];

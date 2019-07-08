@@ -46,28 +46,7 @@ var SqlQueryBuilder = /** @class */ (function () {
     };
     SqlQueryBuilder.prototype.transformToSqlDialect = function (sql, client) {
         if (client === 'sqlite3') {
-            var replace = ' CONCAT(';
-            while (sql.indexOf(replace) > 0) {
-                var start = sql.indexOf(replace);
-                var end = sql.indexOf(')', start);
-                var sqlPre = sql.substr(0, start + 1);
-                var sqlAfter = sql.substr(end + 1);
-                var toBeConverted = sql.substr(start + replace.length, end - start - replace.length);
-                // TODO: check security
-                sql = sqlPre + toBeConverted.replace(/, /g, ' || ') + sqlAfter;
-            }
-            sql = sql.replace(/GREATEST\(/g, 'MAX(');
-            sql = sql.replace(/SUBSTRING_INDEX\(/g, 'SUBSTR(');
-            sql = sql.replace(/CHAR_LENGTH\(/g, 'LENGTH(');
-            sql = sql.replace(/GROUP_CONCAT\(DISTINCT CONCAT\((.*?)\) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT( CONCAT($1), $2)');
-            sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) ORDER BY (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $3)');
-            sql = sql.replace(/GROUP_CONCAT\(DISTINCT (.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
-            sql = sql.replace(/GROUP_CONCAT\((.*?) SEPARATOR (.*?)\)/g, 'GROUP_CONCAT($1, $2)');
-            sql = sql.replace(/MONTH\((.*?)\)/g, 'CAST(STRFTIME("%m", $1) AS INT)');
-            sql = sql.replace(/WEEK\((.*?)\)/g, 'CAST(STRFTIME("%W", $1) AS INT)');
-            sql = sql.replace(/YEAR\((.*?)\)/g, 'CAST(STRFTIME("%Y", $1) AS INT)');
-            sql = sql.replace(/DATE_FORMAT\((.+?), GET_FORMAT\(DATE, "ISO"\)\)/g, 'DATETIME($1)');
-            sql = sql.replace(/TIME_TO_SEC\(TIMEDIFF\((.*?), (.*?)\)\)\/3600/g, '(JULIANDAY($1) - JULIANDAY($2)) * 24');
+            sql = sql_utils_1.SqlUtils.transformToSqliteDialect(sql);
         }
         // console.error("sql", sql);
         return sql;
