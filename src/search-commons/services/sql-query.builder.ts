@@ -302,13 +302,11 @@ export class SqlQueryBuilder {
 
     public generateFacetSqlFromSelectField(tableName: string, tableFacetConfig: TableFacetConfig): string {
         if (tableFacetConfig.selectField === undefined) {
-            console.error("no select");
             return;
         }
         const orderBy = tableFacetConfig.orderBy ? tableFacetConfig.orderBy : 'count desc';
         const from = tableFacetConfig.selectFrom !== undefined ? tableFacetConfig.selectFrom : tableName;
 
-        console.error("found select");
         return 'SELECT count(*) AS count, ' + tableFacetConfig.selectField + ' AS value '
             + 'FROM ' + from + ' GROUP BY value ORDER BY ' + orderBy;
     }

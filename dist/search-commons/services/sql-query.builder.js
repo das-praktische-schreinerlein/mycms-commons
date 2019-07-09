@@ -201,12 +201,10 @@ var SqlQueryBuilder = /** @class */ (function () {
     ;
     SqlQueryBuilder.prototype.generateFacetSqlFromSelectField = function (tableName, tableFacetConfig) {
         if (tableFacetConfig.selectField === undefined) {
-            console.error("no select");
             return;
         }
         var orderBy = tableFacetConfig.orderBy ? tableFacetConfig.orderBy : 'count desc';
         var from = tableFacetConfig.selectFrom !== undefined ? tableFacetConfig.selectFrom : tableName;
-        console.error("found select");
         return 'SELECT count(*) AS count, ' + tableFacetConfig.selectField + ' AS value '
             + 'FROM ' + from + ' GROUP BY value ORDER BY ' + orderBy;
     };
