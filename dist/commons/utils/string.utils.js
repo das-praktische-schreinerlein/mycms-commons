@@ -52,6 +52,19 @@ var StringUtils = /** @class */ (function () {
             .trim()
             .toLowerCase() : '';
     };
+    StringUtils.findNeedle = function (source, needle, findIdx) {
+        var lastPos = -needle.length;
+        var curPos = -1;
+        var idx = -1;
+        do {
+            curPos = source.indexOf(needle, lastPos + needle.length);
+            if (curPos >= 0) {
+                lastPos = curPos;
+                idx++;
+            }
+        } while (curPos >= 0 && idx < findIdx);
+        return lastPos >= 0 && idx === findIdx ? lastPos : -1;
+    };
     return StringUtils;
 }());
 exports.StringUtils = StringUtils;

@@ -57,4 +57,18 @@ export class StringUtils {
             .toLowerCase() : '';
     }
 
+    static findNeedle(source: string, needle: string, findIdx: number): number {
+        let lastPos = -needle.length;
+        let curPos = -1;
+        let idx = -1;
+        do {
+            curPos = source.indexOf(needle, lastPos + needle.length);
+            if (curPos >= 0) {
+                lastPos = curPos;
+                idx++;
+            }
+        } while (curPos >= 0 && idx < findIdx);
+        return lastPos >= 0 && idx === findIdx ? lastPos : -1;
+    }
+
 }

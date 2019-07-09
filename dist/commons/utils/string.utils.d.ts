@@ -4,4 +4,5 @@ export declare class StringUtils {
     static mergeKeywords(src: string, mergerSrc: string, subtract: boolean): string;
     static calcCharCodeForListIndex(code: number): string;
     static generateTechnicalName(name: string): string;
+    static findNeedle(source: string, needle: string, findIdx: number): number;
 }
