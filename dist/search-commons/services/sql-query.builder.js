@@ -18,7 +18,7 @@ var SqlQueryBuilder = /** @class */ (function () {
     SqlQueryBuilder.prototype.extendTableConfig = function (tableConfig) {
         for (var facetKey in tableConfig.facetConfigs) {
             var facetConfig = tableConfig.facetConfigs[facetKey];
-            var sql = facetConfig.selectSql || this.generateFacetSqlFromSelectField(tableConfig.tableName, facetConfig);
+            var sql = facetConfig.selectSql || this.generateFacetSqlForSelectField(tableConfig.tableName, facetConfig);
             if (facetConfig.valueType === undefined) {
                 facetConfig.valueType = facets_1.FacetUtils.calcFacetValueType(facetConfig.valueType);
             }
@@ -178,7 +178,7 @@ var SqlQueryBuilder = /** @class */ (function () {
                     facets.set(key, useCacheSql);
                 }
                 else if (facetConfig.selectField !== undefined) {
-                    facets.set(key, this_1.generateFacetSqlFromSelectField(tableConfig.tableName, facetConfig));
+                    facets.set(key, this_1.generateFacetSqlForSelectField(tableConfig.tableName, facetConfig));
                 }
                 else if (facetConfig.selectSql !== undefined) {
                     facets.set(key, facetConfig.selectSql);
@@ -199,14 +199,20 @@ var SqlQueryBuilder = /** @class */ (function () {
         return facets;
     };
     ;
-    SqlQueryBuilder.prototype.generateFacetSqlFromSelectField = function (tableName, tableFacetConfig) {
+    SqlQueryBuilder.prototype.generateFacetSqlForSelectField = function (tableName, tableFacetConfig) {
         if (tableFacetConfig.selectField === undefined) {
             return;
         }
-        var orderBy = tableFacetConfig.orderBy ? tableFacetConfig.orderBy : 'count desc';
+        var orderBy = this.generateFacetSqlSortForSelectField(tableFacetConfig);
         var from = tableFacetConfig.selectFrom !== undefined ? tableFacetConfig.selectFrom : tableName;
         return 'SELECT count(*) AS count, ' + tableFacetConfig.selectField + ' AS value '
             + 'FROM ' + from + ' GROUP BY value ORDER BY ' + orderBy;
+    };
+    SqlQueryBuilder.prototype.generateFacetSqlSortForSelectField = function (tableFacetConfig) {
+        if (tableFacetConfig.selectField === undefined) {
+            return;
+        }
+        return tableFacetConfig.orderBy ? tableFacetConfig.orderBy : 'count desc';
     };
     SqlQueryBuilder.prototype.generateFacetUseCacheSql = function (facetCacheUsageConfigurations, tableConfig, facetKey, tableFacetConfig) {
         if (facetCacheUsageConfigurations === undefined || tableFacetConfig.cache === undefined

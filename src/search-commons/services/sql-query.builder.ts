@@ -108,7 +108,7 @@ export class SqlQueryBuilder {
     public extendTableConfig(tableConfig: TableConfig) {
         for (const facetKey in tableConfig.facetConfigs) {
             const facetConfig: TableFacetConfig = tableConfig.facetConfigs[facetKey];
-            const sql = facetConfig.selectSql || this.generateFacetSqlFromSelectField(tableConfig.tableName, facetConfig);
+            const sql = facetConfig.selectSql || this.generateFacetSqlForSelectField(tableConfig.tableName, facetConfig);
             if (facetConfig.valueType === undefined) {
                 facetConfig.valueType = FacetUtils.calcFacetValueType(facetConfig.valueType);
             }
@@ -283,7 +283,7 @@ export class SqlQueryBuilder {
                 if (useCacheSql !== undefined) {
                     facets.set(key, useCacheSql);
                 } else if (facetConfig.selectField !== undefined) {
-                    facets.set(key, this.generateFacetSqlFromSelectField(tableConfig.tableName, facetConfig));
+                    facets.set(key, this.generateFacetSqlForSelectField(tableConfig.tableName, facetConfig));
                 } else if (facetConfig.selectSql !== undefined) {
                     facets.set(key, facetConfig.selectSql);
                 } else if (facetConfig.constValues !== undefined) {
@@ -300,15 +300,23 @@ export class SqlQueryBuilder {
         return facets;
     };
 
-    public generateFacetSqlFromSelectField(tableName: string, tableFacetConfig: TableFacetConfig): string {
+    public generateFacetSqlForSelectField(tableName: string, tableFacetConfig: TableFacetConfig): string {
         if (tableFacetConfig.selectField === undefined) {
             return;
         }
-        const orderBy = tableFacetConfig.orderBy ? tableFacetConfig.orderBy : 'count desc';
+        const orderBy = this.generateFacetSqlSortForSelectField(tableFacetConfig);
         const from = tableFacetConfig.selectFrom !== undefined ? tableFacetConfig.selectFrom : tableName;
 
         return 'SELECT count(*) AS count, ' + tableFacetConfig.selectField + ' AS value '
             + 'FROM ' + from + ' GROUP BY value ORDER BY ' + orderBy;
+    }
+
+    public generateFacetSqlSortForSelectField(tableFacetConfig: TableFacetConfig): string {
+        if (tableFacetConfig.selectField === undefined) {
+            return;
+        }
+
+        return tableFacetConfig.orderBy ? tableFacetConfig.orderBy : 'count desc';
     }
 
     protected generateFacetUseCacheSql(facetCacheUsageConfigurations: FacetCacheUsageConfigurations, tableConfig: TableConfig,

@@ -101,7 +101,8 @@ export declare class SqlQueryBuilder {
     queryTransformToAdapterWriteQuery(tableConfig: TableConfig, method: string, props: any, adapterOpts: AdapterOpts): WriteQueryData;
     queryTransformToAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     getFacetSql(tableConfig: TableConfig, facetCacheUsageConfigurations: FacetCacheUsageConfigurations, adapterOpts: AdapterOpts): Map<string, string>;
-    generateFacetSqlFromSelectField(tableName: string, tableFacetConfig: TableFacetConfig): string;
+    generateFacetSqlForSelectField(tableName: string, tableFacetConfig: TableFacetConfig): string;
+    generateFacetSqlSortForSelectField(tableFacetConfig: TableFacetConfig): string;
     protected generateFacetUseCacheSql(facetCacheUsageConfigurations: FacetCacheUsageConfigurations, tableConfig: TableConfig, facetKey: string, tableFacetConfig: TableFacetConfig): string;
     protected generateFacetCacheSql(tableConfig: TableConfig, facetKey: string, tableFacetConfig: TableFacetConfig): string;
     isSpatialQuery(tableConfig: TableConfig, adapterQuery: AdapterQuery): boolean;
