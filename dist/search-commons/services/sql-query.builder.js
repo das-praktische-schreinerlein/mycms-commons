@@ -18,7 +18,7 @@ var SqlQueryBuilder = /** @class */ (function () {
     SqlQueryBuilder.prototype.extendTableConfig = function (tableConfig) {
         for (var facetKey in tableConfig.facetConfigs) {
             var facetConfig = tableConfig.facetConfigs[facetKey];
-            var sql = facetConfig.selectSql;
+            var sql = facetConfig.selectSql || this.generateFacetSqlFromSelectField(tableConfig.tableName, facetConfig);
             if (facetConfig.valueType === undefined) {
                 facetConfig.valueType = facets_1.FacetUtils.calcFacetValueType(facetConfig.valueType);
             }
@@ -178,10 +178,7 @@ var SqlQueryBuilder = /** @class */ (function () {
                     facets.set(key, useCacheSql);
                 }
                 else if (facetConfig.selectField !== undefined) {
-                    var orderBy = facetConfig.orderBy ? facetConfig.orderBy : 'count desc';
-                    var from = facetConfig.selectFrom !== undefined ? facetConfig.selectFrom : tableConfig.tableName;
-                    facets.set(key, 'SELECT count(*) AS count, ' + facetConfig.selectField + ' AS value '
-                        + 'FROM ' + from + ' GROUP BY value ORDER BY ' + orderBy);
+                    facets.set(key, this_1.generateFacetSqlFromSelectField(tableConfig.tableName, facetConfig));
                 }
                 else if (facetConfig.selectSql !== undefined) {
                     facets.set(key, facetConfig.selectSql);
@@ -202,6 +199,17 @@ var SqlQueryBuilder = /** @class */ (function () {
         return facets;
     };
     ;
+    SqlQueryBuilder.prototype.generateFacetSqlFromSelectField = function (tableName, tableFacetConfig) {
+        if (tableFacetConfig.selectField === undefined) {
+            console.error("no select");
+            return;
+        }
+        var orderBy = tableFacetConfig.orderBy ? tableFacetConfig.orderBy : 'count desc';
+        var from = tableFacetConfig.selectFrom !== undefined ? tableFacetConfig.selectFrom : tableName;
+        console.error("found select");
+        return 'SELECT count(*) AS count, ' + tableFacetConfig.selectField + ' AS value '
+            + 'FROM ' + from + ' GROUP BY value ORDER BY ' + orderBy;
+    };
     SqlQueryBuilder.prototype.generateFacetUseCacheSql = function (facetCacheUsageConfigurations, tableConfig, facetKey, tableFacetConfig) {
         if (facetCacheUsageConfigurations === undefined || tableFacetConfig.cache === undefined
             || facetCacheUsageConfigurations.active === false || facetCacheUsageConfigurations.entities === undefined
