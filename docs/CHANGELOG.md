@@ -18,6 +18,22 @@
 - none
 
 
+## 4.3.0
+- none
+
+### new features
+- none
+
+### improvements
+- none
+
+### bug fixes
+- none 
+ 
+### breaking changes
+- none
+
+
 ## 4.2.0
 - added new type+features for managing object-detection image-objects
 - added facetcache
