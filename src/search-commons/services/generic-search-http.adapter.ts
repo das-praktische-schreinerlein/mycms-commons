@@ -251,7 +251,8 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
         const me = this;
         opts = opts || {};
         opts.endpoint = this.getHttpEndpoint('export', format);
-        return super.GET(this.getPath('export', mapper, opts.params, opts), opts)
+        opts.responseType = 'text';
+        return super.GET(this.getPath('export', mapper, opts.params, opts), opts, opts)
             .then(response => {
                 if (response) {
                     return utils.resolve(response.text());

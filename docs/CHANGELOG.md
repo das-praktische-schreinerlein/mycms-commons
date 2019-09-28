@@ -19,16 +19,16 @@
 
 
 ## 4.3.0
-- none
+- moved full implementation of facetcache to commons
 
 ### new features
-- none
+- common: moved full implementation of facetcache to commons
 
 ### improvements
 - none
 
 ### bug fixes
-- none 
+-common: added optional responsetype to GenericSearchHttpAdapter for export  
  
 ### breaking changes
 - none

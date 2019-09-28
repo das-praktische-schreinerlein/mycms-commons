@@ -236,7 +236,8 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         var me = this;
         opts = opts || {};
         opts.endpoint = this.getHttpEndpoint('export', format);
-        return _super.prototype.GET.call(this, this.getPath('export', mapper, opts.params, opts), opts)
+        opts.responseType = 'text';
+        return _super.prototype.GET.call(this, this.getPath('export', mapper, opts.params, opts), opts, opts)
             .then(function (response) {
             if (response) {
                 return js_data_1.utils.resolve(response.text());

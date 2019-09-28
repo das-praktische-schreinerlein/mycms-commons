@@ -1,0 +1,34 @@
+import { FacetCacheConfiguration } from './facetcache.configuration';
+import { FacetCacheAdapter } from './facetcache.adapter';
+export declare class Sqlite3FacetCacheAdapter implements FacetCacheAdapter {
+    protected sqlScriptPath: string;
+    constructor(sqlScriptPath: string);
+    supportsDatabaseManagedUpdate(): boolean;
+    generateCreateTableTriggerSql(table: string, triggerSql: string): string[];
+    generateDropTableTriggerSql(table: string): string[];
+    generateCreateUpdateScheduleSql(facetKey: string, updateSql: string, checkInterval: number): string[];
+    generateDropUpdateScheduleSql(facetKey: string): string[];
+    generateFacetTriggerCallSql(facetKey: string): string[];
+    generateCreateFacetCacheConfigsSql(configurations: FacetCacheConfiguration[]): string[];
+    generateCreateFacetCacheConfigSql(configuration: FacetCacheConfiguration): string[];
+    generateRemoveFacetCacheConfigsSql(configurations: FacetCacheConfiguration[]): string[];
+    generateRemoveFacetCacheConfigSql(configuration: FacetCacheConfiguration): string[];
+    generateSelectTrueIfTableFacetCacheConfigExistsSql(): string;
+    generateUpdateFacetsCacheSql(configurations: FacetCacheConfiguration[]): string[];
+    generateUpdateFacetCacheSql(configuration: FacetCacheConfiguration): string[];
+    generateDeleteFacetCacheSql(configuration: FacetCacheConfiguration): string[];
+    generateSelectFacetCacheUpdateTriggerSql(): string;
+    generateDeleteFacetCacheUpdateTriggerSql(configuration: FacetCacheConfiguration): string[];
+    generateCreateFacetViewsSql(configurations: FacetCacheConfiguration[]): string[];
+    generateCreateFacetViewSql(configuration: FacetCacheConfiguration): string[];
+    generateDropFacetViewsSql(configurations: FacetCacheConfiguration[]): string[];
+    generateDropFacetViewSql(configuration: FacetCacheConfiguration): string[];
+    generateCreateFacetCacheTables(): string[];
+    generateCreateFacetCacheTriggerFunctions(): string[];
+    generateCreateFacetCacheUpdateCheckFunctions(): string[];
+    generateDropFacetCacheTables(): string[];
+    generateDropFacetCacheTriggerFunctions(): string[];
+    generateDropFacetCacheUpdateCheckFunctions(): string[];
+    generateSelectTrueIfTableExistsSql(table: any): string;
+    protected extractSqlFileOnScriptPath(sqlFile: string, splitter: string): string[];
+}
