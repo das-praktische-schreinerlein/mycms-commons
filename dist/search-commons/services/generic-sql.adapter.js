@@ -63,7 +63,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                 var records = value[0];
                 if (actionTagForm.deletes === true) {
                     if (records.length === 0) {
-                        return resolve(new TourDocRecord({}));
+                        return resolve(record);
                     }
                     return js_data_1.utils.reject('result record must empty for deleting actionForm:' + records.length + ' for query:' + adapterQuery);
                 }
