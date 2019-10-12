@@ -31,6 +31,7 @@ export interface ActionTagForm {
     type: string;
     recordId: string;
     payload: any;
+    deletes?: boolean;
 }
 
 export abstract class ActionTagUtils {

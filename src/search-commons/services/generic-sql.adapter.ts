@@ -66,10 +66,16 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                 return me._findAll(mapper, adapterQuery, opts);
             }).then(value => {
                 const [records] = value;
-                if (records.length === 1) {
+                if (actionTagForm.deletes === true) {
+                    if (records.length === 0) {
+                        return resolve(record);
+                    }
+
+                    return utils.reject('result record must empty for deleting actionForm:' + records.length + ' for query:' + adapterQuery);
+                } else if (records.length === 1) {
                     return resolve(records[0]);
                 } else {
-                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(reason => {
                 console.error('doActionTag failed:', reason);
@@ -101,7 +107,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                 if (records.length === 1) {
                     return resolve(records[0]);
                 } else {
-                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(reason => {
                 console.error('_find failed:', reason);

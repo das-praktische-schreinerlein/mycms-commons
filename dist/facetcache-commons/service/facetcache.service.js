@@ -210,7 +210,7 @@ var FacetCacheService = /** @class */ (function () {
                     var configuration = _a[_i];
                     _loop_1(configuration);
                 }
-                return Promise_serial(promises, { parallelize: 1 }).then(function () {
+                Promise_serial(promises, { parallelize: 1 }).then(function () {
                     return resolve(true);
                 }).catch(function (reason) {
                     return reject(reason);
@@ -232,7 +232,7 @@ var FacetCacheService = /** @class */ (function () {
                 var configuration = _a[_i];
                 _loop_2(configuration);
             }
-            return Promise_serial(promises, { parallelize: 1 }).then(function () {
+            Promise_serial(promises, { parallelize: 1 }).then(function () {
                 return resolve(true);
             }).catch(function (reason) {
                 return reject(reason);
@@ -253,7 +253,7 @@ var FacetCacheService = /** @class */ (function () {
                 var configuration = _a[_i];
                 _loop_3(configuration);
             }
-            return Promise_serial(promises, { parallelize: 1 }).then(function () {
+            Promise_serial(promises, { parallelize: 1 }).then(function () {
                 return resolve(true);
             }).catch(function (reason) {
                 return reject(reason);
@@ -274,7 +274,7 @@ var FacetCacheService = /** @class */ (function () {
                 var configuration = _a[_i];
                 _loop_4(configuration);
             }
-            return Promise_serial(promises, { parallelize: 1 }).then(function () {
+            Promise_serial(promises, { parallelize: 1 }).then(function () {
                 return resolve(true);
             }).catch(function (reason) {
                 return reject(reason);
@@ -295,7 +295,7 @@ var FacetCacheService = /** @class */ (function () {
                 var configuration = _a[_i];
                 _loop_5(configuration);
             }
-            return Promise_serial(promises, { parallelize: 1 }).then(function () {
+            Promise_serial(promises, { parallelize: 1 }).then(function () {
                 return resolve(true);
             }).catch(function (reason) {
                 return reject(reason);
@@ -316,7 +316,7 @@ var FacetCacheService = /** @class */ (function () {
                 var configuration = _a[_i];
                 _loop_6(configuration);
             }
-            return Promise_serial(promises, { parallelize: 1 }).then(function () {
+            Promise_serial(promises, { parallelize: 1 }).then(function () {
                 return resolve(true);
             }).catch(function (reason) {
                 return reject(reason);
@@ -455,7 +455,7 @@ var FacetCacheService = /** @class */ (function () {
                 var sql = sqls_1[_i];
                 _loop_7(sql);
             }
-            return Promise_serial(promises, { parallelize: 1 }).then(function () {
+            Promise_serial(promises, { parallelize: 1 }).then(function () {
                 return resolve(true);
             }).catch(function (reason) {
                 return reject(reason);

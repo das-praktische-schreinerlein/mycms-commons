@@ -43,7 +43,7 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         var result = new Promise(function (resolve, reject) {
             me._doActionTag(mapper, record, actionTagForm, opts).then(function (resultRecord) {
                 if (resultRecord === undefined) {
-                    return reject('record not found');
+                    return js_data_1.utils.reject('record not found');
                 }
                 else {
                     return resolve(resultRecord);

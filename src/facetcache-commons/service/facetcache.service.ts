@@ -240,7 +240,7 @@ export class FacetCacheService {
                     });
                 }
 
-                return Promise_serial(promises, {parallelize: 1}).then(() => {
+                Promise_serial(promises, {parallelize: 1}).then(() => {
                     return resolve(true);
                 }).catch(reason => {
                     return reject(reason);
@@ -259,7 +259,7 @@ export class FacetCacheService {
                 });
             }
 
-            return Promise_serial(promises, {parallelize: 1}).then(() => {
+            Promise_serial(promises, {parallelize: 1}).then(() => {
                 return resolve(true);
             }).catch(reason => {
                 return reject(reason);
@@ -277,7 +277,7 @@ export class FacetCacheService {
                 });
             }
 
-            return Promise_serial(promises, {parallelize: 1}).then(() => {
+            Promise_serial(promises, {parallelize: 1}).then(() => {
                 return resolve(true);
             }).catch(reason => {
                 return reject(reason);
@@ -295,7 +295,7 @@ export class FacetCacheService {
                 });
             }
 
-            return Promise_serial(promises, {parallelize: 1}).then(() => {
+            Promise_serial(promises, {parallelize: 1}).then(() => {
                 return resolve(true);
             }).catch(reason => {
                 return reject(reason);
@@ -313,7 +313,7 @@ export class FacetCacheService {
                 });
             }
 
-            return Promise_serial(promises, {parallelize: 1}).then(() => {
+            Promise_serial(promises, {parallelize: 1}).then(() => {
                 return resolve(true);
             }).catch(reason => {
                 return reject(reason);
@@ -331,7 +331,7 @@ export class FacetCacheService {
                 });
             }
 
-            return Promise_serial(promises, {parallelize: 1}).then(() => {
+            Promise_serial(promises, {parallelize: 1}).then(() => {
                 return resolve(true);
             }).catch(reason => {
                 return reject(reason);
@@ -486,7 +486,7 @@ export class FacetCacheService {
                 });
             }
 
-            return Promise_serial(promises, {parallelize: 1}).then(() => {
+            Promise_serial(promises, {parallelize: 1}).then(() => {
                 return resolve(true);
             }).catch(reason => {
                 return reject(reason);

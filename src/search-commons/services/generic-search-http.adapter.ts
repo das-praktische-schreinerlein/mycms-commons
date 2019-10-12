@@ -41,7 +41,7 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
         const result = new Promise<R>((resolve, reject) => {
             me._doActionTag(mapper, record, actionTagForm, opts).then(resultRecord => {
                 if (resultRecord === undefined) {
-                    return reject('record not found');
+                    return utils.reject('record not found');
                 } else {
                     return resolve(resultRecord);
                 }

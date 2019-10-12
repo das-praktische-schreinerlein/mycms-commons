@@ -29,6 +29,7 @@ export interface ActionTagForm {
     type: string;
     recordId: string;
     payload: any;
+    deletes?: boolean;
 }
 export declare abstract class ActionTagUtils {
     static generateTags(tagConfigs: ActionTagConfig[], record: {}, config: {}, profile: {}): ActionTag[];

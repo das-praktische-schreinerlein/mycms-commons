@@ -61,11 +61,17 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                 return me._findAll(mapper, adapterQuery, opts);
             }).then(function (value) {
                 var records = value[0];
-                if (records.length === 1) {
+                if (actionTagForm.deletes === true) {
+                    if (records.length === 0) {
+                        return resolve(new TourDocRecord({}));
+                    }
+                    return js_data_1.utils.reject('result record must empty for deleting actionForm:' + records.length + ' for query:' + adapterQuery);
+                }
+                else if (records.length === 1) {
                     return resolve(records[0]);
                 }
                 else {
-                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return js_data_1.utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(function (reason) {
                 console.error('doActionTag failed:', reason);
@@ -94,7 +100,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     return resolve(records[0]);
                 }
                 else {
-                    return reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                    return js_data_1.utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(function (reason) {
                 console.error('_find failed:', reason);
