@@ -25,7 +25,7 @@
 - common: moved full implementation of facetcache to commons
 
 ### improvements
-- none
+- common: delete-flag for actionTagForms to handle deleting-tags
 
 ### bug fixes
 -common: added optional responsetype to GenericSearchHttpAdapter for export  
