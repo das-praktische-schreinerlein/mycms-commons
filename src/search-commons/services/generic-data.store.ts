@@ -28,6 +28,10 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
         this.store = new DataStore({
             usePendingFindAll: false,
             usePendingFind: false,
+            addToCache: function(name_: string, data: any, opts: any) {
+                // disabled js-data-cache in generic-datastore because of objects with different loadDetailsProfiles loaded
+                return data;
+            },
             mapperDefaults: {
                 // Override the original to make sure the date properties are actually Date
                 // objects

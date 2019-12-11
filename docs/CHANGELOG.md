@@ -28,7 +28,9 @@
 - common: delete-flag for actionTagForms to handle deleting-tags
 
 ### bug fixes
--common: added optional responsetype to GenericSearchHttpAdapter for export  
+- common: added optional responsetype to GenericSearchHttpAdapter for export  
+- common: disabled js-data-cache in generic-datastore because of objects with different loadDetailsProfiles loaded
+- common: fixed replacement of parameters in generic-sql-adapter - replace global
  
 ### breaking changes
 - none

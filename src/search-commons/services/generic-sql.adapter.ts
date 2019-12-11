@@ -595,7 +595,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                         if (value !== undefined && parameterName === 'id') {
                             value = value.replace(/.*_/g, '');
                         }
-                        sql = sql.replace(':' + parameterName, value);
+                        sql = sql.replace(new RegExp(':' + parameterName, 'g'), value);
                     });
                     const raw = sqlBuilder.raw(sql);
                     const start = (new Date()).getTime();

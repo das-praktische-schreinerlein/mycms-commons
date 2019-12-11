@@ -525,7 +525,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                         if (value !== undefined && parameterName === 'id') {
                             value = value.replace(/.*_/g, '');
                         }
-                        sql = sql.replace(':' + parameterName, value);
+                        sql = sql.replace(new RegExp(':' + parameterName, 'g'), value);
                     });
                     var raw = sqlBuilder.raw(sql);
                     var start = (new Date()).getTime();

@@ -12,6 +12,10 @@ var GenericDataStore = /** @class */ (function () {
         this.store = new js_data_1.DataStore({
             usePendingFindAll: false,
             usePendingFind: false,
+            addToCache: function (name_, data, opts) {
+                // disabled js-data-cache in generic-datastore because of objects with different loadDetailsProfiles loaded
+                return data;
+            },
             mapperDefaults: {
                 // Override the original to make sure the date properties are actually Date
                 // objects
