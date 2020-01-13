@@ -26,6 +26,8 @@
 
 ### improvements
 - common: delete-flag for actionTagForms to handle deleting-tags
+- common: use parameter-substitution for sql
+
 
 ### bug fixes
 - common: added optional responsetype to GenericSearchHttpAdapter for export  
