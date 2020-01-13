@@ -1,8 +1,15 @@
+import * as knex from 'knex';
+
 export interface SqlParts {
     tables: string[];
     tableAliases: string[];
     fields: string[];
     fieldAliases: string[];
+}
+
+export interface RawSqlQueryData {
+    sql: string;
+    parameters: any[];
 }
 
 export class SqlUtils {
@@ -79,5 +86,27 @@ export class SqlUtils {
 
     }
 
+    public static concatRawSqlQueryData(part1: RawSqlQueryData, joiner: String, part2: RawSqlQueryData): RawSqlQueryData {
+        if (part1 === undefined || part1.sql === undefined || part1.sql.length <= 0) {
+            return { sql: part2.sql, parameters: [...part2.parameters]};
+        }
+        if (part2 === undefined || part2.sql === undefined || part2.sql.length <= 0) {
+            return { sql: part1.sql, parameters: [...part1.parameters]};
+        }
+
+        return { sql: part1.sql + joiner + part2.sql, parameters: [...part1.parameters].concat(part2.parameters)};
+    }
+
+    public static mapParametersToPlaceholders(parameters: any[]): String[] {
+        return parameters.map(() => '?');
+    }
+
+    public static mapParametersToPlaceholderString(parameters: any[]): String {
+        return SqlUtils.mapParametersToPlaceholders(parameters).join(', ');
+    }
+
+    public static executeRawSqlQueryData(knex: knex, query: RawSqlQueryData): Promise<any> {
+        return knex.raw(query.sql, query.parameters);
+    }
 }
 

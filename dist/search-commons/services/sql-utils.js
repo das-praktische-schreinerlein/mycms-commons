@@ -67,6 +67,24 @@ var SqlUtils = /** @class */ (function () {
         }
         return sqlParts;
     };
+    SqlUtils.concatRawSqlQueryData = function (part1, joiner, part2) {
+        if (part1 === undefined || part1.sql === undefined || part1.sql.length <= 0) {
+            return { sql: part2.sql, parameters: part2.parameters.slice() };
+        }
+        if (part2 === undefined || part2.sql === undefined || part2.sql.length <= 0) {
+            return { sql: part1.sql, parameters: part1.parameters.slice() };
+        }
+        return { sql: part1.sql + joiner + part2.sql, parameters: part1.parameters.slice().concat(part2.parameters) };
+    };
+    SqlUtils.mapParametersToPlaceholders = function (parameters) {
+        return parameters.map(function () { return '?'; });
+    };
+    SqlUtils.mapParametersToPlaceholderString = function (parameters) {
+        return SqlUtils.mapParametersToPlaceholders(parameters).join(', ');
+    };
+    SqlUtils.executeRawSqlQueryData = function (knex, query) {
+        return knex.raw(query.sql, query.parameters);
+    };
     return SqlUtils;
 }());
 exports.SqlUtils = SqlUtils;
