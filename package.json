@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run prepare-build && tsc && npm run build-copy",
     "build-copy": "cpx \"src/**/*.sql\" dist",
-    "prepare": "patch-package && npm run prepare-build",
+    "prepare": "patch-package",
     "prepare-build": "cross-os prepare-build-os",
     "prepare-build-os": {
       "darwin": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/mkdirp dist",
