@@ -20,9 +20,11 @@
 
 ## 4.3.0
 - moved full implementation of facetcache to commons
+- improved build-process
 
 ### new features
 - common: moved full implementation of facetcache to commons
+- development: improved build-process - activated tests+coverage
 
 ### improvements
 - common: delete-flag for actionTagForms to handle deleting-tags
