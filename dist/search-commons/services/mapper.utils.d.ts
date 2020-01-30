@@ -1,4 +1,6 @@
 import { GenericSearchForm } from '../model/forms/generic-searchform';
+import { BaseEntityRecordFactory, BaseEntityRecordType } from "../model/records/base-entity-record";
+import { Mapper, Record } from 'js-data';
 export interface AdapterQuery {
     where?: {};
     additionalWhere?: {};
@@ -44,4 +46,6 @@ export declare class MapperUtils {
     prepareValueToArray(value: any, splitter: string): string[];
     escapeAdapterValue(value: any): string;
     splitPairs(arr: Array<any>): Array<Array<any>>;
+    mapDetailDocsToDetailRecords(mapper: Mapper, factory: BaseEntityRecordFactory, record: BaseEntityRecordType, detailDocs: {}[]): Record[];
+    extractUniqueId(record: BaseEntityRecordType): number;
 }

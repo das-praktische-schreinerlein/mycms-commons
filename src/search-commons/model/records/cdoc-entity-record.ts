@@ -63,7 +63,7 @@ export class CommonDocRecord extends BaseEntityRecord implements CommonDocRecord
     static cloneToSerializeToJsonObj(baseRecord: CommonDocRecord, anonymizeMedia?: boolean): {}  {
         const record  = {};
         for (const key in baseRecord) {
-            record[key] = baseRecord[key];
+                record[key] = baseRecord[key];
         }
 
         if (anonymizeMedia === true) {

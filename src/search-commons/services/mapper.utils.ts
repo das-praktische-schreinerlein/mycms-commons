@@ -1,5 +1,7 @@
 import {GenericSearchForm} from '../model/forms/generic-searchform';
 import {DateUtils} from '../../commons/utils/date.utils';
+import {BaseEntityRecordFactory, BaseEntityRecordType} from "../model/records/base-entity-record";
+import {Mapper, Record} from 'js-data';
 
 export interface AdapterQuery {
     where?: {};
@@ -165,5 +167,33 @@ export class MapperUtils {
         }
         return pairs;
     }
+
+    public mapDetailDocsToDetailRecords(mapper: Mapper, factory: BaseEntityRecordFactory, record: BaseEntityRecordType,
+                                           detailDocs: {}[]): Record[] {
+        const detailRecords: Record[] = [];
+        if (detailDocs !== undefined) {
+            let id = this.extractUniqueId(record);
+            for (const detailDoc of detailDocs) {
+                if (detailDoc === undefined || detailDoc === null) {
+                    continue;
+                }
+                const detailValues = {... detailDoc};
+                detailValues['id'] = (id++).toString() + record.id;
+                const detailRecord = mapper.createRecord(
+                    factory.getSanitizedValues(detailValues, {}));
+                detailRecords.push(detailRecord);
+            }
+        }
+
+        return detailRecords;
+    }
+
+    public extractUniqueId(record: BaseEntityRecordType): number {
+        let id = Number(record.id.replace(/.*_/, '')) || 1;
+        id = id * 1000000;
+
+        return id;
+    }
+
 }
 
