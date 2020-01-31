@@ -22,11 +22,13 @@
 - moved full implementation of facetcache to commons
 - improved build-process
 - moved full implementation of navigation-objects and objectutils to commons
+- moved full implementation of actions and actiontags to commons
 
 ### new features
 - common: moved full implementation of facetcache to commons
 - development: improved build-process - activated tests+coverage
 - common: moved full implementation of navigation-objects and objectutils to commons
+- common: moved full implementation of actions and actiontags to commons
 
 ### improvements
 - common: delete-flag for actionTagForms to handle deleting-tags
