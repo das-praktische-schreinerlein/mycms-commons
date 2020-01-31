@@ -2,8 +2,8 @@
 import 'rxjs/add/observable/fromPromise';
 import {ActionTagBlockConfigType, CommonSqlActionTagBlockAdapter} from './common-sql-actiontag-block.adapter';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
-import {TestHelper} from '../../testing/test-helper.spec';
-import {TestActionFormHelper} from '../testing/test-actionform-helper.spec';
+import {TestHelper} from '../../testing/test-helper';
+import {TestActionFormHelper} from '../testing/test-actionform-helper';
 
 describe('CommonSqlActionTagBlockAdapter', () => {
     const sqlQueryBuilder: SqlQueryBuilder = new SqlQueryBuilder();

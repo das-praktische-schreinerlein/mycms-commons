@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-variable */
 import 'rxjs/add/observable/fromPromise';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
-import {TestHelper} from '../../testing/test-helper.spec';
+import {TestHelper} from '../../testing/test-helper';
 import {CommonSqlActionTagRateAdapter} from './common-sql-actiontag-rate.adapter';
 import {CommonSqlRateAdapter, RateModelConfigType} from '../actions/common-sql-rate.adapter';
-import {TestActionFormHelper} from '../testing/test-actionform-helper.spec';
+import {TestActionFormHelper} from '../testing/test-actionform-helper';
 
 describe('CommonDocSqlActionTagRateAdapter', () => {
     const modelConfigType: RateModelConfigType = {

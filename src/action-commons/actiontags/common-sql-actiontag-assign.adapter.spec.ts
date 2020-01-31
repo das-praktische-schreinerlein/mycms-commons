@@ -1,9 +1,9 @@
 /* tslint:disable:no-unused-variable */
 import 'rxjs/add/observable/fromPromise';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
-import {TestHelper} from '../../testing/test-helper.spec';
+import {TestHelper} from '../../testing/test-helper';
 import {ActionTagAssignConfigType, CommonSqlActionTagAssignAdapter} from './common-sql-actiontag-assign.adapter';
-import {TestActionFormHelper} from '../testing/test-actionform-helper.spec';
+import {TestActionFormHelper} from '../testing/test-actionform-helper';
 
 describe('CommonSqlActionTagAssignAdapter', () => {
     const sqlQueryBuilder: SqlQueryBuilder = new SqlQueryBuilder();

@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-variable */
 import 'rxjs/add/observable/fromPromise';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
-import {TestHelper} from '../../testing/test-helper.spec';
+import {TestHelper} from '../../testing/test-helper';
 import {CommonSqlKeywordAdapter, KeywordModelConfigType} from '../actions/common-sql-keyword.adapter';
 import {CommonSqlActionTagKeywordAdapter} from './common-sql-actiontag-keyword.adapter';
-import {TestActionFormHelper} from '../testing/test-actionform-helper.spec';
+import {TestActionFormHelper} from '../testing/test-actionform-helper';
 
 describe('CommonSqlActionTagKeywordAdapter', () => {
     const modelConfigType: KeywordModelConfigType = {

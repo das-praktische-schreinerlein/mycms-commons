@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
 import 'rxjs/add/observable/fromPromise';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
-import {TestHelper} from '../../testing/test-helper.spec';
+import {TestHelper} from '../../testing/test-helper';
 import {CommonSqlObjectDetectionAdapter} from '../actions/common-sql-object-detection.adapter';
 import {ObjectDetectionModelConfigType} from '../../commons/model/common-sql-object-detection.model';
 import {CommonSqlActionTagObjectDetectionAdapter} from './common-sql-actiontag-object-detection.adapter';
-import {TestActionFormHelper} from '../testing/test-actionform-helper.spec';
+import {TestActionFormHelper} from '../testing/test-actionform-helper';
 
 describe('CommonSqlActionTagObjectDetectionAdapter', () => {
     const modelConfigType: ObjectDetectionModelConfigType = {
