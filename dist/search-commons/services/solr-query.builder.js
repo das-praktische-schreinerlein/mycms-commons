@@ -220,7 +220,7 @@ var SolrQueryBuilder = /** @class */ (function () {
             query = fieldName + ':("' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('" OR "') + '")';
         }
         else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {
-            query = fieldName + ':(-"' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('" AND -"') + '")';
+            query = '-' + fieldName + ':("' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('" OR "') + '")';
         }
         return query;
     };

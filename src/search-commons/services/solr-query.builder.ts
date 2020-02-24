@@ -271,9 +271,9 @@ export class SolrQueryBuilder {
                 inValue => this.mapperUtils.escapeAdapterValue(inValue.toString())
             ).join('" OR "') + '")';
         } else if (action === AdapterFilterActions.NOTIN) {
-            query = fieldName + ':(-"' + value.map(
+            query = '-' + fieldName + ':("' + value.map(
                 inValue => this.mapperUtils.escapeAdapterValue(inValue.toString())
-            ).join('" AND -"') + '")';
+            ).join('" OR "') + '")';
         }
 
         return query;
