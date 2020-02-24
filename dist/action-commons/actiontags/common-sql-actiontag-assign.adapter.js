@@ -37,9 +37,6 @@ var CommonSqlActionTagAssignAdapter = /** @class */ (function () {
             if (!this.idValidator.isValid(newId)) {
                 return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' newId not valid');
             }
-            if ((id + '') === (newId + '')) {
-                return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' newId must not equal id');
-            }
             newId = parseInt(newId, 10);
             if (!js_data_1.utils.isInteger(newId)) {
                 return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' newId must be integer');

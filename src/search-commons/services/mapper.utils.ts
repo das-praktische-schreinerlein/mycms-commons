@@ -189,6 +189,9 @@ export class MapperUtils {
     }
 
     public extractUniqueId(record: BaseEntityRecordType): number {
+        if (record === undefined || record.id === undefined) {
+            return undefined;
+        }
         let id = Number(record.id.replace(/.*_/, '')) || 1;
         id = id * 1000000;
 

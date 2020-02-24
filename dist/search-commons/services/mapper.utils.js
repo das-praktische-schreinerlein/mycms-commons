@@ -166,6 +166,9 @@ var MapperUtils = /** @class */ (function () {
         return detailRecords;
     };
     MapperUtils.prototype.extractUniqueId = function (record) {
+        if (record === undefined || record.id === undefined) {
+            return undefined;
+        }
         var id = Number(record.id.replace(/.*_/, '')) || 1;
         id = id * 1000000;
         return id;

@@ -77,9 +77,6 @@ export class CommonSqlActionTagAssignAdapter {
             if (!this.idValidator.isValid(newId)) {
                 return utils.reject('actiontag ' + actionTagForm.key + ' newId not valid');
             }
-            if ((id + '') === (newId + '')) {
-                return utils.reject('actiontag ' + actionTagForm.key + ' newId must not equal id');
-            }
             newId = parseInt(newId, 10);
             if (!utils.isInteger(newId)) {
                 return utils.reject('actiontag ' + actionTagForm.key + ' newId must be integer');
