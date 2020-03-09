@@ -81,7 +81,7 @@ var CommonSqlObjectDetectionAdapter = /** @class */ (function () {
         return result;
     };
     CommonSqlObjectDetectionAdapter.prototype.setObjectsState = function (table, id, state, opts) {
-        var config = this.objectDetectionModelConfig.detectionTables[table];
+        var config = this.objectDetectionModelConfig.detectedObjectsTables[table];
         if (config === undefined) {
             return js_data_1.utils.reject('unknown table: ' + log_utils_1.LogUtils.sanitizeLogMsg(table));
         }
@@ -93,8 +93,8 @@ var CommonSqlObjectDetectionAdapter = /** @class */ (function () {
             return js_data_1.utils.reject('actiontag ObjectsState ' + table + ' state not valid');
         }
         var updateSqlQuery = {
-            sql: 'UPDATE ' + config.detectedTable + ' SET ' + config.detectedFieldState + '=' + '?' + '' +
-                '  WHERE ' + config.baseFieldId + ' = ' + '?' + '',
+            sql: 'UPDATE ' + config.table + ' SET ' + config.fieldState + '=' + '?' + '' +
+                '  WHERE ' + config.fieldId + ' = ' + '?' + '',
             parameters: [state, id]
         };
         updateSqlQuery.sql = this.sqlQueryBuilder.transformToSqlDialect(updateSqlQuery.sql, this.config.knexOpts.client);

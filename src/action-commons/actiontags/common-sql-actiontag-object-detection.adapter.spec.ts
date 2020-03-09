@@ -214,7 +214,7 @@ describe('CommonSqlActionTagObjectDetectionAdapter', () => {
 
         it('executeActionTagObjectsState should set state', done => {
             const id: any = 5;
-            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagObjectsState', 'image', id, {
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagObjectsState', 'odimgobject', id, {
                     payload: {
                         state: 'stateBla'
                     },
@@ -225,7 +225,7 @@ describe('CommonSqlActionTagObjectDetectionAdapter', () => {
                 },
                 true,
                 [
-                    'UPDATE image_object SET io_state=?  WHERE i_id = ?'
+                    'UPDATE image_object SET io_state=?  WHERE io_id = ?'
                 ],
                 [
                     ['stateBla', 5]

@@ -97,7 +97,7 @@ export class CommonSqlObjectDetectionAdapter {
     }
 
     public setObjectsState(table: string, id: number, state: string, opts: any): Promise<any> {
-        const config = this.objectDetectionModelConfig.detectionTables[table];
+        const config = this.objectDetectionModelConfig.detectedObjectsTables[table];
         if (config === undefined) {
             return utils.reject('unknown table: ' + LogUtils.sanitizeLogMsg(table));
         }
@@ -112,8 +112,8 @@ export class CommonSqlObjectDetectionAdapter {
         }
 
         const updateSqlQuery: RawSqlQueryData = {
-            sql: 'UPDATE ' + config.detectedTable + ' SET ' + config.detectedFieldState + '=' + '?' + '' +
-                '  WHERE ' + config.baseFieldId + ' = ' + '?' + '',
+            sql: 'UPDATE ' + config.table + ' SET ' + config.fieldState + '=' + '?' + '' +
+                '  WHERE ' + config.fieldId + ' = ' + '?' + '',
             parameters: [state, id]
         };
         updateSqlQuery.sql = this.sqlQueryBuilder.transformToSqlDialect(updateSqlQuery.sql, this.config.knexOpts.client);
