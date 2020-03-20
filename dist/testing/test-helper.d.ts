@@ -1,3 +1,4 @@
+import 'rxjs/add/observable/fromPromise';
 export declare class TestHelper {
     static createKnex(client: string, returnValues: any[]): {
         client: {

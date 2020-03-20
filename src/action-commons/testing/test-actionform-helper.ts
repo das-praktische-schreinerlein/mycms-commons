@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 
 export class TestActionFormHelper {

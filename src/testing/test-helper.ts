@@ -1,5 +1,6 @@
 import {utils} from 'js-data';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
 
 export class TestHelper {
     public static createKnex(client: string, returnValues: any[]) {

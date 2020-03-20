@@ -1,3 +1,4 @@
+import 'rxjs/add/observable/fromPromise';
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
 export declare class TestActionFormHelper {
     static doActionTagTestSuccessTest(knex: any, service: any, functionName: string, table: string, id: any, actionForm: ActionTagForm, result: any, sqls: string[], parameters: any[], done: any, newReturnValue?: any[]): any;

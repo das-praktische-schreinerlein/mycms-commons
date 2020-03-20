@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_1 = require("js-data");
 var Observable_1 = require("rxjs/Observable");
+require("rxjs/add/observable/fromPromise");
 var TestHelper = /** @class */ (function () {
     function TestHelper() {
     }

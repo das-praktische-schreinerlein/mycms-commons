@@ -9,6 +9,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Observable_1 = require("rxjs/Observable");
+require("rxjs/add/observable/fromPromise");
 var TestActionFormHelper = /** @class */ (function () {
     function TestActionFormHelper() {
     }
