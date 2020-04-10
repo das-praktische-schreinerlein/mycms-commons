@@ -11,7 +11,13 @@ import {GenericFacetAdapter} from './generic-search.adapter';
 import {isArray} from 'util';
 import {AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
 import {GenericAdapterResponseMapper} from './generic-adapter-response.mapper';
-import {FacetCacheUsageConfigurations, SelectQueryData, SqlQueryBuilder, TableConfig, WriteQueryData} from './sql-query.builder';
+import {
+    FacetCacheUsageConfigurations,
+    SelectQueryData,
+    SqlQueryBuilder,
+    TableConfig,
+    WriteQueryData
+} from './sql-query.builder';
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {LogUtils} from '../../commons/utils/log.utils';
 
