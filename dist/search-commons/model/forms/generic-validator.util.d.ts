@@ -20,7 +20,7 @@ export declare enum GenericValidatorDatatypes {
     'MARKDOWN' = 17,
     'NUMBER' = 18,
     'FILENAME' = 19,
-    'GEOLOC' = 20,
+    'GEOLOC' = 20
 }
 export declare abstract class ValidationRule {
     protected _required: boolean;

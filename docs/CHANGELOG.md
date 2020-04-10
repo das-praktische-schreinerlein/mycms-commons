@@ -18,6 +18,22 @@
 - none
 
 
+## 5.0.0
+- upgraded all dev-dependencies to latest
+
+### new features
+- none
+
+### improvements
+- none
+
+### bug fixes
+- none 
+ 
+### breaking changes
+- build: upgraded all dev-dependencies to latest
+
+
 ## 4.3.0
 - moved full implementation of facetcache to commons
 - improved build-process

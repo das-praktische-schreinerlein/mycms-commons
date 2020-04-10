@@ -31,6 +31,6 @@ export declare abstract class GenericSearchHttpAdapter<R extends Record, F exten
     protected _doActionTag(mapper: Mapper, record: R, actionTagForm: ActionTagForm, opts: any): Promise<R>;
     protected _export(mapper: Mapper, query: any, format: string, opts: any): Promise<string>;
     abstract getHttpEndpoint(method: string, format?: string): string;
-    private queryTransformToHttpQuery(mapper, params, opts);
+    private queryTransformToHttpQuery;
     buildUrl(url: any, params: any): any;
 }

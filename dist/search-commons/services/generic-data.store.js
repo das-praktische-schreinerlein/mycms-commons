@@ -57,12 +57,13 @@ var GenericDataStore = /** @class */ (function () {
                     return js_data_1.utils.resolve(props);
                 },
                 afterUpdate: function (id, props, opts, result) {
+                    var _a;
                     if (opts.realResult) {
                         result = opts.realResult;
                     }
                     // update relations
-                    for (var _i = 0, _a = me.updateRelations; _i < _a.length; _i++) {
-                        var mapperKey = _a[_i];
+                    for (var _i = 0, _b = me.updateRelations; _i < _b.length; _i++) {
+                        var mapperKey = _b[_i];
                         if (result.get(mapperKey)) {
                             var obj = result.get(mapperKey);
                             me.store.add(mapperKey, obj);
@@ -70,13 +71,12 @@ var GenericDataStore = /** @class */ (function () {
                         }
                         else {
                             me.store.removeAll(mapperKey, { where: { 'cdoc_id': { 'contains': result.id } } });
-                            me.store.removeAll(mapperKey, { where: (_b = {}, _b['cdoc_id'] = { 'contains': [result.id] }, _b) });
+                            me.store.removeAll(mapperKey, { where: (_a = {}, _a['cdoc_id'] = { 'contains': [result.id] }, _a) });
                             me.store.removeAll(mapperKey, { where: { 'cdoc_id': { 'contains': [result.id] } } });
                             result.set(mapperKey, undefined);
                         }
                     }
                     return js_data_1.utils.resolve(result);
-                    var _b;
                 }
             }
         });

@@ -8,7 +8,7 @@ export declare enum SimpleFilterCommands {
     LT = "LT",
     LE = "LE",
     GT = "GT",
-    GE = "GE",
+    GE = "GE"
 }
 export interface SimpleFilter {
     property: string;

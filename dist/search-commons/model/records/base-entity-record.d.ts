@@ -5,8 +5,8 @@ export declare class BaseEntityRecordFieldConfig {
     private _datatype;
     private _validator;
     constructor(datatype: GenericValidatorDatatypes, validator: ValidationRule);
-    readonly datatype: GenericValidatorDatatypes;
-    readonly validator: ValidationRule;
+    get datatype(): GenericValidatorDatatypes;
+    get validator(): ValidationRule;
 }
 export interface BaseEntityRecordType {
     id: string;

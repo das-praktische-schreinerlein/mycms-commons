@@ -14,7 +14,7 @@ export declare enum ObjectDetectionState {
     DONE_APPROVAL_PROCESSED = "DONE_APPROVAL_PROCESSED",
     DONE_REJECTION_PROCESSED = "DONE_REJECTION_PROCESSED",
     DONE_CORRECTION_PROCESSED = "DONE_CORRECTION_PROCESSED",
-    DONE_DETAIL_PROCESSED = "DONE_DETAIL_PROCESSED",
+    DONE_DETAIL_PROCESSED = "DONE_DETAIL_PROCESSED"
 }
 export interface ObjectDetectionRequestType {
     detectors: string[];
@@ -50,7 +50,7 @@ export declare enum ObjectDetectionResponseCode {
     OK_WITH_HINTS = "OK_WITH_HINT",
     OK_WITH_WARNING = "OK_WITH_WARNING",
     RECOVERABLE_ERROR = "RECOVERABLE_ERROR",
-    NONRECOVERABLE_ERROR = "NONRECOVERABLE_ERROR",
+    NONRECOVERABLE_ERROR = "NONRECOVERABLE_ERROR"
 }
 export interface ObjectDetectionResponseType {
     request: ObjectDetectionRequestType;
