@@ -1,11 +1,4 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var SqlUtils = /** @class */ (function () {
     function SqlUtils() {
@@ -76,12 +69,12 @@ var SqlUtils = /** @class */ (function () {
     };
     SqlUtils.concatRawSqlQueryData = function (part1, joiner, part2) {
         if (part1 === undefined || part1.sql === undefined || part1.sql.length <= 0) {
-            return { sql: part2.sql, parameters: __spreadArrays(part2.parameters) };
+            return { sql: part2.sql, parameters: part2.parameters.slice() };
         }
         if (part2 === undefined || part2.sql === undefined || part2.sql.length <= 0) {
-            return { sql: part1.sql, parameters: __spreadArrays(part1.parameters) };
+            return { sql: part1.sql, parameters: part1.parameters.slice() };
         }
-        return { sql: part1.sql + joiner + part2.sql, parameters: __spreadArrays(part1.parameters).concat(part2.parameters) };
+        return { sql: part1.sql + joiner + part2.sql, parameters: part1.parameters.slice().concat(part2.parameters) };
     };
     SqlUtils.mapParametersToPlaceholders = function (parameters) {
         return parameters.map(function () { return '?'; });

@@ -9,7 +9,6 @@ MyCMS uses a bunch of libraries and tools. Many thanx to the people behind these
 - data-framework
     - [js-data](https://www.npmjs.com/package/js-data)
     - [js-data-http](https://www.npmjs.com/package/js-data-http)
-    - [js-data-sql](https://www.npmjs.com/package/js-data-sql)
 - maps
     - [geo-coder](https://www.npmjs.com/package/geo-coder)
 - storage-adapter
@@ -24,8 +23,6 @@ MyCMS uses a bunch of libraries and tools. Many thanx to the people behind these
 - base
     - [nodejs](https://nodejs.org)
     - [npm](https://www.npmjs.com/)
-- documentation
-    - [@compodoc/compodoc](https://www.npmjs.com/package/@compodoc/compodoc)
 - build-tools
     - [codelyzer](https://www.npmjs.com/package/codelyzer)
     - [cross-os](https://www.npmjs.com/package/cross-os)
