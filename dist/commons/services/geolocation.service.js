@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var geo_coder_1 = require("geo-coder");
-var Observable_1 = require("rxjs/Observable");
+var rxjs_1 = require("rxjs");
 var js_data_1 = require("js-data");
 var GeoLocationService = /** @class */ (function () {
     function GeoLocationService() {
         this.geoCoder = new geo_coder_1.GeoCoder({ provider: 'osm', lang: 'de-DE' });
     }
     GeoLocationService.prototype.getCurrentPosition = function () {
-        return new Observable_1.Observable(function (observer) {
+        return new rxjs_1.Observable(function (observer) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 observer.next(position);
                 observer.complete();

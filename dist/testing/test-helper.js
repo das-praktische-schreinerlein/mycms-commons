@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_1 = require("js-data");
-var Observable_1 = require("rxjs/Observable");
-require("rxjs/add/observable/fromPromise");
+var rxjs_1 = require("rxjs");
 var TestHelper = /** @class */ (function () {
     function TestHelper() {
     }
@@ -32,7 +31,7 @@ var TestHelper = /** @class */ (function () {
     TestHelper.doTestSuccessWithSqlsTest = function (knex, promiseFunction, result, sqls, parameters, done, newReturnValue) {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
         // WHEN
-        return Observable_1.Observable.fromPromise(promiseFunction()).subscribe(function (res) {
+        return rxjs_1.from(promiseFunction()).subscribe(function (res) {
             // THEN
             expect(res).toEqual(result);
             expect(knex.sqls).toEqual(sqls);
@@ -49,7 +48,7 @@ var TestHelper = /** @class */ (function () {
     TestHelper.doTestFailWithSqlsTest = function (knex, promiseFunction, errorMsg, sqls, parameters, done, newReturnValue) {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
         // WHEN
-        return Observable_1.Observable.fromPromise(promiseFunction()).subscribe(function (res) {
+        return rxjs_1.from(promiseFunction()).subscribe(function (res) {
             // THEN
             expect(res).toBeUndefined();
             expect(false).toBeTruthy('should fail');

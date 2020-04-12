@@ -30,7 +30,7 @@
     "js-data-http": "3.0.1",
     "knex": "0.15.2",
     "promise-serial": "0.1.5",
-    "rxjs": "5.5.12",
+    "rxjs": "6.5.5",
     "xregexp": "4.3.0"
   },
   "devDependencies": {

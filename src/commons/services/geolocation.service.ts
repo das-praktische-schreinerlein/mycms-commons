@@ -1,6 +1,6 @@
 import {GeoCoder} from 'geo-coder';
-import {Observer} from 'rxjs/Observer';
-import {Observable} from 'rxjs/Observable';
+import {Observer} from 'rxjs';
+import {Observable} from 'rxjs';
 import {utils} from 'js-data';
 
 export class GeoLocationService {

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ReplaySubject_1 = require("rxjs/ReplaySubject");
-var BehaviorSubject_1 = require("rxjs/BehaviorSubject");
+var rxjs_1 = require("rxjs");
+var rxjs_2 = require("rxjs");
 var AppState;
 (function (AppState) {
     AppState[AppState["Starting"] = 1] = "Starting";
@@ -21,9 +21,9 @@ var BrowserOnlineState;
 var GenericAppService = /** @class */ (function () {
     function GenericAppService() {
         this.appState = AppState.Starting;
-        this.appStateObservable = new ReplaySubject_1.ReplaySubject();
-        this.appOnlineStateObservable = new BehaviorSubject_1.BehaviorSubject(AppOnlineState.Online);
-        this.browserOnlineStateObservable = new BehaviorSubject_1.BehaviorSubject(BrowserOnlineState.Online);
+        this.appStateObservable = new rxjs_1.ReplaySubject();
+        this.appOnlineStateObservable = new rxjs_2.BehaviorSubject(AppOnlineState.Online);
+        this.browserOnlineStateObservable = new rxjs_2.BehaviorSubject(BrowserOnlineState.Online);
         this.appStateObservable.next(this.appState);
         this.initBrowserOnlineStateLoader();
     }

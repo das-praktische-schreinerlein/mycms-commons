@@ -1,6 +1,5 @@
 import {utils} from 'js-data';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import {from} from 'rxjs';
 
 export class TestHelper {
     public static createKnex(client: string, returnValues: any[]) {
@@ -32,7 +31,7 @@ export class TestHelper {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
 
         // WHEN
-        return Observable.fromPromise(promiseFunction()).subscribe(
+        return from(promiseFunction()).subscribe(
             res => {
                 // THEN
                 expect(res).toEqual(result);
@@ -56,7 +55,7 @@ export class TestHelper {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
 
         // WHEN
-        return Observable.fromPromise(promiseFunction()).subscribe(
+        return from(promiseFunction()).subscribe(
             res => {
                 // THEN
                 expect(res).toBeUndefined();

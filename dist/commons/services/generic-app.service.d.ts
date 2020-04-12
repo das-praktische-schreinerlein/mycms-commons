@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 export declare enum AppState {
     Starting = 1,
     Ready = 5,

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 export declare class GeoLocationService {
     private geoCoder;
     constructor();

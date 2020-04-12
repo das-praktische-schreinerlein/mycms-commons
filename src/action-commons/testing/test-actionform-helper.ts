@@ -1,5 +1,4 @@
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import {from} from 'rxjs';
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 
 export class TestActionFormHelper {
@@ -8,7 +7,7 @@ export class TestActionFormHelper {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
 
         // WHEN
-        return Observable.fromPromise(service[functionName](table, id, actionForm, {})).subscribe(
+        return from(service[functionName](table, id, actionForm, {})).subscribe(
             res => {
                 // THEN
                 expect(res).toEqual(result);
@@ -32,7 +31,7 @@ export class TestActionFormHelper {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
 
         // WHEN
-        return Observable.fromPromise(service[functionName](table, id, actionForm, {})).subscribe(
+        return from(service[functionName](table, id, actionForm, {})).subscribe(
             res => {
                 // THEN
                 expect(res).toBeUndefined();
@@ -56,7 +55,7 @@ export class TestActionFormHelper {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
 
         // WHEN
-        return Observable.fromPromise(service[functionName](table, id, actionForm, {})).subscribe(
+        return from(service[functionName](table, id, actionForm, {})).subscribe(
             res => {
                 // THEN
                 expect(res).toBeUndefined();

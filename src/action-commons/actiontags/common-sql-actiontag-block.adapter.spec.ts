@@ -1,5 +1,4 @@
 /* tslint:disable:no-unused-variable */
-import 'rxjs/add/observable/fromPromise';
 import {ActionTagBlockConfigType, CommonSqlActionTagBlockAdapter} from './common-sql-actiontag-block.adapter';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {TestHelper} from '../../testing/test-helper';

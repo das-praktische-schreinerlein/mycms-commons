@@ -8,15 +8,14 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Observable_1 = require("rxjs/Observable");
-require("rxjs/add/observable/fromPromise");
+var rxjs_1 = require("rxjs");
 var TestActionFormHelper = /** @class */ (function () {
     function TestActionFormHelper() {
     }
     TestActionFormHelper.doActionTagTestSuccessTest = function (knex, service, functionName, table, id, actionForm, result, sqls, parameters, done, newReturnValue) {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
         // WHEN
-        return Observable_1.Observable.fromPromise(service[functionName](table, id, actionForm, {})).subscribe(function (res) {
+        return rxjs_1.from(service[functionName](table, id, actionForm, {})).subscribe(function (res) {
             // THEN
             expect(res).toEqual(result);
             expect(knex.sqls).toEqual(sqls);
@@ -33,7 +32,7 @@ var TestActionFormHelper = /** @class */ (function () {
     TestActionFormHelper.doActionTagTestFailWithSqlsTest = function (knex, service, functionName, table, id, actionForm, errorMsg, sqls, parameters, done, newReturnValue) {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
         // WHEN
-        return Observable_1.Observable.fromPromise(service[functionName](table, id, actionForm, {})).subscribe(function (res) {
+        return rxjs_1.from(service[functionName](table, id, actionForm, {})).subscribe(function (res) {
             // THEN
             expect(res).toBeUndefined();
             expect(false).toBeTruthy('should fail');
@@ -50,7 +49,7 @@ var TestActionFormHelper = /** @class */ (function () {
     TestActionFormHelper.doActionTagFailTest = function (knex, service, functionName, table, id, actionForm, errorMsg, done, newReturnValue) {
         knex.resetTestResults(newReturnValue ? newReturnValue : [true]);
         // WHEN
-        return Observable_1.Observable.fromPromise(service[functionName](table, id, actionForm, {})).subscribe(function (res) {
+        return rxjs_1.from(service[functionName](table, id, actionForm, {})).subscribe(function (res) {
             // THEN
             expect(res).toBeUndefined();
             expect(false).toBeTruthy('should fail');

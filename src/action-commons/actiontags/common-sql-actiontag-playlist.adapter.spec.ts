@@ -1,5 +1,4 @@
 /* tslint:disable:no-unused-variable */
-import 'rxjs/add/observable/fromPromise';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {TestHelper} from '../../testing/test-helper';
 import {CommonSqlActionTagPlaylistAdapter} from './common-sql-actiontag-playlist.adapter';
