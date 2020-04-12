@@ -3,8 +3,6 @@ import { Mapper, Record } from 'js-data';
 import { Facets } from '../model/container/facets';
 import { GenericSearchResult } from '../model/container/generic-searchresult';
 import { GenericSearchForm } from '../model/forms/generic-searchform';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
 import { GenericActionTagAdapter, GenericFacetAdapter, GenericSearchAdapter } from './generic-search.adapter';
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
 export declare function Response(data: any, meta: any, op: any): void;

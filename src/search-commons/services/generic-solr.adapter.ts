@@ -4,8 +4,6 @@ import {Facet, Facets} from '../model/container/facets';
 import {GenericSearchResult} from '../model/container/generic-searchresult';
 import {GenericSearchForm} from '../model/forms/generic-searchform';
 import {GenericSearchHttpAdapter, Response} from './generic-search-http.adapter';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
 import {AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
 import {GenericFacetAdapter, GenericSearchAdapter} from './generic-search.adapter';
 import {GenericAdapterResponseMapper} from './generic-adapter-response.mapper';

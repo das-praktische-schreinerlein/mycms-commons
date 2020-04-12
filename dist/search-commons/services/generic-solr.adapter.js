@@ -14,8 +14,6 @@ var js_data_1 = require("js-data");
 var facets_1 = require("../model/container/facets");
 var generic_searchresult_1 = require("../model/container/generic-searchresult");
 var generic_search_http_adapter_1 = require("./generic-search-http.adapter");
-require("rxjs/add/operator/toPromise");
-require("rxjs/add/operator/map");
 var mapper_utils_1 = require("./mapper.utils");
 var solr_query_builder_1 = require("./solr-query.builder");
 var GenericSolrAdapter = /** @class */ (function (_super) {

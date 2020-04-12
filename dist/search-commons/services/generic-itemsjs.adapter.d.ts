@@ -1,8 +1,6 @@
 import { Mapper, Record } from 'js-data';
 import { GenericSearchResult } from '../model/container/generic-searchresult';
 import { GenericSearchForm } from '../model/forms/generic-searchform';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
 import { Adapter } from 'js-data-adapter';
 import { Facets } from '../model/container/facets';
 import { GenericFacetAdapter, GenericSearchAdapter } from './generic-search.adapter';

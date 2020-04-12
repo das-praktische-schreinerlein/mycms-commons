@@ -12,8 +12,6 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_1 = require("js-data");
 var generic_searchresult_1 = require("../model/container/generic-searchresult");
-require("rxjs/add/operator/toPromise");
-require("rxjs/add/operator/map");
 var js_data_adapter_1 = require("js-data-adapter");
 var facets_1 = require("../model/container/facets");
 var itemsjs_query_builder_1 = require("./itemsjs-query.builder");

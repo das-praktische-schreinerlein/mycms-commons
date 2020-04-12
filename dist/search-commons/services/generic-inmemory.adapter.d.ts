@@ -2,8 +2,6 @@ import { Adapter } from 'js-data-adapter';
 import { Mapper, Record } from 'js-data';
 import { GenericSearchResult } from '../model/container/generic-searchresult';
 import { GenericSearchForm } from '../model/forms/generic-searchform';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
 export declare abstract class GenericInMemoryAdapter<R extends Record, F extends GenericSearchForm, S extends GenericSearchResult<R, F>> extends Adapter {
     constructor(config: any);
     _count(mapper: Mapper, query: any, opts?: any): Promise<any>;

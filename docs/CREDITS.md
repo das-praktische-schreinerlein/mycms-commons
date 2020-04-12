@@ -26,7 +26,6 @@ MyCMS uses a bunch of libraries and tools. Many thanx to the people behind these
 - build-tools
     - [codelyzer](https://www.npmjs.com/package/codelyzer)
     - [cross-os](https://www.npmjs.com/package/cross-os)
-    - [enhanced-resolve](https://www.npmjs.com/package/enhanced-resolve)
     - [mkdirp](https://www.npmjs.com/package/mkdirp)
     - [patch-package](https://www.npmjs.com/package/patch-package)
     - [rimraf](https://www.npmjs.com/package/rimraf)

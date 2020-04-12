@@ -11,8 +11,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_adapter_1 = require("js-data-adapter");
-require("rxjs/add/operator/toPromise");
-require("rxjs/add/operator/map");
 var GenericInMemoryAdapter = /** @class */ (function (_super) {
     __extends(GenericInMemoryAdapter, _super);
     function GenericInMemoryAdapter(config) {

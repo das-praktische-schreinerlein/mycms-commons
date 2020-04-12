@@ -14,8 +14,6 @@ var js_data_http_1 = require("js-data-http");
 var js_data_1 = require("js-data");
 var facets_1 = require("../model/container/facets");
 var generic_searchresult_1 = require("../model/container/generic-searchresult");
-require("rxjs/add/operator/toPromise");
-require("rxjs/add/operator/map");
 function Response(data, meta, op) {
     meta = meta || {};
     this.data = data;

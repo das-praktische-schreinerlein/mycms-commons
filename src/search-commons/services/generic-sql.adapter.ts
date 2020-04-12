@@ -3,8 +3,6 @@ import {Mapper, Record, utils} from 'js-data';
 import {Facet, Facets} from '../model/container/facets';
 import {GenericSearchResult} from '../model/container/generic-searchresult';
 import {GenericSearchForm} from '../model/forms/generic-searchform';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
 import {Adapter} from 'js-data-adapter';
 import * as knex from 'knex';
 import {GenericFacetAdapter} from './generic-search.adapter';

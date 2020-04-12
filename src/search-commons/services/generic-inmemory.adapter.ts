@@ -2,8 +2,6 @@ import {Adapter} from 'js-data-adapter';
 import {DataStore, Mapper, Record} from 'js-data';
 import {GenericSearchResult} from '../model/container/generic-searchresult';
 import {GenericSearchForm} from '../model/forms/generic-searchform';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
 
 export abstract class GenericInMemoryAdapter <R extends Record, F extends GenericSearchForm,
     S extends GenericSearchResult<R, F>> extends Adapter {
