@@ -28,6 +28,7 @@ MyCMS uses a bunch of libraries and tools. Many thanx to the people behind these
     - [mkdirp](https://www.npmjs.com/package/mkdirp)
     - [patch-package](https://www.npmjs.com/package/patch-package)
     - [rimraf](https://www.npmjs.com/package/rimraf)
+    - [tslint](https://www.npmjs.com/package/tslint)
 - compiler
     - [@types](https://www.npmjs.com/search?q=%40Types)
     - [typescript](https://www.npmjs.com/package/typescript)
