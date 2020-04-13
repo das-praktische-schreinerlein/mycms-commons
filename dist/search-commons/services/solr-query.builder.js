@@ -68,7 +68,6 @@ var SolrQueryBuilder = /** @class */ (function () {
         }
         return false;
     };
-    ;
     SolrQueryBuilder.prototype.createAdapterSelectQuery = function (solrConfig, method, adapterQuery, adapterOpts) {
         // console.log('createAdapterSelectQuery adapterQuery:', adapterQuery);
         // console.log('createAdapterSelectQuery adapterOpts:', adapterOpts);
@@ -128,7 +127,6 @@ var SolrQueryBuilder = /** @class */ (function () {
         }
         return sortParams;
     };
-    ;
     SolrQueryBuilder.prototype.getSpatialParams = function (solrConfig, adapterQuery) {
         var spatialParams = new Map();
         if (this.isSpatialQuery(solrConfig, adapterQuery)) {
@@ -140,7 +138,6 @@ var SolrQueryBuilder = /** @class */ (function () {
         }
         return spatialParams;
     };
-    ;
     SolrQueryBuilder.prototype.getAdapterSelectFields = function (solrConfig, method, adapterQuery) {
         var fields = solrConfig.fieldList.slice(0);
         if (adapterQuery !== undefined && adapterQuery.spatial !== undefined && adapterQuery.spatial.geo_loc_p !== undefined &&
@@ -170,9 +167,8 @@ var SolrQueryBuilder = /** @class */ (function () {
         }
         return facetParams;
     };
-    ;
     SolrQueryBuilder.prototype.mapToAdapterFieldName = function (solrConfig, fieldName) {
-        switch (fieldName) {
+        switch (fieldName) { // NOSONAR: is template for depended
             default:
                 break;
         }

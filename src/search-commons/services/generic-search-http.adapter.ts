@@ -138,8 +138,8 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
         opts.params = me.queryTransformToHttpQuery(mapper, opts.params, opts);
 
         const result = new Promise<string>((resolve, reject) => {
-            me._export(mapper, query, format, opts).then(result => {
-                return resolve(result);
+            me._export(mapper, query, format, opts).then(exportresult => {
+                return resolve(exportresult);
             }).catch(reason => {
                 console.error('export failed:', reason);
                 return reject(reason);
@@ -225,7 +225,6 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
     }
 
     protected _doActionTag(mapper: Mapper, record: R, actionTagForm: ActionTagForm, opts: any): Promise<R> {
-        const me = this;
         opts = opts || {};
         opts.endpoint = this.getHttpEndpoint('doActionTag');
 
@@ -246,7 +245,6 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
     }
 
     protected _export(mapper: Mapper, query: any, format: string, opts: any): Promise<string> {
-        const me = this;
         opts = opts || {};
         opts.endpoint = this.getHttpEndpoint('export', format);
         opts.responseType = 'text';

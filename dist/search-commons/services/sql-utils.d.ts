@@ -13,8 +13,8 @@ export declare class SqlUtils {
     static transformToSqliteDialect(sql: string): string;
     static extractDbResult(dbresult: any, client: string): any;
     static analyzeSimpleSql(sql: string): SqlParts;
-    static concatRawSqlQueryData(part1: RawSqlQueryData, joiner: String, part2: RawSqlQueryData): RawSqlQueryData;
-    static mapParametersToPlaceholders(parameters: any[]): String[];
-    static mapParametersToPlaceholderString(parameters: any[]): String;
-    static executeRawSqlQueryData(knex: knex, query: RawSqlQueryData): Promise<any>;
+    static concatRawSqlQueryData(part1: RawSqlQueryData, joiner: string, part2: RawSqlQueryData): RawSqlQueryData;
+    static mapParametersToPlaceholders(parameters: any[]): string[];
+    static mapParametersToPlaceholderString(parameters: any[]): string;
+    static executeRawSqlQueryData(db: knex, query: RawSqlQueryData): Promise<any>;
 }

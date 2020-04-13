@@ -128,10 +128,10 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         opts.queryData = queryData;
         var result = this.doQuery(queryData);
         var records = this.extractRecordsFromRequestResult(mapper, result);
-        if (!(Array.isArray(result))) {
+        if (!(Array.isArray(records))) {
             return js_data_1.utils.Promise.reject('generic-solr-adapter.afterFind: no array as result');
         }
-        return js_data_1.utils.Promise.resolve(result);
+        return js_data_1.utils.Promise.resolve(records);
     };
     GenericItemsJsAdapter.prototype.deserializeResponse = function (mapper, response, opts) {
         // console.log('deserializeResponse:', response);
@@ -201,7 +201,6 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         var result = this.itemJs.search(query);
         return result;
     };
-    ;
     GenericItemsJsAdapter.prototype.queryTransformToAdapterQuery = function (mapper, params, opts) {
         return this.queryTransformToAdapterQueryWithMethod(undefined, mapper, params, opts);
     };

@@ -10,5 +10,5 @@ export declare class CommonDocPlaylistExporter<R extends CommonDocRecord, F exte
     protected dataService: D;
     protected playlistGenerator: CommonDocPlaylistService<R>;
     constructor(dataService: D, playlistGenerator: CommonDocPlaylistService<R>);
-    exportPlaylist(playlistExportConfig: CommonDocPlaylistExporterConfig, searchForm: F): Promise<String>;
+    exportPlaylist(playlistExportConfig: CommonDocPlaylistExporterConfig, searchForm: F): Promise<string>;
 }

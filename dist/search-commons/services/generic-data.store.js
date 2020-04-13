@@ -148,7 +148,7 @@ var GenericDataStore = /** @class */ (function () {
         var me = this;
         var result = new Promise(function (resolve, reject) {
             if (_this.getAdapterForMapper(mapperName) === undefined ||
-                (!(typeof me.getAdapterForMapper(mapperName)['doActionTag'] === 'function'))) {
+                (typeof me.getAdapterForMapper(mapperName)['doActionTag'] !== 'function')) {
                 return reject('doActionTag not supported');
             }
             else {
@@ -171,7 +171,7 @@ var GenericDataStore = /** @class */ (function () {
     };
     GenericDataStore.prototype.facets = function (mapperName, query, opts) {
         if (this.getAdapterForMapper(mapperName) === undefined ||
-            (!(typeof this.getAdapterForMapper(mapperName)['facets'] === 'function')) ||
+            (typeof this.getAdapterForMapper(mapperName)['facets'] !== 'function') ||
             (opts && opts.forceLocalStore)) {
             return js_data_1.utils.Promise.resolve(undefined);
         }
@@ -226,7 +226,7 @@ var GenericDataStore = /** @class */ (function () {
                 orderBy: [['created_at', 'descTxt']]
             };
             if (_this.getAdapterForMapper(mapperName) === undefined ||
-                (!(typeof me.getAdapterForMapper(mapperName)['search'] === 'function')) ||
+                (typeof me.getAdapterForMapper(mapperName)['search'] !== 'function') ||
                 (opts && opts.forceLocalStore)) {
                 // the resolve / reject functions control the fate of the promise
                 me.findAll(mapperName, query, options).then(function doneFindAll(documents) {
@@ -272,7 +272,7 @@ var GenericDataStore = /** @class */ (function () {
                 originalSearchForm: searchForm
             };
             if (_this.getAdapterForMapper(mapperName) === undefined ||
-                (!(typeof me.getAdapterForMapper(mapperName)['export'] === 'function')) ||
+                (typeof me.getAdapterForMapper(mapperName)['export'] !== 'function') ||
                 (opts && opts.forceLocalStore)) {
                 // the resolve / reject functions control the fate of the promise
                 var reason = 'export not supported';

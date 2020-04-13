@@ -157,7 +157,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
         const me = this;
         const result = new Promise<R>((resolve, reject) => {
             if (this.getAdapterForMapper(mapperName) === undefined ||
-                (!(typeof me.getAdapterForMapper(mapperName)['doActionTag'] === 'function'))) {
+                (typeof me.getAdapterForMapper(mapperName)['doActionTag'] !== 'function')) {
                 return reject('doActionTag not supported');
             } else {
                 const mapper = this.store.getMapper(mapperName);
@@ -183,7 +183,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
 
     public facets(mapperName: string, query?: any, opts?: any): Promise<Facets> {
         if (this.getAdapterForMapper(mapperName) === undefined ||
-            (!(typeof this.getAdapterForMapper(mapperName)['facets'] === 'function')) ||
+            (typeof this.getAdapterForMapper(mapperName)['facets'] !== 'function') ||
             (opts && opts.forceLocalStore)) {
             return utils.Promise.resolve(undefined);
         } else {
@@ -243,7 +243,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                 orderBy: [['created_at', 'descTxt']]
             };
             if (this.getAdapterForMapper(mapperName) === undefined ||
-                (!(typeof me.getAdapterForMapper(mapperName)['search'] === 'function')) ||
+                (typeof me.getAdapterForMapper(mapperName)['search'] !== 'function') ||
                 (opts && opts.forceLocalStore)) {
                 // the resolve / reject functions control the fate of the promise
                 me.findAll(mapperName, query, options).then(function doneFindAll(documents: R[]) {
@@ -292,7 +292,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                 originalSearchForm: searchForm
             };
             if (this.getAdapterForMapper(mapperName) === undefined ||
-                (!(typeof me.getAdapterForMapper(mapperName)['export'] === 'function')) ||
+                (typeof me.getAdapterForMapper(mapperName)['export'] !== 'function') ||
                 (opts && opts.forceLocalStore)) {
                 // the resolve / reject functions control the fate of the promise
                 const reason = 'export not supported';

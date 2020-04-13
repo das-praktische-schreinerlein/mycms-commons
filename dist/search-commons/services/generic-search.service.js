@@ -37,7 +37,6 @@ var GenericSearchService = /** @class */ (function () {
     GenericSearchService.prototype.search = function (searchForm, opts) {
         // console.log('search for form', searchForm);
         var searchResultObs = this.dataStore.search(this.searchMapperName, searchForm, opts);
-        var me = this;
         var result = new Promise(function (resolve, reject) {
             searchResultObs.then(function doneSearch(searchResultData) {
                 // console.log('search searchResultData', searchResultData);
@@ -52,7 +51,6 @@ var GenericSearchService = /** @class */ (function () {
     GenericSearchService.prototype.export = function (searchForm, format, opts) {
         // console.log('export for form', searchForm);
         var exportResultObs = this.dataStore.export(this.searchMapperName, searchForm, format, opts);
-        var me = this;
         var result = new Promise(function (resolve, reject) {
             exportResultObs.then(function doneExport(exportResultData) {
                 // console.log('export exportResultData', exportResultData);

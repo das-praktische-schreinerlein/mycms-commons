@@ -55,8 +55,8 @@ var CommonDocSearchService = /** @class */ (function (_super) {
         return new Promise(function (resolve, reject) {
             return Promise.all(promises).then(function doneSearch(docSearchResults) {
                 var records = [];
-                docSearchResults.forEach(function (docSearchResult) {
-                    for (var _i = 0, _a = docSearchResult.currentRecords; _i < _a.length; _i++) {
+                docSearchResults.forEach(function (result) {
+                    for (var _i = 0, _a = result.currentRecords; _i < _a.length; _i++) {
                         var doc = _a[_i];
                         var type = doc.id.split('_')[0];
                         type = type.toLowerCase();
@@ -81,6 +81,7 @@ var CommonDocSearchService = /** @class */ (function (_super) {
     };
     CommonDocSearchService.prototype.sortRecords = function (records, sortType) {
         if (sortType === 'relevance') {
+            // NOOP
         }
         else if (sortType === 'dateAsc' || sortType === 'dateDesc') {
             var retLt_1 = sortType === 'dateAsc' ? -1 : 1;

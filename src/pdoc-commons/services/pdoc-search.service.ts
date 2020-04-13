@@ -23,7 +23,7 @@ export class PDocSearchService extends GenericSearchService <PDocRecord, PDocSea
     }
 
     public createRecord(props, opts): PDocRecord {
-        return <PDocRecord>this.dataStore.createRecord(this.getBaseMapperName(), props, opts);
+        return this.dataStore.createRecord(this.getBaseMapperName(), props, opts);
     }
 
     public newRecord(values: {}): PDocRecord {

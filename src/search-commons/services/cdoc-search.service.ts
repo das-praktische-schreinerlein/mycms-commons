@@ -52,8 +52,8 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
         return new Promise<S>((resolve, reject) => {
             return Promise.all(promises).then(function doneSearch(docSearchResults: S[]) {
                 const records: R[] = [];
-                docSearchResults.forEach(docSearchResult => {
-                    for (const doc of docSearchResult.currentRecords) {
+                docSearchResults.forEach(result => {
+                    for (const doc of result.currentRecords) {
                         let [type] = doc.id.split('_');
                         type = type.toLowerCase();
                         idTypeMap[type]['records'][doc.id] = doc;
@@ -79,6 +79,7 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
 
     sortRecords(records: R[], sortType: string): void {
         if (sortType === 'relevance') {
+            // NOOP
         } else if (sortType === 'dateAsc' || sortType === 'dateDesc') {
             const retLt = sortType === 'dateAsc' ? -1 : 1;
             records.sort((a, b) => {

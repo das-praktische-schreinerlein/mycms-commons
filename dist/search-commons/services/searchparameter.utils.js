@@ -97,7 +97,7 @@ var SearchParameterUtils = /** @class */ (function () {
         }).join(joiner);
     };
     SearchParameterUtils.prototype.replacePlaceHolder = function (value, regEx, replacement) {
-        if (value === undefined || !(typeof value === 'string')) {
+        if (value === undefined || (typeof value !== 'string')) {
             return value;
         }
         return value.replace(regEx, replacement);

@@ -169,11 +169,11 @@ export class BaseEntityRecordValidator {
 
     protected validateRelationDoc(relation: string, doc: BaseEntityRecord, errFieldPrefix?: string): string[] {
         throw new Error('unknown relation:' + relation);
-    };
+    }
 
     protected validateValueRelationDoc(relation: string, values: {}, fieldPrefix?: string, errFieldPrefix?: string): string[] {
         throw new Error('unknown relation:' + relation);
-    };
+    }
 
     protected validateFieldRules(values: {}, fieldConfigs: {}, fieldPrefix: string, errors: string[], errFieldPrefix?: string): boolean {
         let state = true;

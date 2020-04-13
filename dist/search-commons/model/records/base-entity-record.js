@@ -161,11 +161,9 @@ var BaseEntityRecordValidator = /** @class */ (function () {
     BaseEntityRecordValidator.prototype.validateRelationDoc = function (relation, doc, errFieldPrefix) {
         throw new Error('unknown relation:' + relation);
     };
-    ;
     BaseEntityRecordValidator.prototype.validateValueRelationDoc = function (relation, values, fieldPrefix, errFieldPrefix) {
         throw new Error('unknown relation:' + relation);
     };
-    ;
     BaseEntityRecordValidator.prototype.validateFieldRules = function (values, fieldConfigs, fieldPrefix, errors, errFieldPrefix) {
         var state = true;
         for (var fieldConfigName in fieldConfigs) {

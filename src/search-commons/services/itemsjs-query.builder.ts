@@ -26,8 +26,8 @@ export class ItemsJsQueryBuilder {
 
         const query = this.createAdapterSelectQuery(itemsJsConfig, method, adapterQuery, adapterOpts);
 
-        const facetParams = this.getFacetParams(itemsJsConfig, adapterOpts);
-        const spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
+        // for debug only: const facetParams = this.getFacetParams(itemsJsConfig, adapterOpts);
+        // for debug only: const spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
 
         const sorts = this.getSortParams(itemsJsConfig, method, adapterQuery, adapterOpts);
         if (sorts !== undefined && sorts.length > 0) {
@@ -46,7 +46,7 @@ export class ItemsJsQueryBuilder {
         }
 
         return false;
-    };
+    }
 
     protected createAdapterSelectQuery(itemsJsConfig: ItemsJsConfig, method: string, adapterQuery: AdapterQuery,
                                        adapterOpts: AdapterOpts): ItemsJsSelectQueryData {
@@ -104,7 +104,7 @@ export class ItemsJsQueryBuilder {
         }
 
         return sortKey;
-    };
+    }
 
     protected getSpatialParams(itemsJsConfig: ItemsJsConfig, adapterQuery: AdapterQuery): Map<string, any> {
         const spatialParams = new Map<string, any>();
@@ -114,7 +114,7 @@ export class ItemsJsQueryBuilder {
         }
 
         return spatialParams;
-    };
+    }
 
     protected getAdapterSelectFields(itemsJsConfig: ItemsJsConfig, method: string, adapterQuery: AdapterQuery): string[] {
         const fields = itemsJsConfig.searchableFields.slice(0);
@@ -150,10 +150,10 @@ export class ItemsJsQueryBuilder {
         }
 
         return facetParams;
-    };
+    }
 
     protected mapToAdapterFieldName(itemsJsConfig: ItemsJsConfig, fieldName: string): string {
-        switch (fieldName) {
+        switch (fieldName) { // NOSONAR: is template for depended
             default:
                 break;
         }
@@ -198,7 +198,7 @@ export class ItemsJsQueryBuilder {
             throw new Error ('not implemented');
         } else if (action === AdapterFilterActions.LE) {
             throw new Error ('not implemented');
-        } else if (action === AdapterFilterActions.IN, action === AdapterFilterActions.IN_NUMBER) {
+        } else if (action === AdapterFilterActions.IN || action === AdapterFilterActions.IN_NUMBER) {
             query[fieldName] = value;
         } else if (action === AdapterFilterActions.NOTIN) {
             throw new Error ('not implemented');

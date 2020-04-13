@@ -194,13 +194,6 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         const result: Promise<any> = new Promise((allResolve, allReject) => {
             const writeQuery = me.queryTransformToAdapterWriteQuery('create', mapper, props, opts);
             if (writeQuery) {
-                const queryFields = [];
-                const queryValues = [];
-                for (const field in writeQuery.fields) {
-                    queryFields.push(field);
-                    queryValues.push(writeQuery.fields[field]);
-                }
-                //me.knex.insert(me.knex.raw(' (' + queryFields.join(', ') + ') values (' + queryValues.join(', ') + ')'))
                 let dbId = undefined;
                 const idField = writeQuery.tableConfig.filterMapping['id'];
                 sqlBuilder.insert([writeQuery.fields])
@@ -255,22 +248,22 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
         const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
         const sql = this.queryTransformToSql(queryData);
-        const start = (new Date()).getTime();
+        // for debug only: const start = (new Date()).getTime();
         const raw = sqlBuilder.raw(sql);
         const result = new Promise((resolve, reject) => {
             raw.then(function doneSearch(dbresults: any) {
-                    // console.error("sql _count: " + ((new Date()).getTime() - start), sql);  // TODO SQL
-                    const response = me.extractDbResult(dbresults);
-                    const count = me.extractCountFromRequestResult(response);
-                    return resolve(count);
-                }).catch(function errorSearch(reason) {
-                    console.error('_count failed:', reason);
-                    return reject(reason);
-                });
+                // for debug only: console.error("sql _count: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                const response = me.extractDbResult(dbresults);
+                const count = me.extractCountFromRequestResult(response);
+                return resolve(count);
+            }).catch(function errorSearch(reason) {
+                console.error('_count failed:', reason);
+                return reject(reason);
+            });
         });
 
         return result;
-    };
+    }
 
     protected _doActionTag(mapper: Mapper, record: R, actionTagForm: ActionTagForm, opts: any): Promise<any> {
         const tableConfig = this.getTableConfigForTableKey((record['type'] + '').toLowerCase());
@@ -299,11 +292,11 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
         const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
         const sql = this.queryTransformToSql(queryData);
-        const start = (new Date()).getTime();
+        // for debug only: const start = (new Date()).getTime();
         const raw = sqlBuilder.raw(sql);
         const result = new Promise((resolve, reject) => {
             raw.then(function doneSearch(dbresults: any) {
-                // console.error("sql _findAll: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                // for debug only: console.error("sql _findAll: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                 const response = me.extractDbResult(dbresults);
                 const records: R[] = me.extractRecordsFromRequestResult(mapper, response, queryData);
                 return utils.resolve(records);
@@ -318,7 +311,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         });
 
         return result;
-    };
+    }
 
     protected _facets(mapper, query, opts) {
         query = query || {};
@@ -343,10 +336,10 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             queries.forEach((value, key) => {
                 const sql = this.transformToSqlDialect(value);
                 const raw = sqlBuilder.raw(sql);
-                const start = (new Date()).getTime();
+                // for debug only: const start = (new Date()).getTime();
                 promises.push(new Promise((resolve, reject) => {
                     raw.then(function doneSearch(dbresults: any) {
-                        // console.error("sql _facets: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                        // for debug only: console.error("sql _facets: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                         const response = me.extractDbResult(dbresults);
                         let facet: Facet = me.extractFacetFromRequestResult(response);
                         if (!facet) {
@@ -392,7 +385,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         });
 
         return result;
-    };
+    }
 
     protected _update(mapper, id, props, opts): Promise<any> {
         if (opts.realSource) {
@@ -406,12 +399,6 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         const result: Promise<any> = new Promise((allResolve, allReject) => {
             const writeQuery = me.queryTransformToAdapterWriteQuery('update', mapper, props, opts);
             if (writeQuery) {
-                const queryFields = [];
-                const queryValues = [];
-                for (const field in writeQuery.fields) {
-                    queryFields.push(field);
-                    queryValues.push(writeQuery.fields[field]);
-                }
                 const dbId  = this.mapperUtils.prepareSingleValue(id, '_').replace(/.*_/g, '');
                 const idField = writeQuery.tableConfig.filterMapping['id'];
                 sqlBuilder.update(writeQuery.fields)
@@ -602,10 +589,10 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                         sql = sql.replace(new RegExp(':' + parameterName, 'g'), value);
                     });
                     const raw = sqlBuilder.raw(sql);
-                    const start = (new Date()).getTime();
+                    // for debug only: const start = (new Date()).getTime();
                     promises.push(new Promise((resolve, reject) => {
                         raw.then(function doneSearch(dbresults: any) {
-                            // console.error("sql loadDetailData: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                                // for debug only: console.error("sql loadDetailData: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                             const response = me.extractDbResult(dbresults);
                             return resolve([loadDetailDataConfig.profile, record, response]);
                         },
@@ -648,7 +635,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         }
 
         return this.sqlQueryBuilder.getFacetSql(tableConfig, this.facetCacheConfig, adapterOpts);
-    };
+    }
 
     protected queryTransformToSql(query: SelectQueryData): string {
         let  sql = this.sqlQueryBuilder.selectQueryTransformToSql(query);

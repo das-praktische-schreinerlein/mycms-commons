@@ -162,13 +162,6 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         var result = new Promise(function (allResolve, allReject) {
             var writeQuery = me.queryTransformToAdapterWriteQuery('create', mapper, props, opts);
             if (writeQuery) {
-                var queryFields = [];
-                var queryValues = [];
-                for (var field in writeQuery.fields) {
-                    queryFields.push(field);
-                    queryValues.push(writeQuery.fields[field]);
-                }
-                //me.knex.insert(me.knex.raw(' (' + queryFields.join(', ') + ') values (' + queryValues.join(', ') + ')'))
                 var dbId_1 = undefined;
                 var idField_1 = writeQuery.tableConfig.filterMapping['id'];
                 sqlBuilder.insert([writeQuery.fields])
@@ -216,11 +209,11 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         opts.queryData = queryData;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
         var sql = this.queryTransformToSql(queryData);
-        var start = (new Date()).getTime();
+        // for debug only: const start = (new Date()).getTime();
         var raw = sqlBuilder.raw(sql);
         var result = new Promise(function (resolve, reject) {
             raw.then(function doneSearch(dbresults) {
-                // console.error("sql _count: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                // for debug only: console.error("sql _count: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                 var response = me.extractDbResult(dbresults);
                 var count = me.extractCountFromRequestResult(response);
                 return resolve(count);
@@ -231,7 +224,6 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         });
         return result;
     };
-    ;
     GenericSqlAdapter.prototype._doActionTag = function (mapper, record, actionTagForm, opts) {
         var tableConfig = this.getTableConfigForTableKey((record['type'] + '').toLowerCase());
         if (tableConfig === undefined) {
@@ -255,11 +247,11 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         opts.queryData = queryData;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
         var sql = this.queryTransformToSql(queryData);
-        var start = (new Date()).getTime();
+        // for debug only: const start = (new Date()).getTime();
         var raw = sqlBuilder.raw(sql);
         var result = new Promise(function (resolve, reject) {
             raw.then(function doneSearch(dbresults) {
-                // console.error("sql _findAll: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                // for debug only: console.error("sql _findAll: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                 var response = me.extractDbResult(dbresults);
                 var records = me.extractRecordsFromRequestResult(mapper, response, queryData);
                 return js_data_1.utils.resolve(records);
@@ -274,7 +266,6 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         });
         return result;
     };
-    ;
     GenericSqlAdapter.prototype._facets = function (mapper, query, opts) {
         var _this = this;
         query = query || {};
@@ -297,10 +288,10 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             queries.forEach(function (value, key) {
                 var sql = _this.transformToSqlDialect(value);
                 var raw = sqlBuilder.raw(sql);
-                var start = (new Date()).getTime();
+                // for debug only: const start = (new Date()).getTime();
                 promises.push(new Promise(function (resolve, reject) {
                     raw.then(function doneSearch(dbresults) {
-                        // console.error("sql _facets: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                        // for debug only: console.error("sql _facets: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                         var response = me.extractDbResult(dbresults);
                         var facet = me.extractFacetFromRequestResult(response);
                         if (!facet) {
@@ -340,7 +331,6 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         });
         return result;
     };
-    ;
     GenericSqlAdapter.prototype._update = function (mapper, id, props, opts) {
         var _this = this;
         if (opts.realSource) {
@@ -353,12 +343,6 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         var result = new Promise(function (allResolve, allReject) {
             var writeQuery = me.queryTransformToAdapterWriteQuery('update', mapper, props, opts);
             if (writeQuery) {
-                var queryFields = [];
-                var queryValues = [];
-                for (var field in writeQuery.fields) {
-                    queryFields.push(field);
-                    queryValues.push(writeQuery.fields[field]);
-                }
                 var dbId_2 = _this.mapperUtils.prepareSingleValue(id, '_').replace(/.*_/g, '');
                 var idField_2 = writeQuery.tableConfig.filterMapping['id'];
                 sqlBuilder.update(writeQuery.fields)
@@ -526,10 +510,10 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                         sql = sql.replace(new RegExp(':' + parameterName, 'g'), value);
                     });
                     var raw = sqlBuilder.raw(sql);
-                    var start = (new Date()).getTime();
+                    // for debug only: const start = (new Date()).getTime();
                     promises.push(new Promise(function (resolve, reject) {
                         raw.then(function doneSearch(dbresults) {
-                            // console.error("sql loadDetailData: " + ((new Date()).getTime() - start), sql);  // TODO SQL
+                            // for debug only: console.error("sql loadDetailData: " + ((new Date()).getTime() - start), sql);  // TODO SQL
                             var response = me.extractDbResult(dbresults);
                             return resolve([loadDetailDataConfig.profile, record, response]);
                         }, function errorSearch(reason) {
@@ -559,7 +543,6 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         }
         return this.sqlQueryBuilder.getFacetSql(tableConfig, this.facetCacheConfig, adapterOpts);
     };
-    ;
     GenericSqlAdapter.prototype.queryTransformToSql = function (query) {
         var sql = this.sqlQueryBuilder.selectQueryTransformToSql(query);
         sql = this.transformToSqlDialect(sql);

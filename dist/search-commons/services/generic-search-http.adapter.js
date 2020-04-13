@@ -138,8 +138,8 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         js_data_1.utils.deepMixIn(opts.params, query);
         opts.params = me.queryTransformToHttpQuery(mapper, opts.params, opts);
         var result = new Promise(function (resolve, reject) {
-            me._export(mapper, query, format, opts).then(function (result) {
-                return resolve(result);
+            me._export(mapper, query, format, opts).then(function (exportresult) {
+                return resolve(exportresult);
             }).catch(function (reason) {
                 console.error('export failed:', reason);
                 return reject(reason);
@@ -210,7 +210,6 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         return facets;
     };
     GenericSearchHttpAdapter.prototype._doActionTag = function (mapper, record, actionTagForm, opts) {
-        var me = this;
         opts = opts || {};
         opts.endpoint = this.getHttpEndpoint('doActionTag');
         return _super.prototype.PUT.call(this, this.getPath('doActionTag', mapper, undefined, opts), actionTagForm, undefined)
@@ -231,7 +230,6 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         });
     };
     GenericSearchHttpAdapter.prototype._export = function (mapper, query, format, opts) {
-        var me = this;
         opts = opts || {};
         opts.endpoint = this.getHttpEndpoint('export', format);
         opts.responseType = 'text';

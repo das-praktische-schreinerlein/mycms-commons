@@ -256,7 +256,7 @@ var GenericSolrAdapter = /** @class */ (function (_super) {
         opts.contentType = 'application/json';
         return this.GET(url, opts).then(function (response) { return _this._end(mapper, opts, response); });
     };
-    GenericSolrAdapter.prototype._doActionTag = function (mapper, Record, actionTagForm, opts) {
+    GenericSolrAdapter.prototype._doActionTag = function (mapper, record, actionTagForm, opts) {
         return js_data_1.utils.reject('not supported');
     };
     GenericSolrAdapter.prototype._destroy = function (mapper, id, opts) {

@@ -35,7 +35,7 @@ export declare abstract class GenericSolrAdapter<R extends Record, F extends Gen
     afterFind(mapper: Mapper, id: number | string, opts: any, result: any): Promise<R>;
     afterDestroy(mapper: Mapper, id: number | string, opts: any, result: any): Promise<R>;
     _create(mapper: Mapper, props: any, opts: any): Promise<any>;
-    _doActionTag(mapper: Mapper, Record: R, actionTagForm: ActionTagForm, opts: any): Promise<any>;
+    _doActionTag(mapper: Mapper, record: R, actionTagForm: ActionTagForm, opts: any): Promise<any>;
     _destroy(mapper: Mapper, id: string | number, opts: any): Promise<any>;
     _update(mapper: Mapper, id: string | number, props: any, opts: any): Promise<any>;
     deserialize(mapper: Mapper, response: any, opts: any): any;

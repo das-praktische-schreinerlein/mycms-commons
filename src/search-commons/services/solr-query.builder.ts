@@ -101,7 +101,7 @@ export class SolrQueryBuilder {
         }
 
         return false;
-    };
+    }
 
     protected createAdapterSelectQuery(solrConfig: SolrConfig, method: string, adapterQuery: AdapterQuery,
                                        adapterOpts: AdapterOpts): SolrQueryData {
@@ -167,7 +167,7 @@ export class SolrQueryBuilder {
         }
 
         return sortParams;
-    };
+    }
 
     protected getSpatialParams(solrConfig: SolrConfig, adapterQuery: AdapterQuery): Map<string, any> {
         const spatialParams = new Map<string, any>();
@@ -182,7 +182,7 @@ export class SolrQueryBuilder {
         }
 
         return spatialParams;
-    };
+    }
 
     protected getAdapterSelectFields(solrConfig: SolrConfig, method: string, adapterQuery: AdapterQuery): string[] {
         const fields = solrConfig.fieldList.slice(0);
@@ -218,10 +218,10 @@ export class SolrQueryBuilder {
         }
 
         return facetParams;
-    };
+    }
 
     protected mapToAdapterFieldName(solrConfig: SolrConfig, fieldName: string): string {
-        switch (fieldName) {
+        switch (fieldName) { // NOSONAR: is template for depended
             default:
                 break;
         }

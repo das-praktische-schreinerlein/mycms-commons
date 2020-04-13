@@ -38,7 +38,7 @@ export class DateUtils {
         return new Date(Date.parse(<any>date));
     }
 
-    public static dateToLocalISOString(src: any): String {
+    public static dateToLocalISOString(src: any): string {
         const date = DateUtils.parseDate(src);
         if (date === undefined || date === null || !isDate(date)) {
             return undefined;

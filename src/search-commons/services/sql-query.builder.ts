@@ -298,7 +298,7 @@ export class SqlQueryBuilder {
         }
 
         return facets;
-    };
+    }
 
     public generateFacetSqlForSelectField(tableName: string, tableFacetConfig: TableFacetConfig): string {
         if (tableFacetConfig.selectField === undefined) {
@@ -365,12 +365,10 @@ export class SqlQueryBuilder {
         }
 
         return false;
-    };
+    }
 
     public generateFilter(fieldName: string, action: string | AdapterFilterActions, value: any, throwOnUnknown?: boolean): string {
         let query = '';
-        let containsNull = false;
-        const me = this;
 
         if (action === AdapterFilterActions.LIKEI || action === AdapterFilterActions.LIKE) {
             query = fieldName + ' LIKE "%'
@@ -530,20 +528,20 @@ export class SqlQueryBuilder {
         }
 
         return [sortMapping['relevance']];
-    };
+    }
 
     protected getSpatialParams(tableConfig: TableConfig, adapterQuery: AdapterQuery, spatialField: string): string {
         if (this.isSpatialQuery(tableConfig, adapterQuery)) {
-            const [lat, lon, distance] = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/);
+            const [, , distance] = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/);
             return spatialField + ' <= ' + distance;
         }
 
         return undefined;
-    };
+    }
 
     protected getSpatialSql(tableConfig: TableConfig, adapterQuery: AdapterQuery): string {
         if (this.isSpatialQuery(tableConfig, adapterQuery)) {
-            const [lat, lon, distance] = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/);
+            const [lat, lon, ] = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/);
             const distanceSql =
                 '(3959 ' +
                 ' * ACOS (' +
@@ -621,7 +619,7 @@ export class SqlQueryBuilder {
     }
 
     protected mapToAdapterFieldName(tableConfig: TableConfig, fieldName: string): string {
-        switch (fieldName) {
+        switch (fieldName) { // NOSONAR: is template for depended
             default:
                 break;
         }

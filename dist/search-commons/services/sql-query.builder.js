@@ -198,7 +198,6 @@ var SqlQueryBuilder = /** @class */ (function () {
         }
         return facets;
     };
-    ;
     SqlQueryBuilder.prototype.generateFacetSqlForSelectField = function (tableName, tableFacetConfig) {
         if (tableFacetConfig.selectField === undefined) {
             return;
@@ -252,12 +251,9 @@ var SqlQueryBuilder = /** @class */ (function () {
         }
         return false;
     };
-    ;
     SqlQueryBuilder.prototype.generateFilter = function (fieldName, action, value, throwOnUnknown) {
         var _this = this;
         var query = '';
-        var containsNull = false;
-        var me = this;
         if (action === mapper_utils_1.AdapterFilterActions.LIKEI || action === mapper_utils_1.AdapterFilterActions.LIKE) {
             query = fieldName + ' LIKE "%'
                 + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', '%" AND ' + fieldName + ' LIKE "%') + '%" ';
@@ -408,18 +404,16 @@ var SqlQueryBuilder = /** @class */ (function () {
         }
         return [sortMapping['relevance']];
     };
-    ;
     SqlQueryBuilder.prototype.getSpatialParams = function (tableConfig, adapterQuery, spatialField) {
         if (this.isSpatialQuery(tableConfig, adapterQuery)) {
-            var _a = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/), lat = _a[0], lon = _a[1], distance = _a[2];
+            var _a = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/), distance = _a[2];
             return spatialField + ' <= ' + distance;
         }
         return undefined;
     };
-    ;
     SqlQueryBuilder.prototype.getSpatialSql = function (tableConfig, adapterQuery) {
         if (this.isSpatialQuery(tableConfig, adapterQuery)) {
-            var _a = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/), lat = _a[0], lon = _a[1], distance = _a[2];
+            var _a = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/), lat = _a[0], lon = _a[1];
             var distanceSql = '(3959 ' +
                 ' * ACOS (' +
                 '     COS ( RADIANS(' + lat + ') )' +
@@ -487,7 +481,7 @@ var SqlQueryBuilder = /** @class */ (function () {
         query.fields = query.fields.concat(addFields);
     };
     SqlQueryBuilder.prototype.mapToAdapterFieldName = function (tableConfig, fieldName) {
-        switch (fieldName) {
+        switch (fieldName) { // NOSONAR: is template for depended
             default:
                 break;
         }

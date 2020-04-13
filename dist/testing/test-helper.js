@@ -24,7 +24,7 @@ var TestHelper = /** @class */ (function () {
             resetTestResults: function (newReturnValues) {
                 this.sqls = [];
                 this.params = [];
-                this.returnValues = newReturnValues.reverse();
+                this.returnValues = newReturnValues.slice().reverse();
             }
         };
     };

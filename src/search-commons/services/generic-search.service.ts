@@ -62,7 +62,7 @@ export abstract class GenericSearchService <R extends Record, F extends GenericS
         const result = new Promise<R[]>((resolve, reject) => {
             this.search(searchForm, opts).then(function doneSearch(searchResultData: S) {
                     // console.log('findCurList searchResultData', searchResultData);
-                    return resolve(<R[]>searchResultData.currentRecords);
+                    return resolve(searchResultData.currentRecords);
                 },
                 function errorSearch(reason) {
                     console.error('findCurList failed:', reason);
@@ -77,7 +77,6 @@ export abstract class GenericSearchService <R extends Record, F extends GenericS
         // console.log('search for form', searchForm);
         const searchResultObs = this.dataStore.search(this.searchMapperName, searchForm, opts);
 
-        const me = this;
         const result = new Promise<S>((resolve, reject) => {
             searchResultObs.then(function doneSearch(searchResultData: S) {
                     // console.log('search searchResultData', searchResultData);
@@ -96,7 +95,6 @@ export abstract class GenericSearchService <R extends Record, F extends GenericS
         // console.log('export for form', searchForm);
         const exportResultObs = this.dataStore.export(this.searchMapperName, searchForm, format, opts);
 
-        const me = this;
         const result = new Promise<string>((resolve, reject) => {
             exportResultObs.then(function doneExport(exportResultData: string) {
                     // console.log('export exportResultData', exportResultData);
@@ -116,7 +114,7 @@ export abstract class GenericSearchService <R extends Record, F extends GenericS
     }
 
     getByIdFromLocalStore(id: string): R {
-        return <R>this.dataStore.getFromLocalStore(this.searchMapperName, id);
+        return this.dataStore.getFromLocalStore(this.searchMapperName, id);
     }
 
     sortRecords(records: R[], sortType: string): void {

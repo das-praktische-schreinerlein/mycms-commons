@@ -126,21 +126,21 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
             return utils.reject('doc-values not valid');
         }
 
-        return <Promise<R>>this.dataStore.create(this.getBaseMapperName(), record, opts);
+        return this.dataStore.create(this.getBaseMapperName(), record, opts);
     }
 
     addMany(docs: R[], opts?: any): Promise<R[]> {
         if (!this.isWritable()) {
             throw new Error('CommonDocDataService configured: not writable');
         }
-        return <Promise<R[]>>this.dataStore.createMany(this.getBaseMapperName(), docs, opts);
+        return this.dataStore.createMany(this.getBaseMapperName(), docs, opts);
     }
 
     deleteById(id: string, opts?: any): Promise<R> {
         if (!this.isWritable()) {
             throw new Error('CommonDocDataService configured: not writable');
         }
-        return <Promise<R>>this.dataStore.destroy(this.getBaseMapperName(), id, opts);
+        return this.dataStore.destroy(this.getBaseMapperName(), id, opts);
     }
 
     updateById(id: string, values: {}, opts?: any): Promise<R> {
@@ -159,7 +159,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
             return utils.reject('doc-values not valid');
         }
 
-        return <Promise<R>>this.dataStore.update(this.getBaseMapperName(), id, record, opts);
+        return this.dataStore.update(this.getBaseMapperName(), id, record, opts);
     }
 
     doActionTag(docRecord: R, actionTagForm: ActionTagForm, opts?: any): Promise<R> {
@@ -167,7 +167,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
             throw new Error('CommonDocDataService configured: not writable');
         }
 
-        return <Promise<R>>this.dataStore.doActionTag(this.getBaseMapperName(), docRecord, actionTagForm, opts);
+        return this.dataStore.doActionTag(this.getBaseMapperName(), docRecord, actionTagForm, opts);
     }
 
     doActionTags(docRecord: R, actionTagForms: ActionTagForm[], opts?: any): Promise<R> {

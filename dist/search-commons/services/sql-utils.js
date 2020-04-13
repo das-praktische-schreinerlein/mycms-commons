@@ -5,7 +5,7 @@ var SqlUtils = /** @class */ (function () {
     }
     SqlUtils.transformToSqliteDialect = function (sql) {
         var replace = ' CONCAT(';
-        while (sql.indexOf(replace) > 0) {
+        while (sql.indexOf(replace) >= 0) {
             var start = sql.indexOf(replace);
             var end = sql.indexOf(')', start);
             var sqlPre = sql.substr(0, start + 1);
@@ -82,8 +82,8 @@ var SqlUtils = /** @class */ (function () {
     SqlUtils.mapParametersToPlaceholderString = function (parameters) {
         return SqlUtils.mapParametersToPlaceholders(parameters).join(', ');
     };
-    SqlUtils.executeRawSqlQueryData = function (knex, query) {
-        return knex.raw(query.sql, query.parameters);
+    SqlUtils.executeRawSqlQueryData = function (db, query) {
+        return db.raw(query.sql, query.parameters);
     };
     return SqlUtils;
 }());

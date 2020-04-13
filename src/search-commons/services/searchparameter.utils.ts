@@ -104,7 +104,7 @@ export class SearchParameterUtils {
     }
 
     public replacePlaceHolder(value: any, regEx: RegExp, replacement: string) {
-        if (value === undefined || !(typeof value === 'string')) {
+        if (value === undefined || (typeof value !== 'string')) {
             return value;
         }
 

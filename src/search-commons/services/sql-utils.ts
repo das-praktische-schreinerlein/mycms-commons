@@ -15,7 +15,7 @@ export interface RawSqlQueryData {
 export class SqlUtils {
     public static transformToSqliteDialect(sql: string): string {
         const replace = ' CONCAT(';
-        while (sql.indexOf(replace) > 0) {
+        while (sql.indexOf(replace) >= 0) {
             const start = sql.indexOf(replace);
             const end = sql.indexOf(')', start);
             const sqlPre = sql.substr(0, start + 1);
@@ -86,7 +86,7 @@ export class SqlUtils {
 
     }
 
-    public static concatRawSqlQueryData(part1: RawSqlQueryData, joiner: String, part2: RawSqlQueryData): RawSqlQueryData {
+    public static concatRawSqlQueryData(part1: RawSqlQueryData, joiner: string, part2: RawSqlQueryData): RawSqlQueryData {
         if (part1 === undefined || part1.sql === undefined || part1.sql.length <= 0) {
             return { sql: part2.sql, parameters: [...part2.parameters]};
         }
@@ -97,16 +97,16 @@ export class SqlUtils {
         return { sql: part1.sql + joiner + part2.sql, parameters: [...part1.parameters].concat(part2.parameters)};
     }
 
-    public static mapParametersToPlaceholders(parameters: any[]): String[] {
+    public static mapParametersToPlaceholders(parameters: any[]): string[] {
         return parameters.map(() => '?');
     }
 
-    public static mapParametersToPlaceholderString(parameters: any[]): String {
+    public static mapParametersToPlaceholderString(parameters: any[]): string {
         return SqlUtils.mapParametersToPlaceholders(parameters).join(', ');
     }
 
-    public static executeRawSqlQueryData(knex: knex, query: RawSqlQueryData): Promise<any> {
-        return knex.raw(query.sql, query.parameters);
+    public static executeRawSqlQueryData(db: knex, query: RawSqlQueryData): Promise<any> {
+        return db.raw(query.sql, query.parameters);
     }
 }
 

@@ -7,8 +7,8 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
     }
     ItemsJsQueryBuilder.prototype.queryTransformToAdapterSelectQuery = function (itemsJsConfig, method, adapterQuery, adapterOpts) {
         var query = this.createAdapterSelectQuery(itemsJsConfig, method, adapterQuery, adapterOpts);
-        var facetParams = this.getFacetParams(itemsJsConfig, adapterOpts);
-        var spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
+        // for debug only: const facetParams = this.getFacetParams(itemsJsConfig, adapterOpts);
+        // for debug only: const spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
         var sorts = this.getSortParams(itemsJsConfig, method, adapterQuery, adapterOpts);
         if (sorts !== undefined && sorts.length > 0) {
             query.sort = sorts;
@@ -23,7 +23,6 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         }
         return false;
     };
-    ;
     ItemsJsQueryBuilder.prototype.createAdapterSelectQuery = function (itemsJsConfig, method, adapterQuery, adapterOpts) {
         // console.log('createAdapterSelectQuery adapterQuery:', adapterQuery);
         // console.log('createAdapterSelectQuery adapterOpts:', adapterOpts);
@@ -75,7 +74,6 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         }
         return sortKey;
     };
-    ;
     ItemsJsQueryBuilder.prototype.getSpatialParams = function (itemsJsConfig, adapterQuery) {
         var spatialParams = new Map();
         if (this.isSpatialQuery(itemsJsConfig, adapterQuery)) {
@@ -83,7 +81,6 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         }
         return spatialParams;
     };
-    ;
     ItemsJsQueryBuilder.prototype.getAdapterSelectFields = function (itemsJsConfig, method, adapterQuery) {
         var fields = itemsJsConfig.searchableFields.slice(0);
         if (adapterQuery !== undefined && adapterQuery.spatial !== undefined && adapterQuery.spatial.geo_loc_p !== undefined &&
@@ -113,9 +110,8 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         }
         return facetParams;
     };
-    ;
     ItemsJsQueryBuilder.prototype.mapToAdapterFieldName = function (itemsJsConfig, fieldName) {
-        switch (fieldName) {
+        switch (fieldName) { // NOSONAR: is template for depended
             default:
                 break;
         }
@@ -158,7 +154,7 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         else if (action === mapper_utils_1.AdapterFilterActions.LE) {
             throw new Error('not implemented');
         }
-        else if (action === mapper_utils_1.AdapterFilterActions.IN, action === mapper_utils_1.AdapterFilterActions.IN_NUMBER) {
+        else if (action === mapper_utils_1.AdapterFilterActions.IN || action === mapper_utils_1.AdapterFilterActions.IN_NUMBER) {
             query[fieldName] = value;
         }
         else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {

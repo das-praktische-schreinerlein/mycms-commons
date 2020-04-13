@@ -15,7 +15,7 @@ export class CommonDocPlaylistExporter <R extends CommonDocRecord, F extends Com
 
     }
 
-    public exportPlaylist(playlistExportConfig: CommonDocPlaylistExporterConfig, searchForm: F): Promise<String> {
+    public exportPlaylist(playlistExportConfig: CommonDocPlaylistExporterConfig, searchForm: F): Promise<string> {
         const me = this;
         searchForm.perPage = 100;
         searchForm.pageNum = 1;

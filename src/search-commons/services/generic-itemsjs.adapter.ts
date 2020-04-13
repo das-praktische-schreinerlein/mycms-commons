@@ -174,11 +174,11 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
 
         const result = this.doQuery(queryData);
         const records = this.extractRecordsFromRequestResult(mapper, result);
-        if (! (Array.isArray(result))) {
+        if (! (Array.isArray(records))) {
             return utils.Promise.reject('generic-solr-adapter.afterFind: no array as result');
         }
 
-        return utils.Promise.resolve(result);
+        return utils.Promise.resolve(records);
     }
 
     deserializeResponse(mapper: Mapper, response: ItemJsResult, opts: any) {
@@ -267,7 +267,7 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
     protected doQuery(query: ItemsJsSelectQueryData): ItemJsResult {
         const result: ItemJsResult = this.itemJs.search(query);
         return result;
-    };
+    }
 
     protected queryTransformToAdapterQuery(mapper: Mapper, params: any, opts: any): ItemsJsSelectQueryData {
         return this.queryTransformToAdapterQueryWithMethod(undefined, mapper, params, opts);

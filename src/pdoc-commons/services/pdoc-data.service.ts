@@ -16,7 +16,7 @@ export class PDocDataService extends PDocSearchService {
     }
 
     createRecord(props, opts): PDocRecord {
-        return <PDocRecord>this.dataStore.createRecord(this.searchMapperName, props, opts);
+        return this.dataStore.createRecord(this.searchMapperName, props, opts);
     }
 
     // Simulate POST /pdocs

@@ -21,7 +21,7 @@ export class TestHelper {
             resetTestResults: function (newReturnValues: any[]) {
                 this.sqls = [];
                 this.params = [];
-                this.returnValues = newReturnValues.reverse();
+                this.returnValues = [...newReturnValues].reverse();
             }
         };
     }
