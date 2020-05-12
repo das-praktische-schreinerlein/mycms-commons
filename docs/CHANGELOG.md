@@ -20,6 +20,7 @@
 
 ## 5.0.0
 - upgraded all dev-dependencies to latest
+- build: use peerDependencies
 
 ### new features
 - none
@@ -32,6 +33,7 @@
  
 ### breaking changes
 - build: upgraded all dev-dependencies to latest
+- build: use peerDependencies
 
 
 ## 4.4.0
