@@ -18,6 +18,22 @@
 - none
 
 
+## 4.4.0
+- bumped version up to be in sync with mycms-frontend-commons
+
+### new features
+- none
+
+### improvements
+- none
+
+### bug fixes
+- none 
+ 
+### breaking changes
+- none
+
+
 ## 4.3.0
 - moved full implementation of facetcache to commons
 - improved build-process
