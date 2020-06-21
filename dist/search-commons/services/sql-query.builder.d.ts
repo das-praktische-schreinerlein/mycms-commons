@@ -110,7 +110,7 @@ export declare class SqlQueryBuilder {
     sanitizeSqlFilterValue(value: any): string;
     sanitizeSqlFilterValuesToSingleValue(value: any, splitter: string, joiner: string): string;
     extractDbResult(dbresult: any, client: string): any;
-    protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string, suffix: string, nullAction: string): string;
+    protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string, suffix: string, nullAction: string, notNullAction: string): string;
     protected createAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     protected getAdapterFrom(tableConfig: TableConfig): string;
     protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[];

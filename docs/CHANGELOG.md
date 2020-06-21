@@ -18,6 +18,24 @@
 - none
 
 
+## 4.5.0
+- improved error-messages
+- improved filter of sqlQueryBuilder
+
+### new features
+- none
+
+### improvements
+- improved error-messages
+- sqlQueryBuilder: support for "notnull" in "IN," NOTIN"...
+
+### bug fixes
+- none 
+ 
+### breaking changes
+- none
+
+
 ## 4.4.0
 - bumped version up to be in sync with mycms-frontend-commons
 

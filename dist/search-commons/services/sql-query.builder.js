@@ -283,13 +283,13 @@ var SqlQueryBuilder = /** @class */ (function () {
                 + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' <= ') + '"';
         }
         else if (action === mapper_utils_1.AdapterFilterActions.IN) {
-            query = this.createInValueList(fieldName, value, ' IN ("', '", "', '")', ' OR ' + fieldName + ' IS NULL');
+            query = this.createInValueList(fieldName, value, ' IN ("', '", "', '")', ' OR ' + fieldName + ' IS NULL', ' OR ' + fieldName + ' IS NOT NULL');
         }
         else if (action === mapper_utils_1.AdapterFilterActions.IN_NUMBER) {
-            query = this.createInValueList(fieldName, value, ' IN (CAST("', '" AS INT), CAST("', '" AS INT))', ' OR ' + fieldName + ' IS NULL');
+            query = this.createInValueList(fieldName, value, ' IN (CAST("', '" AS INT), CAST("', '" AS INT))', ' OR ' + fieldName + ' IS NULL', ' OR ' + fieldName + ' IS NOT NULL');
         }
         else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {
-            query = this.createInValueList(fieldName, value, ' NOT IN ("', '", "', '")', ' AND ' + fieldName + ' IS NOT NULL');
+            query = this.createInValueList(fieldName, value, ' NOT IN ("', '", "', '")', ' AND ' + fieldName + ' IS NOT NULL', ' AND ' + fieldName + ' IS NULL');
         }
         else if (action === mapper_utils_1.AdapterFilterActions.LIKEIN) {
             query = '(' + value.map(function (inValue) {
@@ -325,15 +325,18 @@ var SqlQueryBuilder = /** @class */ (function () {
     SqlQueryBuilder.prototype.extractDbResult = function (dbresult, client) {
         return sql_utils_1.SqlUtils.extractDbResult(dbresult, client);
     };
-    SqlQueryBuilder.prototype.createInValueList = function (fieldName, fieldValues, prefix, joiner, suffix, nullAction) {
+    SqlQueryBuilder.prototype.createInValueList = function (fieldName, fieldValues, prefix, joiner, suffix, nullAction, notNullAction) {
         var me = this;
         var containsNull = false;
+        var containsNotNull = false;
         return ' ( ' + fieldName + ' ' +
             prefix + fieldValues.map(function (inValue) {
             containsNull = containsNull || inValue === null || inValue === 'null';
+            containsNotNull = containsNotNull || inValue === 'notnull';
             return me.sanitizeSqlFilterValue(inValue !== null ? inValue.toString() : null);
         }).join(joiner) + suffix +
             (containsNull ? nullAction : '') +
+            (containsNotNull ? notNullAction : '') +
             ')';
     };
     SqlQueryBuilder.prototype.createAdapterSelectQuery = function (tableConfig, method, adapterQuery, adapterOpts) {
