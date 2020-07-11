@@ -390,13 +390,13 @@ export class SqlQueryBuilder {
                 + this.sanitizeSqlFilterValuesToSingleValue(value, ' ', ' AND ' + fieldName + ' <= ') + '"';
         } else if (action === AdapterFilterActions.IN) {
             query = this.createInValueList(fieldName, value,' IN ("', '", "', '")',
-                ' OR ' + fieldName + ' IS NULL');
+                ' OR ' + fieldName + ' IS NULL', ' OR ' + fieldName + ' IS NOT NULL');
         } else if (action === AdapterFilterActions.IN_NUMBER) {
             query = this.createInValueList(fieldName, value,' IN (CAST("', '" AS INT), CAST("',
-                '" AS INT))', ' OR ' + fieldName + ' IS NULL');
+                '" AS INT))', ' OR ' + fieldName + ' IS NULL', ' OR ' + fieldName + ' IS NOT NULL');
         } else if (action === AdapterFilterActions.NOTIN) {
             query = this.createInValueList(fieldName, value,' NOT IN ("', '", "', '")',
-                ' AND ' + fieldName + ' IS NOT NULL');
+                ' AND ' + fieldName + ' IS NOT NULL', ' AND ' + fieldName + ' IS NULL');
         } else if (action === AdapterFilterActions.LIKEIN) {
             query = '(' + value.map(
                 inValue => {
@@ -439,15 +439,18 @@ export class SqlQueryBuilder {
     }
 
     protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string,
-                                suffix: string, nullAction: string): string {
+                                suffix: string, nullAction: string, notNullAction: string): string {
         const me = this;
         let containsNull = false;
+        let containsNotNull = false;
         return ' ( ' + fieldName + ' ' +
             prefix + fieldValues.map(function(inValue) {
                 containsNull = containsNull || inValue === null || inValue === 'null';
+                containsNotNull = containsNotNull || inValue === 'notnull';
                 return me.sanitizeSqlFilterValue(inValue !== null ? inValue.toString(): null);
             }).join(joiner) + suffix +
             (containsNull ? nullAction : '') +
+            (containsNotNull ? notNullAction : '') +
             ')';
     }
 

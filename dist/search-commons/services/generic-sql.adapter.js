@@ -204,7 +204,8 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         var me = this;
         var queryData = me.queryTransformToAdapterSelectQuery('count', mapper, query, opts);
         if (queryData === undefined) {
-            return js_data_1.utils.reject('something went wrong');
+            console.error('something went wrong - got no query for count', query);
+            return js_data_1.utils.reject('something went wrong - got no query for count');
         }
         opts.queryData = queryData;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
@@ -242,7 +243,8 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         var me = this;
         var queryData = me.queryTransformToAdapterSelectQuery('findAll', mapper, query, opts);
         if (queryData === undefined) {
-            return js_data_1.utils.reject('something went wrong');
+            console.error('something went wrong - got no query for findAll', query);
+            return js_data_1.utils.reject('something went wrong - got no query for findAll');
         }
         opts.queryData = queryData;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;

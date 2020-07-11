@@ -242,7 +242,8 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         const me = this;
         const queryData = me.queryTransformToAdapterSelectQuery('count', mapper, query, opts);
         if (queryData === undefined) {
-            return utils.reject('something went wrong');
+            console.error('something went wrong - got no query for count', query);
+            return utils.reject('something went wrong - got no query for count');
         }
         opts.queryData = queryData;
 
@@ -286,7 +287,8 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         const me = this;
         const queryData = me.queryTransformToAdapterSelectQuery('findAll', mapper, query, opts);
         if (queryData === undefined) {
-            return utils.reject('something went wrong');
+            console.error('something went wrong - got no query for findAll', query);
+            return utils.reject('something went wrong - got no query for findAll');
         }
         opts.queryData = queryData;
 
