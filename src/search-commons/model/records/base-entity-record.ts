@@ -151,6 +151,7 @@ export class BaseEntityRecordValidator {
     }
 
     protected validateRelationRules(doc: BaseEntityRecord, relations: string[], errors: string[], fieldPrefix?: string, errFieldPrefix?: string): boolean {
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
         const relErrors = [];
         for (const relation of relations) {
             const subRecords = doc.get(relation) || doc[relation];
@@ -176,6 +177,7 @@ export class BaseEntityRecordValidator {
     }
 
     protected validateFieldRules(values: {}, fieldConfigs: {}, fieldPrefix: string, errors: string[], errFieldPrefix?: string): boolean {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
         let state = true;
         for (const fieldConfigName in fieldConfigs) {
             const fieldConfig = <GenericSearchFormFieldConfig>fieldConfigs[fieldConfigName];

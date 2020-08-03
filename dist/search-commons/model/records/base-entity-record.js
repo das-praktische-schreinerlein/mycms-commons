@@ -141,6 +141,7 @@ var BaseEntityRecordValidator = /** @class */ (function () {
         return relErrors.length === 0;
     };
     BaseEntityRecordValidator.prototype.validateRelationRules = function (doc, relations, errors, fieldPrefix, errFieldPrefix) {
+        errFieldPrefix = errFieldPrefix !== undefined ? errFieldPrefix : '';
         var relErrors = [];
         for (var _i = 0, relations_2 = relations; _i < relations_2.length; _i++) {
             var relation = relations_2[_i];
@@ -165,6 +166,7 @@ var BaseEntityRecordValidator = /** @class */ (function () {
         throw new Error('unknown relation:' + relation);
     };
     BaseEntityRecordValidator.prototype.validateFieldRules = function (values, fieldConfigs, fieldPrefix, errors, errFieldPrefix) {
+        fieldPrefix = fieldPrefix !== undefined ? fieldPrefix : '';
         var state = true;
         for (var fieldConfigName in fieldConfigs) {
             var fieldConfig = fieldConfigs[fieldConfigName];

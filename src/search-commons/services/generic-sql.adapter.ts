@@ -610,7 +610,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             return Promise.all(promises).then(function doneSearch(loadDetailsResults: any[]) {
                 loadDetailsResults.forEach(loadDetailsResult => {
                     const [profile, record, dbresults] = loadDetailsResult;
-                    me.mapper.mapDetailDataToAdapterDocument(mapper, profile, record, dbresults);
+                    me.mapper.mapDetailResponseDocuments(mapper, profile, record, dbresults);
                 });
                 return allResolve(records);
             }).catch(function errorSearch(reason) {

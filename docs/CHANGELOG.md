@@ -29,11 +29,12 @@
 - none
 
 ### bug fixes
-- none 
+- BaseEntityRecordValidator: fixed null-values of prefixes 
  
 ### breaking changes
 - build: upgraded all dev-dependencies to latest
 - build: use peerDependencies
+- GenericAdapterResponseMapper: renamed mapDetailResponseDocuments -> mapDetailDataToAdapterDocument and added new mapDetailResponseDocuments 
 
 
 ## 4.5.0

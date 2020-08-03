@@ -528,7 +528,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             return Promise.all(promises).then(function doneSearch(loadDetailsResults) {
                 loadDetailsResults.forEach(function (loadDetailsResult) {
                     var profile = loadDetailsResult[0], record = loadDetailsResult[1], dbresults = loadDetailsResult[2];
-                    me.mapper.mapDetailDataToAdapterDocument(mapper, profile, record, dbresults);
+                    me.mapper.mapDetailResponseDocuments(mapper, profile, record, dbresults);
                 });
                 return allResolve(records);
             }).catch(function errorSearch(reason) {
