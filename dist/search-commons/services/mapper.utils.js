@@ -30,13 +30,11 @@ var AdapterFilterActions = /** @class */ (function () {
 }());
 exports.AdapterFilterActions = AdapterFilterActions;
 var MapperUtils = /** @class */ (function () {
-    function MapperUtils() {
-    }
-    MapperUtils.prototype.MapperUtils = function (_objectSeparator, _fieldSeparator, _valueSeparator) {
+    function MapperUtils(_objectSeparator, _fieldSeparator, _valueSeparator) {
         this._objectSeparator = _objectSeparator || MapperUtils.DEFAULT_OBJECTSEPARATOR;
         this._fieldSeparator = _fieldSeparator || MapperUtils.DEFAULT_FIELDSEPARATOR;
         this._fieldSeparator = _valueSeparator || MapperUtils.DEFAULT_VALUESEPARATOR;
-    };
+    }
     MapperUtils.prototype.mapToAdapterFieldName = function (mapping, fieldName) {
         if (mapping.hasOwnProperty(fieldName)) {
             return mapping[fieldName];

@@ -39,7 +39,7 @@ export declare class MapperUtils {
     private _objectSeparator;
     private _fieldSeparator;
     private _valueSeparator;
-    MapperUtils(_objectSeparator?: string, _fieldSeparator?: string, _valueSeparator?: string): void;
+    constructor(_objectSeparator?: string, _fieldSeparator?: string, _valueSeparator?: string);
     mapToAdapterFieldName(mapping: {}, fieldName: string): string;
     getMappedAdapterValue(mapping: {}, adapterDocument: any, adapterFieldName: string, defaultValue: any): string;
     getMappedAdapterNumberValue(mapping: {}, adapterDocument: any, adapterFieldName: string, defaultValue: any): number;

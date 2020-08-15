@@ -52,7 +52,7 @@ export class MapperUtils {
     private _fieldSeparator;
     private _valueSeparator;
 
-    public MapperUtils(_objectSeparator?: string, _fieldSeparator?: string, _valueSeparator?: string) {
+    constructor(_objectSeparator?: string, _fieldSeparator?: string, _valueSeparator?: string) {
         this._objectSeparator = _objectSeparator || MapperUtils.DEFAULT_OBJECTSEPARATOR;
         this._fieldSeparator = _fieldSeparator || MapperUtils.DEFAULT_FIELDSEPARATOR;
         this._fieldSeparator = _valueSeparator || MapperUtils.DEFAULT_VALUESEPARATOR;
