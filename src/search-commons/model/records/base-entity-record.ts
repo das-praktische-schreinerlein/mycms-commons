@@ -3,6 +3,26 @@ import {GenericValidatorDatatypes, IdValidationRule, ValidationRule} from '../fo
 import {GenericSearchFormFieldConfig} from '../forms/generic-searchform';
 import {isArray} from 'util';
 
+export interface BaseEntityRecordRelationType {
+    foreignKey: string;
+    localField: string;
+    mapperKey: string;
+    factory?: BaseEntityRecordFactory;
+    validator?: BaseEntityRecordValidator;
+}
+
+export interface BaseEntityRecordRelationsType {
+    belongsTo?: {
+        [key: string]: BaseEntityRecordRelationType;
+    }
+    hasOne?: {
+        [key: string]: BaseEntityRecordRelationType;
+    }
+    hasMany?: {
+        [key: string]: BaseEntityRecordRelationType;
+    }
+}
+
 export class BaseEntityRecordFieldConfig {
     private _datatype: GenericValidatorDatatypes;
     private _validator: ValidationRule;

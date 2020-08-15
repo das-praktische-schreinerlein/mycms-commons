@@ -1,6 +1,24 @@
 import { Record } from 'js-data';
 import { GenericValidatorDatatypes, ValidationRule } from '../forms/generic-validator.util';
 import { GenericSearchFormFieldConfig } from '../forms/generic-searchform';
+export interface BaseEntityRecordRelationType {
+    foreignKey: string;
+    localField: string;
+    mapperKey: string;
+    factory?: BaseEntityRecordFactory;
+    validator?: BaseEntityRecordValidator;
+}
+export interface BaseEntityRecordRelationsType {
+    belongsTo?: {
+        [key: string]: BaseEntityRecordRelationType;
+    };
+    hasOne?: {
+        [key: string]: BaseEntityRecordRelationType;
+    };
+    hasMany?: {
+        [key: string]: BaseEntityRecordRelationType;
+    };
+}
 export declare class BaseEntityRecordFieldConfig {
     private _datatype;
     private _validator;
