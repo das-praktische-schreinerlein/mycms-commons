@@ -33,7 +33,7 @@ var MapperUtils = /** @class */ (function () {
     function MapperUtils(_objectSeparator, _fieldSeparator, _valueSeparator) {
         this._objectSeparator = _objectSeparator || MapperUtils.DEFAULT_OBJECTSEPARATOR;
         this._fieldSeparator = _fieldSeparator || MapperUtils.DEFAULT_FIELDSEPARATOR;
-        this._fieldSeparator = _valueSeparator || MapperUtils.DEFAULT_VALUESEPARATOR;
+        this._valueSeparator = _valueSeparator || MapperUtils.DEFAULT_VALUESEPARATOR;
     }
     MapperUtils.prototype.mapToAdapterFieldName = function (mapping, fieldName) {
         if (mapping.hasOwnProperty(fieldName)) {
