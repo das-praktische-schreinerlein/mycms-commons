@@ -21,9 +21,12 @@
 ## 5.0.0
 - upgraded all dev-dependencies to latest
 - build: use peerDependencies
+- added and improved new mapperutil-functions
 
 ### new features
-- none
+- common: added base-types for relations
+- common: added base-entities for ExtendedObjectProperties, Joins
+- common: added actiontag assignjoin
 
 ### improvements
 - none

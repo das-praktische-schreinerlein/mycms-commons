@@ -9,6 +9,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var date_utils_1 = require("../../commons/utils/date.utils");
+var object_utils_1 = require("../../commons/utils/object.utils");
 var AdapterFilterActions = /** @class */ (function () {
     function AdapterFilterActions() {
     }
@@ -31,6 +32,11 @@ exports.AdapterFilterActions = AdapterFilterActions;
 var MapperUtils = /** @class */ (function () {
     function MapperUtils() {
     }
+    MapperUtils.prototype.MapperUtils = function (_objectSeparator, _fieldSeparator, _valueSeparator) {
+        this._objectSeparator = _objectSeparator || MapperUtils.DEFAULT_OBJECTSEPARATOR;
+        this._fieldSeparator = _fieldSeparator || MapperUtils.DEFAULT_FIELDSEPARATOR;
+        this._fieldSeparator = _valueSeparator || MapperUtils.DEFAULT_VALUESEPARATOR;
+    };
     MapperUtils.prototype.mapToAdapterFieldName = function (mapping, fieldName) {
         if (mapping.hasOwnProperty(fieldName)) {
             return mapping[fieldName];
@@ -165,6 +171,70 @@ var MapperUtils = /** @class */ (function () {
         }
         return detailRecords;
     };
+    MapperUtils.prototype.explodeAndMapDetailResponseDocuments = function (mapper, relation, srcFields, record, docs) {
+        var _this = this;
+        if (docs === undefined) {
+            return;
+        }
+        var subDocs = [];
+        docs.forEach(function (doc) {
+            var fieldName;
+            for (var _i = 0, srcFields_1 = srcFields; _i < srcFields_1.length; _i++) {
+                var srcField = srcFields_1[_i];
+                if (doc[srcField] !== undefined && doc[srcField] !== null) {
+                    fieldName = srcField;
+                    break;
+                }
+            }
+            if (fieldName !== undefined && doc[fieldName] !== undefined && doc[fieldName] !== null) {
+                var objects = object_utils_1.ObjectUtils.explodeValueToObjects(doc[fieldName], _this._objectSeparator, _this._fieldSeparator, _this._valueSeparator);
+                subDocs = subDocs.concat(objects);
+            }
+        });
+        record.set(relation.localField, this.mapDetailDocsToDetailRecords(mapper['datastore']._mappers[relation.mapperKey], relation.factory, record, subDocs));
+    };
+    MapperUtils.prototype.mapValuesToSubRecords = function (mapper, values, record, relations) {
+        if (relations.hasOne) {
+            for (var relationKey in relations.hasOne) {
+                var relation = relations.hasOne[relationKey];
+                var subMapper = mapper['datastore']._mappers[relation.mapperKey];
+                var subValues = undefined;
+                for (var key in values) {
+                    if (key.startsWith(relation.localField + '.')) {
+                        var subKey = key.replace(relation.localField + '.', '');
+                        subValues = subValues || {};
+                        subValues[subKey] = values[key];
+                    }
+                }
+                if (subValues) {
+                    record.set(relation.localField, subMapper.createRecord(relation.factory.getSanitizedValues(subValues, {})));
+                }
+                else {
+                    record.set(relation.localField, undefined);
+                }
+            }
+        }
+        if (relations.hasMany) {
+            for (var relationKey in relations.hasMany) {
+                var relation = relations.hasMany[relationKey];
+                var joinMapper = mapper['datastore']._mappers[relation.mapperKey];
+                if (values[relation.localField]) {
+                    var joinValues = values[relation.localField];
+                    var joinRecords = [];
+                    for (var _i = 0, joinValues_1 = joinValues; _i < joinValues_1.length; _i++) {
+                        var joinRecordProps = joinValues_1[_i];
+                        joinRecords.push(joinMapper.createRecord(relation.factory.getSanitizedValues(joinRecordProps, {})));
+                    }
+                    if (joinRecords.length > 0) {
+                        record.set(relation.localField, joinRecords);
+                    }
+                    else {
+                        record.set(relation.localField, undefined);
+                    }
+                }
+            }
+        }
+    };
     MapperUtils.prototype.extractUniqueId = function (record) {
         if (record === undefined || record.id === undefined) {
             return undefined;
@@ -173,6 +243,18 @@ var MapperUtils = /** @class */ (function () {
         id = id * 1000000;
         return id;
     };
+    MapperUtils.generateDoubletteValue = function (value) {
+        return value === undefined ? value :
+            value.toLowerCase()
+                .replace(/ß/g, 'ss')
+                .replace(/ö/g, 'oe')
+                .replace(/ü/g, 'ue')
+                .replace(/ä/g, 'ae')
+                .replace(/[^a-z0-9]/g, '');
+    };
+    MapperUtils.DEFAULT_OBJECTSEPARATOR = ';;';
+    MapperUtils.DEFAULT_FIELDSEPARATOR = ':::';
+    MapperUtils.DEFAULT_VALUESEPARATOR = '=';
     return MapperUtils;
 }());
 exports.MapperUtils = MapperUtils;
