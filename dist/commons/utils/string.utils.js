@@ -35,6 +35,29 @@ var StringUtils = /** @class */ (function () {
         });
         return keywordsList.join(',');
     };
+    StringUtils.createReplacementsFromConfigArray = function (config) {
+        var replacementConfig = [];
+        if (Array.isArray(config)) {
+            for (var _i = 0, config_1 = config; _i < config_1.length; _i++) {
+                var replacement = config_1[_i];
+                if (Array.isArray(replacement) && replacement.length === 2) {
+                    replacementConfig.push([new RegExp(replacement[0]), replacement[1]]);
+                }
+            }
+        }
+        return replacementConfig;
+    };
+    StringUtils.doReplacements = function (src, nameReplacements) {
+        if (src === undefined || src === null || !nameReplacements || !Array.isArray(nameReplacements)) {
+            return src;
+        }
+        var name = src;
+        for (var _i = 0, nameReplacements_1 = nameReplacements; _i < nameReplacements_1.length; _i++) {
+            var replacement = nameReplacements_1[_i];
+            name = name.replace(replacement[0], replacement[1]);
+        }
+        return name;
+    };
     StringUtils.calcCharCodeForListIndex = function (code) {
         var baseChar = ('A').charCodeAt(0);
         var res = '';
