@@ -101,7 +101,7 @@ export class CommonSqlActionTagAssignJoinAdapter {
         insertSqlQueries.push({sql:
                 'INSERT INTO ' + referenceConfig.joinTable +
                 ' (' + referenceConfig.joinBaseIdField + ', ' + referenceConfig.joinReferenceField + ')' +
-                ' SELECT ?, ? FROM DUAL WHERE NOT EXISTS' +
+                ' SELECT ?, ? WHERE NOT EXISTS' +
                 '    (SELECT ' + referenceConfig.joinBaseIdField + ', ' + referenceConfig.joinReferenceField +
                 '     FROM ' + referenceConfig.joinTable +
                 '     WHERE ' + referenceConfig.joinBaseIdField + '=? AND ' + referenceConfig.joinReferenceField + '=?)',

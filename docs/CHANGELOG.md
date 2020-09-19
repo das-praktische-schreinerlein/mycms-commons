@@ -28,7 +28,7 @@
 - none
 
 ### bug fixes
-- none 
+- backend: made CommonSqlActionTagAssignJoinAdapter sqlite-compatible 
  
 ### breaking changes
 - none

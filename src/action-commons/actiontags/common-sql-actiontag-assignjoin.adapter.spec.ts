@@ -150,7 +150,7 @@ describe('CommonSqlActionTagAssignJoinAdapter', () => {
                 [
                     'SELECT t_id AS id FROM route WHERE t_id=?',
                     'SELECT if_id AS id FROM info WHERE if_id=?',
-                    'INSERT INTO tour_info (t_id, if_id) SELECT ?, ? FROM DUAL WHERE NOT EXISTS    (SELECT t_id, if_id     FROM tour_info     WHERE t_id=? AND if_id=?)'
+                    'INSERT INTO tour_info (t_id, if_id) SELECT ?, ? WHERE NOT EXISTS    (SELECT t_id, if_id     FROM tour_info     WHERE t_id=? AND if_id=?)'
                 ],
                 [
                     [5],
