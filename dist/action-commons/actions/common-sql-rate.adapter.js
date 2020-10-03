@@ -34,7 +34,7 @@ var CommonSqlRateAdapter = /** @class */ (function () {
             }
             var base = checkGreatestHimself ? rateConfig.rateFields[rateKey] : '-1';
             rateUpdateSqls.push(rateConfig.rateFields[rateKey] + '=GREATEST(COALESCE(' + base + ', -1), ?)');
-            rateUpdateSqlParams.push(rate);
+            rateUpdateSqlParams.push(+rate);
         }
         if (rateConfig.fieldSum !== undefined) {
             var greatesSqls = [];

@@ -9,6 +9,12 @@ var CommonSqlActionTagRateAdapter = /** @class */ (function () {
         this.commonSqlRateAdapter = commonSqlRateAdapter;
     }
     CommonSqlActionTagRateAdapter.prototype.executeActionTagRate = function (table, id, actionTagForm, opts) {
+        return this.executeActionTagCommonRate(table, id, actionTagForm, false, opts);
+    };
+    CommonSqlActionTagRateAdapter.prototype.executeActionTagRateWithGreatestCheck = function (table, id, actionTagForm, opts) {
+        return this.executeActionTagCommonRate(table, id, actionTagForm, true, opts);
+    };
+    CommonSqlActionTagRateAdapter.prototype.executeActionTagCommonRate = function (table, id, actionTagForm, checkGreatestHimself, opts) {
         opts = opts || {};
         if (!js_data_1.utils.isInteger(id)) {
             return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' id not an integer');
@@ -26,7 +32,7 @@ var CommonSqlActionTagRateAdapter = /** @class */ (function () {
         }
         var rates = {};
         rates[rateKey] = rate;
-        return this.commonSqlRateAdapter.setRates(table, id, rates, false, opts);
+        return this.commonSqlRateAdapter.setRates(table, id, rates, checkGreatestHimself, opts);
     };
     return CommonSqlActionTagRateAdapter;
 }());
