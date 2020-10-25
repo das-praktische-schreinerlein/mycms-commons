@@ -6,9 +6,9 @@ import {
     BaseEntityRecordRelationsType,
     BaseEntityRecordRelationType,
     BaseEntityRecordType
-} from "../model/records/base-entity-record";
+} from '../model/records/base-entity-record';
 import {Mapper, Record} from 'js-data';
-import {ObjectUtils} from "../../commons/utils/object.utils";
+import {ObjectUtils} from '../../commons/utils/object.utils';
 
 export interface AdapterQuery {
     where?: {};

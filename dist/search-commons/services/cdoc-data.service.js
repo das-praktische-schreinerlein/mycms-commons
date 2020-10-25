@@ -60,6 +60,9 @@ var CommonDocDataService = /** @class */ (function () {
     CommonDocDataService.prototype.doMultiSearch = function (searchForm, ids) {
         return this.searchService.doMultiSearch(searchForm, ids);
     };
+    CommonDocDataService.prototype.batchProcessSearchResult = function (searchForm, cb, opts, processingOptions) {
+        return this.searchService.batchProcessSearchResult(searchForm, cb, opts, processingOptions);
+    };
     CommonDocDataService.prototype.export = function (searchForm, format, opts) {
         return this.searchService.export(searchForm, format, opts);
     };

@@ -8,7 +8,7 @@ import { CommonDocSearchForm } from '../model/forms/cdoc-searchform';
 import { CommonDocSearchResult } from '../model/container/cdoc-searchresult';
 import { GenericSearchOptions, GenericSearchService } from './generic-search.service';
 import { GenericAdapterResponseMapper } from './generic-adapter-response.mapper';
-import { CommonDocSearchService } from './cdoc-search.service';
+import { CommonDocSearchService, ProcessingOptions } from './cdoc-search.service';
 export declare abstract class CommonDocDataService<R extends CommonDocRecord, F extends CommonDocSearchForm, S extends CommonDocSearchResult<R, F>> {
     protected dataStore: GenericDataStore<R, F, S>;
     protected searchService: CommonDocSearchService<R, F, S>;
@@ -34,6 +34,7 @@ export declare abstract class CommonDocDataService<R extends CommonDocRecord, F 
     getAll(opts?: any): Promise<R[]>;
     findCurList(searchForm: F, opts?: any): Promise<R[]>;
     doMultiSearch(searchForm: F, ids: string[]): Promise<S>;
+    batchProcessSearchResult(searchForm: F, cb: (tdoc: R) => Promise<{}>[], opts: GenericSearchOptions, processingOptions: ProcessingOptions): Promise<{}>;
     export(searchForm: F, format: string, opts?: GenericSearchOptions): Promise<string>;
     search(searchForm: F, opts?: GenericSearchOptions): Promise<S>;
     getById(id: string, opts?: any): Promise<R>;

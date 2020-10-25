@@ -1,4 +1,4 @@
-import { BaseMediaRecord, BaseMediaRecordFactory, BaseMediaRecordType, BaseMediaRecordValidator } from "./basemedia-record";
+import { BaseMediaRecord, BaseMediaRecordFactory, BaseMediaRecordType, BaseMediaRecordValidator } from './basemedia-record';
 export interface BaseImageRecordType extends BaseMediaRecordType {
 }
 export declare class BaseImageRecord extends BaseMediaRecord implements BaseImageRecordType {

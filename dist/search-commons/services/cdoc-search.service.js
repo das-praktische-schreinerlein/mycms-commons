@@ -124,6 +124,61 @@ var CommonDocSearchService = /** @class */ (function (_super) {
             console.warn('unknown sortType', sortType);
         }
     };
+    CommonDocSearchService.prototype.batchProcessSearchResult = function (searchForm, cb, opts, processingOptions) {
+        searchForm.perPage = processingOptions.parallel;
+        searchForm.pageNum = Number.isInteger(searchForm.pageNum) ? searchForm.pageNum : 1;
+        var me = this;
+        var startTime = (new Date()).getTime();
+        var errorCount = 0;
+        var readNextPage = function () {
+            var startTime2 = (new Date()).getTime();
+            return me.search(searchForm, opts).then(function searchDone(searchResult) {
+                var promises = [];
+                for (var _i = 0, _a = searchResult.currentRecords; _i < _a.length; _i++) {
+                    var tdoc = _a[_i];
+                    promises = promises.concat(cb(tdoc));
+                }
+                var processResults = function () {
+                    var durWhole = ((new Date()).getTime() - startTime + 1) / 1000;
+                    var dur = ((new Date()).getTime() - startTime2 + 1) / 1000;
+                    var alreadyDone = searchForm.pageNum * searchForm.perPage;
+                    var performance = searchResult.currentRecords.length / dur;
+                    var performanceWhole = alreadyDone / durWhole;
+                    console.log('DONE processed page ' +
+                        searchForm.pageNum +
+                        ' [' + ((searchForm.pageNum - 1) * searchForm.perPage + 1) +
+                        '-' + alreadyDone + ']' +
+                        ' / ' + Math.round(searchResult.recordCount / searchForm.perPage + 1) +
+                        ' [' + searchResult.recordCount + ']' +
+                        ' in ' + Math.round(dur + 1) + ' (' + Math.round(durWhole + 1) + ') s' +
+                        ' with ' + Math.round(performance + 1) + ' (' + Math.round(performanceWhole + 1) + ') per s' +
+                        ' approximately ' + Math.round(((searchResult.recordCount - alreadyDone) / performance + 1) / 60) + 'min left');
+                    searchForm.pageNum++;
+                    if (searchForm.pageNum < (searchResult.recordCount / searchForm.perPage + 1)) {
+                        return readNextPage();
+                    }
+                    else {
+                        return js_data_1.utils.resolve('WELL DONE');
+                    }
+                };
+                return Promise.all(promises).then(function () {
+                    return processResults();
+                }).catch(function (reason) {
+                    errorCount = errorCount + 1;
+                    if (processingOptions.ignoreErrors > errorCount) {
+                        console.warn('SKIP ERROR: ' + errorCount + ' of possible ' + processingOptions.ignoreErrors, reason);
+                        return processResults();
+                    }
+                    console.error('UNSKIPPABLE ERROR: ' + errorCount + ' of possible ' + processingOptions.ignoreErrors, reason);
+                    return js_data_1.utils.reject(reason);
+                });
+            }).catch(function searchError(error) {
+                console.error('error thrown: ', error);
+                return js_data_1.utils.reject(error);
+            });
+        };
+        return readNextPage();
+    };
     CommonDocSearchService.prototype.getAvailableSorts = function () {
         return ['relevance', 'dateAsc', 'dateDesc', 'name', 'type', 'subtype'];
     };

@@ -1,5 +1,5 @@
 import { GenericSearchForm } from '../model/forms/generic-searchform';
-import { BaseEntityRecord, BaseEntityRecordFactory, BaseEntityRecordRelationsType, BaseEntityRecordRelationType, BaseEntityRecordType } from "../model/records/base-entity-record";
+import { BaseEntityRecord, BaseEntityRecordFactory, BaseEntityRecordRelationsType, BaseEntityRecordRelationType, BaseEntityRecordType } from '../model/records/base-entity-record';
 import { Mapper, Record } from 'js-data';
 export interface AdapterQuery {
     where?: {};

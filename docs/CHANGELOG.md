@@ -19,13 +19,16 @@
 
 
 ## 5.1.0
-- none
+- improved search-services
 
 ### new features
-- none
+- backend: added File/Name-Utils
+- common: added BaseMusicMediaDocRecordType
+- common: added batchProcessSearchResult to search+data-service
+- common: added CommonDocDocExportService
 
 ### improvements
-- none
+- common: fixed imports
 
 ### bug fixes
 - backend: made CommonSqlActionTagAssignJoinAdapter sqlite-compatible

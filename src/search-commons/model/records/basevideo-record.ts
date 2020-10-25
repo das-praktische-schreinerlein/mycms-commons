@@ -3,9 +3,9 @@ import {
     BaseMediaRecordFactory,
     BaseMediaRecordType,
     BaseMediaRecordValidator
-} from "./basemedia-record";
-import {BaseEntityRecordFieldConfig} from "./base-entity-record";
-import {GenericValidatorDatatypes, NumberValidationRule} from "../forms/generic-validator.util";
+} from './basemedia-record';
+import {BaseEntityRecordFieldConfig} from './base-entity-record';
+import {GenericValidatorDatatypes, NumberValidationRule} from '../forms/generic-validator.util';
 
 export interface BaseVideoRecordType extends BaseMediaRecordType {
     toString(): string;

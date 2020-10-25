@@ -3,7 +3,7 @@ import * as Promise_serial from 'promise-serial';
 import {utils} from 'js-data';
 import {FacetCacheConfiguration, FacetCacheServiceConfiguration} from '../model/facetcache.configuration';
 import {FacetCacheAdapter} from '../model/facetcache.adapter';
-import {SqlUtils} from "../../search-commons/services/sql-utils";
+import {SqlUtils} from '../../search-commons/services/sql-utils';
 
 export class FacetCacheService {
     protected knex: any;

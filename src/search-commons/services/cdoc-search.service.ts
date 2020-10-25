@@ -1,10 +1,15 @@
-import {GenericSearchService} from './generic-search.service';
+import {GenericSearchOptions, GenericSearchService} from './generic-search.service';
 import {DateUtils} from '../../commons/utils/date.utils';
 import {utils} from 'js-data';
 import {CommonDocRecord} from '../model/records/cdoc-entity-record';
 import {CommonDocSearchForm} from '../model/forms/cdoc-searchform';
 import {CommonDocSearchResult} from '../model/container/cdoc-searchresult';
 import {GenericDataStore} from './generic-data.store';
+
+export interface ProcessingOptions {
+    ignoreErrors: number;
+    parallel: number
+}
 
 export abstract class CommonDocSearchService<R extends CommonDocRecord, F extends CommonDocSearchForm,
     S extends CommonDocSearchResult<R, F>> extends GenericSearchService <R, F, S> {
@@ -13,7 +18,7 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
         super(dataStore, mapperName);
     }
 
-    doMultiSearch(searchForm: F, ids: string[]): Promise<S> {
+    public doMultiSearch(searchForm: F, ids: string[]): Promise<S> {
         const me = this;
         if (ids.length <= 0 || ids[0] === '') {
             return utils.resolve(this.newSearchResult(searchForm, 0, [], undefined));
@@ -77,7 +82,7 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
         });
     }
 
-    sortRecords(records: R[], sortType: string): void {
+    public sortRecords(records: R[], sortType: string): void {
         if (sortType === 'relevance') {
             // NOOP
         } else if (sortType === 'dateAsc' || sortType === 'dateDesc') {
@@ -123,7 +128,71 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
         }
     }
 
-    getAvailableSorts(): string[] {
+    public batchProcessSearchResult(searchForm: F, cb: (tdoc: R) => Promise<{}>[], opts: GenericSearchOptions,
+                                       processingOptions: ProcessingOptions): Promise<{}> {
+        searchForm.perPage = processingOptions.parallel;
+        searchForm.pageNum = Number.isInteger(searchForm.pageNum) ? searchForm.pageNum : 1;
+
+        const me = this;
+        const startTime = (new Date()).getTime();
+        let errorCount = 0;
+        const readNextPage = function(): Promise<any> {
+            const startTime2 = (new Date()).getTime();
+            return me.search(searchForm, opts).then(
+                function searchDone(searchResult: S) {
+                    let promises: Promise<any>[] = [];
+                    for (const tdoc of searchResult.currentRecords) {
+                        promises = promises.concat(cb(tdoc));
+                    }
+
+                    const processResults = function(): Promise<any> {
+                        const durWhole = ((new Date()).getTime() - startTime + 1) / 1000 ;
+                        const dur = ((new Date()).getTime() - startTime2 + 1) / 1000;
+                        const alreadyDone = searchForm.pageNum * searchForm.perPage;
+                        const performance = searchResult.currentRecords.length / dur;
+                        const performanceWhole = alreadyDone / durWhole;
+                        console.log('DONE processed page ' +
+                            searchForm.pageNum +
+                            ' [' + ((searchForm.pageNum - 1) * searchForm.perPage + 1) +
+                            '-' + alreadyDone + ']' +
+                            ' / ' + Math.round(searchResult.recordCount / searchForm.perPage + 1) +
+                            ' [' + searchResult.recordCount + ']' +
+                            ' in ' + Math.round(dur + 1) + ' (' + Math.round(durWhole + 1) + ') s' +
+                            ' with ' + Math.round(performance + 1) + ' ('  + Math.round(performanceWhole + 1) + ') per s' +
+                            ' approximately ' + Math.round(((searchResult.recordCount - alreadyDone) / performance + 1) / 60) + 'min left'
+                        );
+                        searchForm.pageNum++;
+
+                        if (searchForm.pageNum < (searchResult.recordCount / searchForm.perPage + 1)) {
+                            return readNextPage();
+                        } else {
+                            return utils.resolve('WELL DONE');
+                        }
+                    };
+
+                    return Promise.all(promises).then(() => {
+                        return processResults();
+                    }).catch(reason => {
+                        errorCount = errorCount + 1;
+                        if (processingOptions.ignoreErrors > errorCount) {
+                            console.warn('SKIP ERROR: ' + errorCount + ' of possible ' + processingOptions.ignoreErrors, reason);
+                            return processResults();
+                        }
+
+                        console.error('UNSKIPPABLE ERROR: ' + errorCount + ' of possible ' + processingOptions.ignoreErrors, reason);
+                        return utils.reject(reason);
+                    });
+                }
+            ).catch(function searchError(error) {
+                console.error('error thrown: ', error);
+                return utils.reject(error);
+            });
+        };
+
+        return readNextPage();
+    }
+
+    public getAvailableSorts(): string[] {
         return ['relevance', 'dateAsc', 'dateDesc', 'name', 'type', 'subtype'];
     }
 }

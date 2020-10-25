@@ -3,7 +3,7 @@ import {isDate} from 'util';
 import {DateUtils} from '../../commons/utils/date.utils';
 import {LogUtils} from '../../commons/utils/log.utils';
 import {FacetUtils, FacetValueType} from '../model/container/facets';
-import {SqlUtils} from "./sql-utils";
+import {SqlUtils} from './sql-utils';
 
 export interface SelectQueryData {
     where: string[];

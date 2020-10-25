@@ -1,5 +1,5 @@
-import { BaseMediaRecord, BaseMediaRecordFactory, BaseMediaRecordType, BaseMediaRecordValidator } from "./basemedia-record";
-import { BaseEntityRecordFieldConfig } from "./base-entity-record";
+import { BaseMediaRecord, BaseMediaRecordFactory, BaseMediaRecordType, BaseMediaRecordValidator } from './basemedia-record';
+import { BaseEntityRecordFieldConfig } from './base-entity-record';
 export interface BaseVideoRecordType extends BaseMediaRecordType {
     toString(): string;
 }

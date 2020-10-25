@@ -1,6 +1,6 @@
 import {FacetCacheUsageConfigurations, SqlQueryBuilder, TableConfig, TableConfigs} from './sql-query.builder';
 import {FacetUtils} from '../model/container/facets';
-import {FacetCacheConfiguration} from "../../facetcache-commons/model/facetcache.configuration";
+import {FacetCacheConfiguration} from '../../facetcache-commons/model/facetcache.configuration';
 
 export class FacetCacheUtils {
     public static createCommonFacetCacheConfigurations(sqlQueryBuilder: SqlQueryBuilder, tableConfigs: TableConfigs,

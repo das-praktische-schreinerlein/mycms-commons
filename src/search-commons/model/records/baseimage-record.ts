@@ -3,7 +3,7 @@ import {
     BaseMediaRecordFactory,
     BaseMediaRecordType,
     BaseMediaRecordValidator
-} from "./basemedia-record";
+} from './basemedia-record';
 
 export interface BaseImageRecordType extends BaseMediaRecordType {
 }
