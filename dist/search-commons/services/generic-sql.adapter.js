@@ -538,6 +538,43 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         });
         return result;
     };
+    GenericSqlAdapter.prototype.extractTable = function (params) {
+        if (params.where === undefined) {
+            return undefined;
+        }
+        var tabKey;
+        var types = params.where['type_txt'];
+        if (types !== undefined && types.in !== undefined) {
+            tabKey = this.extractSingleElement(types.in);
+            if (tabKey !== undefined) {
+                tabKey = tabKey.toLocaleLowerCase();
+                if (this.getTableConfigForTableKey(tabKey) !== undefined) {
+                    return tabKey;
+                }
+                return undefined;
+            }
+        }
+        var ids = params.where['id'];
+        if (ids !== undefined) {
+            tabKey = this.extractSingleElement(ids.in_number);
+            if (tabKey !== undefined) {
+                tabKey = tabKey.replace(/_.*/g, '').toLocaleLowerCase();
+                if (this.getTableConfigForTableKey(tabKey) !== undefined) {
+                    return tabKey;
+                }
+                return undefined;
+            }
+            tabKey = this.extractSingleElement(ids.in);
+            if (tabKey !== undefined) {
+                tabKey = tabKey.replace(/_.*/g, '').toLocaleLowerCase();
+                if (this.getTableConfigForTableKey(tabKey) !== undefined) {
+                    return tabKey;
+                }
+                return undefined;
+            }
+        }
+        return undefined;
+    };
     GenericSqlAdapter.prototype.getFacetSql = function (adapterQuery, adapterOpts) {
         var tableConfig = this.getTableConfig(adapterQuery);
         if (tableConfig === undefined) {
@@ -574,6 +611,27 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         }
         var mappedProps = this.mapToAdapterDocument(tableConfig, props);
         return this.sqlQueryBuilder.queryTransformToAdapterWriteQuery(tableConfig, method, mappedProps, opts);
+    };
+    GenericSqlAdapter.prototype.extractSingleElement = function (values) {
+        if (values === undefined) {
+            return undefined;
+        }
+        if (!Array.isArray(values)) {
+            return values;
+        }
+        if (values.length === 1) {
+            return values[0];
+        }
+        var realValues = [];
+        values.map(function (value) {
+            if (value !== undefined && value.trim().length > 0) {
+                realValues.push(value.trim());
+            }
+        });
+        if (realValues.length === 1) {
+            return realValues[0];
+        }
+        return undefined;
     };
     return GenericSqlAdapter;
 }(js_data_adapter_1.Adapter));

@@ -51,7 +51,7 @@ export declare abstract class GenericSqlAdapter<R extends Record, F extends Gene
     mapResponseDocument(mapper: Mapper, doc: any, tableConfig: TableConfig): Record;
     mapToAdapterDocument(tableConfig: TableConfig, props: any): any;
     loadDetailData(method: string, mapper: Mapper, params: any, opts: any, records: R[]): Promise<R[]>;
-    protected abstract extractTable(params: AdapterQuery): string;
+    protected extractTable(params: AdapterQuery): string;
     protected abstract getTableConfig(params: AdapterQuery): TableConfig;
     protected abstract getTableConfigForTableKey(table: string): TableConfig;
     protected abstract getDefaultFacets(): Facets;
@@ -61,4 +61,5 @@ export declare abstract class GenericSqlAdapter<R extends Record, F extends Gene
     protected extractDbResult(dbresult: any): any;
     protected queryTransformToAdapterSelectQuery(method: string, mapper: Mapper, params: any, opts: any): SelectQueryData;
     protected queryTransformToAdapterWriteQuery(method: string, mapper: Mapper, props: any, opts: any): WriteQueryData;
+    protected extractSingleElement(values: any): string;
 }

@@ -29,6 +29,7 @@
 
 ### improvements
 - common: fixed imports
+- common: implemented common GenericSqlAdapter.extractTable
 
 ### bug fixes
 - backend: made CommonSqlActionTagAssignJoinAdapter sqlite-compatible
