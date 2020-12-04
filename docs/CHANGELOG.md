@@ -2,22 +2,6 @@
  
 # Versions
  
-## Planned
-- none
-
-### new features
-- none
-
-### improvements
-- none
-
-### bug fixes
-- none 
- 
-### breaking changes
-- none
-
-
 ## 5.1.0
 - improved search-services
 
