@@ -9,7 +9,7 @@ For more information take a look at documentation:
 
 MyCMS-Commons contains the commons services+utils for clients+servers.
 
-Some amazing Features
+Some amazing features:
 - common utils+services as geolocation, http-backends, name+file+string-utils...
 - object-detection generic and abstract services, models, processors 
 - faceting, facets-cache to improve performance of sql-datastores
