@@ -1,6 +1,6 @@
 import {FacetCacheConfiguration} from './facetcache.configuration';
-import * as fs from 'fs';
 import {FacetCacheAdapter} from './facetcache.adapter';
+import {DatabaseService} from "../../commons/services/database.service";
 
 export class MysqlFacetCacheAdapter implements FacetCacheAdapter {
     protected sqlScriptPath: string;
@@ -228,6 +228,6 @@ export class MysqlFacetCacheAdapter implements FacetCacheAdapter {
     }
 
     protected extractSqlFileOnScriptPath(sqlFile: string, splitter: string): string[] {
-        return fs.readFileSync(this.sqlScriptPath + '/' + sqlFile, {encoding: 'utf8'}).split(splitter);
+        return DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath, splitter);
     }
 }

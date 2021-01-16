@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
+var database_service_1 = require("../../commons/services/database.service");
 var MysqlFacetCacheAdapter = /** @class */ (function () {
     function MysqlFacetCacheAdapter(sqlScriptPath) {
         this.sqlScriptPath = sqlScriptPath;
@@ -185,7 +185,7 @@ var MysqlFacetCacheAdapter = /** @class */ (function () {
         return 'SELECT "true" FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name="' + table + '"';
     };
     MysqlFacetCacheAdapter.prototype.extractSqlFileOnScriptPath = function (sqlFile, splitter) {
-        return fs.readFileSync(this.sqlScriptPath + '/' + sqlFile, { encoding: 'utf8' }).split(splitter);
+        return database_service_1.DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath, splitter);
     };
     return MysqlFacetCacheAdapter;
 }());

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
+var database_service_1 = require("../../commons/services/database.service");
 var Sqlite3FacetCacheAdapter = /** @class */ (function () {
     function Sqlite3FacetCacheAdapter(sqlScriptPath) {
         this.sqlScriptPath = sqlScriptPath;
@@ -176,7 +176,7 @@ var Sqlite3FacetCacheAdapter = /** @class */ (function () {
         return 'SELECT "true" FROM sqlite_master WHERE type="table" AND name="' + table + '"';
     };
     Sqlite3FacetCacheAdapter.prototype.extractSqlFileOnScriptPath = function (sqlFile, splitter) {
-        return fs.readFileSync(this.sqlScriptPath + '/' + sqlFile, { encoding: 'utf8' }).split(splitter);
+        return database_service_1.DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath, splitter);
     };
     return Sqlite3FacetCacheAdapter;
 }());

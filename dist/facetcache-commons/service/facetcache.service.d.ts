@@ -1,9 +1,11 @@
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 import { FacetCacheConfiguration, FacetCacheServiceConfiguration } from '../model/facetcache.configuration';
 import { FacetCacheAdapter } from '../model/facetcache.adapter';
+import { DatabaseService } from "../../commons/services/database.service";
+import { SqlQueryBuilder } from "../../search-commons/services/sql-query.builder";
 export declare class FacetCacheService {
     protected knex: any;
     protected sqlQueryBuilder: SqlQueryBuilder;
+    protected databaseService: DatabaseService;
     protected configuration: FacetCacheServiceConfiguration;
     protected adapter: FacetCacheAdapter;
     constructor(configuration: FacetCacheServiceConfiguration, knex: any, adapter: FacetCacheAdapter);
@@ -49,6 +51,4 @@ export declare class FacetCacheService {
     protected removeFacetCacheConfig(configuration: FacetCacheConfiguration): Promise<boolean>;
     protected createFacetUpdateSchedule(configuration: FacetCacheConfiguration): Promise<boolean>;
     protected dropFacetUpdateSchedule(configuration: FacetCacheConfiguration): Promise<boolean>;
-    protected executeSqls(sqls: string[]): Promise<boolean>;
-    protected transformToSqlDialect(sql: string): string;
 }

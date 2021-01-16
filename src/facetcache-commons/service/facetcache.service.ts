@@ -1,18 +1,20 @@
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import * as Promise_serial from 'promise-serial';
 import {utils} from 'js-data';
 import {FacetCacheConfiguration, FacetCacheServiceConfiguration} from '../model/facetcache.configuration';
 import {FacetCacheAdapter} from '../model/facetcache.adapter';
-import {SqlUtils} from '../../search-commons/services/sql-utils';
+import {DatabaseService} from "../../commons/services/database.service";
+import {SqlQueryBuilder} from "../../search-commons/services/sql-query.builder";
 
 export class FacetCacheService {
     protected knex: any;
     protected sqlQueryBuilder: SqlQueryBuilder;
+    protected databaseService: DatabaseService;
     protected configuration: FacetCacheServiceConfiguration;
     protected adapter: FacetCacheAdapter;
 
     public constructor(configuration: FacetCacheServiceConfiguration, knex: any, adapter: FacetCacheAdapter) {
         this.sqlQueryBuilder = new SqlQueryBuilder();
+        this.databaseService = new DatabaseService(knex, this.sqlQueryBuilder);
         this.configuration = configuration;
         this.knex = knex;
         this.adapter = adapter;
@@ -154,7 +156,7 @@ export class FacetCacheService {
 
                     console.error('DO update facets:', sqls);
 
-                    return me.executeSqls(sqls);
+                    return me.databaseService.executeSqls(sqls);
                 }).then(function doneSearch() {
                     console.error('DONE update facets:', new Date());
                     setTimeout(callback, me.configuration.checkInterval * 60 * 1000);
@@ -190,40 +192,40 @@ export class FacetCacheService {
     }
 
     public dropFacetCacheTables(): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateDropFacetCacheTables());
+        return this.databaseService.executeSqls(this.adapter.generateDropFacetCacheTables());
     }
 
     public createFacetCacheTables(): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateCreateFacetCacheTables());
+        return this.databaseService.executeSqls(this.adapter.generateCreateFacetCacheTables());
     }
 
     public createFacetCacheTriggerFunctions(): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateCreateFacetCacheTriggerFunctions());
+        return this.databaseService.executeSqls(this.adapter.generateCreateFacetCacheTriggerFunctions());
     }
 
     public dropFacetCacheTriggerFunctions(): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateDropFacetCacheTriggerFunctions());
+        return this.databaseService.executeSqls(this.adapter.generateDropFacetCacheTriggerFunctions());
     }
 
     public createFacetCacheUpdateCheckFunctions(): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateCreateFacetCacheUpdateCheckFunctions());
+        return this.databaseService.executeSqls(this.adapter.generateCreateFacetCacheUpdateCheckFunctions());
     }
 
     public dropFacetCacheUpdateCheckFunctions(): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateDropFacetCacheUpdateCheckFunctions());
+        return this.databaseService.executeSqls(this.adapter.generateDropFacetCacheUpdateCheckFunctions());
     }
 
     public dropFacetsTriggers(): Promise<boolean> {
-        return this.executeSqls(this.generateDropFacetTriggerSql());
+        return this.databaseService.executeSqls(this.generateDropFacetTriggerSql());
     }
 
     public createFacetsTriggers(): Promise<boolean> {
-        return this.executeSqls(this.generateCreateFacetTriggerSql());
+        return this.databaseService.executeSqls(this.generateCreateFacetTriggerSql());
     }
 
     public removeFacetsCacheConfigs(): Promise<boolean> {
         const sqlBuilder = this.knex;
-        const sql = this.transformToSqlDialect(this.adapter.generateSelectTrueIfTableFacetCacheConfigExistsSql());
+        const sql = this.databaseService.transformToSqlDialect(this.adapter.generateSelectTrueIfTableFacetCacheConfigExistsSql());
         const me = this;
         return sqlBuilder.raw(sql).then(dbresult => {
             const response = me.sqlQueryBuilder.extractDbResult(dbresult, me.knex.client['config']['client']);
@@ -446,60 +448,29 @@ export class FacetCacheService {
     }
 
     protected createFacetView(configuration: FacetCacheConfiguration): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateCreateFacetViewSql(configuration));
+        return this.databaseService.executeSqls(this.adapter.generateCreateFacetViewSql(configuration));
     }
 
     protected dropFacetView(configuration: FacetCacheConfiguration): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateDropFacetViewSql(configuration));
+        return this.databaseService.executeSqls(this.adapter.generateDropFacetViewSql(configuration));
     }
 
     protected createFacetCacheConfig(configuration: FacetCacheConfiguration): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateCreateFacetCacheConfigSql(configuration));
+        return this.databaseService.executeSqls(this.adapter.generateCreateFacetCacheConfigSql(configuration));
     }
 
     protected removeFacetCacheConfig(configuration: FacetCacheConfiguration): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateRemoveFacetCacheConfigSql(configuration));
+        return this.databaseService.executeSqls(this.adapter.generateRemoveFacetCacheConfigSql(configuration));
     }
 
     protected createFacetUpdateSchedule(configuration: FacetCacheConfiguration): Promise<boolean> {
-        return this.executeSqls(
+        return this.databaseService.executeSqls(
             this.adapter.generateCreateUpdateScheduleSql(configuration.longKey,
                 this.adapter.generateUpdateFacetCacheSql(configuration).join(';'), this.configuration.checkInterval));
     }
 
     protected dropFacetUpdateSchedule(configuration: FacetCacheConfiguration): Promise<boolean> {
-        return this.executeSqls(this.adapter.generateDropUpdateScheduleSql(configuration.longKey));
+        return this.databaseService.executeSqls(this.adapter.generateDropUpdateScheduleSql(configuration.longKey));
     }
 
-    protected executeSqls(sqls: string[]): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            const promises = [];
-            const me = this;
-            const sqlBuilder = this.knex;
-            for (const sql of sqls) {
-                promises.push(function () {
-                    if (sql === undefined || sql.trim() === '') {
-                        return utils.resolve(true);
-                    }
-
-                    return sqlBuilder.raw(me.transformToSqlDialect(sql));
-                });
-            }
-
-            Promise_serial(promises, {parallelize: 1}).then(() => {
-                return resolve(true);
-            }).catch(reason => {
-                return reject(reason);
-            });
-        });
-    }
-
-    protected transformToSqlDialect(sql: string): string {
-        const client = this.knex.client['config']['client'];
-        if (client === 'sqlite3') {
-            sql = SqlUtils.transformToSqliteDialect(sql);
-        }
-
-        return this.sqlQueryBuilder.transformToSqlDialect(sql, client);
-    }
 }
