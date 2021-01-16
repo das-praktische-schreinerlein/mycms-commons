@@ -4,9 +4,12 @@ export declare class PDocRecord extends BaseEntityRecord {
     descTxt: string;
     descMd: string;
     descHtml: string;
-    flgShowSearch: boolean;
-    flgShowNews: boolean;
-    flgShowTopTen: boolean;
+    flgShowSearch?: boolean;
+    flgShowNews?: boolean;
+    flgShowTopTen?: boolean;
+    flgShowAdminArea?: boolean;
+    flgShowDashboard?: boolean;
+    flags?: string[];
     heading: string;
     image: string;
     keywords: string;

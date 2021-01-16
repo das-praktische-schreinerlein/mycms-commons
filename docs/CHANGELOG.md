@@ -10,7 +10,7 @@
 - commons: added admin-responses for admin-server+frontend
 
 ### improvements
-- none
+- commons: extend pdoc-model with additonal flags
 
 ### bug fixes
 - none
