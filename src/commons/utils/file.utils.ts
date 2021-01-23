@@ -54,13 +54,14 @@ export class FileUtils {
         }
     }
 
-    public static copyFile(srcPath: string, destPath: string, onlyIfDiffer: boolean, overwrite?: boolean): Promise<string> {
+    public static copyFile(srcPath: string, destPath: string, onlyIfDiffer: boolean, destFileMustNotExists?: boolean)
+        : Promise<string> {
         let err = this.checkFilePath(srcPath, false,  false, true);
         if (err) {
             return Promise.reject('srcFile is invalid: ' + err);
         }
 
-        err = this.checkFilePath(destPath, true,  !overwrite, false);
+        err = this.checkFilePath(destPath, true,  destFileMustNotExists, false);
         if (err) {
             return Promise.reject('destPath is invalid: ' + err);
         }
