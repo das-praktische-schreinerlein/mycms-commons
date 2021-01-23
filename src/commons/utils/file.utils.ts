@@ -54,13 +54,13 @@ export class FileUtils {
         }
     }
 
-    public static copyFile(srcPath: string, destPath: string, onlyIfDiffer: boolean): Promise<string> {
+    public static copyFile(srcPath: string, destPath: string, onlyIfDiffer: boolean, overwrite?: boolean): Promise<string> {
         let err = this.checkFilePath(srcPath, false,  false, true);
         if (err) {
             return Promise.reject('srcFile is invalid: ' + err);
         }
 
-        err = this.checkFilePath(destPath, true,  false, false);
+        err = this.checkFilePath(destPath, true,  !overwrite, false);
         if (err) {
             return Promise.reject('destPath is invalid: ' + err);
         }
@@ -84,6 +84,30 @@ export class FileUtils {
                 }
 
                 console.log('copied ' + srcPath, ' to ' + destPath);
+                return passed(destPath);
+            });
+        });
+    }
+
+    public static moveFile(srcPath: string, destPath: string, overwrite: boolean): Promise<string> {
+        let err = this.checkFilePath(srcPath, false,  false, true);
+        if (err) {
+            return Promise.reject('srcFile is invalid: ' + err);
+        }
+
+        err = this.checkFilePath(destPath, true,  !overwrite, false);
+        if (err) {
+            return Promise.reject('destPath is invalid: ' + err);
+        }
+
+        return new Promise<string>((passed, failure) => {
+            fs.rename(srcPath, destPath, function (err2) {
+                if (err) {
+                    console.error('error while exporting: ' + srcPath, err2);
+                    return failure(err2);
+                }
+
+                console.log('renamed ' + srcPath, ' to ' + destPath);
                 return passed(destPath);
             });
         });

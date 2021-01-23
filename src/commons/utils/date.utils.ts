@@ -1,4 +1,5 @@
 import {isDate, isNumber, isString} from 'util';
+import {StringUtils} from './string.utils';
 
 export class DateUtils {
     public static parseDate(date: any): Date {
@@ -75,5 +76,19 @@ export class DateUtils {
         const formatOptionsLong = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
             second: '2-digit' };
         return start.toLocaleString('de-DE', formatOptionsLong);
+    }
+
+    public static formatToFileNameDate(date: Date, dateSeparator: string, dateTimeSeparator: string, timeSeparator: string): string {
+        return [StringUtils.padStart(date.getDate().toString(), '00'),
+            dateSeparator,
+            StringUtils.padStart((date.getMonth() + 1).toString(), '00'),
+            dateSeparator,
+            date.getFullYear(),
+            dateTimeSeparator,
+            StringUtils.padStart(date.getHours().toString(), '00'),
+            timeSeparator,
+            StringUtils.padStart(date.getMinutes().toString(), '00'),
+            timeSeparator,
+            StringUtils.padStart(date.getSeconds().toString(), '00')].join('');
     }
 }

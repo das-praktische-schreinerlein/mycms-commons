@@ -10,7 +10,8 @@
 - commons: added admin-responses for admin-server+frontend
 
 ### improvements
-- commons: extend pdoc-model with additonal flags
+- commons: extend pdoc-model with additional flags
+- commons: added service-functions to string/date/file-utils
 
 ### bug fixes
 - none

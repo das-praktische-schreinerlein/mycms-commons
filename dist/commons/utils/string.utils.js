@@ -88,6 +88,10 @@ var StringUtils = /** @class */ (function () {
         } while (curPos >= 0 && idx < findIdx);
         return lastPos >= 0 && idx === findIdx ? lastPos : -1;
     };
+    StringUtils.padStart = function (source, paddingValue) {
+        return String(paddingValue + source).slice(-paddingValue.length);
+    };
+    ;
     return StringUtils;
 }());
 exports.StringUtils = StringUtils;

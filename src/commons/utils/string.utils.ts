@@ -97,4 +97,7 @@ export class StringUtils {
         return lastPos >= 0 && idx === findIdx ? lastPos : -1;
     }
 
+    public static padStart(source: string, paddingValue: string) {
+        return String(paddingValue + source).slice(-paddingValue.length);
+    };
 }

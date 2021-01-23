@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("util");
+var string_utils_1 = require("./string.utils");
 var DateUtils = /** @class */ (function () {
     function DateUtils() {
     }
@@ -65,6 +66,19 @@ var DateUtils = /** @class */ (function () {
         var formatOptionsLong = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
             second: '2-digit' };
         return start.toLocaleString('de-DE', formatOptionsLong);
+    };
+    DateUtils.formatToFileNameDate = function (date, dateSeparator, dateTimeSeparator, timeSeparator) {
+        return [string_utils_1.StringUtils.padStart(date.getDate().toString(), '00'),
+            dateSeparator,
+            string_utils_1.StringUtils.padStart((date.getMonth() + 1).toString(), '00'),
+            dateSeparator,
+            date.getFullYear(),
+            dateTimeSeparator,
+            string_utils_1.StringUtils.padStart(date.getHours().toString(), '00'),
+            timeSeparator,
+            string_utils_1.StringUtils.padStart(date.getMinutes().toString(), '00'),
+            timeSeparator,
+            string_utils_1.StringUtils.padStart(date.getSeconds().toString(), '00')].join('');
     };
     return DateUtils;
 }());

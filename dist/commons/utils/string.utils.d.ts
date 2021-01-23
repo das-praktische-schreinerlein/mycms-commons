@@ -7,4 +7,5 @@ export declare class StringUtils {
     static calcCharCodeForListIndex(code: number): string;
     static generateTechnicalName(name: string): string;
     static findNeedle(source: string, needle: string, findIdx: number): number;
+    static padStart(source: string, paddingValue: string): string;
 }

@@ -4,4 +4,5 @@ export declare class DateUtils {
     static dateToLocalISOString(src: any): string;
     static formatDateRange(start: Date, end: Date): string;
     static formatDateTime(start: Date): string;
+    static formatToFileNameDate(date: Date, dateSeparator: string, dateTimeSeparator: string, timeSeparator: string): string;
 }
