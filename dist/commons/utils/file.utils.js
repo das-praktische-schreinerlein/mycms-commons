@@ -47,12 +47,12 @@ var FileUtils = /** @class */ (function () {
             return 'path is no file: ' + path;
         }
     };
-    FileUtils.copyFile = function (srcPath, destPath, onlyIfDiffer, overwrite) {
+    FileUtils.copyFile = function (srcPath, destPath, onlyIfDiffer, destFileMustNotExists) {
         var err = this.checkFilePath(srcPath, false, false, true);
         if (err) {
             return Promise.reject('srcFile is invalid: ' + err);
         }
-        err = this.checkFilePath(destPath, true, !overwrite, false);
+        err = this.checkFilePath(destPath, true, destFileMustNotExists, false);
         if (err) {
             return Promise.reject('destPath is invalid: ' + err);
         }
