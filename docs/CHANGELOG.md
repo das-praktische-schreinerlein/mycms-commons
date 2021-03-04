@@ -1,7 +1,23 @@
 # Changelog of MyCMS
  
 # Versions
- 
+
+## 5.3.0
+- added utils to generate passwords and override options in configfiles
+
+### new features
+- commons: added utils to generate passwords and override options in configfiles 
+
+### improvements
+- none
+
+### bug fixes
+- commons: fixed facetcache-sqlfile-executor
+
+### breaking changes
+- none
+
+
 ## 5.2.0
 - added support-utils for admin-server
 

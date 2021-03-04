@@ -176,7 +176,7 @@ var Sqlite3FacetCacheAdapter = /** @class */ (function () {
         return 'SELECT "true" FROM sqlite_master WHERE type="table" AND name="' + table + '"';
     };
     Sqlite3FacetCacheAdapter.prototype.extractSqlFileOnScriptPath = function (sqlFile, splitter) {
-        return database_service_1.DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath, splitter);
+        return database_service_1.DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath + '/' + sqlFile, splitter);
     };
     return Sqlite3FacetCacheAdapter;
 }());

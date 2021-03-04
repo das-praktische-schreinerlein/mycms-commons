@@ -185,7 +185,7 @@ var MysqlFacetCacheAdapter = /** @class */ (function () {
         return 'SELECT "true" FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name="' + table + '"';
     };
     MysqlFacetCacheAdapter.prototype.extractSqlFileOnScriptPath = function (sqlFile, splitter) {
-        return database_service_1.DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath, splitter);
+        return database_service_1.DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath + '/' + sqlFile, splitter);
     };
     return MysqlFacetCacheAdapter;
 }());

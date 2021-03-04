@@ -228,6 +228,6 @@ export class MysqlFacetCacheAdapter implements FacetCacheAdapter {
     }
 
     protected extractSqlFileOnScriptPath(sqlFile: string, splitter: string): string[] {
-        return DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath, splitter);
+        return DatabaseService.extractSqlFileOnScriptPath(this.sqlScriptPath + '/' + sqlFile, splitter);
     }
 }
