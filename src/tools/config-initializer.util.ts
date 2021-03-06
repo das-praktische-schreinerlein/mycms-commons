@@ -54,6 +54,13 @@ export class ConfigInitializerUtil {
             '"' + configKey + '": $1"password": "' + password + '"', required);
     }
 
+    public static replaceMysqlPasswordInDbMigrateConfig(file: string, configKey: string, password: string,
+                                                      required: boolean): Promise<boolean> {
+        return ConfigInitializerUtil.executeChangeOnFile(file,
+            new RegExp('"' + configKey + '": ({[^}]*"password")+: ".*?"', 'gms'),
+            '"' + configKey + '": $1: "' + password + '"', required);
+    }
+
     public static replaceMysqlPasswordInCreateUserSql(file: string, oldPasswordPattern: string, password: string,
                                                       required: boolean): Promise<boolean> {
         return ConfigInitializerUtil.executeChangeOnFile(file,
