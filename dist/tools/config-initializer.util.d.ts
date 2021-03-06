@@ -5,6 +5,7 @@ export declare class ConfigInitializerUtil {
     static replaceSolrUserPasswordInSolrConfig(file: string, user: string, solrPasswordHash: string, required: boolean): Promise<boolean>;
     static replaceSolrDefaultPasswordHashInSolrConfig(file: string, solrPasswordHash: string, required: boolean): Promise<boolean>;
     static replaceMysqlPasswordInBackendConfig(file: string, configKey: string, password: string, required: boolean): Promise<boolean>;
+    static replaceMysqlPasswordInDbMigrateConfig(file: string, configKey: string, password: string, required: boolean): Promise<boolean>;
     static replaceMysqlPasswordInCreateUserSql(file: string, oldPasswordPattern: string, password: string, required: boolean): Promise<boolean>;
     static replaceMysqlPasswordInSolrCoreConfig(file: string, password: string, required: boolean): Promise<boolean>;
     static replaceTokenCookieInFirewallConfig(file: string, key: string, tokenCookie: string, required: boolean): Promise<boolean>;

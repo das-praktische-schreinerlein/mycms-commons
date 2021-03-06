@@ -6,7 +6,8 @@
 - added utils to generate passwords and override options in configfiles
 
 ### new features
-- commons: added utils to generate passwords and override options in configfiles 
+- commons: added utils to generate passwords and override options in configfiles
+- commons: added PasswordValidationRule
 
 ### improvements
 - none

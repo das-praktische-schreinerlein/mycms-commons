@@ -31,6 +31,9 @@ var ConfigInitializerUtil = /** @class */ (function () {
     ConfigInitializerUtil.replaceMysqlPasswordInBackendConfig = function (file, configKey, password, required) {
         return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"' + configKey + '": ({[\\n\\r\\t ]*"client": "mysql".*?)+"password": ".*?"', 'gms'), '"' + configKey + '": $1"password": "' + password + '"', required);
     };
+    ConfigInitializerUtil.replaceMysqlPasswordInDbMigrateConfig = function (file, configKey, password, required) {
+        return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"' + configKey + '": ({[^}]*"password")+: ".*?"', 'gms'), '"' + configKey + '": $1: "' + password + '"', required);
+    };
     ConfigInitializerUtil.replaceMysqlPasswordInCreateUserSql = function (file, oldPasswordPattern, password, required) {
         return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('IDENTIFIED BY \'' + oldPasswordPattern + '\'', 'gm'), 'IDENTIFIED BY \'' + password + '\'', required);
     };

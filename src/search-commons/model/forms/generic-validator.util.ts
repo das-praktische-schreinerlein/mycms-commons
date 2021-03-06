@@ -454,4 +454,13 @@ export class SimpleInsecurePathValidationRule extends RegExValidationReplaceRule
             new XRegExp('^[^\$\&\"\*]*$', 'gi'),
             new XRegExp('[\$\&\"\*]*', 'gi'), '', 4096);
     }
+
+}
+
+export class PasswordValidationRule extends RegExValidationReplaceRule {
+    constructor(required: boolean) {
+        super(required,
+            new XRegExp('^[-A-Za-z0-9_@\(\)<>:]*$', 'gi'),
+            new XRegExp('[^-A-Za-z0-9_@\(\)<>:]*', 'gi'), '', 50)
+    }
 }

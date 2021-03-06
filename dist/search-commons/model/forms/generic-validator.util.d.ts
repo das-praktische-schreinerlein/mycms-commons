@@ -170,3 +170,6 @@ export declare class FilenameValidationRule extends RegExValidationReplaceRule {
 export declare class SimpleInsecurePathValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean);
 }
+export declare class PasswordValidationRule extends RegExValidationReplaceRule {
+    constructor(required: boolean);
+}

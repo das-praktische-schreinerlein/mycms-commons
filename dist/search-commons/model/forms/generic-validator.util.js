@@ -475,4 +475,12 @@ var SimpleInsecurePathValidationRule = /** @class */ (function (_super) {
     return SimpleInsecurePathValidationRule;
 }(RegExValidationReplaceRule));
 exports.SimpleInsecurePathValidationRule = SimpleInsecurePathValidationRule;
+var PasswordValidationRule = /** @class */ (function (_super) {
+    __extends(PasswordValidationRule, _super);
+    function PasswordValidationRule(required) {
+        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9_@\(\)<>:]*$', 'gi'), new XRegExp('[^-A-Za-z0-9_@\(\)<>:]*', 'gi'), '', 50) || this;
+    }
+    return PasswordValidationRule;
+}(RegExValidationReplaceRule));
+exports.PasswordValidationRule = PasswordValidationRule;
 //# sourceMappingURL=generic-validator.util.js.map
