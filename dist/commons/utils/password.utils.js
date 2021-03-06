@@ -37,18 +37,17 @@ var PasswordUtils = /** @class */ (function () {
         return this.createNewPassword(max, this.DEFAULTCHARSET, this.DEFAULTNUMBERCHARSET, this.DEFAULTSPECIALCHARSET);
     };
     PasswordUtils.createSolrPasswordHash = function (pwd) {
-        return new Promise(function (accept, reject) {
+        return new Promise(function (accept) {
             var salt = crypto.randomBytes(32);
-            var saltUtf = salt.toString('utf8');
             var saltBase64 = salt.toString('base64');
-            crypto.pbkdf2(pwd, saltUtf, 1000, 32, 'sha256', function (error, hash) {
-                if (error) {
-                    reject(error);
-                }
-                else {
-                    accept(hash.toString('base64') + ' ' + saltBase64);
-                }
-            });
+            var basekey = crypto.createHash('sha256')
+                .update(salt)
+                .update(pwd)
+                .digest();
+            var hash = crypto.createHash('sha256')
+                .update(basekey)
+                .digest();
+            return accept(hash.toString('base64') + ' ' + saltBase64);
         });
     };
     PasswordUtils.DEFAULTCHARSET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
