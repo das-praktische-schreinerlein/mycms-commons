@@ -5,7 +5,7 @@ var ConfigInitializerUtil = /** @class */ (function () {
     function ConfigInitializerUtil() {
     }
     ConfigInitializerUtil.executeChangeOnFile = function (file, searchPattern, replacePattern, required) {
-        if (!fs.statSync(file).isFile) {
+        if (!fs.existsSync(file) || !fs.statSync(file).isFile) {
             if (required) {
                 return Promise.reject('file must exist:' + file);
             }

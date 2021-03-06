@@ -4,7 +4,7 @@ export class ConfigInitializerUtil {
 
     public static executeChangeOnFile(file: string, searchPattern: RegExp, replacePattern: string,
                                       required: boolean): Promise<boolean> {
-        if (!fs.statSync(file).isFile) {
+        if (!fs.existsSync(file) || !fs.statSync(file).isFile) {
             if (required) {
                 return Promise.reject('file must exist:' + file);
             }
