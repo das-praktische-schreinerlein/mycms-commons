@@ -44,17 +44,19 @@ export class PasswordUtils {
     }
 
     public static createSolrPasswordHash(pwd: string): Promise<string> {
-        return new Promise<string>((accept, reject) => {
+        return new Promise<string>((accept) => {
             const salt: Buffer = crypto.randomBytes(32);
-            const saltUtf = salt.toString('utf8');
             const saltBase64 = salt.toString('base64');
-            crypto.pbkdf2(pwd, saltUtf, 1000, 32, 'sha256', (error, hash: Buffer) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    accept(hash.toString('base64') + ' ' + saltBase64);
-                }
-            });
+
+            const basekey = crypto.createHash('sha256')
+                .update(salt)
+                .update(pwd)
+                .digest();
+            const hash = crypto.createHash('sha256')
+                .update(basekey)
+                .digest();
+
+            return accept(hash.toString('base64') + ' ' + saltBase64);
         });
     }
 
