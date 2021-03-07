@@ -29,7 +29,7 @@ export class ConfigInitializerUtil {
     public static replaceSolrPasswordInDbPublishConfig(file: string, solrPassword: string, required: boolean):
         Promise<boolean>{
         return ConfigInitializerUtil.executeChangeOnFile(file,
-            /"solr": ({[\n\r\t ]*"core".*?)+"password": ".*?"/gms,
+            /"solr": ({[^}]*"core".*?)+"password": ".*?"/gms,
             '"solr": $1"password": "' + solrPassword + '"', required);
     }
 
@@ -50,7 +50,7 @@ export class ConfigInitializerUtil {
     public static replaceMysqlPasswordInBackendConfig(file: string, configKey: string, password: string,
                                                       required: boolean): Promise<boolean> {
         return ConfigInitializerUtil.executeChangeOnFile(file,
-            new RegExp('"' + configKey + '": ({[\\n\\r\\t ]*"client": "mysql".*?)+"password": ".*?"', 'gms'),
+            new RegExp('"' + configKey + '": ({[^}]*"client": "mysql".*?)+"password": ".*?"', 'gms'),
             '"' + configKey + '": $1"password": "' + password + '"', required);
     }
 

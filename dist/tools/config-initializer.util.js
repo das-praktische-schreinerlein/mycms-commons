@@ -20,7 +20,7 @@ var ConfigInitializerUtil = /** @class */ (function () {
         return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"' + key + '": ".*?"', 'g'), '"' + key + '": "' + solrPassword + '"', required);
     };
     ConfigInitializerUtil.replaceSolrPasswordInDbPublishConfig = function (file, solrPassword, required) {
-        return ConfigInitializerUtil.executeChangeOnFile(file, /"solr": ({[\n\r\t ]*"core".*?)+"password": ".*?"/gms, '"solr": $1"password": "' + solrPassword + '"', required);
+        return ConfigInitializerUtil.executeChangeOnFile(file, /"solr": ({[^}]*"core".*?)+"password": ".*?"/gms, '"solr": $1"password": "' + solrPassword + '"', required);
     };
     ConfigInitializerUtil.replaceSolrUserPasswordInSolrConfig = function (file, user, solrPasswordHash, required) {
         return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"credentials": ({[^}]*"' + user + '")+: ".*?"', 'gms'), '"credentials": $1: "' + solrPasswordHash + '"', required);
@@ -29,7 +29,7 @@ var ConfigInitializerUtil = /** @class */ (function () {
         return ConfigInitializerUtil.executeChangeOnFile(file, /"IV0EHq1OnNrj6gvRCwvFwTrZ1\+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="/g, '"' + solrPasswordHash + '"', required);
     };
     ConfigInitializerUtil.replaceMysqlPasswordInBackendConfig = function (file, configKey, password, required) {
-        return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"' + configKey + '": ({[\\n\\r\\t ]*"client": "mysql".*?)+"password": ".*?"', 'gms'), '"' + configKey + '": $1"password": "' + password + '"', required);
+        return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"' + configKey + '": ({[^}]*"client": "mysql".*?)+"password": ".*?"', 'gms'), '"' + configKey + '": $1"password": "' + password + '"', required);
     };
     ConfigInitializerUtil.replaceMysqlPasswordInDbMigrateConfig = function (file, configKey, password, required) {
         return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"' + configKey + '": ({[^}]*"password")+: ".*?"', 'gms'), '"' + configKey + '": $1: "' + password + '"', required);
