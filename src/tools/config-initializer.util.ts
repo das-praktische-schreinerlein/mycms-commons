@@ -64,7 +64,7 @@ export class ConfigInitializerUtil {
     public static replaceMysqlPasswordInCreateUserSql(file: string, oldPasswordPattern: string, password: string,
                                                       required: boolean): Promise<boolean> {
         return ConfigInitializerUtil.executeChangeOnFile(file,
-            new RegExp('IDENTIFIED BY \'' + oldPasswordPattern + '\'', 'gm'),
+            new RegExp('IDENTIFIED BY \'' + oldPasswordPattern + '\'', 'gmi'),
             'IDENTIFIED BY \'' + password + '\'', required);
     }
 

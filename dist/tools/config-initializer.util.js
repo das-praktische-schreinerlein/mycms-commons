@@ -35,7 +35,7 @@ var ConfigInitializerUtil = /** @class */ (function () {
         return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('"' + configKey + '": ({[^}]*"password")+: ".*?"', 'gms'), '"' + configKey + '": $1: "' + password + '"', required);
     };
     ConfigInitializerUtil.replaceMysqlPasswordInCreateUserSql = function (file, oldPasswordPattern, password, required) {
-        return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('IDENTIFIED BY \'' + oldPasswordPattern + '\'', 'gm'), 'IDENTIFIED BY \'' + password + '\'', required);
+        return ConfigInitializerUtil.executeChangeOnFile(file, new RegExp('IDENTIFIED BY \'' + oldPasswordPattern + '\'', 'gmi'), 'IDENTIFIED BY \'' + password + '\'', required);
     };
     ConfigInitializerUtil.replaceMysqlPasswordInSolrCoreConfig = function (file, password, required) {
         return ConfigInitializerUtil.executeChangeOnFile(file, /dataimport.mysql.jdbcPassword=(.*?)$/gm, 'dataimport.mysql.jdbcPassword=' + password, required);
