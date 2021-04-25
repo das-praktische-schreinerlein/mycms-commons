@@ -19,7 +19,7 @@
 - none
 
 
-## 5.2.0
+## 5.2.0 (2021-02-05)
 - added support-utils for admin-server
 
 ### new features
@@ -37,7 +37,7 @@
 - none
 
 
-## 5.1.0
+## 5.1.0 (2020-12-20)
 - improved search-services
 
 ### new features
@@ -58,7 +58,7 @@
 - none
 
 
-## 5.0.0
+## 5.0.0 (2020-08-26)
 - upgraded all dev-dependencies to latest
 - build: use peerDependencies
 - added and improved new mapperutil/string-functions
@@ -81,7 +81,7 @@
 - GenericAdapterResponseMapper: renamed mapDetailResponseDocuments -> mapDetailDataToAdapterDocument and added new mapDetailResponseDocuments 
 
 
-## 4.5.0
+## 4.5.0 (2020-07-11)
 - improved error-messages
 - improved filter of sqlQueryBuilder
 
@@ -99,7 +99,7 @@
 - none
 
 
-## 4.4.0
+## 4.4.0 (2020-05-24)
 - bumped version up to be in sync with mycms-frontend-commons
 
 ### new features
@@ -115,7 +115,7 @@
 - none
 
 
-## 4.3.0
+## 4.3.0 (2020-03-20)
 - moved full implementation of facetcache to commons
 - improved build-process
 - moved full implementation of navigation-objects and objectutils to commons
@@ -142,7 +142,7 @@
 - none
 
 
-## 4.2.0
+## 4.2.0 (2019-09-07)
 - added new type+features for managing object-detection image-objects
 - added facetcache
 
@@ -166,7 +166,7 @@
 - none
 
 
-## 4.1.0
+## 4.1.0 (2019-02-11)
 - improved build-process
 - added new functions to strings and math-utils
 
@@ -183,7 +183,7 @@
 - none
 
 
-## 4.0.0
+## 4.0.0 (2018-11-07)
 - bumped version up to be in sync with mycms
 
 ### new features
@@ -199,7 +199,7 @@
 - commons: set subtype for CommonDocRecords to not required
 
 
-## 3.0.0
+## 3.0.0 (2018-10-10)
 - improvements for album/action/playlist-functionality
 - improvements on validation
 
@@ -219,7 +219,7 @@
 - commons: changed validation
 
 
-## 2.0.0
+## 2.0.0 (2018-09-13)
 - improved dependencies
 - improved utils
 
@@ -237,7 +237,7 @@
 - none
 
 
-## 1.0.0
+## 1.0.0 (2018-09-02)
 - initial version based on mytourbook-1.5.0
 
 ### new features
