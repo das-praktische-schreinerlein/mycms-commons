@@ -2,7 +2,7 @@
  
 # Versions
 
-## 5.3.0
+## 5.3.0 (2021-05-13)
 - added utils to generate passwords and override options in configfiles
 
 ### new features
