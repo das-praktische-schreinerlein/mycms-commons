@@ -63,7 +63,9 @@ var CommonSqlObjectDetectionAdapter = /** @class */ (function () {
                 ' FROM objects WHERE o_name = (' + sql_utils_1.SqlUtils.mapParametersToPlaceholderString(objectKeys) + ')',
             parameters: [id, precision, detector, objectdetection_model_1.ObjectDetectionState.DONE_APPROVAL_PROCESSED].concat(objectKeys)
         };
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var rawDelete = sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery);
         var result = new Promise(function (resolve, reject) {
             rawDelete.then(function () {
@@ -98,7 +100,9 @@ var CommonSqlObjectDetectionAdapter = /** @class */ (function () {
             parameters: [state, id]
         };
         updateSqlQuery.sql = this.sqlQueryBuilder.transformToSqlDialect(updateSqlQuery.sql, this.config.knexOpts.client);
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var rawUpdate = sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         var result = new Promise(function (resolve, reject) {
             rawUpdate.then(function () {
@@ -207,7 +211,9 @@ var CommonSqlObjectDetectionAdapter = /** @class */ (function () {
         if (insertObjectKeySqlQuery) {
             insertObjectKeySqlQuery.sql = this.sqlQueryBuilder.transformToSqlDialect(insertObjectKeySqlQuery.sql, this.config.knexOpts.client);
         }
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         return new Promise(function (resolve, reject) {
             sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateImageObjectObjectKeySqlQuery).then(function () {
                 if (insertObjectNameSqlQuery) {

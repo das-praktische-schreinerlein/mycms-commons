@@ -60,7 +60,9 @@ export class CommonSqlActionTagBlockAdapter {
             parameters: [value, id]
         };
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const rawUpdate = SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         const result = new Promise((resolve, reject) => {
             rawUpdate.then(() => {

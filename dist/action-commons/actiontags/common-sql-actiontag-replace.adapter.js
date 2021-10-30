@@ -114,7 +114,9 @@ var CommonSqlActionTagReplaceAdapter = /** @class */ (function () {
                 ' WHERE ' + replaceConfig.fieldId + '=' + '?' + '',
             parameters: [id]
         };
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var result = new Promise(function (resolve, reject) {
             sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, checkBaseSqlQuery).then(function (dbresults) {
                 var records = _this.sqlQueryBuilder.extractDbResult(dbresults, _this.knex.client['config']['client']);

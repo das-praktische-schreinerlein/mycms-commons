@@ -1,5 +1,5 @@
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
-import {KeywordValidationRule} from '../../search-commons/model/forms/generic-validator.util';
+import {KeywordValidationRule, NumberValidationRule} from '../../search-commons/model/forms/generic-validator.util';
 import {utils} from 'js-data';
 import {CommonSqlPlaylistAdapter} from '../actions/common-sql-playlist.adapter';
 
@@ -7,12 +7,14 @@ export interface PlaylistActionTagForm extends ActionTagForm {
     payload: {
         playlistkey: string;
         set: boolean;
+        position ?: number;
     };
 }
 
 export class CommonSqlActionTagPlaylistAdapter {
 
     private playlistValidationRule = new KeywordValidationRule(true);
+    private numberValidationRule = new NumberValidationRule(false, 1, 999999999999, undefined);
     private readonly commonSqlPlaylistAdapter: CommonSqlPlaylistAdapter;
 
     constructor(commonSqlPlaylistAdapter: CommonSqlPlaylistAdapter) {
@@ -34,7 +36,12 @@ export class CommonSqlActionTagPlaylistAdapter {
             return utils.reject('actiontag ' + actionTagForm.key + ' playlists not valid');
         }
 
-        return this.commonSqlPlaylistAdapter.setPlaylists(table, id, playlists, opts, actionTagForm.payload.set);
+        const position = actionTagForm.payload.position;
+        if (!this.numberValidationRule.isValid(position)) {
+            return utils.reject('actiontag ' + actionTagForm.key + ' position not valid');
+        }
+
+        return this.commonSqlPlaylistAdapter.setPlaylists(table, id, playlists, opts, actionTagForm.payload.set, position);
     }
 
 }

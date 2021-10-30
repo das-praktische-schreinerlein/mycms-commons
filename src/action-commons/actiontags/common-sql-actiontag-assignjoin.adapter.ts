@@ -108,7 +108,9 @@ export class CommonSqlActionTagAssignJoinAdapter {
             parameters: [id, newId, id, newId]}
         );
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const result = new Promise((resolve, reject) => {
             SqlUtils.executeRawSqlQueryData(sqlBuilder, checkBaseSqlQuery).then(dbresults => {
                 const records = this.sqlQueryBuilder.extractDbResult(dbresults, this.knex.client['config']['client']);

@@ -5,6 +5,7 @@ var js_data_1 = require("js-data");
 var CommonSqlActionTagPlaylistAdapter = /** @class */ (function () {
     function CommonSqlActionTagPlaylistAdapter(commonSqlPlaylistAdapter) {
         this.playlistValidationRule = new generic_validator_util_1.KeywordValidationRule(true);
+        this.numberValidationRule = new generic_validator_util_1.NumberValidationRule(false, 1, 999999999999, undefined);
         this.commonSqlPlaylistAdapter = commonSqlPlaylistAdapter;
     }
     CommonSqlActionTagPlaylistAdapter.prototype.executeActionTagPlaylist = function (table, id, actionTagForm, opts) {
@@ -19,7 +20,11 @@ var CommonSqlActionTagPlaylistAdapter = /** @class */ (function () {
         if (!this.playlistValidationRule.isValid(playlists)) {
             return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' playlists not valid');
         }
-        return this.commonSqlPlaylistAdapter.setPlaylists(table, id, playlists, opts, actionTagForm.payload.set);
+        var position = actionTagForm.payload.position;
+        if (!this.numberValidationRule.isValid(position)) {
+            return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' position not valid');
+        }
+        return this.commonSqlPlaylistAdapter.setPlaylists(table, id, playlists, opts, actionTagForm.payload.set, position);
     };
     return CommonSqlActionTagPlaylistAdapter;
 }());

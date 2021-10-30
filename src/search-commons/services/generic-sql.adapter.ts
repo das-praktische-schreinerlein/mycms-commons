@@ -189,7 +189,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         props = props || {};
         opts = opts || {};
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const me = this;
         const result: Promise<any> = new Promise((allResolve, allReject) => {
             const writeQuery = me.queryTransformToAdapterWriteQuery('create', mapper, props, opts);
@@ -247,7 +249,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         }
         opts.queryData = queryData;
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const sql = this.queryTransformToSql(queryData);
         // for debug only: const start = (new Date()).getTime();
         const raw = sqlBuilder.raw(sql);
@@ -292,7 +296,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         }
         opts.queryData = queryData;
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const sql = this.queryTransformToSql(queryData);
         // for debug only: const start = (new Date()).getTime();
         const raw = sqlBuilder.raw(sql);
@@ -331,7 +337,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
         const tableConfig = this.getTableConfig(<AdapterQuery>query);
         const facetConfigs = tableConfig.facetConfigs;
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const result = new Promise((allResolve, allReject) => {
             const queries = me.getFacetSql(<AdapterQuery>query, <AdapterOpts>opts);
             const promises = [];
@@ -396,7 +404,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
         props = props || {};
         opts = opts || {};
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const me = this;
         const result: Promise<any> = new Promise((allResolve, allReject) => {
             const writeQuery = me.queryTransformToAdapterWriteQuery('update', mapper, props, opts);
@@ -566,7 +576,9 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         }
 
         const me = this;
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const result: Promise<R[]> = new Promise((allResolve, allReject) => {
             const promises = [];
             records.forEach(record => {

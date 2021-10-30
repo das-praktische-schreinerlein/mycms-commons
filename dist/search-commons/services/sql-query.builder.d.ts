@@ -113,11 +113,12 @@ export declare class SqlQueryBuilder {
     protected createInValueList(fieldName: string, fieldValues: any, prefix: string, joiner: string, suffix: string, nullAction: string, notNullAction: string): string;
     protected createAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     protected getAdapterFrom(tableConfig: TableConfig): string;
+    protected getSortKey(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string;
     protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[];
     protected getSpatialParams(tableConfig: TableConfig, adapterQuery: AdapterQuery, spatialField: string): string;
     protected getSpatialSql(tableConfig: TableConfig, adapterQuery: AdapterQuery): string;
     protected getAdapterSelectFields(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery): string[];
-    protected generateGroupByForQuery(tableConfig: TableConfig, method: string, query: SelectQueryData, adapterQuery: AdapterQuery): void;
+    protected generateGroupByForQuery(tableConfig: TableConfig, method: string, query: SelectQueryData, adapterQuery: AdapterQuery, adapterOpts?: AdapterOpts): void;
     protected mapToAdapterFieldName(tableConfig: TableConfig, fieldName: string): string;
     protected mapFilterToAdapterQuery(tableConfig: TableConfig, fieldName: string, action: string | AdapterFilterActions, value: any): string;
 }

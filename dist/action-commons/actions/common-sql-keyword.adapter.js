@@ -97,7 +97,9 @@ var CommonSqlKeywordAdapter = /** @class */ (function () {
                 parameters: [].concat([dbId]).concat(keywordSplitParameter).concat([dbId])
             };
         }
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var result = new Promise(function (resolve, reject) {
             sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSqlQuery).then(function () {
                 return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertNewKeywordsSqlQuery);
@@ -165,7 +167,9 @@ var CommonSqlKeywordAdapter = /** @class */ (function () {
                 parameters: [].concat([dbId]).concat(keywordSplitParameter)
             };
         }
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var result = new Promise(function (resolve, reject) {
             sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSql).then(function () {
             }).then(function (insertResults) {

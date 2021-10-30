@@ -125,7 +125,9 @@ export class CommonSqlKeywordAdapter {
             };
         }
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const result = new Promise((resolve, reject) => {
             SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSqlQuery).then(() => {
                 return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertNewKeywordsSqlQuery);
@@ -198,7 +200,9 @@ export class CommonSqlKeywordAdapter {
             };
         }
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const result = new Promise((resolve, reject) => {
             SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSql).then(() => {
             }).then(insertResults => {

@@ -157,7 +157,7 @@ var SqlQueryBuilder = /** @class */ (function () {
             query.sort = sortParams;
         }
         query.from = this.getAdapterFrom(tableConfig);
-        this.generateGroupByForQuery(tableConfig, method, query, adapterQuery);
+        this.generateGroupByForQuery(tableConfig, method, query, adapterQuery, adapterOpts);
         return query;
     };
     SqlQueryBuilder.prototype.getFacetSql = function (tableConfig, facetCacheUsageConfigurations, adapterOpts) {
@@ -384,10 +384,7 @@ var SqlQueryBuilder = /** @class */ (function () {
     SqlQueryBuilder.prototype.getAdapterFrom = function (tableConfig) {
         return tableConfig.selectFrom || '';
     };
-    SqlQueryBuilder.prototype.getSortParams = function (tableConfig, method, adapterQuery, adapterOpts) {
-        if (method === 'count') {
-            return undefined;
-        }
+    SqlQueryBuilder.prototype.getSortKey = function (tableConfig, method, adapterQuery, adapterOpts) {
         var form = adapterOpts.originalSearchForm;
         var sortMapping = tableConfig.sortMapping;
         var sortKey;
@@ -403,9 +400,13 @@ var SqlQueryBuilder = /** @class */ (function () {
             sortKey = 'relevance';
         }
         if (sortMapping.hasOwnProperty(sortKey)) {
-            return [sortMapping[sortKey]];
+            return sortKey;
         }
-        return [sortMapping['relevance']];
+        return 'relevance';
+    };
+    SqlQueryBuilder.prototype.getSortParams = function (tableConfig, method, adapterQuery, adapterOpts) {
+        var sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
+        return [tableConfig.sortMapping[sortKey]];
     };
     SqlQueryBuilder.prototype.getSpatialParams = function (tableConfig, adapterQuery, spatialField) {
         if (this.isSpatialQuery(tableConfig, adapterQuery)) {
@@ -445,16 +446,18 @@ var SqlQueryBuilder = /** @class */ (function () {
         }
         return fields;
     };
-    SqlQueryBuilder.prototype.generateGroupByForQuery = function (tableConfig, method, query, adapterQuery) {
+    SqlQueryBuilder.prototype.generateGroupByForQuery = function (tableConfig, method, query, adapterQuery, adapterOpts) {
+        var sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
         var addFields = [];
         if (tableConfig.optionalGroupBy !== undefined) {
             for (var _i = 0, _a = tableConfig.optionalGroupBy; _i < _a.length; _i++) {
                 var groupByConfig = _a[_i];
                 for (var _b = 0, _c = groupByConfig.triggerParams; _b < _c.length; _b++) {
-                    var fieldName = _c[_b];
-                    if (adapterQuery.where.hasOwnProperty(fieldName)
-                        || (adapterQuery.additionalWhere && adapterQuery.additionalWhere.hasOwnProperty(fieldName))
-                        || (adapterQuery.loadTrack && fieldName === 'loadTrack')) {
+                    var triggerName = _c[_b];
+                    if (adapterQuery.where.hasOwnProperty(triggerName)
+                        || (adapterQuery.additionalWhere && adapterQuery.additionalWhere.hasOwnProperty(triggerName))
+                        || (sortKey && sortKey === triggerName)
+                        || (adapterQuery.loadTrack && triggerName === 'loadTrack')) {
                         query.from += ' ' + groupByConfig.from;
                         addFields = addFields.concat(groupByConfig.groupByFields);
                         break;

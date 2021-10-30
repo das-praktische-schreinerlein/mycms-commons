@@ -32,7 +32,9 @@ var CommonSqlActionTagBlockAdapter = /** @class */ (function () {
             sql: updateSql,
             parameters: [value, id]
         };
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var rawUpdate = sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         var result = new Promise(function (resolve, reject) {
             rawUpdate.then(function () {

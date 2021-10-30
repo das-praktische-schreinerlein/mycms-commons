@@ -44,15 +44,15 @@ export class CommonSqlJoinAdapter {
     public saveJoins(joinKey: string, baseTableKey: string, dbId: number, joinRecords: BaseJoinRecordType[], opts: any):
         Promise<any> {
         if (!utils.isInteger(dbId)) {
-            return utils.reject('setJoins ' + baseTableKey + ' id not an integer');
+            return utils.reject('saveJoins ' + baseTableKey + ' id not an integer');
         }
         if (!this.joinModelConfig[joinKey]) {
-            return utils.reject('setJoins: ' + joinKey + ' -> ' + baseTableKey + ' - join not valid');
+            return utils.reject('saveJoins: ' + joinKey + ' -> ' + baseTableKey + ' - join not valid');
         }
 
         const joinConfig = this.joinModelConfig[joinKey];
         if (!joinConfig.tables[baseTableKey]) {
-            return utils.reject('setJoins: ' + joinKey + ' -> ' + baseTableKey + ' - table not valid');
+            return utils.reject('saveJoins: ' + joinKey + ' -> ' + baseTableKey + ' - table not valid');
         }
         const joinedTableConfig = joinConfig.tables[baseTableKey];
         const baseTableIdField = joinedTableConfig.baseTableIdField;
@@ -65,7 +65,9 @@ export class CommonSqlJoinAdapter {
             parameters: [].concat([dbId])};
         const promises = [];
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const rawDelete = SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery);
 
         for (const joinRecord of joinRecords) {

@@ -258,7 +258,7 @@ export class SqlQueryBuilder {
 
         query.from = this.getAdapterFrom(tableConfig);
 
-        this.generateGroupByForQuery(tableConfig, method, query, adapterQuery);
+        this.generateGroupByForQuery(tableConfig, method, query, adapterQuery, adapterOpts);
 
         return query;
     }
@@ -506,11 +506,7 @@ export class SqlQueryBuilder {
         return tableConfig.selectFrom || '';
     }
 
-    protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[] {
-        if (method === 'count') {
-            return undefined;
-        }
-
+    protected getSortKey(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string {
         const form = adapterOpts.originalSearchForm;
         const sortMapping = tableConfig.sortMapping;
         let sortKey: string;
@@ -527,10 +523,15 @@ export class SqlQueryBuilder {
         }
 
         if (sortMapping.hasOwnProperty(sortKey)) {
-            return [sortMapping[sortKey]];
+            return sortKey;
         }
 
-        return [sortMapping['relevance']];
+        return 'relevance';
+
+    }
+    protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[] {
+        const sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
+        return [tableConfig.sortMapping[sortKey]];
     }
 
     protected getSpatialParams(tableConfig: TableConfig, adapterQuery: AdapterQuery, spatialField: string): string {
@@ -579,14 +580,17 @@ export class SqlQueryBuilder {
         return fields;
     }
 
-    protected generateGroupByForQuery(tableConfig: TableConfig, method: string, query: SelectQueryData, adapterQuery: AdapterQuery): void {
+    protected generateGroupByForQuery(tableConfig: TableConfig, method: string, query: SelectQueryData,
+                                      adapterQuery: AdapterQuery, adapterOpts?: AdapterOpts): void {
+        const sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
         let addFields = [];
         if (tableConfig.optionalGroupBy !== undefined) {
             for (const groupByConfig of tableConfig.optionalGroupBy) {
-                for (const fieldName of groupByConfig.triggerParams) {
-                    if (adapterQuery.where.hasOwnProperty(fieldName)
-                        || (adapterQuery.additionalWhere && adapterQuery.additionalWhere.hasOwnProperty(fieldName))
-                        || (adapterQuery.loadTrack && fieldName === 'loadTrack')) {
+                for (const triggerName of groupByConfig.triggerParams) {
+                    if (adapterQuery.where.hasOwnProperty(triggerName)
+                        || (adapterQuery.additionalWhere && adapterQuery.additionalWhere.hasOwnProperty(triggerName))
+                        || (sortKey && sortKey === triggerName)
+                        || (adapterQuery.loadTrack && triggerName === 'loadTrack')) {
                         query.from += ' ' + groupByConfig.from;
                         addFields = addFields.concat(groupByConfig.groupByFields);
                         break;

@@ -11,14 +11,14 @@ var CommonSqlJoinAdapter = /** @class */ (function () {
     }
     CommonSqlJoinAdapter.prototype.saveJoins = function (joinKey, baseTableKey, dbId, joinRecords, opts) {
         if (!js_data_1.utils.isInteger(dbId)) {
-            return js_data_1.utils.reject('setJoins ' + baseTableKey + ' id not an integer');
+            return js_data_1.utils.reject('saveJoins ' + baseTableKey + ' id not an integer');
         }
         if (!this.joinModelConfig[joinKey]) {
-            return js_data_1.utils.reject('setJoins: ' + joinKey + ' -> ' + baseTableKey + ' - join not valid');
+            return js_data_1.utils.reject('saveJoins: ' + joinKey + ' -> ' + baseTableKey + ' - join not valid');
         }
         var joinConfig = this.joinModelConfig[joinKey];
         if (!joinConfig.tables[baseTableKey]) {
-            return js_data_1.utils.reject('setJoins: ' + joinKey + ' -> ' + baseTableKey + ' - table not valid');
+            return js_data_1.utils.reject('saveJoins: ' + joinKey + ' -> ' + baseTableKey + ' - table not valid');
         }
         var joinedTableConfig = joinConfig.tables[baseTableKey];
         var baseTableIdField = joinedTableConfig.baseTableIdField;
@@ -30,7 +30,9 @@ var CommonSqlJoinAdapter = /** @class */ (function () {
             parameters: [].concat([dbId])
         };
         var promises = [];
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var rawDelete = sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery);
         for (var _i = 0, joinRecords_1 = joinRecords; _i < joinRecords_1.length; _i++) {
             var joinRecord = joinRecords_1[_i];

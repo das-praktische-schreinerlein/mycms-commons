@@ -17,6 +17,17 @@ describe('CommonDocSqlActionTagPlaylistAdapter', () => {
         }
     };
 
+    const modelConfigTypeWithPosition: PlaylistModelConfigType = {
+        table: 'playlist',
+        fieldId: 'p_id',
+        fieldName: 'p_name',
+        joins: {
+            'image': {
+                table: 'image', joinTable: 'image_playlist', fieldReference: 'i_id', positionField: 'ip_pos'
+            }
+        }
+    };
+
     const sqlQueryBuilder: SqlQueryBuilder = new SqlQueryBuilder();
     const localTestHelper = {
         createService: function (knex) {
@@ -30,7 +41,6 @@ describe('CommonDocSqlActionTagPlaylistAdapter', () => {
                 new CommonSqlPlaylistAdapter(config, knex, sqlQueryBuilder, modelConfigType));
         }
     };
-
 
     describe('test defaults', () => {
         const knex = TestHelper.createKnex('mysql', []);
@@ -55,7 +65,7 @@ describe('CommonDocSqlActionTagPlaylistAdapter', () => {
                 {
                     playlistkey: 'playlist',
                     set: 1,
-                }, 'setGenericPlaylists: unknowntable - table not valid', done);
+                }, 'setPlaylists: unknowntable - table not valid', done);
         });
 
 
@@ -125,6 +135,265 @@ describe('CommonDocSqlActionTagPlaylistAdapter', () => {
                     ['playlist', 5]
                 ],
                 done);
+        });
+
+        const localTestHelperWithPosition = {
+            createService: function (knex) {
+                const config = {
+                    knexOpts: {
+                        client: knex.client.config.client
+                    }
+                };
+
+                return new CommonSqlActionTagPlaylistAdapter(
+                    new CommonSqlPlaylistAdapter(config, knex, sqlQueryBuilder, modelConfigTypeWithPosition));
+            }
+        };
+
+        describe('#executeActionTagPlaylistWith() WithPosition', () => {
+            const knex = TestHelper.createKnex('mysql', []);
+            const service: CommonSqlActionTagPlaylistAdapter = localTestHelperWithPosition.createService(knex);
+
+            it('executeActionTagPlaylist should set playlist WithPosition newPosition and oldPosition', done => {
+                const id: any = 5;
+                const oldPos = 11;
+                const newPos = 111;
+                TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'image', id, {
+                        payload: {
+                            playlistkey: 'playlist',
+                            set: true,
+                            position: newPos
+                        },
+                        deletes: false,
+                        key: 'playlist',
+                        recordId: id,
+                        type: 'tag'
+                    },
+                    true,
+                    [
+                        'SELECT * FROM image_playlist INNER JOIN playlist ON playlist.p_id = image_playlist.p_id' +
+                        ' WHERE image_playlist.p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'DELETE FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'UPDATE image_playlist SET ip_pos = ip_pos - 1' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND ip_pos >= ?',
+                        'UPDATE image_playlist SET ip_pos = ip_pos + 1' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND ip_pos >= ?',
+                        'INSERT INTO image_playlist (p_id, ip_pos, i_id)' +
+                        ' SELECT p_id AS p_id,     ? AS ip_pos,     ? AS i_id FROM playlist     WHERE p_name IN (?)'
+                    ],
+                    [
+                        ['playlist', id],
+                        ['playlist', id],
+                        ['playlist', oldPos],
+                        ['playlist', newPos],
+                        [newPos, id, 'playlist'],
+                    ],
+                    done,
+                    [
+                        [[{'i_id': id, 'ip_pos': oldPos, 'p_name': 'playlist'}]],
+                        [],
+                        [],
+                        [],
+                        [],
+                    ]);
+            });
+
+            it('executeActionTagPlaylist should set playlist WithPosition no oldPosition no newPos', done => {
+                const id: any = 5;
+                const oldPos = undefined;
+                const newPos = undefined;
+                const maxPos = 111;
+                TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'image', id, {
+                        payload: {
+                            playlistkey: 'playlist',
+                            set: true,
+                            position: newPos
+                        },
+                        deletes: false,
+                        key: 'playlist',
+                        recordId: id,
+                        type: 'tag'
+                    },
+                    true,
+                    [
+                        'SELECT * FROM image_playlist INNER JOIN playlist ON playlist.p_id = image_playlist.p_id' +
+                        ' WHERE image_playlist.p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'DELETE FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'SELECT max(ip_pos) AS maxPos FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?))',
+                        'INSERT INTO image_playlist (p_id, ip_pos, i_id)' +
+                        ' SELECT p_id AS p_id,     ? AS ip_pos,     ? AS i_id FROM playlist     WHERE p_name IN (?)'
+                    ],
+                    [
+                        ['playlist', id],
+                        ['playlist', id],
+                        ['playlist'],
+                        [maxPos + 1, id, 'playlist'],
+                    ],
+                    done,
+                    [
+                        [[{'i_id': id, 'ip_pos': oldPos, 'p_name': 'playlist'}]],
+                        [],
+                        [[{maxPos: maxPos}]],
+                        [],
+                    ]);
+            });
+
+            it('executeActionTagPlaylist should set playlist WithPosition oldPosition no newPos', done => {
+                const id: any = 5;
+                const oldPos = 11;
+                const newPos = undefined;
+                const maxPos = 111;
+                TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'image', id, {
+                        payload: {
+                            playlistkey: 'playlist',
+                            set: true,
+                            position: newPos
+                        },
+                        deletes: false,
+                        key: 'playlist',
+                        recordId: id,
+                        type: 'tag'
+                    },
+                    true,
+                    [
+                        'SELECT * FROM image_playlist INNER JOIN playlist ON playlist.p_id = image_playlist.p_id' +
+                        ' WHERE image_playlist.p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'DELETE FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'UPDATE image_playlist SET ip_pos = ip_pos - 1' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND ip_pos >= ?',
+                        'SELECT max(ip_pos) AS maxPos FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?))',
+                        'INSERT INTO image_playlist (p_id, ip_pos, i_id)' +
+                        ' SELECT p_id AS p_id,     ? AS ip_pos,     ? AS i_id FROM playlist     WHERE p_name IN (?)'
+                    ],
+                    [
+                        ['playlist', id],
+                        ['playlist', id],
+                        ['playlist', oldPos],
+                        ['playlist'],
+                        [maxPos + 1, id, 'playlist'],
+                    ],
+                    done,
+                    [
+                        [[{'i_id': id, 'ip_pos': oldPos, 'p_name': 'playlist'}]],
+                        [],
+                        [],
+                        [[{maxPos: maxPos}]],
+                        [],
+                    ]);
+            });
+
+            it('executeActionTagPlaylist should set playlist WithPosition no oldPosition but newPos', done => {
+                const id: any = 5;
+                const oldPos = undefined;
+                const newPos = 11;
+                const maxPos = 111;
+                TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'image', id, {
+                        payload: {
+                            playlistkey: 'playlist',
+                            set: true,
+                            position: newPos
+                        },
+                        deletes: false,
+                        key: 'playlist',
+                        recordId: id,
+                        type: 'tag'
+                    },
+                    true,
+                    [
+                        'SELECT * FROM image_playlist INNER JOIN playlist ON playlist.p_id = image_playlist.p_id' +
+                        ' WHERE image_playlist.p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'DELETE FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'UPDATE image_playlist SET ip_pos = ip_pos + 1' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND ip_pos >= ?',
+                        'INSERT INTO image_playlist (p_id, ip_pos, i_id)' +
+                        ' SELECT p_id AS p_id,     ? AS ip_pos,     ? AS i_id FROM playlist     WHERE p_name IN (?)'
+                    ],
+                    [
+                        ['playlist', id],
+                        ['playlist', id],
+                        ['playlist', newPos],
+                        [newPos, id, 'playlist'],
+                    ],
+                    done,
+                    [
+                        [[{'i_id': id, 'ip_pos': oldPos, 'p_name': 'playlist'}]],
+                        [],
+                        [],
+                        [],
+                    ]);
+            });
+
+            it('executeActionTagPlaylist should unset playlist WithPosition withOldPos', done => {
+                const id: any = 5;
+                const oldPos = 111;
+                TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'image', id, {
+                        payload: {
+                            playlistkey: 'playlist',
+                            set: false
+                        },
+                        deletes: false,
+                        key: 'playlist',
+                        recordId: id,
+                        type: 'tag'
+                    },
+                    true,
+                    [
+                        'SELECT * FROM image_playlist INNER JOIN playlist ON playlist.p_id = image_playlist.p_id' +
+                        ' WHERE image_playlist.p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'DELETE FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'UPDATE image_playlist SET ip_pos = ip_pos - 1' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND ip_pos >= ?'
+                    ],
+                    [
+                        ['playlist', id],
+                        ['playlist', id],
+                        ['playlist', oldPos]
+                    ],
+                    done,
+                    [
+                        [[{'i_id': id, 'ip_pos': oldPos, 'p_name': 'playlist'}]],
+                        [],
+                        []
+                    ]);
+            });
+
+            it('executeActionTagPlaylist should unset playlist WithPosition withoutOldPos', done => {
+                const id: any = 5;
+                const oldPos = undefined;
+                TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'image', id, {
+                        payload: {
+                            playlistkey: 'playlist',
+                            set: false
+                        },
+                        deletes: false,
+                        key: 'playlist',
+                        recordId: id,
+                        type: 'tag'
+                    },
+                    true,
+                    [
+                        'SELECT * FROM image_playlist INNER JOIN playlist ON playlist.p_id = image_playlist.p_id' +
+                        ' WHERE image_playlist.p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?',
+                        'DELETE FROM image_playlist' +
+                        ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND i_id = ?'
+                    ],
+                    [
+                        ['playlist', id],
+                        ['playlist', id]
+                    ],
+                    done,
+                    [
+                        [[{'i_id': id, 'ip_pos': oldPos, 'p_name': 'playlist'}]],
+                        []
+                    ]);
+            });
         });
     });
 });

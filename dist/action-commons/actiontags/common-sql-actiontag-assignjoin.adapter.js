@@ -61,7 +61,9 @@ var CommonSqlActionTagAssignJoinAdapter = /** @class */ (function () {
                 '     FROM ' + referenceConfig.joinTable +
                 '     WHERE ' + referenceConfig.joinBaseIdField + '=? AND ' + referenceConfig.joinReferenceField + '=?)',
             parameters: [id, newId, id, newId] });
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var result = new Promise(function (resolve, reject) {
             sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, checkBaseSqlQuery).then(function (dbresults) {
                 var records = _this.sqlQueryBuilder.extractDbResult(dbresults, _this.knex.client['config']['client']);

@@ -76,7 +76,9 @@ export class CommonSqlObjectDetectionAdapter {
                 ' FROM objects WHERE o_name = (' + SqlUtils.mapParametersToPlaceholderString(objectKeys) + ')',
             parameters: [id, precision, detector, ObjectDetectionState.DONE_APPROVAL_PROCESSED].concat(objectKeys)
         };
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const rawDelete = SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery);
         const result = new Promise((resolve, reject) => {
             rawDelete.then(() => {
@@ -118,7 +120,9 @@ export class CommonSqlObjectDetectionAdapter {
         };
         updateSqlQuery.sql = this.sqlQueryBuilder.transformToSqlDialect(updateSqlQuery.sql, this.config.knexOpts.client);
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         const rawUpdate = SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         const result = new Promise((resolve, reject) => {
             rawUpdate.then(() => {
@@ -240,7 +244,9 @@ export class CommonSqlObjectDetectionAdapter {
                 this.config.knexOpts.client);
         }
 
-        const sqlBuilder = utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        const sqlBuilder = utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         return new Promise((resolve, reject) => {
             SqlUtils.executeRawSqlQueryData(sqlBuilder, updateImageObjectObjectKeySqlQuery).then(() => {
                 if (insertObjectNameSqlQuery) {

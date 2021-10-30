@@ -157,7 +157,9 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         }
         props = props || {};
         opts = opts || {};
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var me = this;
         var result = new Promise(function (allResolve, allReject) {
             var writeQuery = me.queryTransformToAdapterWriteQuery('create', mapper, props, opts);
@@ -208,7 +210,9 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.reject('something went wrong - got no query for count');
         }
         opts.queryData = queryData;
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var sql = this.queryTransformToSql(queryData);
         // for debug only: const start = (new Date()).getTime();
         var raw = sqlBuilder.raw(sql);
@@ -247,7 +251,9 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.reject('something went wrong - got no query for findAll');
         }
         opts.queryData = queryData;
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var sql = this.queryTransformToSql(queryData);
         // for debug only: const start = (new Date()).getTime();
         var raw = sqlBuilder.raw(sql);
@@ -283,7 +289,9 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         opts.query = queryData;
         var tableConfig = this.getTableConfig(query);
         var facetConfigs = tableConfig.facetConfigs;
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var result = new Promise(function (allResolve, allReject) {
             var queries = me.getFacetSql(query, opts);
             var promises = [];
@@ -340,7 +348,9 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         }
         props = props || {};
         opts = opts || {};
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var me = this;
         var result = new Promise(function (allResolve, allReject) {
             var writeQuery = me.queryTransformToAdapterWriteQuery('update', mapper, props, opts);
@@ -488,7 +498,9 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.resolve(records);
         }
         var me = this;
-        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction) ? this.knex : opts.transaction;
+        var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
+            ? this.knex
+            : opts.transaction;
         var result = new Promise(function (allResolve, allReject) {
             var promises = [];
             records.forEach(function (record) {
