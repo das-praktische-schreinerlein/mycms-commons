@@ -384,6 +384,13 @@ var SqlQueryBuilder = /** @class */ (function () {
     SqlQueryBuilder.prototype.getAdapterFrom = function (tableConfig) {
         return tableConfig.selectFrom || '';
     };
+    SqlQueryBuilder.prototype.getSortParams = function (tableConfig, method, adapterQuery, adapterOpts) {
+        if (method === 'count') {
+            return undefined;
+        }
+        var sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
+        return [tableConfig.sortMapping[sortKey]];
+    };
     SqlQueryBuilder.prototype.getSortKey = function (tableConfig, method, adapterQuery, adapterOpts) {
         var form = adapterOpts.originalSearchForm;
         var sortMapping = tableConfig.sortMapping;
@@ -403,10 +410,6 @@ var SqlQueryBuilder = /** @class */ (function () {
             return sortKey;
         }
         return 'relevance';
-    };
-    SqlQueryBuilder.prototype.getSortParams = function (tableConfig, method, adapterQuery, adapterOpts) {
-        var sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
-        return [tableConfig.sortMapping[sortKey]];
     };
     SqlQueryBuilder.prototype.getSpatialParams = function (tableConfig, adapterQuery, spatialField) {
         if (this.isSpatialQuery(tableConfig, adapterQuery)) {

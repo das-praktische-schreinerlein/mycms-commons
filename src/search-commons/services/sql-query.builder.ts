@@ -506,6 +506,15 @@ export class SqlQueryBuilder {
         return tableConfig.selectFrom || '';
     }
 
+    protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[] {
+        if (method === 'count') {
+            return undefined;
+        }
+
+        const sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
+        return [tableConfig.sortMapping[sortKey]];
+    }
+
     protected getSortKey(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string {
         const form = adapterOpts.originalSearchForm;
         const sortMapping = tableConfig.sortMapping;
@@ -527,11 +536,6 @@ export class SqlQueryBuilder {
         }
 
         return 'relevance';
-
-    }
-    protected getSortParams(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string[] {
-        const sortKey = this.getSortKey(tableConfig, method, adapterQuery, adapterOpts);
-        return [tableConfig.sortMapping[sortKey]];
     }
 
     protected getSpatialParams(tableConfig: TableConfig, adapterQuery: AdapterQuery, spatialField: string): string {
