@@ -34,7 +34,7 @@ export declare abstract class CommonDocDataService<R extends CommonDocRecord, F 
     getAll(opts?: any): Promise<R[]>;
     findCurList(searchForm: F, opts?: any): Promise<R[]>;
     doMultiSearch(searchForm: F, ids: string[]): Promise<S>;
-    batchProcessSearchResult(searchForm: F, cb: (tdoc: R) => Promise<{}>[], opts: GenericSearchOptions, processingOptions: ProcessingOptions): Promise<{}>;
+    batchProcessSearchResult(searchForm: F, cb: (cdoc: R) => Promise<{}>[], opts: GenericSearchOptions, processingOptions: ProcessingOptions): Promise<{}>;
     export(searchForm: F, format: string, opts?: GenericSearchOptions): Promise<string>;
     search(searchForm: F, opts?: GenericSearchOptions): Promise<S>;
     getById(id: string, opts?: any): Promise<R>;

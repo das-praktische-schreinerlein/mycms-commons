@@ -90,7 +90,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
         return this.searchService.doMultiSearch(searchForm, ids);
     }
 
-    batchProcessSearchResult(searchForm: F, cb: (tdoc: R) => Promise<{}>[], opts: GenericSearchOptions,
+    batchProcessSearchResult(searchForm: F, cb: (cdoc: R) => Promise<{}>[], opts: GenericSearchOptions,
                              processingOptions: ProcessingOptions): Promise<{}> {
         return this.searchService.batchProcessSearchResult(searchForm, cb,  opts, processingOptions);
     }

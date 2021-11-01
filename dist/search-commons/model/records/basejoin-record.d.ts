@@ -1,4 +1,4 @@
-import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordRelationsType, BaseEntityRecordType } from './base-entity-record';
+import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordType } from './base-entity-record';
 export interface BaseJoinRecordType extends BaseEntityRecordType {
     name: string;
     refId: string;
@@ -15,4 +15,3 @@ export declare abstract class BaseJoinRecord extends BaseEntityRecord implements
     type: string;
     toString(): string;
 }
-export declare let BaseJoinRecordRelation: BaseEntityRecordRelationsType;

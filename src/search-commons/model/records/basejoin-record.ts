@@ -1,8 +1,4 @@
-import {
-    BaseEntityRecord,
-    BaseEntityRecordFieldConfig, BaseEntityRecordRelationsType,
-    BaseEntityRecordType
-} from './base-entity-record';
+import {BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordType} from './base-entity-record';
 import {GenericValidatorDatatypes, NameValidationRule} from '../forms/generic-validator.util';
 
 export interface BaseJoinRecordType extends BaseEntityRecordType {
@@ -31,15 +27,3 @@ export abstract class BaseJoinRecord extends BaseEntityRecord implements BaseJoi
             '}';
     }
 }
-
-export let BaseJoinRecordRelation: BaseEntityRecordRelationsType = {
-    belongsTo: {
-        tdoc: {
-            // database column
-            foreignKey: 'tdoc_id',
-            // reference to related object in memory
-            localField: 'tdoc',
-            mapperKey: 'tdoc'
-        }
-    }
-};

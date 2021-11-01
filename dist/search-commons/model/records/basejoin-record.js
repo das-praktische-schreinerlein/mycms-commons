@@ -33,15 +33,4 @@ var BaseJoinRecord = /** @class */ (function (_super) {
     return BaseJoinRecord;
 }(base_entity_record_1.BaseEntityRecord));
 exports.BaseJoinRecord = BaseJoinRecord;
-exports.BaseJoinRecordRelation = {
-    belongsTo: {
-        tdoc: {
-            // database column
-            foreignKey: 'tdoc_id',
-            // reference to related object in memory
-            localField: 'tdoc',
-            mapperKey: 'tdoc'
-        }
-    }
-};
 //# sourceMappingURL=basejoin-record.js.map

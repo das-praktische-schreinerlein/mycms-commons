@@ -11,6 +11,6 @@ export declare abstract class CommonDocSearchService<R extends CommonDocRecord, 
     protected constructor(dataStore: GenericDataStore<R, F, S>, mapperName: string);
     doMultiSearch(searchForm: F, ids: string[]): Promise<S>;
     sortRecords(records: R[], sortType: string): void;
-    batchProcessSearchResult(searchForm: F, cb: (tdoc: R) => Promise<{}>[], opts: GenericSearchOptions, processingOptions: ProcessingOptions): Promise<{}>;
+    batchProcessSearchResult(searchForm: F, cb: (cdoc: R) => Promise<{}>[], opts: GenericSearchOptions, processingOptions: ProcessingOptions): Promise<{}>;
     getAvailableSorts(): string[];
 }

@@ -135,8 +135,8 @@ var CommonDocSearchService = /** @class */ (function (_super) {
             return me.search(searchForm, opts).then(function searchDone(searchResult) {
                 var promises = [];
                 for (var _i = 0, _a = searchResult.currentRecords; _i < _a.length; _i++) {
-                    var tdoc = _a[_i];
-                    promises = promises.concat(cb(tdoc));
+                    var cdoc = _a[_i];
+                    promises = promises.concat(cb(cdoc));
                 }
                 var processResults = function () {
                     var durWhole = ((new Date()).getTime() - startTime + 1) / 1000;

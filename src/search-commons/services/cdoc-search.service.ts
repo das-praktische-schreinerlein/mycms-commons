@@ -128,7 +128,7 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
         }
     }
 
-    public batchProcessSearchResult(searchForm: F, cb: (tdoc: R) => Promise<{}>[], opts: GenericSearchOptions,
+    public batchProcessSearchResult(searchForm: F, cb: (cdoc: R) => Promise<{}>[], opts: GenericSearchOptions,
                                        processingOptions: ProcessingOptions): Promise<{}> {
         searchForm.perPage = processingOptions.parallel;
         searchForm.pageNum = Number.isInteger(searchForm.pageNum) ? searchForm.pageNum : 1;
@@ -141,8 +141,8 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
             return me.search(searchForm, opts).then(
                 function searchDone(searchResult: S) {
                     let promises: Promise<any>[] = [];
-                    for (const tdoc of searchResult.currentRecords) {
-                        promises = promises.concat(cb(tdoc));
+                    for (const cdoc of searchResult.currentRecords) {
+                        promises = promises.concat(cb(cdoc));
                     }
 
                     const processResults = function(): Promise<any> {
