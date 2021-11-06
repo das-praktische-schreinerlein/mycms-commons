@@ -1,5 +1,9 @@
 import {utils} from 'js-data';
-import {KeywordValidationRule, NumberValidationRule} from '../../search-commons/model/forms/generic-validator.util';
+import {
+    DescValidationRule,
+    KeywordValidationRule,
+    NumberValidationRule
+} from '../../search-commons/model/forms/generic-validator.util';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {StringUtils} from '../../commons/utils/string.utils';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
@@ -10,6 +14,7 @@ export interface PlaylistModelConfigJoinType {
     joinTable: string;
     fieldReference: string;
     positionField ?: string;
+    detailsField ?: string;
 }
 
 export interface PlaylistModelConfigJoinsType {
@@ -21,6 +26,12 @@ export interface PlaylistModelConfigType {
     fieldName: string;
     joins: PlaylistModelConfigJoinsType;
     table: string;
+    // sql: UPDATE image_playlist SET ip_pos = ip_pos + ? WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND ip_pos >= ?
+    // parameter [-1, 1] (inc/dec), playlistKey, oldPosition
+    commonChangeSuccessorPosSqls ?: string [];
+    // sql: SELECT max(pos) AS maxPos FROM all_entries_playlist_max WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?))
+    // parameter playlistKey
+    commonSelectMaxPositionSql ?: string;
 }
 
 export class CommonSqlPlaylistAdapter {
@@ -31,6 +42,7 @@ export class CommonSqlPlaylistAdapter {
     private readonly playlistModelConfig: PlaylistModelConfigType;
     private playlistValidationRule = new KeywordValidationRule(true);
     private numberValidationRule = new NumberValidationRule(false, 1, 999999999999, undefined);
+    private textValidationRule = new DescValidationRule(false);
 
     constructor(config: any, knex: any, sqlQueryBuilder: SqlQueryBuilder, playlistModelConfig: PlaylistModelConfigType) {
         this.config = config;
@@ -39,7 +51,8 @@ export class CommonSqlPlaylistAdapter {
         this.playlistModelConfig = playlistModelConfig;
     }
 
-    public setPlaylists(joinTableKey: string, dbId: number, playlist: string, opts: any, set: boolean, position?: number):
+    public setPlaylists(joinTableKey: string, dbId: number, playlist: string, opts: any, set: boolean,
+                        position?: number, details?: string):
         Promise<any> {
         if (!utils.isInteger(dbId)) {
             return utils.reject('setPlaylists ' + joinTableKey + ' id not an integer');
@@ -52,6 +65,9 @@ export class CommonSqlPlaylistAdapter {
         }
         if (!this.numberValidationRule.isValid(position)) {
             return utils.reject('setPlaylists ' + joinTableKey + ' position not valid');
+        }
+        if (!this.textValidationRule.isValid(details)) {
+            return utils.reject('setPlaylists ' + joinTableKey + ' details not valid');
         }
 
         const me = this;
@@ -119,7 +135,7 @@ export class CommonSqlPlaylistAdapter {
             for (const playlistKey of playlistKeys) {
                 const oldRecord = oldPlaylistJoinsByPlaylistKey[playlistKey];
                 promises.push(function () {
-                    return me.setPlaylist(joinTableKey, dbId, playlistKey, opts, set, position, oldRecord);
+                    return me.setPlaylist(joinTableKey, dbId, playlistKey, opts, set, position, details, oldRecord);
                 });
             }
 
@@ -133,7 +149,7 @@ export class CommonSqlPlaylistAdapter {
     }
 
     protected setPlaylist(joinTableKey: string, dbId: number, playlistKey: string, opts: any, set: boolean,
-                       position: number, oldRecord: {}):
+                       position: number, details: string, oldRecord: {}):
         Promise<any> {
         if (!utils.isInteger(dbId)) {
             return utils.reject('setPlaylist ' + joinTableKey + ' id not an integer');
@@ -154,6 +170,7 @@ export class CommonSqlPlaylistAdapter {
         const joinTable = this.playlistModelConfig.joins[joinTableKey].joinTable;
         const joinBaseIdField = this.playlistModelConfig.joins[joinTableKey].fieldReference;
         const positionField = this.playlistModelConfig.joins[joinTableKey].positionField;
+        const detailsField = this.playlistModelConfig.joins[joinTableKey].detailsField;
 
         const sqlBuilder = utils.isUndefined(opts.transaction)
             ? this.knex
@@ -174,32 +191,56 @@ export class CommonSqlPlaylistAdapter {
         if (oldRecord !== undefined) {
             const oldValue = oldRecord[positionField]
             if (oldValue !== undefined && oldValue !== null && oldValue !== 'null') {
-                const updateOldPlaylistSuccessorsSqlQuery: RawSqlQueryData = {
-                    sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' - 1 ' +
-                        'WHERE ' + playlistIdField + ' IN' +
-                        '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
-                        '      WHERE ' + playlistNameField + ' IN (?))' +
-                        ' AND ' + positionField + ' >= ' + '?' + '',
-                    parameters: [].concat([playlistKey]).concat([oldValue])
-                };
-                promises.push(function () {
-                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery);
-                })
+                if (this.playlistModelConfig.commonChangeSuccessorPosSqls !== undefined) {
+                    for (const sql of this.playlistModelConfig.commonChangeSuccessorPosSqls) {
+                        const updateOldPlaylistSuccessorsSqlQuery: RawSqlQueryData = {
+                            sql: sql,
+                            parameters: [].concat([-1]).concat([playlistKey]).concat([oldValue])
+                        };
+                        promises.push(function () {
+                            return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery);
+                        })
+                    }
+                } else {
+                    const updateOldPlaylistSuccessorsSqlQuery: RawSqlQueryData = {
+                        sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' - 1 ' +
+                            'WHERE ' + playlistIdField + ' IN' +
+                            '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
+                            '      WHERE ' + playlistNameField + ' IN (?))' +
+                            ' AND ' + positionField + ' >= ' + '?' + '',
+                        parameters: [].concat([playlistKey]).concat([oldValue])
+                    };
+                    promises.push(function () {
+                        return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery);
+                    })
+                }
             }
         }
 
         if (position !== undefined) {
-            const updateNewPlaylistSuccessorsSqlQuery: RawSqlQueryData = {
-                sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' + 1 ' +
-                    'WHERE ' + playlistIdField + ' IN' +
-                    '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
-                    '      WHERE ' + playlistNameField + ' IN (?))' +
-                    ' AND ' + positionField + ' >= ' + '?' + '',
-                parameters: [].concat([playlistKey]).concat([position])
-            };
-            promises.push(function () {
-                return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateNewPlaylistSuccessorsSqlQuery);
-            })
+            if (this.playlistModelConfig.commonChangeSuccessorPosSqls !== undefined) {
+                for (const sql of this.playlistModelConfig.commonChangeSuccessorPosSqls) {
+                    const updateOldPlaylistSuccessorsSqlQuery: RawSqlQueryData = {
+                        sql: sql,
+                        parameters: [].concat([+1]).concat([playlistKey]).concat([position])
+                    };
+                    promises.push(function () {
+                        return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery);
+                    });
+                }
+            } else {
+                const updateNewPlaylistSuccessorsSqlQuery: RawSqlQueryData = {
+                    sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' + 1 ' +
+                        'WHERE ' + playlistIdField + ' IN' +
+                        '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
+                        '      WHERE ' + playlistNameField + ' IN (?))' +
+                        ' AND ' + positionField + ' >= ' + '?' + '',
+                    parameters: [].concat([playlistKey]).concat([position])
+                };
+                promises.push(function () {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateNewPlaylistSuccessorsSqlQuery);
+                })
+            }
         }
 
         return Promise_serial(promises, {parallelize: 1}).then((value) => {
@@ -207,22 +248,33 @@ export class CommonSqlPlaylistAdapter {
                 return utils.resolve(value);
             }
 
+            const sql = 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' +
+                (detailsField && details ? detailsField + ', ' : '') +
+                positionField + ', ' + joinBaseIdField + ')' +
+                ' SELECT ' + playlistIdField + ' AS ' + playlistIdField + ',' +
+                (detailsField && details ? '     ' + '?' + ' AS ' + detailsField + ',' : '') +
+                '     ' + '?' + ' AS ' + positionField + ',' +
+                '     ' + '?' + ' AS ' + joinBaseIdField + ' FROM ' + playlistTable +
+                '     WHERE ' + playlistNameField + ' IN (?)';
+            const params = detailsField && details
+                ? [details]
+                : [];
+
             if (position !== undefined) {
                 const insertSinglePlaylistSqlQuery: RawSqlQueryData = {
-                    sql: 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' + positionField + ', ' + joinBaseIdField + ')' +
-                        ' SELECT ' + playlistIdField + ' AS ' + playlistIdField + ',' +
-                        '     ' + '?' + ' AS ' + positionField + ',' +
-                        '     ' + '?' + ' AS ' + joinBaseIdField + ' FROM ' + playlistTable +
-                        '     WHERE ' + playlistNameField + ' IN (?)',
-                    parameters: [].concat([position]).concat([dbId]).concat([playlistKey])
+                    sql: sql,
+                    parameters: [].concat(params).concat([position]).concat([dbId]).concat([playlistKey])
                 };
                 return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSinglePlaylistSqlQuery);
             }
 
+            const selectMaxPlaylistPositionSql = this.playlistModelConfig.commonSelectMaxPositionSql
+                ? this.playlistModelConfig.commonSelectMaxPositionSql
+                : 'SELECT max(' + positionField + ') AS maxPos FROM ' + joinTable + ' WHERE ' + playlistIdField + ' IN' +
+                '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
+                '      WHERE ' + playlistNameField + ' IN (?))'
             const selectMaxPlaylistPositionSqlQuery: RawSqlQueryData = {
-                sql: 'SELECT max(' + positionField + ') AS maxPos FROM ' + joinTable + ' WHERE ' + playlistIdField + ' IN' +
-                    '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
-                    '      WHERE ' + playlistNameField + ' IN (?))',
+                sql: selectMaxPlaylistPositionSql,
                 parameters: [].concat([playlistKey])
             };
             return SqlUtils.executeRawSqlQueryData(sqlBuilder, selectMaxPlaylistPositionSqlQuery).then(dbresults => {
@@ -234,11 +286,7 @@ export class CommonSqlPlaylistAdapter {
 
                 maxPos = maxPos + 1;
                 const insertSinglePlaylistSqlQuery: RawSqlQueryData = {
-                    sql: 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' + positionField + ', ' + joinBaseIdField + ')' +
-                        ' SELECT ' + playlistIdField + ' AS ' + playlistIdField + ',' +
-                        '     ' + '?' + ' AS ' + positionField + ',' +
-                        '     ' + '?' + ' AS ' + joinBaseIdField + ' FROM ' + playlistTable +
-                        '     WHERE ' + playlistNameField + ' IN (?)',
+                    sql: sql,
                     parameters: [].concat([maxPos]).concat([dbId]).concat([playlistKey])
                 };
                 return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSinglePlaylistSqlQuery);

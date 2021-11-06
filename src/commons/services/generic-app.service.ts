@@ -1,6 +1,4 @@
-import {Subject} from 'rxjs';
-import {ReplaySubject} from 'rxjs';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, ReplaySubject, Subject} from 'rxjs';
 
 export enum AppState {
     Starting = 1,

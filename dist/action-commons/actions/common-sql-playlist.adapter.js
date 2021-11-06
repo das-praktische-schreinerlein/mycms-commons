@@ -9,12 +9,13 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
     function CommonSqlPlaylistAdapter(config, knex, sqlQueryBuilder, playlistModelConfig) {
         this.playlistValidationRule = new generic_validator_util_1.KeywordValidationRule(true);
         this.numberValidationRule = new generic_validator_util_1.NumberValidationRule(false, 1, 999999999999, undefined);
+        this.textValidationRule = new generic_validator_util_1.DescValidationRule(false);
         this.config = config;
         this.knex = knex;
         this.sqlQueryBuilder = sqlQueryBuilder;
         this.playlistModelConfig = playlistModelConfig;
     }
-    CommonSqlPlaylistAdapter.prototype.setPlaylists = function (joinTableKey, dbId, playlist, opts, set, position) {
+    CommonSqlPlaylistAdapter.prototype.setPlaylists = function (joinTableKey, dbId, playlist, opts, set, position, details) {
         var _this = this;
         if (!js_data_1.utils.isInteger(dbId)) {
             return js_data_1.utils.reject('setPlaylists ' + joinTableKey + ' id not an integer');
@@ -27,6 +28,9 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
         }
         if (!this.numberValidationRule.isValid(position)) {
             return js_data_1.utils.reject('setPlaylists ' + joinTableKey + ' position not valid');
+        }
+        if (!this.textValidationRule.isValid(details)) {
+            return js_data_1.utils.reject('setPlaylists ' + joinTableKey + ' details not valid');
         }
         var me = this;
         var playlistKeys = string_utils_1.StringUtils.uniqueKeywords(playlist);
@@ -88,7 +92,7 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
             var _loop_1 = function (playlistKey) {
                 var oldRecord = oldPlaylistJoinsByPlaylistKey[playlistKey];
                 promises.push(function () {
-                    return me.setPlaylist(joinTableKey, dbId, playlistKey, opts, set, position, oldRecord);
+                    return me.setPlaylist(joinTableKey, dbId, playlistKey, opts, set, position, details, oldRecord);
                 });
             };
             for (var _i = 0, playlistKeys_1 = playlistKeys; _i < playlistKeys_1.length; _i++) {
@@ -103,7 +107,7 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
             return js_data_1.utils.reject(reason);
         });
     };
-    CommonSqlPlaylistAdapter.prototype.setPlaylist = function (joinTableKey, dbId, playlistKey, opts, set, position, oldRecord) {
+    CommonSqlPlaylistAdapter.prototype.setPlaylist = function (joinTableKey, dbId, playlistKey, opts, set, position, details, oldRecord) {
         var _this = this;
         if (!js_data_1.utils.isInteger(dbId)) {
             return js_data_1.utils.reject('setPlaylist ' + joinTableKey + ' id not an integer');
@@ -123,6 +127,7 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
         var joinTable = this.playlistModelConfig.joins[joinTableKey].joinTable;
         var joinBaseIdField = this.playlistModelConfig.joins[joinTableKey].fieldReference;
         var positionField = this.playlistModelConfig.joins[joinTableKey].positionField;
+        var detailsField = this.playlistModelConfig.joins[joinTableKey].detailsField;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
             ? this.knex
             : opts.transaction;
@@ -141,51 +146,95 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
         if (oldRecord !== undefined) {
             var oldValue = oldRecord[positionField];
             if (oldValue !== undefined && oldValue !== null && oldValue !== 'null') {
-                var updateOldPlaylistSuccessorsSqlQuery_1 = {
-                    sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' - 1 ' +
+                if (this.playlistModelConfig.commonChangeSuccessorPosSqls !== undefined) {
+                    var _loop_2 = function (sql) {
+                        var updateOldPlaylistSuccessorsSqlQuery = {
+                            sql: sql,
+                            parameters: [].concat([-1]).concat([playlistKey]).concat([oldValue])
+                        };
+                        promises.push(function () {
+                            return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery);
+                        });
+                    };
+                    for (var _i = 0, _a = this.playlistModelConfig.commonChangeSuccessorPosSqls; _i < _a.length; _i++) {
+                        var sql = _a[_i];
+                        _loop_2(sql);
+                    }
+                }
+                else {
+                    var updateOldPlaylistSuccessorsSqlQuery_1 = {
+                        sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' - 1 ' +
+                            'WHERE ' + playlistIdField + ' IN' +
+                            '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
+                            '      WHERE ' + playlistNameField + ' IN (?))' +
+                            ' AND ' + positionField + ' >= ' + '?' + '',
+                        parameters: [].concat([playlistKey]).concat([oldValue])
+                    };
+                    promises.push(function () {
+                        return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery_1);
+                    });
+                }
+            }
+        }
+        if (position !== undefined) {
+            if (this.playlistModelConfig.commonChangeSuccessorPosSqls !== undefined) {
+                var _loop_3 = function (sql) {
+                    var updateOldPlaylistSuccessorsSqlQuery = {
+                        sql: sql,
+                        parameters: [].concat([+1]).concat([playlistKey]).concat([position])
+                    };
+                    promises.push(function () {
+                        return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery);
+                    });
+                };
+                for (var _b = 0, _c = this.playlistModelConfig.commonChangeSuccessorPosSqls; _b < _c.length; _b++) {
+                    var sql = _c[_b];
+                    _loop_3(sql);
+                }
+            }
+            else {
+                var updateNewPlaylistSuccessorsSqlQuery_1 = {
+                    sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' + 1 ' +
                         'WHERE ' + playlistIdField + ' IN' +
                         '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
                         '      WHERE ' + playlistNameField + ' IN (?))' +
                         ' AND ' + positionField + ' >= ' + '?' + '',
-                    parameters: [].concat([playlistKey]).concat([oldValue])
+                    parameters: [].concat([playlistKey]).concat([position])
                 };
                 promises.push(function () {
-                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateOldPlaylistSuccessorsSqlQuery_1);
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateNewPlaylistSuccessorsSqlQuery_1);
                 });
             }
-        }
-        if (position !== undefined) {
-            var updateNewPlaylistSuccessorsSqlQuery_1 = {
-                sql: 'UPDATE ' + joinTable + ' SET ' + positionField + ' = ' + positionField + ' + 1 ' +
-                    'WHERE ' + playlistIdField + ' IN' +
-                    '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
-                    '      WHERE ' + playlistNameField + ' IN (?))' +
-                    ' AND ' + positionField + ' >= ' + '?' + '',
-                parameters: [].concat([playlistKey]).concat([position])
-            };
-            promises.push(function () {
-                return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateNewPlaylistSuccessorsSqlQuery_1);
-            });
         }
         return Promise_serial(promises, { parallelize: 1 }).then(function (value) {
             if (!set) {
                 return js_data_1.utils.resolve(value);
             }
+            var sql = 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' +
+                (detailsField && details ? detailsField + ', ' : '') +
+                positionField + ', ' + joinBaseIdField + ')' +
+                ' SELECT ' + playlistIdField + ' AS ' + playlistIdField + ',' +
+                (detailsField && details ? '     ' + '?' + ' AS ' + detailsField + ',' : '') +
+                '     ' + '?' + ' AS ' + positionField + ',' +
+                '     ' + '?' + ' AS ' + joinBaseIdField + ' FROM ' + playlistTable +
+                '     WHERE ' + playlistNameField + ' IN (?)';
+            var params = detailsField && details
+                ? [details]
+                : [];
             if (position !== undefined) {
                 var insertSinglePlaylistSqlQuery = {
-                    sql: 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' + positionField + ', ' + joinBaseIdField + ')' +
-                        ' SELECT ' + playlistIdField + ' AS ' + playlistIdField + ',' +
-                        '     ' + '?' + ' AS ' + positionField + ',' +
-                        '     ' + '?' + ' AS ' + joinBaseIdField + ' FROM ' + playlistTable +
-                        '     WHERE ' + playlistNameField + ' IN (?)',
-                    parameters: [].concat([position]).concat([dbId]).concat([playlistKey])
+                    sql: sql,
+                    parameters: [].concat(params).concat([position]).concat([dbId]).concat([playlistKey])
                 };
                 return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSinglePlaylistSqlQuery);
             }
-            var selectMaxPlaylistPositionSqlQuery = {
-                sql: 'SELECT max(' + positionField + ') AS maxPos FROM ' + joinTable + ' WHERE ' + playlistIdField + ' IN' +
+            var selectMaxPlaylistPositionSql = _this.playlistModelConfig.commonSelectMaxPositionSql
+                ? _this.playlistModelConfig.commonSelectMaxPositionSql
+                : 'SELECT max(' + positionField + ') AS maxPos FROM ' + joinTable + ' WHERE ' + playlistIdField + ' IN' +
                     '     (SELECT ' + playlistIdField + ' FROM ' + playlistTable +
-                    '      WHERE ' + playlistNameField + ' IN (?))',
+                    '      WHERE ' + playlistNameField + ' IN (?))';
+            var selectMaxPlaylistPositionSqlQuery = {
+                sql: selectMaxPlaylistPositionSql,
                 parameters: [].concat([playlistKey])
             };
             return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, selectMaxPlaylistPositionSqlQuery).then(function (dbresults) {
@@ -196,11 +245,7 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
                 }
                 maxPos = maxPos + 1;
                 var insertSinglePlaylistSqlQuery = {
-                    sql: 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' + positionField + ', ' + joinBaseIdField + ')' +
-                        ' SELECT ' + playlistIdField + ' AS ' + playlistIdField + ',' +
-                        '     ' + '?' + ' AS ' + positionField + ',' +
-                        '     ' + '?' + ' AS ' + joinBaseIdField + ' FROM ' + playlistTable +
-                        '     WHERE ' + playlistNameField + ' IN (?)',
+                    sql: sql,
                     parameters: [].concat([maxPos]).concat([dbId]).concat([playlistKey])
                 };
                 return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSinglePlaylistSqlQuery);

@@ -34,7 +34,7 @@ var BaseLinkedPlaylistRecord = /** @class */ (function (_super) {
             '  position: ' + this.position +
             '}';
     };
-    BaseLinkedPlaylistRecord.baseLinkedPlaylistFields = __assign({}, basejoin_record_1.BaseJoinRecord.joinFields, { position: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 1, 999999999999, undefined)) });
+    BaseLinkedPlaylistRecord.baseLinkedPlaylistFields = __assign({}, basejoin_record_1.BaseJoinRecord.joinFields, { position: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NUMBER, new generic_validator_util_1.NumberValidationRule(false, 1, 999999999999, undefined)), details: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.MARKDOWN, new generic_validator_util_1.DescValidationRule(false)) });
     return BaseLinkedPlaylistRecord;
 }(basejoin_record_1.BaseJoinRecord));
 exports.BaseLinkedPlaylistRecord = BaseLinkedPlaylistRecord;
