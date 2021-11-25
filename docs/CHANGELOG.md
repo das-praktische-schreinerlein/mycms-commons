@@ -2,7 +2,7 @@
  
 # Versions
 
-## 5.4.0
+## 5.4.0 (2021-11-25)
 - added support for ordering playlists 
 
 ### new features
