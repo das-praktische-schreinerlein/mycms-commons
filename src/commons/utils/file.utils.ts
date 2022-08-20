@@ -2,10 +2,12 @@ import * as fs from 'fs';
 import * as pathLib from 'path';
 
 export class FileUtils {
-    public static checkDirPath(path: string, createDirIfNotExists: boolean, dirMustNotExist: boolean, dirMustExist: boolean): string {
+    public static checkDirPath(path: string, createDirIfNotExists: boolean, dirMustNotExist: boolean,
+                               dirMustExist: boolean, allowParentSymLink: boolean = false): string {
         if (dirMustExist && !fs.existsSync(path)) {
             return 'path not exists: ' + path;
         }
+
         if (fs.existsSync(path)) {
             if (dirMustNotExist) {
                 return 'path already exists: ' + path;
@@ -13,7 +15,11 @@ export class FileUtils {
 
             const srcStat: fs.Stats = fs.lstatSync(path);
             if (!srcStat.isDirectory()) {
-                return 'path exists but is no directory: ' + path;
+                if (!allowParentSymLink
+                    || !srcStat.isSymbolicLink()
+                    || !fs.lstatSync(fs.readlinkSync(path)).isDirectory()) {
+                    return 'path exists but is no directory and/or no symmlink to directory allowed: ' + path;
+                }
             }
         }
 
@@ -22,7 +28,9 @@ export class FileUtils {
         }
     }
 
-    public static checkFilePath(path: string, createDirIfNotExists: boolean, fileMustNotExist: boolean, fileMustExist: boolean): string {
+    public static checkFilePath(path: string, createDirIfNotExists: boolean, fileMustNotExist: boolean,
+                                fileMustExist: boolean, allowParentSymLink: boolean = false,
+                                allowFileSymLink: boolean = false): string {
         const dir = pathLib.dirname(path);
 
         if (!fs.existsSync(path)) {
@@ -32,8 +40,13 @@ export class FileUtils {
             }
         }
 
-        if (!fs.lstatSync(dir).isDirectory()) {
-            return 'directory of path is no directory: ' + dir;
+        const dirStat: fs.Stats = fs.lstatSync(dir);
+        if (!dirStat.isDirectory()) {
+            if (!allowParentSymLink
+                || !dirStat.isSymbolicLink()
+                || !fs.lstatSync(fs.readlinkSync(dir)).isDirectory()) {
+                return 'directory of path is no directory and/or no symlink to directory allowed: ' + dir;
+            }
         }
 
         if (!fs.existsSync(path)) {
@@ -50,18 +63,26 @@ export class FileUtils {
         }
 
         if (!srcStat.isFile()) {
-            return 'path is no file: ' + path;
+            if (!allowFileSymLink
+                || !srcStat.isSymbolicLink()
+                || !fs.lstatSync(fs.readlinkSync(path)).isFile()) {
+                return 'path is no file and/or no symlink to file allowed: ' + path;
+            }
         }
     }
 
-    public static copyFile(srcPath: string, destPath: string, onlyIfDiffer: boolean, destFileMustNotExists?: boolean)
+    public static copyFile(srcPath: string, destPath: string, onlyIfDiffer: boolean,
+                           destFileMustNotExists: boolean = false, allowParentSymLink: boolean = false,
+                           allowFileSymLink: boolean = false)
         : Promise<string> {
-        let err = this.checkFilePath(srcPath, false,  false, true);
+        let err = this.checkFilePath(srcPath, false,  false, true,
+            allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('srcFile is invalid: ' + err);
         }
 
-        err = this.checkFilePath(destPath, true,  destFileMustNotExists, false);
+        err = this.checkFilePath(destPath, true,  destFileMustNotExists, false,
+            allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('destPath is invalid: ' + err);
         }
@@ -90,13 +111,16 @@ export class FileUtils {
         });
     }
 
-    public static moveFile(srcPath: string, destPath: string, overwrite: boolean): Promise<string> {
-        let err = this.checkFilePath(srcPath, false,  false, true);
+    public static moveFile(srcPath: string, destPath: string, overwrite: boolean, allowParentSymLink: boolean = false,
+                           allowFileSymLink: boolean = false): Promise<string> {
+        let err = this.checkFilePath(srcPath, false,  false, true,
+            allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('srcFile is invalid: ' + err);
         }
 
-        err = this.checkFilePath(destPath, true,  !overwrite, false);
+        err = this.checkFilePath(destPath, true,  !overwrite, false,
+            allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('destPath is invalid: ' + err);
         }

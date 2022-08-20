@@ -28,6 +28,7 @@ var DatabaseService = /** @class */ (function () {
                             console.error('skip misue', reason, sql);
                             return Promise.resolve();
                         }
+                        console.error('error on sql', reason, sql);
                         return Promise.reject(reason);
                     });
                 });

@@ -2,6 +2,23 @@
  
 # Versions
 
+## 5.5.0
+- improved db-error messages
+- improved symlink-handling for fileutils
+
+### new features
+- none
+
+### improvements
+- commons: - improved symlink-handling for fileutils
+
+### bug fixes
+- commons: - improved db-error messages
+
+### breaking changes
+- none
+
+
 ## 5.4.0 (2021-11-25)
 - added support for ordering playlists 
 

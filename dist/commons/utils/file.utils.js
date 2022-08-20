@@ -5,7 +5,8 @@ var pathLib = require("path");
 var FileUtils = /** @class */ (function () {
     function FileUtils() {
     }
-    FileUtils.checkDirPath = function (path, createDirIfNotExists, dirMustNotExist, dirMustExist) {
+    FileUtils.checkDirPath = function (path, createDirIfNotExists, dirMustNotExist, dirMustExist, allowParentSymLink) {
+        if (allowParentSymLink === void 0) { allowParentSymLink = false; }
         if (dirMustExist && !fs.existsSync(path)) {
             return 'path not exists: ' + path;
         }
@@ -15,14 +16,20 @@ var FileUtils = /** @class */ (function () {
             }
             var srcStat = fs.lstatSync(path);
             if (!srcStat.isDirectory()) {
-                return 'path exists but is no directory: ' + path;
+                if (!allowParentSymLink
+                    || !srcStat.isSymbolicLink()
+                    || !fs.lstatSync(fs.readlinkSync(path)).isDirectory()) {
+                    return 'path exists but is no directory and/or no symmlink to directory allowed: ' + path;
+                }
             }
         }
         if (createDirIfNotExists && !fs.existsSync(path)) {
             fs.mkdirSync(path, { recursive: true });
         }
     };
-    FileUtils.checkFilePath = function (path, createDirIfNotExists, fileMustNotExist, fileMustExist) {
+    FileUtils.checkFilePath = function (path, createDirIfNotExists, fileMustNotExist, fileMustExist, allowParentSymLink, allowFileSymLink) {
+        if (allowParentSymLink === void 0) { allowParentSymLink = false; }
+        if (allowFileSymLink === void 0) { allowFileSymLink = false; }
         var dir = pathLib.dirname(path);
         if (!fs.existsSync(path)) {
             var err = this.checkDirPath(dir, createDirIfNotExists, false, !createDirIfNotExists);
@@ -30,8 +37,13 @@ var FileUtils = /** @class */ (function () {
                 return err;
             }
         }
-        if (!fs.lstatSync(dir).isDirectory()) {
-            return 'directory of path is no directory: ' + dir;
+        var dirStat = fs.lstatSync(dir);
+        if (!dirStat.isDirectory()) {
+            if (!allowParentSymLink
+                || !dirStat.isSymbolicLink()
+                || !fs.lstatSync(fs.readlinkSync(dir)).isDirectory()) {
+                return 'directory of path is no directory and/or no symlink to directory allowed: ' + dir;
+            }
         }
         if (!fs.existsSync(path)) {
             if (fileMustExist) {
@@ -44,15 +56,22 @@ var FileUtils = /** @class */ (function () {
             return 'file already exists: ' + path;
         }
         if (!srcStat.isFile()) {
-            return 'path is no file: ' + path;
+            if (!allowFileSymLink
+                || !srcStat.isSymbolicLink()
+                || !fs.lstatSync(fs.readlinkSync(path)).isFile()) {
+                return 'path is no file and/or no symlink to file allowed: ' + path;
+            }
         }
     };
-    FileUtils.copyFile = function (srcPath, destPath, onlyIfDiffer, destFileMustNotExists) {
-        var err = this.checkFilePath(srcPath, false, false, true);
+    FileUtils.copyFile = function (srcPath, destPath, onlyIfDiffer, destFileMustNotExists, allowParentSymLink, allowFileSymLink) {
+        if (destFileMustNotExists === void 0) { destFileMustNotExists = false; }
+        if (allowParentSymLink === void 0) { allowParentSymLink = false; }
+        if (allowFileSymLink === void 0) { allowFileSymLink = false; }
+        var err = this.checkFilePath(srcPath, false, false, true, allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('srcFile is invalid: ' + err);
         }
-        err = this.checkFilePath(destPath, true, destFileMustNotExists, false);
+        err = this.checkFilePath(destPath, true, destFileMustNotExists, false, allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('destPath is invalid: ' + err);
         }
@@ -76,12 +95,14 @@ var FileUtils = /** @class */ (function () {
             });
         });
     };
-    FileUtils.moveFile = function (srcPath, destPath, overwrite) {
-        var err = this.checkFilePath(srcPath, false, false, true);
+    FileUtils.moveFile = function (srcPath, destPath, overwrite, allowParentSymLink, allowFileSymLink) {
+        if (allowParentSymLink === void 0) { allowParentSymLink = false; }
+        if (allowFileSymLink === void 0) { allowFileSymLink = false; }
+        var err = this.checkFilePath(srcPath, false, false, true, allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('srcFile is invalid: ' + err);
         }
-        err = this.checkFilePath(destPath, true, !overwrite, false);
+        err = this.checkFilePath(destPath, true, !overwrite, false, allowParentSymLink, allowFileSymLink);
         if (err) {
             return Promise.reject('destPath is invalid: ' + err);
         }

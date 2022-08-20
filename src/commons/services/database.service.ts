@@ -33,6 +33,7 @@ export class DatabaseService {
                             return Promise.resolve();
                         }
 
+                        console.error('error on sql', reason, sql);
                         return Promise.reject(reason);
                     });
                 });
