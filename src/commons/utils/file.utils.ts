@@ -34,7 +34,8 @@ export class FileUtils {
         const dir = pathLib.dirname(path);
 
         if (!fs.existsSync(path)) {
-            const err = this.checkDirPath(dir, createDirIfNotExists,  false, !createDirIfNotExists);
+            const err = this.checkDirPath(dir, createDirIfNotExists,  false, !createDirIfNotExists,
+                allowParentSymLink);
             if (err) {
                 return err;
             }

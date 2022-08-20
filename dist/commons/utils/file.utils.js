@@ -32,7 +32,7 @@ var FileUtils = /** @class */ (function () {
         if (allowFileSymLink === void 0) { allowFileSymLink = false; }
         var dir = pathLib.dirname(path);
         if (!fs.existsSync(path)) {
-            var err = this.checkDirPath(dir, createDirIfNotExists, false, !createDirIfNotExists);
+            var err = this.checkDirPath(dir, createDirIfNotExists, false, !createDirIfNotExists, allowParentSymLink);
             if (err) {
                 return err;
             }
