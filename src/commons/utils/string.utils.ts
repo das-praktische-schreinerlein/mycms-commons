@@ -100,4 +100,13 @@ export class StringUtils {
     public static padStart(source: string, paddingValue: string) {
         return String(paddingValue + source).slice(-paddingValue.length);
     };
+
+    public static formatToShortFileNameDate(date: Date, dateSeparator: string): string {
+        return [date.getFullYear(),
+            dateSeparator,
+            StringUtils.padStart((date.getMonth() + 1).toString(), '00'),
+            dateSeparator,
+            StringUtils.padStart(date.getDate().toString(), '00')].join('');
+    }
+
 }

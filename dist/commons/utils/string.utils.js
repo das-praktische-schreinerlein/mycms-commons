@@ -92,6 +92,13 @@ var StringUtils = /** @class */ (function () {
         return String(paddingValue + source).slice(-paddingValue.length);
     };
     ;
+    StringUtils.formatToShortFileNameDate = function (date, dateSeparator) {
+        return [date.getFullYear(),
+            dateSeparator,
+            StringUtils.padStart((date.getMonth() + 1).toString(), '00'),
+            dateSeparator,
+            StringUtils.padStart(date.getDate().toString(), '00')].join('');
+    };
     return StringUtils;
 }());
 exports.StringUtils = StringUtils;

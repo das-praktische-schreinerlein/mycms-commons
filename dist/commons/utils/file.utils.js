@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
+var fse = require("fs-extra");
 var pathLib = require("path");
 var FileUtils = /** @class */ (function () {
     function FileUtils() {
@@ -86,8 +87,8 @@ var FileUtils = /** @class */ (function () {
                 return passed(destPath);
             }
             fs.copyFile(srcPath, destPath, function (err2) {
-                if (err) {
-                    console.error('error while exporting: ' + srcPath, err2);
+                if (err2) {
+                    console.error('error while copyFile: ' + srcPath + ' to ' + destPath, err2);
                     return failure(err2);
                 }
                 console.log('copied ' + srcPath, ' to ' + destPath);
@@ -108,11 +109,51 @@ var FileUtils = /** @class */ (function () {
         }
         return new Promise(function (passed, failure) {
             fs.rename(srcPath, destPath, function (err2) {
-                if (err) {
-                    console.error('error while exporting: ' + srcPath, err2);
+                if (err2) {
+                    console.error('error while rename: ' + srcPath + ' to ' + destPath, err2);
                     return failure(err2);
                 }
                 console.log('renamed ' + srcPath, ' to ' + destPath);
+                return passed(destPath);
+            });
+        });
+    };
+    FileUtils.moveDir = function (srcPath, destPath, overwrite, allowParentSymLink) {
+        if (allowParentSymLink === void 0) { allowParentSymLink = false; }
+        var err = FileUtils.checkDirPath(srcPath, false, false, true, allowParentSymLink);
+        if (err) {
+            return Promise.reject('srcDir is invalid: ' + err);
+        }
+        err = FileUtils.checkDirPath(destPath, false, !overwrite, false, allowParentSymLink);
+        if (err) {
+            return Promise.reject('destPath is invalid: ' + err);
+        }
+        return new Promise(function (passed, failure) {
+            fse.move(srcPath, destPath, { overwrite: overwrite }, function (err2) {
+                if (err2) {
+                    console.error('error while move: ' + srcPath, err2);
+                    return failure(err2);
+                }
+                return passed(destPath);
+            });
+        });
+    };
+    FileUtils.copyDir = function (srcPath, destPath, overwrite, allowParentSymLink) {
+        if (allowParentSymLink === void 0) { allowParentSymLink = false; }
+        var err = FileUtils.checkDirPath(srcPath, false, false, true, allowParentSymLink);
+        if (err) {
+            return Promise.reject('srcDir is invalid: ' + err);
+        }
+        err = FileUtils.checkDirPath(destPath, false, !overwrite, false, allowParentSymLink);
+        if (err) {
+            return Promise.reject('destPath is invalid: ' + err);
+        }
+        return new Promise(function (passed, failure) {
+            fse.copy(srcPath, destPath, { overwrite: overwrite }, function (err2) {
+                if (err2) {
+                    console.error('error while exporting: ' + srcPath, err2);
+                    return failure(err2);
+                }
                 return passed(destPath);
             });
         });

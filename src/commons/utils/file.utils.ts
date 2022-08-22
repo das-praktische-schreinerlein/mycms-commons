@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as fse from 'fs-extra';
 import * as pathLib from 'path';
 
 export class FileUtils {
@@ -101,8 +102,8 @@ export class FileUtils {
             }
 
             fs.copyFile(srcPath, destPath, function (err2) {
-                if (err) {
-                    console.error('error while exporting: ' + srcPath, err2);
+                if (err2) {
+                    console.error('error while copyFile: ' + srcPath + ' to ' + destPath, err2);
                     return failure(err2);
                 }
 
@@ -128,8 +129,8 @@ export class FileUtils {
 
         return new Promise<string>((passed, failure) => {
             fs.rename(srcPath, destPath, function (err2) {
-                if (err) {
-                    console.error('error while exporting: ' + srcPath, err2);
+                if (err2) {
+                    console.error('error while rename: ' + srcPath + ' to ' + destPath, err2);
                     return failure(err2);
                 }
 
@@ -138,4 +139,55 @@ export class FileUtils {
             });
         });
     }
+
+    public static moveDir(srcPath: string, destPath: string, overwrite: boolean, allowParentSymLink: boolean = false): Promise<string> {
+        let err = FileUtils.checkDirPath(srcPath, false,  false, true,
+            allowParentSymLink);
+        if (err) {
+            return Promise.reject('srcDir is invalid: ' + err);
+        }
+
+        err = FileUtils.checkDirPath(destPath, false,  !overwrite, false,
+            allowParentSymLink);
+        if (err) {
+            return Promise.reject('destPath is invalid: ' + err);
+        }
+
+        return new Promise<string>((passed, failure) => {
+            fse.move(srcPath, destPath, { overwrite: overwrite}, function (err2) {
+                if (err2) {
+                    console.error('error while move: ' + srcPath, err2);
+                    return failure(err2);
+                }
+
+                return passed(destPath);
+            });
+        });
+    }
+
+    public static copyDir(srcPath: string, destPath: string, overwrite: boolean, allowParentSymLink: boolean = false): Promise<string> {
+        let err = FileUtils.checkDirPath(srcPath, false,  false, true,
+            allowParentSymLink);
+        if (err) {
+            return Promise.reject('srcDir is invalid: ' + err);
+        }
+
+        err = FileUtils.checkDirPath(destPath, false,  !overwrite, false,
+            allowParentSymLink);
+        if (err) {
+            return Promise.reject('destPath is invalid: ' + err);
+        }
+
+        return new Promise<string>((passed, failure) => {
+            fse.copy(srcPath, destPath, { overwrite: overwrite}, function (err2) {
+                if (err2) {
+                    console.error('error while exporting: ' + srcPath, err2);
+                    return failure(err2);
+                }
+
+                return passed(destPath);
+            });
+        });
+    }
+
 }

@@ -4,16 +4,21 @@
 
 ## 5.5.0
 - improved db-error messages
-- improved symlink-handling for fileutils
+- improved symlink-handling for FileUtils
+- added copy/move-dirs to FileUtils
+- improved StringUtils
+- fixed error-handling of FileUtils
 
 ### new features
-- none
+- commons: - added copy/move-dirs to FileUtils
+- commons: - improved StringUtils
 
 ### improvements
-- commons: - improved symlink-handling for fileutils
+- commons: - improved symlink-handling for FileUtils
 
 ### bug fixes
 - commons: - improved db-error messages
+- commons: fixed error-handling of FileUtils
 
 ### breaking changes
 - none
