@@ -24,6 +24,28 @@
 - none
 
 
+## 5.5.0 (2022-08-29)
+- improved db-error messages
+- improved symlink-handling for FileUtils
+- added copy/move-dirs to FileUtils
+- improved StringUtils
+- fixed error-handling of FileUtils
+
+### new features
+- commons: - added copy/move-dirs to FileUtils
+- commons: - improved StringUtils
+
+### improvements
+- commons: - improved symlink-handling for FileUtils
+
+### bug fixes
+- commons: - improved db-error messages
+- commons: fixed error-handling of FileUtils
+
+### breaking changes
+- none
+
+
 ## 5.4.0 (2021-11-25)
 - added support for ordering playlists 
 
