@@ -2,6 +2,22 @@
  
 # Versions
 
+## 5.6.0
+- improved itemsjs-adapter
+
+### new features
+-none
+
+### improvements
+- commons: improved itemsjs-adapter
+
+### bug fixes
+- none
+
+### breaking changes
+- none
+
+
 ## 5.5.0 (2022-08-29)
 - improved db-error messages
 - improved symlink-handling for FileUtils

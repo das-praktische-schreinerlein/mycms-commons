@@ -41,7 +41,29 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         throw new Error('export not implemented');
     };
     GenericItemsJsAdapter.prototype.find = function (mapper, id, opts) {
-        throw new Error('find not implemented');
+        var adapterQuery = {
+            loadTrack: false,
+            where: {
+                id: {
+                    'in_number': [id]
+                }
+            }
+        };
+        var me = this;
+        return new Promise(function (resolve, reject) {
+            me._findAll(mapper, adapterQuery, opts).then(function (value) {
+                var records = value;
+                if (records.length === 1) {
+                    return resolve(records[0]);
+                }
+                else {
+                    return js_data_1.utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                }
+            }).catch(function (reason) {
+                console.error('_find failed:', reason);
+                return reject(reason);
+            });
+        });
     };
     GenericItemsJsAdapter.prototype.sum = function (mapper, field, query, opts) {
         throw new Error('sum not implemented');
@@ -88,6 +110,7 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.resolve([0]);
         }
         opts.queryData = queryData;
+        queryData['skipFacetting'] = false;
         var result = this.doQuery(queryData);
         var facets = this.extractFacetsFromRequestResult(mapper, result);
         return js_data_1.utils.Promise.resolve(facets);
@@ -100,6 +123,7 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.resolve([0]);
         }
         opts.queryData = queryData;
+        queryData['skipFacetting'] = !opts.showFacets;
         var result = this.doQuery(queryData);
         var count = this.extractCountFromRequestResult(mapper, result);
         var records = this.extractRecordsFromRequestResult(mapper, result);
@@ -115,7 +139,8 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.resolve([0]);
         }
         opts.queryData = queryData;
-        var result = this.doQuery(query);
+        queryData['skipFacetting'] = true;
+        var result = this.doQuery(queryData);
         return Promise.resolve(this.extractCountFromRequestResult(mapper, result));
     };
     GenericItemsJsAdapter.prototype._findAll = function (mapper, query, opts) {
@@ -126,6 +151,7 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
             return js_data_1.utils.resolve([[]]);
         }
         opts.queryData = queryData;
+        queryData['skipFacetting'] = !opts.showFacets;
         var result = this.doQuery(queryData);
         var records = this.extractRecordsFromRequestResult(mapper, result);
         if (!(Array.isArray(records))) {
@@ -199,6 +225,9 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
     };
     GenericItemsJsAdapter.prototype.doQuery = function (query) {
         var result = this.itemJs.search(query);
+        if (result && result['timings']) {
+            console.debug('timings for itemsjs-call', result['timings'], query);
+        }
         return result;
     };
     GenericItemsJsAdapter.prototype.queryTransformToAdapterQuery = function (mapper, params, opts) {

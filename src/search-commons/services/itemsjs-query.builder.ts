@@ -73,7 +73,7 @@ export class ItemsJsQueryBuilder {
 
         const query: ItemsJsSelectQueryData = {
             query: '',
-            page: adapterOpts.offset,
+            page: adapterOpts.offset + 1,
             per_page: adapterOpts.limit,
             filters: newParams
         };

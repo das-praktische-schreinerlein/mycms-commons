@@ -65,7 +65,29 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
     }
 
     find(mapper: Mapper, id: string | number, opts: any): Promise<R> {
-        throw new Error('find not implemented');
+        const adapterQuery: AdapterQuery = {
+            loadTrack: false,
+            where: {
+                id: {
+                    'in_number': [id]
+                }
+            }
+        };
+
+        const me = this;
+        return new Promise<R>((resolve, reject) => {
+            me._findAll(mapper, adapterQuery, opts).then(value => {
+                const records = value;
+                if (records.length === 1) {
+                    return resolve(records[0]);
+                } else {
+                    return utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
+                }
+            }).catch(reason => {
+                console.error('_find failed:', reason);
+                return reject(reason);
+            });
+        });
     }
 
     sum (mapper: Mapper, field: string, query: any, opts?: any): Promise<any> {
@@ -127,7 +149,9 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
         if (queryData === undefined) {
             return utils.resolve([0]);
         }
+
         opts.queryData = queryData;
+        queryData['skipFacetting'] = false;
 
         const result = this.doQuery(queryData);
         const facets: Facets = this.extractFacetsFromRequestResult(mapper, result);
@@ -141,7 +165,10 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
         if (queryData === undefined) {
             return utils.resolve([0]);
         }
+
         opts.queryData = queryData;
+        queryData['skipFacetting'] = !opts.showFacets;
+
         const result = this.doQuery(queryData);
         const count: number = this.extractCountFromRequestResult(mapper, result);
         const records: R[] = this.extractRecordsFromRequestResult(mapper, result);
@@ -157,9 +184,11 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
         if (queryData === undefined) {
             return utils.resolve([0]);
         }
-        opts.queryData = queryData;
 
-        const result = this.doQuery(query);
+        opts.queryData = queryData;
+        queryData['skipFacetting'] = true;
+
+        const result = this.doQuery(queryData);
         return Promise.resolve(this.extractCountFromRequestResult(mapper, result));
     }
 
@@ -170,7 +199,9 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
         if (queryData === undefined) {
             return utils.resolve([[]]);
         }
+
         opts.queryData = queryData;
+        queryData['skipFacetting'] = !opts.showFacets;
 
         const result = this.doQuery(queryData);
         const records = this.extractRecordsFromRequestResult(mapper, result);
@@ -266,6 +297,10 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
 
     protected doQuery(query: ItemsJsSelectQueryData): ItemJsResult {
         const result: ItemJsResult = this.itemJs.search(query);
+        if (result && result['timings']) {
+            console.debug('timings for itemsjs-call', result['timings'], query);
+        }
+
         return result;
     }
 

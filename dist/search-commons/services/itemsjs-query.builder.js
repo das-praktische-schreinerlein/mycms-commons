@@ -47,7 +47,7 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         }
         var query = {
             query: '',
-            page: adapterOpts.offset,
+            page: adapterOpts.offset + 1,
             per_page: adapterOpts.limit,
             filters: newParams
         };
