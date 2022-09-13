@@ -19,8 +19,12 @@ export class ObjectUtils {
     }
 
     public static explodeValueToObjects(srcValue: string, objectSeparator: string, fieldSeparator: string,
-                                        valueSeparator: string): {}[] {
-        const objectsSrcs = srcValue.split(objectSeparator);
+                                        valueSeparator: string, unique = true): {}[] {
+        let objectsSrcs = srcValue.split(objectSeparator);
+        if (unique) {
+            objectsSrcs = ObjectUtils.uniqueArray(objectsSrcs);
+        }
+
         const objects: {}[] = [];
         for (let i = 0; i < objectsSrcs.length; i++) {
             const valuePairs = objectsSrcs[i].split(fieldSeparator);
@@ -35,15 +39,33 @@ export class ObjectUtils {
         return objects;
     }
 
-    public static mergePropertyValues(detailDocs: {}[], property: string, joiner: string): string {
-        const merged = [];
+    public static mergePropertyValues(detailDocs: {}[], property: string, joiner: string, unique = true): string {
+        let merged = [];
         detailDocs.forEach(doc => {
             if (doc[property] !== undefined && doc[property] !== null) {
                 merged.push(doc[property]);
             }
         });
 
+        if (unique) {
+            merged = ObjectUtils.uniqueArray(merged);
+        }
+
         return merged.join(joiner);
+    }
+
+    public static uniqueArray(arr: any[]): any[] {
+        const keys = {}
+        const result = [];
+
+        for (let i = 0, length = arr.length; i < length; ++i){
+            if (!keys.hasOwnProperty(arr[i])) {
+                result.push(arr[i]);
+                keys[arr[i]] = 1;
+            }
+        }
+
+        return result;
     }
 
 }

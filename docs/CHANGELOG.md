@@ -4,15 +4,18 @@
 
 ## 5.6.0
 - improved itemsjs-adapter
+- added query-params to GenericSearchFormSearchFormConverter
+- object/mapper-utils merge values to unique-values (default)
 
 ### new features
--none
+- none
 
 ### improvements
 - commons: improved itemsjs-adapter
+- commons: added query-params to GenericSearchFormSearchFormConverter
 
 ### bug fixes
-- none
+- commons: object/mapper-utils merge values to unique-values (default)
 
 ### breaking changes
 - none

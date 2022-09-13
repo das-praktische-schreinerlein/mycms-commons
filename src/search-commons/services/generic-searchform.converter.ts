@@ -8,7 +8,7 @@ export interface HumanReadableFilter {
 
 export interface GenericSearchFormSearchFormConverter<F extends GenericSearchForm> {
     searchFormToUrl(baseUrl: string, searchForm: F): string;
-    paramsToSearchForm(params: any, defaults: {}, searchForm: F): void;
+    paramsToSearchForm(params: any, defaults: {}, searchForm: F, queryParams?: {}): void;
     isValid(searchForm: F): boolean;
     newSearchForm(valzes: {}): F;
     searchFormToHumanReadableFilter(searchForm: F): HumanReadableFilter[];

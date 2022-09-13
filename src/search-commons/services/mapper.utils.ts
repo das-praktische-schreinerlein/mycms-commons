@@ -210,7 +210,7 @@ export class MapperUtils {
     }
 
     explodeAndMapDetailResponseDocuments(mapper: Mapper, relation: BaseEntityRecordRelationType, srcFields: string[],
-                                         record: BaseEntityRecord, docs: any[]): void {
+                                         record: BaseEntityRecord, docs: any[], unique = true): void {
         if (docs === undefined) {
             return;
         }
@@ -226,7 +226,7 @@ export class MapperUtils {
             }
             if (fieldName !== undefined && doc[fieldName] !== undefined && doc[fieldName] !== null) {
                 const objects = ObjectUtils.explodeValueToObjects(doc[fieldName], this._objectSeparator,
-                    this._fieldSeparator, this._valueSeparator);
+                    this._fieldSeparator, this._valueSeparator, unique);
                 subDocs = subDocs.concat(objects);
             }
         });

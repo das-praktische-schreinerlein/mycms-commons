@@ -169,8 +169,9 @@ var MapperUtils = /** @class */ (function () {
         }
         return detailRecords;
     };
-    MapperUtils.prototype.explodeAndMapDetailResponseDocuments = function (mapper, relation, srcFields, record, docs) {
+    MapperUtils.prototype.explodeAndMapDetailResponseDocuments = function (mapper, relation, srcFields, record, docs, unique) {
         var _this = this;
+        if (unique === void 0) { unique = true; }
         if (docs === undefined) {
             return;
         }
@@ -185,7 +186,7 @@ var MapperUtils = /** @class */ (function () {
                 }
             }
             if (fieldName !== undefined && doc[fieldName] !== undefined && doc[fieldName] !== null) {
-                var objects = object_utils_1.ObjectUtils.explodeValueToObjects(doc[fieldName], _this._objectSeparator, _this._fieldSeparator, _this._valueSeparator);
+                var objects = object_utils_1.ObjectUtils.explodeValueToObjects(doc[fieldName], _this._objectSeparator, _this._fieldSeparator, _this._valueSeparator, unique);
                 subDocs = subDocs.concat(objects);
             }
         });

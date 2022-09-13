@@ -54,7 +54,7 @@ export declare class MapperUtils {
     escapeAdapterValue(value: any): string;
     splitPairs(arr: Array<any>): Array<Array<any>>;
     mapDetailDocsToDetailRecords(mapper: Mapper, factory: BaseEntityRecordFactory, record: BaseEntityRecordType, detailDocs: {}[]): Record[];
-    explodeAndMapDetailResponseDocuments(mapper: Mapper, relation: BaseEntityRecordRelationType, srcFields: string[], record: BaseEntityRecord, docs: any[]): void;
+    explodeAndMapDetailResponseDocuments(mapper: Mapper, relation: BaseEntityRecordRelationType, srcFields: string[], record: BaseEntityRecord, docs: any[], unique?: boolean): void;
     mapValuesToSubRecords(mapper: Mapper, values: {}, record: BaseEntityRecord, relations: BaseEntityRecordRelationsType): void;
     extractUniqueId(record: BaseEntityRecordType): number;
     static generateDoubletteValue(value: string): string;
