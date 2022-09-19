@@ -82,7 +82,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                     return utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(reason => {
-                console.error('doActionTag failed:', reason);
+                console.error('doActionTag failed:', reason, actionTagForm);
                 return reject(reason);
             });
         });
@@ -114,7 +114,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                     return utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(reason => {
-                console.error('_find failed:', reason);
+                console.error('_find failed:', reason, id, adapterQuery);
                 return reject(reason);
             });
         });
@@ -223,7 +223,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
                         return allResolve([searchResult[0]]);
                     }).catch(function errorSearch(reason) {
-                        console.error('_create failed:', reason);
+                        console.error('_create failed:', reason, writeQuery);
 
                         return allReject(reason);
                     });
@@ -262,7 +262,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                 const count = me.extractCountFromRequestResult(response);
                 return resolve(count);
             }).catch(function errorSearch(reason) {
-                console.error('_count failed:', reason);
+                console.error('_count failed:', reason, sql, queryData, query);
                 return reject(reason);
             });
         });
@@ -313,7 +313,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             }).then(function doneSearch(records: R[]) {
                 return resolve([records]);
             }).catch(function errorSearch(reason) {
-                console.error('_findAll failed:', reason);
+                console.error('_findAll failed:', reason, sql, queryData, query);
                 return reject(reason);
             });
         });
@@ -362,7 +362,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                         return resolve([key, facet]);
                     },
                     function errorSearch(reason) {
-                        console.error('_facets failed:', reason);
+                        console.error('_facets failed:', reason, sql);
 
                         return reject(reason);
                     });
@@ -389,7 +389,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
                     return allResolve(facets);
                 }).catch(function errorSearch(reason) {
-                    console.error('_facets failed:', reason);
+                    console.error('_facets failed:', reason, queryData);
                     return allReject(reason);
                 });
         });
@@ -438,7 +438,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
 
                         return allResolve([searchResult[0]]);
                     }).catch(function errorSearch(reason) {
-                        console.error('_update failed:',  reason);
+                        console.error('_update failed:', reason, id);
                         return allReject(reason);
                     });
             } else {

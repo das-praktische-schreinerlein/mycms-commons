@@ -167,7 +167,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                     .then(function doneActionTag(genericResult: R) {
                         return resolve(genericResult);
                     }).catch(function errorHandling(reason) {
-                    console.error('search failed:', reason);
+                    console.error('doActionTag failed:', reason, actionTagForm);
                     return reject(reason);
                 });
             }
@@ -256,7 +256,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                     searchResult.facets = facets;
                     return resolve(searchResult);
                 }).catch(function errorHandling(reason) {
-                    console.error('search failed:', reason);
+                    console.error('search failed:', reason, searchForm);
                     return reject(reason);
                 });
             } else {
@@ -272,7 +272,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                     searchResult.recordCount = genericSearchResult.recordCount;
                     return resolve(searchResult);
                 }).catch(function errorHandling(reason) {
-                    console.error('search failed:', reason);
+                    console.error('search failed:', reason, searchForm);
                     return reject(reason);
                 });
             }
@@ -296,7 +296,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                 (opts && opts.forceLocalStore)) {
                 // the resolve / reject functions control the fate of the promise
                 const reason = 'export not supported';
-                console.error('export failed:', reason);
+                console.error('export failed:', reason, searchForm);
                 return reject(reason);
             } else {
                 opts = opts || {};
@@ -306,7 +306,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                     .then(function doneExport(genericExportResult: string) {
                         return resolve(genericExportResult);
                     }).catch(function errorHandling(reason) {
-                    console.error('export failed:', reason);
+                    console.error('export failed:', reason, searchForm);
                     return reject(reason);
                 });
             }

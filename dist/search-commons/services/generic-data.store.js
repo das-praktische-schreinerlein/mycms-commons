@@ -159,7 +159,7 @@ var GenericDataStore = /** @class */ (function () {
                     .then(function doneActionTag(genericResult) {
                     return resolve(genericResult);
                 }).catch(function errorHandling(reason) {
-                    console.error('search failed:', reason);
+                    console.error('doActionTag failed:', reason, actionTagForm);
                     return reject(reason);
                 });
             }
@@ -239,7 +239,7 @@ var GenericDataStore = /** @class */ (function () {
                     searchResult.facets = facets;
                     return resolve(searchResult);
                 }).catch(function errorHandling(reason) {
-                    console.error('search failed:', reason);
+                    console.error('search failed:', reason, searchForm);
                     return reject(reason);
                 });
             }
@@ -255,7 +255,7 @@ var GenericDataStore = /** @class */ (function () {
                     searchResult.recordCount = genericSearchResult.recordCount;
                     return resolve(searchResult);
                 }).catch(function errorHandling(reason) {
-                    console.error('search failed:', reason);
+                    console.error('search failed:', reason, searchForm);
                     return reject(reason);
                 });
             }
@@ -276,7 +276,7 @@ var GenericDataStore = /** @class */ (function () {
                 (opts && opts.forceLocalStore)) {
                 // the resolve / reject functions control the fate of the promise
                 var reason = 'export not supported';
-                console.error('export failed:', reason);
+                console.error('export failed:', reason, searchForm);
                 return reject(reason);
             }
             else {
@@ -287,7 +287,7 @@ var GenericDataStore = /** @class */ (function () {
                     .then(function doneExport(genericExportResult) {
                     return resolve(genericExportResult);
                 }).catch(function errorHandling(reason) {
-                    console.error('export failed:', reason);
+                    console.error('export failed:', reason, searchForm);
                     return reject(reason);
                 });
             }

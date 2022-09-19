@@ -47,7 +47,7 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
                     return resolve(resultRecord);
                 }
             }).catch(function (reason) {
-                console.error('doActionTag failed:', reason);
+                console.error('doActionTag failed:', reason, actionTagForm);
                 return reject(reason);
             });
         });
@@ -141,7 +141,7 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
             me._export(mapper, query, format, opts).then(function (exportresult) {
                 return resolve(exportresult);
             }).catch(function (reason) {
-                console.error('export failed:', reason);
+                console.error('export failed:', reason, query);
                 return reject(reason);
             });
         });

@@ -7,7 +7,7 @@ import {GenericFacetAdapter, GenericSearchAdapter} from './generic-search.adapte
 import {AdapterOpts, AdapterQuery} from './mapper.utils';
 import {ItemsJsConfig, ItemsJsQueryBuilder, ItemsJsSelectQueryData} from './itemsjs-query.builder';
 import {GenericAdapterResponseMapper} from './generic-adapter-response.mapper';
-import * as itemsjs from 'itemsjs';
+import * as itemsjs from 'itemsjs/src/index.js';
 
 export interface ItemJsResultPagination {
     per_page: number;
@@ -84,7 +84,7 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
                     return utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(reason => {
-                console.error('_find failed:', reason);
+                console.error('_find failed:', reason, id, adapterQuery);
                 return reject(reason);
             });
         });
@@ -147,7 +147,7 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
         const me = this;
         const queryData = me.queryTransformToAdapterQuery( mapper, query, opts);
         if (queryData === undefined) {
-            return utils.resolve([0]);
+            return utils.reject('got no adapter-query for query:' + query);
         }
 
         opts.queryData = queryData;
@@ -163,7 +163,7 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
         const me = this;
         const queryData = me.queryTransformToAdapterQuery(mapper, query, opts);
         if (queryData === undefined) {
-            return utils.resolve([0]);
+            return utils.reject('got no adapter-query for query:' + query);
         }
 
         opts.queryData = queryData;
@@ -296,6 +296,21 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
     abstract getItemsJsConfig(): ItemsJsConfig;
 
     protected doQuery(query: ItemsJsSelectQueryData): ItemJsResult {
+        if (query.filters && query.filters['UNDEFINED_FILTER']) {
+            console.debug('WARN return empty result for query with UNDEFINED_FILTER', query);
+            return {
+                data: {
+                    items: [],
+                    aggregations: []
+                },
+                pagination: {
+                    page: query.page,
+                    per_page: query.per_page,
+                    total: 0
+                }
+            };
+        }
+
         const result: ItemJsResult = this.itemJs.search(query);
         if (result && result['timings']) {
             console.debug('timings for itemsjs-call', result['timings'], query);

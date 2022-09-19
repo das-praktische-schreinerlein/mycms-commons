@@ -28,7 +28,7 @@ var GenericSearchService = /** @class */ (function () {
                 // console.log('findCurList searchResultData', searchResultData);
                 return resolve(searchResultData.currentRecords);
             }, function errorSearch(reason) {
-                console.error('findCurList failed:', reason);
+                console.error('findCurList failed:', reason, searchForm);
                 return reject(reason);
             });
         });
@@ -42,7 +42,7 @@ var GenericSearchService = /** @class */ (function () {
                 // console.log('search searchResultData', searchResultData);
                 return resolve(searchResultData);
             }, function errorSearch(reason) {
-                console.error('search failed:', reason);
+                console.error('search failed:', reason, searchForm);
                 return reject(reason);
             });
         });
@@ -56,7 +56,7 @@ var GenericSearchService = /** @class */ (function () {
                 // console.log('export exportResultData', exportResultData);
                 return resolve(exportResultData);
             }, function errorExport(reason) {
-                console.error('export failed:', reason);
+                console.error('export failed:', reason, searchForm);
                 return reject(reason);
             });
         });

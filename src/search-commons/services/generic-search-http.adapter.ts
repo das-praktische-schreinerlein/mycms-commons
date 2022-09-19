@@ -44,7 +44,7 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
                     return resolve(resultRecord);
                 }
             }).catch(reason => {
-                console.error('doActionTag failed:', reason);
+                console.error('doActionTag failed:', reason, actionTagForm);
                 return reject(reason);
             });
         });
@@ -141,7 +141,7 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
             me._export(mapper, query, format, opts).then(exportresult => {
                 return resolve(exportresult);
             }).catch(reason => {
-                console.error('export failed:', reason);
+                console.error('export failed:', reason, query);
                 return reject(reason);
             });
         });

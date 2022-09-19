@@ -15,7 +15,7 @@ var generic_searchresult_1 = require("../model/container/generic-searchresult");
 var js_data_adapter_1 = require("js-data-adapter");
 var facets_1 = require("../model/container/facets");
 var itemsjs_query_builder_1 = require("./itemsjs-query.builder");
-var itemsjs = require("itemsjs");
+var itemsjs = require("itemsjs/src/index.js");
 var GenericItemsJsAdapter = /** @class */ (function (_super) {
     __extends(GenericItemsJsAdapter, _super);
     function GenericItemsJsAdapter(config, mapper, data, itemJsConfig) {
@@ -60,7 +60,7 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
                     return js_data_1.utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(function (reason) {
-                console.error('_find failed:', reason);
+                console.error('_find failed:', reason, id, adapterQuery);
                 return reject(reason);
             });
         });
@@ -107,7 +107,7 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         var me = this;
         var queryData = me.queryTransformToAdapterQuery(mapper, query, opts);
         if (queryData === undefined) {
-            return js_data_1.utils.resolve([0]);
+            return js_data_1.utils.reject('got no adapter-query for query:' + query);
         }
         opts.queryData = queryData;
         queryData['skipFacetting'] = false;
@@ -120,7 +120,7 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         var me = this;
         var queryData = me.queryTransformToAdapterQuery(mapper, query, opts);
         if (queryData === undefined) {
-            return js_data_1.utils.resolve([0]);
+            return js_data_1.utils.reject('got no adapter-query for query:' + query);
         }
         opts.queryData = queryData;
         queryData['skipFacetting'] = !opts.showFacets;
@@ -224,6 +224,20 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         return this.mapper.mapResponseDocument(mapper, doc, itemsJsConfig.fieldMapping);
     };
     GenericItemsJsAdapter.prototype.doQuery = function (query) {
+        if (query.filters && query.filters['UNDEFINED_FILTER']) {
+            console.debug('WARN return empty result for query with UNDEFINED_FILTER', query);
+            return {
+                data: {
+                    items: [],
+                    aggregations: []
+                },
+                pagination: {
+                    page: query.page,
+                    per_page: query.per_page,
+                    total: 0
+                }
+            };
+        }
         var result = this.itemJs.search(query);
         if (result && result['timings']) {
             console.debug('timings for itemsjs-call', result['timings'], query);

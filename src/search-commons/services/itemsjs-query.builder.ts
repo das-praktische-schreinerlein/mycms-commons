@@ -171,10 +171,15 @@ export class ItemsJsQueryBuilder {
 
             realFieldName = itemsJsConfig.aggregations[fieldName].selectField || itemsJsConfig.aggregations[fieldName].filterField;
             action = itemsJsConfig.aggregations[fieldName].action || action;
+        } else {
+            console.debug('WARNING: UNDEFINED_FILTER for itemsjsquery', fieldName, itemsJsConfig);
+            realFieldName = 'UNDEFINED_FILTER';
         }
+
         if (realFieldName === undefined && itemsJsConfig.filterMapping.hasOwnProperty(fieldName)) {
             realFieldName = itemsJsConfig.filterMapping[fieldName];
         }
+
         if (realFieldName === undefined) {
             realFieldName = this.mapToAdapterFieldName(itemsJsConfig, fieldName);
         }

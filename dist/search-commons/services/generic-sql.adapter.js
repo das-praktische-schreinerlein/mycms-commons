@@ -72,7 +72,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     return js_data_1.utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(function (reason) {
-                console.error('doActionTag failed:', reason);
+                console.error('doActionTag failed:', reason, actionTagForm);
                 return reject(reason);
             });
         });
@@ -101,7 +101,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     return js_data_1.utils.reject('records not found or not unique:' + records.length + ' for query:' + adapterQuery);
                 }
             }).catch(function (reason) {
-                console.error('_find failed:', reason);
+                console.error('_find failed:', reason, id, adapterQuery);
                 return reject(reason);
             });
         });
@@ -188,7 +188,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     }
                     return allResolve([searchResult[0]]);
                 }).catch(function errorSearch(reason) {
-                    console.error('_create failed:', reason);
+                    console.error('_create failed:', reason, writeQuery);
                     return allReject(reason);
                 });
             }
@@ -223,7 +223,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                 var count = me.extractCountFromRequestResult(response);
                 return resolve(count);
             }).catch(function errorSearch(reason) {
-                console.error('_count failed:', reason);
+                console.error('_count failed:', reason, sql, queryData, query);
                 return reject(reason);
             });
         });
@@ -268,7 +268,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             }).then(function doneSearch(records) {
                 return resolve([records]);
             }).catch(function errorSearch(reason) {
-                console.error('_findAll failed:', reason);
+                console.error('_findAll failed:', reason, sql, queryData, query);
                 return reject(reason);
             });
         });
@@ -312,7 +312,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                         }
                         return resolve([key, facet]);
                     }, function errorSearch(reason) {
-                        console.error('_facets failed:', reason);
+                        console.error('_facets failed:', reason, sql);
                         return reject(reason);
                     });
                 }));
@@ -335,7 +335,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                 facets.facets.set('sorts', sortFacet);
                 return allResolve(facets);
             }).catch(function errorSearch(reason) {
-                console.error('_facets failed:', reason);
+                console.error('_facets failed:', reason, queryData);
                 return allReject(reason);
             });
         });
@@ -380,7 +380,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     }
                     return allResolve([searchResult[0]]);
                 }).catch(function errorSearch(reason) {
-                    console.error('_update failed:', reason);
+                    console.error('_update failed:', reason, id);
                     return allReject(reason);
                 });
             }

@@ -126,6 +126,10 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
             realFieldName = itemsJsConfig.aggregations[fieldName].selectField || itemsJsConfig.aggregations[fieldName].filterField;
             action = itemsJsConfig.aggregations[fieldName].action || action;
         }
+        else {
+            console.debug('WARNING: UNDEFINED_FILTER for itemsjsquery', fieldName, itemsJsConfig);
+            realFieldName = 'UNDEFINED_FILTER';
+        }
         if (realFieldName === undefined && itemsJsConfig.filterMapping.hasOwnProperty(fieldName)) {
             realFieldName = itemsJsConfig.filterMapping[fieldName];
         }
