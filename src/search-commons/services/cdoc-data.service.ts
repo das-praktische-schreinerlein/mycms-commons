@@ -231,15 +231,17 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
                 }
 
                 // new record: map refIds
-                me.onImportRecordNewRecordProcessDefaults(record);
+                me.onImportRecordNewRecordProcessDefaults(record, recordIdMapping, recordRecoverIdMapping);
                 for (const refIdFieldName of me.idMappings) {
-                    if (recordIdMapping[refIdFieldName] && recordIdMapping[refIdFieldName][record[refIdFieldName]]) {
-                        console.log('orig: ' + record.id + ' map ref ' + refIdFieldName + ' ' + record[refIdFieldName]
-                            + '->' + recordIdMapping[refIdFieldName][record[refIdFieldName]]);
-                        record[refIdFieldName] = recordIdMapping[refIdFieldName][record[refIdFieldName]];
-                    } else if (record[refIdFieldName] && !(record[refIdFieldName] === null || record[refIdFieldName] === undefined)) {
-                        console.log('orig: ' + record.id + ' save ref ' + refIdFieldName + ' ' + record[refIdFieldName]);
-                        myMappings[refIdFieldName] = record[refIdFieldName];
+                    const refIdMapping = recordIdMapping[refIdFieldName];
+                    const refId = record[refIdFieldName];
+                    if (refId !== undefined && refIdMapping && refIdMapping[refId]) {
+                        console.log('orig: ' + record.type + ' id:' + record.id + ' map ref ' + refIdFieldName + ' ' + refId
+                            + '->' + refIdMapping[refId]);
+                        record[refIdFieldName] = refIdMapping[refId];
+                    } else if (refId && !(refId === null || refId === undefined)) {
+                        console.log('orig: ' + record.type + ' id:' + record.id + ' save ref ' + refIdFieldName + ' ' + refId);
+                        myMappings[refIdFieldName] = refId;
                         record[refIdFieldName] = undefined;
                     }
                 }
@@ -355,7 +357,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
     }
 
     protected generateImportRecordName(record: R): {} {
-        return record.type + ' ' + record.name;
+        return record.type + ' ' + record.id + ' ' + record.name;
     }
 
     protected abstract defineDatastoreMapper(): void;
@@ -366,7 +368,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
 
     protected abstract defineTypeMappings(): {};
 
-    protected abstract onImportRecordNewRecordProcessDefaults(record: R): void;
+    protected abstract onImportRecordNewRecordProcessDefaults(record: R, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void;
 
     protected abstract addAdditionalActionTagForms(origRecord: R, newRecord: R, actionTagForms: ActionTagForm[]);
 

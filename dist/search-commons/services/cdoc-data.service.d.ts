@@ -57,6 +57,6 @@ export declare abstract class CommonDocDataService<R extends CommonDocRecord, F 
     protected abstract defineIdMappings(): string[];
     protected abstract defineIdMappingAlliases(): {};
     protected abstract defineTypeMappings(): {};
-    protected abstract onImportRecordNewRecordProcessDefaults(record: R): void;
+    protected abstract onImportRecordNewRecordProcessDefaults(record: R, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void;
     protected abstract addAdditionalActionTagForms(origRecord: R, newRecord: R, actionTagForms: ActionTagForm[]): any;
 }

@@ -177,17 +177,19 @@ var CommonDocDataService = /** @class */ (function () {
                 // return dataService.updateById(docRecord.id, record);
             }
             // new record: map refIds
-            me.onImportRecordNewRecordProcessDefaults(record);
+            me.onImportRecordNewRecordProcessDefaults(record, recordIdMapping, recordRecoverIdMapping);
             for (var _i = 0, _a = me.idMappings; _i < _a.length; _i++) {
                 var refIdFieldName = _a[_i];
-                if (recordIdMapping[refIdFieldName] && recordIdMapping[refIdFieldName][record[refIdFieldName]]) {
-                    console.log('orig: ' + record.id + ' map ref ' + refIdFieldName + ' ' + record[refIdFieldName]
-                        + '->' + recordIdMapping[refIdFieldName][record[refIdFieldName]]);
-                    record[refIdFieldName] = recordIdMapping[refIdFieldName][record[refIdFieldName]];
+                var refIdMapping = recordIdMapping[refIdFieldName];
+                var refId = record[refIdFieldName];
+                if (refId !== undefined && refIdMapping && refIdMapping[refId]) {
+                    console.log('orig: ' + record.type + ' id:' + record.id + ' map ref ' + refIdFieldName + ' ' + refId
+                        + '->' + refIdMapping[refId]);
+                    record[refIdFieldName] = refIdMapping[refId];
                 }
-                else if (record[refIdFieldName] && !(record[refIdFieldName] === null || record[refIdFieldName] === undefined)) {
-                    console.log('orig: ' + record.id + ' save ref ' + refIdFieldName + ' ' + record[refIdFieldName]);
-                    myMappings[refIdFieldName] = record[refIdFieldName];
+                else if (refId && !(refId === null || refId === undefined)) {
+                    console.log('orig: ' + record.type + ' id:' + record.id + ' save ref ' + refIdFieldName + ' ' + refId);
+                    myMappings[refIdFieldName] = refId;
                     record[refIdFieldName] = undefined;
                 }
             }
@@ -288,7 +290,7 @@ var CommonDocDataService = /** @class */ (function () {
         };
     };
     CommonDocDataService.prototype.generateImportRecordName = function (record) {
-        return record.type + ' ' + record.name;
+        return record.type + ' ' + record.id + ' ' + record.name;
     };
     return CommonDocDataService;
 }());
