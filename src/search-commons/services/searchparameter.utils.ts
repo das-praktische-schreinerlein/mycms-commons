@@ -126,6 +126,20 @@ export class SearchParameterUtils {
         return value;
     }
 
+    public joinAndUseValueDefaultOrFallback(value: any, defaultValue: any, fallback: any) {
+        return this.joinAndUseValueOrDefault(value, (defaultValue ? defaultValue : fallback));
+    }
+
+    public joinAndUseValueOrDefault(value: any, defaultValue: any) {
+        value = this.useValueOrDefault(value, defaultValue);
+
+        if (Array.isArray(value)) {
+            return (<any[]>value).join(',');
+        }
+
+        return value;
+    }
+
     public joinParamsToOneRouteParameter(paramsToJoin: Map<string, string>, joiner: string): string {
         if (paramsToJoin === undefined) {
             return '';

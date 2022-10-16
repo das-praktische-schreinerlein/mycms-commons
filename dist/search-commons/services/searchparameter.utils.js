@@ -114,6 +114,16 @@ var SearchParameterUtils = /** @class */ (function () {
         }
         return value;
     };
+    SearchParameterUtils.prototype.joinAndUseValueDefaultOrFallback = function (value, defaultValue, fallback) {
+        return this.joinAndUseValueOrDefault(value, (defaultValue ? defaultValue : fallback));
+    };
+    SearchParameterUtils.prototype.joinAndUseValueOrDefault = function (value, defaultValue) {
+        value = this.useValueOrDefault(value, defaultValue);
+        if (Array.isArray(value)) {
+            return value.join(',');
+        }
+        return value;
+    };
     SearchParameterUtils.prototype.joinParamsToOneRouteParameter = function (paramsToJoin, joiner) {
         var _this = this;
         if (paramsToJoin === undefined) {

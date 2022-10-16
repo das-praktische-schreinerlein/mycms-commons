@@ -8,6 +8,8 @@ export declare class SearchParameterUtils {
     replacePlaceHolder(value: any, regEx: RegExp, replacement: string): any;
     useValueDefaultOrFallback(value: any, defaultValue: any, fallback: any): any;
     useValueOrDefault(value: any, defaultValue: any): any;
+    joinAndUseValueDefaultOrFallback(value: any, defaultValue: any, fallback: any): any;
+    joinAndUseValueOrDefault(value: any, defaultValue: any): any;
     joinParamsToOneRouteParameter(paramsToJoin: Map<string, string>, joiner: string): string;
     escapeHtml(unsafe: any): string;
 }

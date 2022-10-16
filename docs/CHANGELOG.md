@@ -7,6 +7,7 @@
 - added query-params to GenericSearchFormSearchFormConverter
 - object/mapper-utils merge values to unique-values (default)
 - fix remap of basejoins on import
+- improved SearchParameterUtils to serialize forms
 
 ### new features
 - none
@@ -14,6 +15,7 @@
 ### improvements
 - commons: improved itemsjs-adapter
 - commons: added query-params to GenericSearchFormSearchFormConverter
+- commons: improved SearchParameterUtils to serialize forms
 
 ### bug fixes
 - commons: object/mapper-utils merge values to unique-values (default)
