@@ -302,7 +302,7 @@ var SqlQueryBuilder = /** @class */ (function () {
             }).join(' OR ') + ')';
         }
         else if (throwOnUnknown) {
-            throw new Error('unknown actiontype:' + log_utils_1.LogUtils.sanitizeLogMsg(action));
+            throw new Error('unknown actiontype: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         return query;
     };

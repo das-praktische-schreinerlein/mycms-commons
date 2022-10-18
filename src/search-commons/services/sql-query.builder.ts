@@ -414,7 +414,7 @@ export class SqlQueryBuilder {
                 }
             ).join(' OR ') + ')';
         } else if (throwOnUnknown) {
-            throw new Error('unknown actiontype:' + LogUtils.sanitizeLogMsg(action));
+            throw new Error('unknown actiontype: ' + LogUtils.sanitizeLogMsg(action));
         }
 
         return query;

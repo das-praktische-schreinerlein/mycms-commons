@@ -8,6 +8,8 @@
 - object/mapper-utils merge values to unique-values (default)
 - fix remap of basejoins on import
 - improved SearchParameterUtils to serialize forms
+- synced functionality of sql-filter to solr, itemsjs
+- fix invalid cache usage in datastore
 
 ### new features
 - none
@@ -16,10 +18,12 @@
 - commons: improved itemsjs-adapter
 - commons: added query-params to GenericSearchFormSearchFormConverter
 - commons: improved SearchParameterUtils to serialize forms
+- commons: synced functionality of sql-filter to solr, itemsjs
 
 ### bug fixes
 - commons: object/mapper-utils merge values to unique-values (default)
 - commons: fix remap of basejoins on import
+- commons: fix invalid cache usage in datastore
 
 ### breaking changes
 - none

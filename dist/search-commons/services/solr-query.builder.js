@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mapper_utils_1 = require("./mapper.utils");
 var js_data_1 = require("js-data");
+var log_utils_1 = require("../../commons/utils/log.utils");
 var SolrQueryBuilder = /** @class */ (function () {
     function SolrQueryBuilder() {
         this.mapperUtils = new mapper_utils_1.MapperUtils();
@@ -191,7 +192,7 @@ var SolrQueryBuilder = /** @class */ (function () {
         }
         return this.generateFilter(realFieldName, action, value);
     };
-    SolrQueryBuilder.prototype.generateFilter = function (fieldName, action, value) {
+    SolrQueryBuilder.prototype.generateFilter = function (fieldName, action, value, throwOnUnknown) {
         var _this = this;
         var query = '';
         if (action === mapper_utils_1.AdapterFilterActions.LIKEI || action === mapper_utils_1.AdapterFilterActions.LIKE) {
@@ -217,6 +218,20 @@ var SolrQueryBuilder = /** @class */ (function () {
         }
         else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {
             query = '-' + fieldName + ':("' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('" OR "') + '")';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.LIKEIN) {
+            query = fieldName + ':("*' + value.map(function (inValue) { return _this.mapperUtils.escapeAdapterValue(inValue.toString()); }).join('*" OR "*') + '*")';
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.IN_CSV) {
+            query = fieldName + ':(' + value.map(function (inValue) {
+                return fieldName + ' "*,' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + ',*" OR '
+                    + fieldName + ' "*,' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + '" OR '
+                    + fieldName + ' "' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + ',*" OR '
+                    + fieldName + ' "' + _this.mapperUtils.escapeAdapterValue(inValue.toString()) + '" ';
+            }).join(' OR ') + ')';
+        }
+        else if (throwOnUnknown) {
+            throw new Error('unknown actiontype: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         return query;
     };

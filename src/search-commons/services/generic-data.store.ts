@@ -28,6 +28,14 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
         this.store = new DataStore({
             usePendingFindAll: false,
             usePendingFind: false,
+            cachedFind: function(mapperName, id, opts) {
+                // disabled js-data-cache in generic-datastore because of exception: "replace not found" if where has array instead of string
+                return;
+            },
+            cachedFindAll: function(mapperName, hash, opts) {
+                // disabled js-data-cache in generic-datastore because of exception: "replace not found" if where has array instead of string
+                return;
+            },
             addToCache: function(name_: string, data: any, opts: any) {
                 // disabled js-data-cache in generic-datastore because of objects with different loadDetailsProfiles loaded
                 return data;

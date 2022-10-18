@@ -1,4 +1,5 @@
 import {AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
+import {LogUtils} from '../../commons/utils/log.utils';
 
 export interface ItemsJsSelectQueryData {
     page: number;
@@ -188,25 +189,31 @@ export class ItemsJsQueryBuilder {
         return this.generateFilter(realFieldName, action, value);
     }
 
-    protected generateFilter(fieldName: string, action: string, value: any): {} {
+    protected generateFilter(fieldName: string, action: string, value: any | AdapterFilterActions, throwOnUnknown?: boolean): {} {
         const query = {};
 
         if (action === AdapterFilterActions.LIKEI || action === AdapterFilterActions.LIKE) {
-            throw new Error ('not implemented');
+            throw new Error ('not implemented: ' + LogUtils.sanitizeLogMsg(action));
         } else if (action === AdapterFilterActions.EQ1 || action === AdapterFilterActions.EQ2) {
             query[fieldName] = value;
         } else if (action === AdapterFilterActions.GT) {
-            throw new Error ('not implemented');
+            throw new Error ('not implemented: ' + LogUtils.sanitizeLogMsg(action));
         } else if (action === AdapterFilterActions.GE) {
-            throw new Error ('not implemented');
+            throw new Error ('not implemented: ' + LogUtils.sanitizeLogMsg(action));
         } else if (action === AdapterFilterActions.LT) {
-            throw new Error ('not implemented');
+            throw new Error ('not implemented: ' + LogUtils.sanitizeLogMsg(action));
         } else if (action === AdapterFilterActions.LE) {
-            throw new Error ('not implemented');
+            throw new Error ('not implemented: ' + LogUtils.sanitizeLogMsg(action));
         } else if (action === AdapterFilterActions.IN || action === AdapterFilterActions.IN_NUMBER) {
             query[fieldName] = value;
         } else if (action === AdapterFilterActions.NOTIN) {
-            throw new Error ('not implemented');
+            throw new Error ('not implemented: ' + LogUtils.sanitizeLogMsg(action));
+        } else if (action === AdapterFilterActions.LIKEIN) {
+            throw new Error ('not implemented: ' + LogUtils.sanitizeLogMsg(action));
+        } else if (action === AdapterFilterActions.IN_CSV) {
+            throw new Error ('not implemented:' + LogUtils.sanitizeLogMsg(action));
+        } else if (throwOnUnknown) {
+            throw new Error('unknown actiontype: ' + LogUtils.sanitizeLogMsg(action));
         }
 
         return query;

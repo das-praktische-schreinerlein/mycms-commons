@@ -1,4 +1,4 @@
-import { AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
+import { AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
 export interface SolrQueryData {
     start: number;
     rows: number;
@@ -29,5 +29,5 @@ export declare class SolrQueryBuilder {
     protected getFacetParams(solrConfig: SolrConfig, adapterOpts: AdapterOpts): Map<string, any>;
     protected mapToAdapterFieldName(solrConfig: SolrConfig, fieldName: string): string;
     protected mapFilterToAdapterQuery(solrConfig: SolrConfig, fieldName: string, action: string, value: any): string;
-    protected generateFilter(fieldName: string, action: string, value: any): string;
+    protected generateFilter(fieldName: string, action: string | AdapterFilterActions, value: any, throwOnUnknown?: boolean): string;
 }

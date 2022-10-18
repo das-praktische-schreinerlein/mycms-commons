@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var mapper_utils_1 = require("./mapper.utils");
+var log_utils_1 = require("../../commons/utils/log.utils");
 var ItemsJsQueryBuilder = /** @class */ (function () {
     function ItemsJsQueryBuilder() {
         this.mapperUtils = new mapper_utils_1.MapperUtils();
@@ -138,31 +139,40 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         }
         return this.generateFilter(realFieldName, action, value);
     };
-    ItemsJsQueryBuilder.prototype.generateFilter = function (fieldName, action, value) {
+    ItemsJsQueryBuilder.prototype.generateFilter = function (fieldName, action, value, throwOnUnknown) {
         var query = {};
         if (action === mapper_utils_1.AdapterFilterActions.LIKEI || action === mapper_utils_1.AdapterFilterActions.LIKE) {
-            throw new Error('not implemented');
+            throw new Error('not implemented: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         else if (action === mapper_utils_1.AdapterFilterActions.EQ1 || action === mapper_utils_1.AdapterFilterActions.EQ2) {
             query[fieldName] = value;
         }
         else if (action === mapper_utils_1.AdapterFilterActions.GT) {
-            throw new Error('not implemented');
+            throw new Error('not implemented: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         else if (action === mapper_utils_1.AdapterFilterActions.GE) {
-            throw new Error('not implemented');
+            throw new Error('not implemented: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         else if (action === mapper_utils_1.AdapterFilterActions.LT) {
-            throw new Error('not implemented');
+            throw new Error('not implemented: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         else if (action === mapper_utils_1.AdapterFilterActions.LE) {
-            throw new Error('not implemented');
+            throw new Error('not implemented: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         else if (action === mapper_utils_1.AdapterFilterActions.IN || action === mapper_utils_1.AdapterFilterActions.IN_NUMBER) {
             query[fieldName] = value;
         }
         else if (action === mapper_utils_1.AdapterFilterActions.NOTIN) {
-            throw new Error('not implemented');
+            throw new Error('not implemented: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.LIKEIN) {
+            throw new Error('not implemented: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
+        }
+        else if (action === mapper_utils_1.AdapterFilterActions.IN_CSV) {
+            throw new Error('not implemented:' + log_utils_1.LogUtils.sanitizeLogMsg(action));
+        }
+        else if (throwOnUnknown) {
+            throw new Error('unknown actiontype: ' + log_utils_1.LogUtils.sanitizeLogMsg(action));
         }
         return query;
     };

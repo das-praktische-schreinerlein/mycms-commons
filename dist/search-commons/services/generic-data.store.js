@@ -12,6 +12,14 @@ var GenericDataStore = /** @class */ (function () {
         this.store = new js_data_1.DataStore({
             usePendingFindAll: false,
             usePendingFind: false,
+            cachedFind: function (mapperName, id, opts) {
+                // disabled js-data-cache in generic-datastore because of exception: "replace not found" if where has array instead of string
+                return;
+            },
+            cachedFindAll: function (mapperName, hash, opts) {
+                // disabled js-data-cache in generic-datastore because of exception: "replace not found" if where has array instead of string
+                return;
+            },
             addToCache: function (name_, data, opts) {
                 // disabled js-data-cache in generic-datastore because of objects with different loadDetailsProfiles loaded
                 return data;

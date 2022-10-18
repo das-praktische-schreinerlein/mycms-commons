@@ -1,5 +1,6 @@
 import {AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
 import {utils} from 'js-data';
+import {LogUtils} from '../../commons/utils/log.utils';
 
 export interface SolrQueryData {
     start: number;
@@ -251,7 +252,7 @@ export class SolrQueryBuilder {
         return this.generateFilter(realFieldName, action, value);
     }
 
-    protected generateFilter(fieldName: string, action: string, value: any): string {
+    protected generateFilter(fieldName: string, action: string | AdapterFilterActions, value: any, throwOnUnknown?: boolean): string {
         let query = '';
 
         if (action === AdapterFilterActions.LIKEI || action === AdapterFilterActions.LIKE) {
@@ -274,6 +275,21 @@ export class SolrQueryBuilder {
             query = '-' + fieldName + ':("' + value.map(
                 inValue => this.mapperUtils.escapeAdapterValue(inValue.toString())
             ).join('" OR "') + '")';
+        } else if (action === AdapterFilterActions.LIKEIN) {
+            query = fieldName + ':("*' + value.map(
+                inValue => this.mapperUtils.escapeAdapterValue(inValue.toString())
+            ).join('*" OR "*') + '*")';
+        } else if (action === AdapterFilterActions.IN_CSV) {
+            query = fieldName + ':(' + value.map(
+                inValue => {
+                    return fieldName + ' "*,' + this.mapperUtils.escapeAdapterValue(inValue.toString()) + ',*" OR '
+                        + fieldName + ' "*,' + this.mapperUtils.escapeAdapterValue(inValue.toString()) + '" OR '
+                        + fieldName + ' "' + this.mapperUtils.escapeAdapterValue(inValue.toString()) + ',*" OR '
+                        + fieldName + ' "' + this.mapperUtils.escapeAdapterValue(inValue.toString()) + '" ';
+                }
+            ).join(' OR ') + ')';
+        } else if (throwOnUnknown) {
+            throw new Error('unknown actiontype: ' + LogUtils.sanitizeLogMsg(action));
         }
 
         return query;

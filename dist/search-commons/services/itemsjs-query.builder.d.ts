@@ -1,4 +1,4 @@
-import { AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
+import { AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
 export interface ItemsJsSelectQueryData {
     page: number;
     per_page: number;
@@ -26,5 +26,5 @@ export declare class ItemsJsQueryBuilder {
     protected getFacetParams(itemsJsConfig: ItemsJsConfig, adapterOpts: AdapterOpts): Map<string, any>;
     protected mapToAdapterFieldName(itemsJsConfig: ItemsJsConfig, fieldName: string): string;
     protected mapFilterToAdapterQuery(itemsJsConfig: ItemsJsConfig, fieldName: string, action: string, value: any): {};
-    protected generateFilter(fieldName: string, action: string, value: any): {};
+    protected generateFilter(fieldName: string, action: string, value: any | AdapterFilterActions, throwOnUnknown?: boolean): {};
 }
