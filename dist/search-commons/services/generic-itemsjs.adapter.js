@@ -211,13 +211,19 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         for (var name_1 in result.data.aggregations) {
             var aggregation = result.data.aggregations[name_1];
             var buckets = aggregation.buckets;
-            var facet = new facets_1.Facet();
-            facet.facet = [];
+            var facet_1 = new facets_1.Facet();
+            facet_1.facet = [];
             for (var j = 0; j < buckets.length; j++) {
-                facet.facet.push([buckets[j].key, buckets[j].doc_count]);
+                facet_1.facet.push([buckets[j].key, buckets[j].doc_count]);
             }
-            facets.facets.set(aggregation.name, facet);
+            facets.facets.set(aggregation.name, facet_1);
         }
+        var sorts = Object.keys(this.getItemsJsConfig().sortings);
+        var facet = new facets_1.Facet();
+        facet.facet = sorts.map(function (value) {
+            return [value, 0];
+        });
+        facets.facets.set('sorts', facet);
         return facets;
     };
     GenericItemsJsAdapter.prototype.mapResponseDocument = function (mapper, doc, itemsJsConfig) {

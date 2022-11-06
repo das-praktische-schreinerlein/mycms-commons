@@ -283,6 +283,14 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
             facets.facets.set(aggregation.name, facet);
         }
 
+        const sorts = Object.keys(this.getItemsJsConfig().sortings);
+        const facet = new Facet();
+        facet.facet = sorts.map(value => {
+            return [value, 0];
+        });
+
+        facets.facets.set('sorts', facet);
+
         return facets;
     }
 
