@@ -193,17 +193,24 @@ var CommonSqlObjectDetectionProcessingAdapter = /** @class */ (function () {
             });
         });
     };
-    CommonSqlObjectDetectionProcessingAdapter.prototype.processDetectionWithResult = function (detector, detectionResult, tableConfig) {
+    CommonSqlObjectDetectionProcessingAdapter.prototype.createObjectKey = function (detector, key, category, tableConfig) {
         var _this = this;
-        var keySuggestion = this.sqlQueryBuilder.sanitizeSqlFilterValue(detectionResult.keySuggestion.split(',')[0]
-            .trim()
-            .replace(/[^a-zA-Z0-9]/g, '_'));
-        var detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
-            detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,
-            detectionResult.precision]
-            .map(function (value) {
-            return _this.sqlQueryBuilder.sanitizeSqlFilterValue(value);
-        });
+        var insertObjectSqlQuery = {
+            sql: 'INSERT INTO ' + this.objectDetectionModelConfig.objectTable.table +
+                '   (' + [this.objectDetectionModelConfig.objectTable.fieldCategory,
+                this.objectDetectionModelConfig.objectTable.fieldKey,
+                this.objectDetectionModelConfig.objectTable.fieldName,
+                this.objectDetectionModelConfig.objectTable.fieldPicasaKey].join(',') + ') ' +
+                '   SELECT ' + '?' + ',' +
+                '          ' + '?' + ',' +
+                '          ' + '?' + ',' +
+                '          ' + '?' +
+                '         FROM dual ' +
+                '   WHERE NOT EXISTS (' +
+                '      SELECT 1 FROM ' + this.objectDetectionModelConfig.objectTable.table +
+                '      WHERE ' + this.objectDetectionModelConfig.objectTable.fieldKey + '=' + '?' + ')',
+            parameters: [category, key, key, key, key]
+        };
         var insertObjectKeySqlQuery = {
             sql: 'INSERT INTO ' + this.objectDetectionModelConfig.objectKeyTable.table +
                 '   (' + [this.objectDetectionModelConfig.objectKeyTable.fieldDetector,
@@ -220,8 +227,35 @@ var CommonSqlObjectDetectionProcessingAdapter = /** @class */ (function () {
                 '      SELECT 1 FROM ' + this.objectDetectionModelConfig.objectKeyTable.table +
                 '      WHERE ' + this.objectDetectionModelConfig.objectKeyTable.fieldDetector + '=' + '?' + ' ' +
                 '      AND ' + this.objectDetectionModelConfig.objectKeyTable.fieldKey + '=' + '?' + ')',
-            parameters: [detector, keySuggestion, common_sql_object_detection_model_1.OBJECTDETECTION_KEY_DEFAULT, keySuggestion, detector, keySuggestion]
+            parameters: [detector, key, category, key, detector, key]
         };
+        insertObjectSqlQuery.sql = this.transformToSqlDialect(insertObjectSqlQuery.sql);
+        insertObjectKeySqlQuery.sql = this.transformToSqlDialect(insertObjectKeySqlQuery.sql);
+        return new Promise(function (resolve, reject) {
+            sql_utils_1.SqlUtils.executeRawSqlQueryData(_this.knex, insertObjectSqlQuery).then(function () {
+                return sql_utils_1.SqlUtils.executeRawSqlQueryData(_this.knex, insertObjectKeySqlQuery);
+            }).then(function () {
+                return resolve(true);
+            }).catch(function errorFunction(reason) {
+                console.error('createObjectKey insert ' + tableConfig.detectedTable + ' failed:', reason);
+                return reject(reason);
+            });
+        });
+    };
+    CommonSqlObjectDetectionProcessingAdapter.prototype.generateKey = function (key) {
+        return this.sqlQueryBuilder.sanitizeSqlFilterValue(key.split(',')[0]
+            .trim()
+            .replace(/[^a-zA-Z0-9]/g, '_'));
+    };
+    CommonSqlObjectDetectionProcessingAdapter.prototype.processDetectionWithResult = function (detector, detectionResult, tableConfig) {
+        var _this = this;
+        var keySuggestion = this.generateKey(detectionResult.keySuggestion);
+        var detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
+            detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,
+            detectionResult.precision]
+            .map(function (value) {
+            return _this.sqlQueryBuilder.sanitizeSqlFilterValue(value);
+        });
         var insertImageObjectQuery = {
             sql: 'INSERT INTO ' + tableConfig.detectedTable + ' (' +
                 tableConfig.baseFieldId + ', ' + tableConfig.detectedFieldState + ', ' +
@@ -232,10 +266,9 @@ var CommonSqlObjectDetectionProcessingAdapter = /** @class */ (function () {
             parameters: [tableConfig.id, this.sqlQueryBuilder.sanitizeSqlFilterValue(detectionResult.state), detector]
                 .concat(detailValues)
         };
-        insertObjectKeySqlQuery.sql = this.transformToSqlDialect(insertObjectKeySqlQuery.sql);
         insertImageObjectQuery.sql = this.transformToSqlDialect(insertImageObjectQuery.sql);
         return new Promise(function (resolve, reject) {
-            sql_utils_1.SqlUtils.executeRawSqlQueryData(_this.knex, insertObjectKeySqlQuery).then(function () {
+            _this.createObjectKey(detector, keySuggestion, common_sql_object_detection_model_1.OBJECTDETECTION_KEY_DEFAULT, tableConfig).then(function () {
                 return sql_utils_1.SqlUtils.executeRawSqlQueryData(_this.knex, insertImageObjectQuery);
             }).then(function () {
                 return resolve(true);

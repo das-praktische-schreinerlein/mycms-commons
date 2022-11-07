@@ -10,6 +10,7 @@
 - improved SearchParameterUtils to serialize forms
 - synced functionality of sql-filter to solr, itemsjs
 - fix invalid cache usage in datastore
+- improved object-detection: add and use service-functions to create objects if not already defined
 
 ### new features
 - none
@@ -19,6 +20,7 @@
 - commons: added query-params to GenericSearchFormSearchFormConverter
 - commons: improved SearchParameterUtils to serialize forms
 - commons: synced functionality of sql-filter to solr, itemsjs
+- commons: improved object-detection: add and use service-functions to create objects if not already defined
 
 ### bug fixes
 - commons: object/mapper-utils merge values to unique-values (default)

@@ -15,6 +15,8 @@ export declare class CommonSqlObjectDetectionProcessingAdapter implements Common
     createDetectionRequest(detectionRequest: ObjectDetectionRequestType, detector: string): Promise<any>;
     createDetectionError(detectionResponse: ObjectDetectionResponseType, detector: string): Promise<any>;
     createDefaultObject(): Promise<any>;
+    createObjectKey(detector: string, key: string, category: string, tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any>;
+    generateKey(key: string): string;
     processDetectionWithResult(detector: string, detectionResult: ObjectDetectionDetectedObjectType, tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any>;
     processDetectionWithoutResult(detector: string, tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any>;
     protected transformToSqlDialect(sql: string): string;

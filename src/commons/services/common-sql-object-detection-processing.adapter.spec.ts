@@ -423,6 +423,9 @@ describe('CommonSqlObjectDetectionProcessingAdapter', () => {
                 },
                 true,
                 [
+                    'INSERT INTO objects   (o_category,o_key,o_name,o_picasa_key)' +
+                    '    SELECT ?,          ?,          ?,          ?         FROM dual' +
+                    '    WHERE NOT EXISTS (      SELECT 1 FROM objects      WHERE o_key=?)',
                     'INSERT INTO objects_key   (ok_detector,ok_key,o_id)'
                     + '    SELECT ?,          ?,          (SELECT MAX(o_id) AS newId            FROM objects'
                     + '           WHERE o_key=?                  OR o_key=?)   AS newId FROM dual'
@@ -431,6 +434,7 @@ describe('CommonSqlObjectDetectionProcessingAdapter', () => {
                     + ' io_obj_y1, io_obj_width, io_obj_height, io_precision) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
                 ],
                 [
+                    ['Default', 'keySuggestionBlam', 'keySuggestionBlam', 'keySuggestionBlam', 'keySuggestionBlam'],
                     ['detector1', 'keySuggestionBlam', 'Default', 'keySuggestionBlam', 'detector1', 'keySuggestionBlam'],
                     [undefined, 'DONE_CORRECTION_PROCESSED', 'detector1', 'keySuggestionBlam', '100', '200', '1', '2', '10', '10', '0.6']
                 ],

@@ -227,18 +227,24 @@ export class CommonSqlObjectDetectionProcessingAdapter implements CommonObjectDe
         });
     }
 
-    public processDetectionWithResult(detector: string, detectionResult: ObjectDetectionDetectedObjectType,
-                                      tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any> {
-        const keySuggestion = this.sqlQueryBuilder.sanitizeSqlFilterValue(
-            detectionResult.keySuggestion.split(',')[0]
-                .trim()
-                .replace(/[^a-zA-Z0-9]/g, '_'));
-        const detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
-            detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,
-            detectionResult.precision]
-            .map(value => {
-                return this.sqlQueryBuilder.sanitizeSqlFilterValue(value);
-            });
+    public createObjectKey(detector: string, key: string, category: string,
+                           tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any> {
+        const insertObjectSqlQuery: RawSqlQueryData = {
+            sql: 'INSERT INTO ' + this.objectDetectionModelConfig.objectTable.table +
+                '   (' + [this.objectDetectionModelConfig.objectTable.fieldCategory,
+                    this.objectDetectionModelConfig.objectTable.fieldKey,
+                    this.objectDetectionModelConfig.objectTable.fieldName,
+                    this.objectDetectionModelConfig.objectTable.fieldPicasaKey].join(',') + ') ' +
+                '   SELECT ' + '?' + ',' +
+                '          ' + '?' + ',' +
+                '          ' + '?' + ',' +
+                '          ' + '?' +
+                '         FROM dual ' +
+                '   WHERE NOT EXISTS (' +
+                '      SELECT 1 FROM ' + this.objectDetectionModelConfig.objectTable.table +
+                '      WHERE ' + this.objectDetectionModelConfig.objectTable.fieldKey + '=' + '?' + ')',
+            parameters: [ category, key, key, key, key]
+        };
         const insertObjectKeySqlQuery: RawSqlQueryData = {
             sql: 'INSERT INTO ' + this.objectDetectionModelConfig.objectKeyTable.table +
                 '   (' + [this.objectDetectionModelConfig.objectKeyTable.fieldDetector,
@@ -255,8 +261,39 @@ export class CommonSqlObjectDetectionProcessingAdapter implements CommonObjectDe
                 '      SELECT 1 FROM ' + this.objectDetectionModelConfig.objectKeyTable.table +
                 '      WHERE ' + this.objectDetectionModelConfig.objectKeyTable.fieldDetector + '=' + '?' + ' ' +
                 '      AND ' + this.objectDetectionModelConfig.objectKeyTable.fieldKey + '=' + '?' + ')',
-            parameters: [ detector, keySuggestion, OBJECTDETECTION_KEY_DEFAULT, keySuggestion, detector, keySuggestion]
+            parameters: [ detector, key, category, key, detector, key]
         };
+        insertObjectSqlQuery.sql = this.transformToSqlDialect(insertObjectSqlQuery.sql);
+        insertObjectKeySqlQuery.sql = this.transformToSqlDialect(insertObjectKeySqlQuery.sql);
+
+        return new Promise((resolve, reject) => {
+            SqlUtils.executeRawSqlQueryData(this.knex, insertObjectSqlQuery).then(() => {
+                return SqlUtils.executeRawSqlQueryData(this.knex, insertObjectKeySqlQuery);
+            }).then(() => {
+                return resolve(true);
+            }).catch(function errorFunction(reason) {
+                console.error('createObjectKey insert ' + tableConfig.detectedTable + ' failed:', reason);
+                return reject(reason);
+            });
+        });
+    }
+
+    public generateKey(key: string): string {
+        return this.sqlQueryBuilder.sanitizeSqlFilterValue(
+            key.split(',')[0]
+                .trim()
+                .replace(/[^a-zA-Z0-9]/g, '_'));
+    }
+
+    public processDetectionWithResult(detector: string, detectionResult: ObjectDetectionDetectedObjectType,
+                                      tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any> {
+        const keySuggestion = this.generateKey(detectionResult.keySuggestion);
+        const detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
+            detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,
+            detectionResult.precision]
+            .map(value => {
+                return this.sqlQueryBuilder.sanitizeSqlFilterValue(value);
+            });
         const insertImageObjectQuery: RawSqlQueryData = {
             sql: 'INSERT INTO ' + tableConfig.detectedTable + ' (' +
                 tableConfig.baseFieldId + ', ' + tableConfig.detectedFieldState + ', ' +
@@ -267,11 +304,10 @@ export class CommonSqlObjectDetectionProcessingAdapter implements CommonObjectDe
             parameters: [tableConfig.id, this.sqlQueryBuilder.sanitizeSqlFilterValue(detectionResult.state), detector]
                 .concat(detailValues)
         };
-        insertObjectKeySqlQuery.sql = this.transformToSqlDialect(insertObjectKeySqlQuery.sql);
         insertImageObjectQuery.sql = this.transformToSqlDialect(insertImageObjectQuery.sql);
 
         return new Promise((resolve, reject) => {
-            SqlUtils.executeRawSqlQueryData(this.knex, insertObjectKeySqlQuery).then(() => {
+            this.createObjectKey(detector, keySuggestion, OBJECTDETECTION_KEY_DEFAULT, tableConfig).then(() => {
                 return SqlUtils.executeRawSqlQueryData(this.knex, insertImageObjectQuery);
             }).then(() => {
                 return resolve(true);
