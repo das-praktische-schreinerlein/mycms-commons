@@ -29,6 +29,9 @@ var ObjectUtils = /** @class */ (function () {
         }
         var objects = [];
         for (var i = 0; i < objectsSrcs.length; i++) {
+            if (objectsSrcs[i] === undefined || objectsSrcs[i] === null || objectsSrcs[i] === 'null' || objectsSrcs[i] === '') {
+                continue;
+            }
             var valuePairs = objectsSrcs[i].split(fieldSeparator);
             var detailDoc = {};
             for (var j = 0; j < valuePairs.length; j++) {

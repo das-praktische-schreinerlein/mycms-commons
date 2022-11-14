@@ -27,6 +27,10 @@ export class ObjectUtils {
 
         const objects: {}[] = [];
         for (let i = 0; i < objectsSrcs.length; i++) {
+            if (objectsSrcs[i] === undefined || objectsSrcs[i] === null || objectsSrcs[i] === 'null' || objectsSrcs[i] === '') {
+                continue;
+            }
+
             const valuePairs = objectsSrcs[i].split(fieldSeparator);
             const detailDoc = {};
             for (let j = 0; j < valuePairs.length; j++) {
