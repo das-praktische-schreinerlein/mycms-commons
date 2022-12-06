@@ -22,12 +22,14 @@
 - commons: improved SearchParameterUtils to serialize forms
 - commons: synced functionality of sql-filter to solr, itemsjs
 - commons: improved object-detection: add and use service-functions to create objects if not already defined
+- commons: use serial promises on multisearch to prevent overload on database
 
 ### bug fixes
 - commons: object/mapper-utils merge values to unique-values (default)
 - commons: fix remap of basejoins on import
 - commons: fix invalid cache usage in datastore
 - commons: object-utils ignore empty src on object-explode
+- commons: use serial promises on multisearch to prevent overload on database
 
 ### breaking changes
 - none

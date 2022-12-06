@@ -5,6 +5,7 @@ import {CommonDocRecord} from '../model/records/cdoc-entity-record';
 import {CommonDocSearchForm} from '../model/forms/cdoc-searchform';
 import {CommonDocSearchResult} from '../model/container/cdoc-searchresult';
 import {GenericDataStore} from './generic-data.store';
+import * as Promise_serial from 'promise-serial';
 
 export interface ProcessingOptions {
     ignoreErrors: number;
@@ -13,6 +14,8 @@ export interface ProcessingOptions {
 
 export abstract class CommonDocSearchService<R extends CommonDocRecord, F extends CommonDocSearchForm,
     S extends CommonDocSearchResult<R, F>> extends GenericSearchService <R, F, S> {
+
+    protected maxParallelMultiSearches = 5;
 
     protected constructor(dataStore: GenericDataStore<R, F, S>, mapperName: string) {
         super(dataStore, mapperName);
@@ -34,7 +37,7 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
             idTypeMap[type]['ids'].push(id);
         }
 
-        const promises: Promise<S>[] = [];
+        const promises = [];
         for (const type in idTypeMap) {
             for (let page = 1; page <= (idTypeMap[type]['ids'].length / this.maxPerRun) + 1; page ++) {
                 const typeSearchForm = this.newSearchForm({});
@@ -46,16 +49,19 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
                 typeSearchForm.perPage = this.maxPerRun;
                 typeSearchForm.pageNum = 1;
                 typeSearchForm.sort = 'dateAsc';
-                promises.push(me.search(typeSearchForm, {
-                    showFacets: false,
-                    loadTrack: true,
-                    showForm: false
-                }));
+                promises.push(function () {
+                    return me.search(typeSearchForm, {
+                        showFacets: false,
+                        loadTrack: true,
+                        showForm: false
+                    });
+                });
+
             }
         }
 
         return new Promise<S>((resolve, reject) => {
-            return Promise.all(promises).then(function doneSearch(docSearchResults: S[]) {
+            return Promise_serial(promises, {parallelize: me.maxParallelMultiSearches}).then(function doneSearch(docSearchResults: S[]) {
                 const records: R[] = [];
                 docSearchResults.forEach(result => {
                     for (const doc of result.currentRecords) {

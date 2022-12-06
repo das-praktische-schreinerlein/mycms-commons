@@ -13,10 +13,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var generic_search_service_1 = require("./generic-search.service");
 var date_utils_1 = require("../../commons/utils/date.utils");
 var js_data_1 = require("js-data");
+var Promise_serial = require("promise-serial");
 var CommonDocSearchService = /** @class */ (function (_super) {
     __extends(CommonDocSearchService, _super);
     function CommonDocSearchService(dataStore, mapperName) {
-        return _super.call(this, dataStore, mapperName) || this;
+        var _this = _super.call(this, dataStore, mapperName) || this;
+        _this.maxParallelMultiSearches = 5;
+        return _this;
     }
     CommonDocSearchService.prototype.doMultiSearch = function (searchForm, ids) {
         var me = this;
@@ -35,25 +38,31 @@ var CommonDocSearchService = /** @class */ (function (_super) {
         }
         var promises = [];
         for (var type in idTypeMap) {
-            for (var page = 1; page <= (idTypeMap[type]['ids'].length / this.maxPerRun) + 1; page++) {
-                var typeSearchForm = this.newSearchForm({});
-                var start = (page - 1) * this.maxPerRun;
-                var end = Math.min(start + this.maxPerRun, idTypeMap[type]['ids'].length);
+            var _loop_1 = function (page) {
+                var typeSearchForm = this_1.newSearchForm({});
+                var start = (page - 1) * this_1.maxPerRun;
+                var end = Math.min(start + this_1.maxPerRun, idTypeMap[type]['ids'].length);
                 var idTranche = idTypeMap[type]['ids'].slice(start, end);
                 typeSearchForm.moreFilter = 'id:' + idTranche.join(',');
                 typeSearchForm.type = type;
-                typeSearchForm.perPage = this.maxPerRun;
+                typeSearchForm.perPage = this_1.maxPerRun;
                 typeSearchForm.pageNum = 1;
                 typeSearchForm.sort = 'dateAsc';
-                promises.push(me.search(typeSearchForm, {
-                    showFacets: false,
-                    loadTrack: true,
-                    showForm: false
-                }));
+                promises.push(function () {
+                    return me.search(typeSearchForm, {
+                        showFacets: false,
+                        loadTrack: true,
+                        showForm: false
+                    });
+                });
+            };
+            var this_1 = this;
+            for (var page = 1; page <= (idTypeMap[type]['ids'].length / this.maxPerRun) + 1; page++) {
+                _loop_1(page);
             }
         }
         return new Promise(function (resolve, reject) {
-            return Promise.all(promises).then(function doneSearch(docSearchResults) {
+            return Promise_serial(promises, { parallelize: me.maxParallelMultiSearches }).then(function doneSearch(docSearchResults) {
                 var records = [];
                 docSearchResults.forEach(function (result) {
                     for (var _i = 0, _a = result.currentRecords; _i < _a.length; _i++) {
