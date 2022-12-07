@@ -4,6 +4,7 @@
 
 ## 5.6.0
 - improved itemsjs-adapter
+- introduced itemjs-dataimporter
 - added query-params to GenericSearchFormSearchFormConverter
 - object/mapper-utils merge values to unique-values (default)
 - fix remap of basejoins on import
@@ -14,7 +15,7 @@
 - object-utils ignore empty src on object-explode
 
 ### new features
-- none
+- commons: introduced itemjs-dataimporter
 
 ### improvements
 - commons: improved itemsjs-adapter

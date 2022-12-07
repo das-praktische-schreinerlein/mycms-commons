@@ -256,9 +256,32 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
     extractRecordsFromRequestResult(mapper: Mapper, result: ItemJsResult): R[] {
         // got documents
         const docs = result.data.items;
+        const recordIds = {};
+        const afterRecordIds = {};
         const records = [];
         for (const doc of docs) {
-            records.push(this.mapResponseDocument(mapper, doc, this.getItemsJsConfig()));
+            if (recordIds[doc['id']]) {
+                console.error('DUPLICATION id not unique on itemsjs-result', doc['id'], doc);
+                continue;
+            }
+
+            recordIds[doc['id']] = true;
+
+            // remap fields
+            const docCopy = {...doc};
+            for (const filterBase of ['keywords', 'objects', 'persons', 'playlists']) {
+                docCopy[filterBase + '_txt'] = docCopy[filterBase + '_ss'];
+            }
+
+            const record = this.mapResponseDocument(mapper, docCopy, this.getItemsJsConfig());
+            if (afterRecordIds[record['id']]) {
+                console.error('DUPLICATION id not unique after itemsjs-mapping', record['id'], record);
+                continue;
+            }
+
+            afterRecordIds[record['id']] = true;
+
+            records.push(record);
         }
         // console.log('extractRecordsFromRequestResult:', records);
 
@@ -332,8 +355,39 @@ export abstract class GenericItemsJsAdapter <R extends Record, F extends Generic
     }
 
     protected queryTransformToAdapterQueryWithMethod(method: string, mapper: Mapper, params: any, opts: any): ItemsJsSelectQueryData {
-        return this.itemsJsQueryBuilder.queryTransformToAdapterSelectQuery(this.getItemsJsConfig(), method, <AdapterQuery>params,
-            <AdapterOpts>opts);
+        // map html to fulltext
+        const adapterQuery = <AdapterQuery> params;
+        let fulltextQuery = '';
+        const specialAggregations = {};
+        if (adapterQuery.where) {
+            if (adapterQuery.where['html']) {
+                const action = Object.getOwnPropertyNames(adapterQuery.where['html'])[0];
+                fulltextQuery = adapterQuery.where['html'][action];
+                delete adapterQuery.where['html'];
+            }
+
+            for (const filterBase of []) {
+                if (adapterQuery.where[filterBase + '_txt']) {
+                    const action = Object.getOwnPropertyNames(adapterQuery.where[filterBase + '_txt'])[0];
+                    specialAggregations[filterBase + '_ss'] = adapterQuery.where[filterBase + '_txt'][action];
+                    delete adapterQuery.where[filterBase + '_txt'];
+                }
+            }
+        }
+
+        const queryData = this.itemsJsQueryBuilder.queryTransformToAdapterSelectQuery(
+            this.getItemsJsConfig(), method, <AdapterQuery>params, <AdapterOpts>opts);
+        queryData.query = fulltextQuery;
+
+        if (!queryData.filters) {
+            queryData.filters = {};
+        }
+        queryData.filters = {...queryData.filters, ...specialAggregations};
+
+        console.log('itemsjs query:', queryData);
+
+        return queryData;
     }
+
 }
 

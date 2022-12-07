@@ -9,6 +9,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_1 = require("js-data");
 var generic_searchresult_1 = require("../model/container/generic-searchresult");
@@ -194,10 +202,29 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
     GenericItemsJsAdapter.prototype.extractRecordsFromRequestResult = function (mapper, result) {
         // got documents
         var docs = result.data.items;
+        var recordIds = {};
+        var afterRecordIds = {};
         var records = [];
         for (var _i = 0, docs_1 = docs; _i < docs_1.length; _i++) {
             var doc = docs_1[_i];
-            records.push(this.mapResponseDocument(mapper, doc, this.getItemsJsConfig()));
+            if (recordIds[doc['id']]) {
+                console.error('DUPLICATION id not unique on itemsjs-result', doc['id'], doc);
+                continue;
+            }
+            recordIds[doc['id']] = true;
+            // remap fields
+            var docCopy = __assign({}, doc);
+            for (var _a = 0, _b = ['keywords', 'objects', 'persons', 'playlists']; _a < _b.length; _a++) {
+                var filterBase = _b[_a];
+                docCopy[filterBase + '_txt'] = docCopy[filterBase + '_ss'];
+            }
+            var record = this.mapResponseDocument(mapper, docCopy, this.getItemsJsConfig());
+            if (afterRecordIds[record['id']]) {
+                console.error('DUPLICATION id not unique after itemsjs-mapping', record['id'], record);
+                continue;
+            }
+            afterRecordIds[record['id']] = true;
+            records.push(record);
         }
         // console.log('extractRecordsFromRequestResult:', records);
         return records;
@@ -254,7 +281,33 @@ var GenericItemsJsAdapter = /** @class */ (function (_super) {
         return this.queryTransformToAdapterQueryWithMethod(undefined, mapper, params, opts);
     };
     GenericItemsJsAdapter.prototype.queryTransformToAdapterQueryWithMethod = function (method, mapper, params, opts) {
-        return this.itemsJsQueryBuilder.queryTransformToAdapterSelectQuery(this.getItemsJsConfig(), method, params, opts);
+        // map html to fulltext
+        var adapterQuery = params;
+        var fulltextQuery = '';
+        var specialAggregations = {};
+        if (adapterQuery.where) {
+            if (adapterQuery.where['html']) {
+                var action = Object.getOwnPropertyNames(adapterQuery.where['html'])[0];
+                fulltextQuery = adapterQuery.where['html'][action];
+                delete adapterQuery.where['html'];
+            }
+            for (var _i = 0, _a = []; _i < _a.length; _i++) {
+                var filterBase = _a[_i];
+                if (adapterQuery.where[filterBase + '_txt']) {
+                    var action = Object.getOwnPropertyNames(adapterQuery.where[filterBase + '_txt'])[0];
+                    specialAggregations[filterBase + '_ss'] = adapterQuery.where[filterBase + '_txt'][action];
+                    delete adapterQuery.where[filterBase + '_txt'];
+                }
+            }
+        }
+        var queryData = this.itemsJsQueryBuilder.queryTransformToAdapterSelectQuery(this.getItemsJsConfig(), method, params, opts);
+        queryData.query = fulltextQuery;
+        if (!queryData.filters) {
+            queryData.filters = {};
+        }
+        queryData.filters = __assign({}, queryData.filters, specialAggregations);
+        console.log('itemsjs query:', queryData);
+        return queryData;
     };
     return GenericItemsJsAdapter;
 }(js_data_adapter_1.Adapter));
