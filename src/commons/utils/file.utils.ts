@@ -190,4 +190,108 @@ export class FileUtils {
         });
     }
 
+    public static splitJsonFile(srcFile: string, targetFileBase: string, targetFileSuffix: string, chunkSize: number,
+                                parent?: string, targetContentConverter?: Function): Promise<string[]> {
+
+        let err = this.checkFilePath(srcFile, false,  false, true,
+            true, true);
+        if (err) {
+            return Promise.reject('srcFile is invalid: ' + err);
+        }
+
+        const me = this;
+        return new Promise<string[]>((passed, failure) => {
+            const resultFileNames: string[] = [];
+            let data;
+            try {
+                data = fs.readFileSync(srcFile, {encoding: 'utf8'});
+            } catch (err) {
+                console.error('error while splitting json-file: ' + srcFile, err);
+                return failure('error while reading srcFile: ' + err);
+            }
+
+            let jsonArray = JSON.parse(data);
+            if (parent) {
+                jsonArray = jsonArray[parent];
+            }
+
+            let index = 1;
+            do {
+                const targetFileName = targetFileBase + index + targetFileSuffix;
+                err = me.checkFilePath(targetFileName, false,  true, false,
+                    true, false);
+                if (err) {
+                    return failure('targetFileName is invalid: ' + err);
+                }
+
+                try {
+                    const chunk = jsonArray.splice(0, chunkSize);
+                    let result;
+                    if (parent) {
+                        const object  = {};
+                        object[parent] = chunk;
+                        result = JSON.stringify(object);
+                    } else {
+                        result = JSON.stringify(chunk);
+                    }
+
+
+                    if (targetContentConverter) {
+                        result = targetContentConverter.call(this, result, targetFileName);
+                    }
+
+                    fs.writeFileSync(targetFileName, result);
+                } catch (err) {
+                    return failure('error while writing to targetFileName: ' + err);
+                }
+
+                resultFileNames.push(targetFileName);
+                index++;
+            } while (jsonArray.length !== 0);
+
+            return passed(resultFileNames);
+        });
+    }
+
+    public static deleteFilesInDirectoryByPattern(targetBase: string, targetSuffix: string): Promise<string[]> {
+        targetBase = targetBase.replace(/\\/, '/').trim();
+        targetSuffix = targetSuffix.replace(/\\/, '/').trim();
+        if (targetSuffix.includes('/')) {
+            return Promise.reject('targetSuffix must not include / or \\: ' + targetSuffix);
+        }
+
+        const targetDir = pathLib.dirname(targetBase) || './';
+        let err = this.checkDirPath(targetDir, false, false, true);
+        if (err) {
+            return Promise.reject('targetBase is invalid - directory not exists: ' + err);
+        }
+
+        const targetFileBase = pathLib.basename(targetBase);
+
+        return new Promise<string[]>((passed, failure) => {
+            let resultFileNames: string[];
+            try {
+                resultFileNames = fs.readdirSync(targetDir)
+            } catch (err) {
+                console.error('error while reading files of: ' + targetDir, err);
+                return failure('error while reading files of targetDir: ' + err);
+            }
+
+            const pattern = '^' + targetFileBase.replace(/(\.)/g, '\\$1') + '.*' + targetSuffix.replace(/(\.)/g, '\\$1') + '$';
+            const regex = new RegExp(pattern);
+            try {
+                resultFileNames.filter(f => regex.test(f))
+                    .map(f => {
+                        fs.unlinkSync(targetDir + '/' + f);
+                        console.log('deleted file for targetBase+Suffix', targetDir + '/' + f, targetBase, targetSuffix);
+                    });
+            } catch (err) {
+                console.error('error while deleting files for pattern: ' + pattern + ' in: ' + targetDir, err);
+                return failure('error while deleting files for pattern: ' + pattern + ' in: ' + err);
+            }
+
+            return passed(resultFileNames);
+        });
+    }
+
 }

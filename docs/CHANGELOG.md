@@ -13,9 +13,11 @@
 - fix invalid cache usage in datastore
 - improved object-detection: add and use service-functions to create objects if not already defined
 - object-utils ignore empty src on object-explode
+- commons: extended fileutils to delete files and split json.files
 
 ### new features
 - commons: introduced itemjs-dataimporter
+- commons: extended fileutils to delete files and split json.files
 
 ### improvements
 - commons: improved itemsjs-adapter

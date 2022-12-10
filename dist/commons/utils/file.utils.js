@@ -158,6 +158,96 @@ var FileUtils = /** @class */ (function () {
             });
         });
     };
+    FileUtils.splitJsonFile = function (srcFile, targetFileBase, targetFileSuffix, chunkSize, parent, targetContentConverter) {
+        var _this = this;
+        var err = this.checkFilePath(srcFile, false, false, true, true, true);
+        if (err) {
+            return Promise.reject('srcFile is invalid: ' + err);
+        }
+        var me = this;
+        return new Promise(function (passed, failure) {
+            var resultFileNames = [];
+            var data;
+            try {
+                data = fs.readFileSync(srcFile, { encoding: 'utf8' });
+            }
+            catch (err) {
+                console.error('error while splitting json-file: ' + srcFile, err);
+                return failure('error while reading srcFile: ' + err);
+            }
+            var jsonArray = JSON.parse(data);
+            if (parent) {
+                jsonArray = jsonArray[parent];
+            }
+            var index = 1;
+            do {
+                var targetFileName = targetFileBase + index + targetFileSuffix;
+                err = me.checkFilePath(targetFileName, false, true, false, true, false);
+                if (err) {
+                    return failure('targetFileName is invalid: ' + err);
+                }
+                try {
+                    var chunk = jsonArray.splice(0, chunkSize);
+                    var result = void 0;
+                    if (parent) {
+                        var object = {};
+                        object[parent] = chunk;
+                        result = JSON.stringify(object);
+                    }
+                    else {
+                        result = JSON.stringify(chunk);
+                    }
+                    if (targetContentConverter) {
+                        result = targetContentConverter.call(_this, result, targetFileName);
+                    }
+                    fs.writeFileSync(targetFileName, result);
+                }
+                catch (err) {
+                    return failure('error while writing to targetFileName: ' + err);
+                }
+                resultFileNames.push(targetFileName);
+                index++;
+            } while (jsonArray.length !== 0);
+            return passed(resultFileNames);
+        });
+    };
+    FileUtils.deleteFilesInDirectoryByPattern = function (targetBase, targetSuffix) {
+        targetBase = targetBase.replace(/\\/, '/').trim();
+        targetSuffix = targetSuffix.replace(/\\/, '/').trim();
+        if (targetSuffix.includes('/')) {
+            return Promise.reject('targetSuffix must not include / or \\: ' + targetSuffix);
+        }
+        var targetDir = pathLib.dirname(targetBase) || './';
+        var err = this.checkDirPath(targetDir, false, false, true);
+        if (err) {
+            return Promise.reject('targetBase is invalid - directory not exists: ' + err);
+        }
+        var targetFileBase = pathLib.basename(targetBase);
+        return new Promise(function (passed, failure) {
+            var resultFileNames;
+            try {
+                resultFileNames = fs.readdirSync(targetDir);
+            }
+            catch (err) {
+                console.error('error while reading files of: ' + targetDir, err);
+                return failure('error while reading files of targetDir: ' + err);
+            }
+            var pattern = '^' + targetFileBase.replace(/(\.)/g, '\\$1') + '.*' + targetSuffix.replace(/(\.)/g, '\\$1') + '$';
+            var regex = new RegExp(pattern);
+            try {
+                resultFileNames.filter(function (f) { return regex.test(f); })
+                    .map(function (f) {
+                    fs.unlinkSync(targetDir + '/' + f);
+                    console.log('deleted file for targetBase+Suffix', targetDir + '/' + f, targetBase, targetSuffix);
+                });
+            }
+            catch (err) {
+                console.error('error while deleting files for pattern: ' + pattern + ' in: ' + targetDir, err);
+                return failure('error while deleting files for pattern: ' + pattern + ' in: ' + err);
+            }
+            return passed(resultFileNames);
+        });
+    };
     return FileUtils;
 }());
 exports.FileUtils = FileUtils;
