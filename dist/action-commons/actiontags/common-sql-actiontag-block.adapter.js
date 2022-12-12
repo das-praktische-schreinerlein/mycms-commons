@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_1 = require("js-data");
 var sql_utils_1 = require("../../search-commons/services/sql-utils");
+var generic_validator_util_1 = require("../../search-commons/model/forms/generic-validator.util");
 var CommonSqlActionTagBlockAdapter = /** @class */ (function () {
     function CommonSqlActionTagBlockAdapter(config, knex, sqlQueryBuilder, blockConfigs) {
+        this.rateValidationRule = new generic_validator_util_1.NumberValidationRule(false, 0, 15, undefined);
         this.config = config;
         this.knex = knex;
         this.sqlQueryBuilder = sqlQueryBuilder;
@@ -17,7 +19,14 @@ var CommonSqlActionTagBlockAdapter = /** @class */ (function () {
         if (actionTagForm.payload === undefined) {
             return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' playload expected');
         }
-        var value = actionTagForm.payload.set ? 1 : 0;
+        var value = actionTagForm.payload.set
+            ? actionTagForm.payload.value > 0
+                ? actionTagForm.payload.value
+                : 1
+            : 0;
+        if (!this.rateValidationRule.isValid(value)) {
+            return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' value not valid');
+        }
         var blockConfig = this.blockConfigs.tables[table];
         if (!blockConfig) {
             return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' table not valid');

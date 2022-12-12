@@ -75,11 +75,34 @@ describe('CommonSqlActionTagBlockAdapter', () => {
                 done);
         });
 
-        it('executeActionTagBlock should unset', done => {
+            it('executeActionTagBlock should set', done => {
+                const id: any = 5;
+                TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagBlock', 'location', id, {
+                        payload: {
+                            set: 1,
+                            value: 5
+                        },
+                        deletes: false,
+                        key: 'block',
+                        recordId: id,
+                        type: 'tag'
+                    },
+                    true,
+                    [
+                        'UPDATE location SET l_gesperrt=?  WHERE l_id = ?'
+                    ],
+                    [
+                        [5, 5]
+                    ],
+                    done);
+            });
+
+            it('executeActionTagBlock should unset', done => {
             const id: any = 7;
             TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagBlock', 'location', id, {
                     payload: {
-                        set: 0
+                        set: 0,
+                        value: 5
                     },
                     deletes: false,
                     key: 'block',

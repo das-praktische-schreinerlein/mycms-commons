@@ -2,6 +2,7 @@ import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {utils} from 'js-data';
 import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
+import {NumberValidationRule} from '../../search-commons/model/forms/generic-validator.util';
 
 export interface ActionTagBlockTableConfigType {
     table: string;
@@ -17,12 +18,19 @@ export interface ActionTagBlockConfigType {
     tables: ActionTagBlockTableConfigsType;
 }
 
+export interface BlockActionTagForm extends ActionTagForm {
+    payload: {
+        set?: boolean|number;
+        value?: number;
+    };
+}
 export class CommonSqlActionTagBlockAdapter {
 
     private config: any;
     private readonly knex: any;
     private sqlQueryBuilder: SqlQueryBuilder;
     private readonly blockConfigs: ActionTagBlockConfigType;
+    private rateValidationRule = new NumberValidationRule(false, 0, 15, undefined);
 
     constructor(config: any, knex: any, sqlQueryBuilder: SqlQueryBuilder, blockConfigs: ActionTagBlockConfigType) {
         this.config = config;
@@ -31,7 +39,7 @@ export class CommonSqlActionTagBlockAdapter {
         this.blockConfigs = blockConfigs;
     }
 
-    public executeActionTagBlock(table: string, id: number, actionTagForm: ActionTagForm, opts: any): Promise<any> {
+    public executeActionTagBlock(table: string, id: number, actionTagForm: BlockActionTagForm, opts: any): Promise<any> {
         opts = opts || {};
 
         if (!utils.isInteger(id)) {
@@ -41,7 +49,14 @@ export class CommonSqlActionTagBlockAdapter {
             return utils.reject('actiontag ' + actionTagForm.key + ' playload expected');
         }
 
-        const value = actionTagForm.payload.set ? 1 : 0;
+        const value = actionTagForm.payload.set
+            ? actionTagForm.payload.value > 0
+                ? actionTagForm.payload.value
+                : 1
+            : 0;
+        if (!this.rateValidationRule.isValid(value)) {
+            return utils.reject('actiontag ' + actionTagForm.key + ' value not valid');
+        }
 
         const blockConfig: ActionTagBlockTableConfigType = this.blockConfigs.tables[table];
         if (!blockConfig) {

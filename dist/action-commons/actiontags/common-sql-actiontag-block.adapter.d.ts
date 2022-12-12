@@ -11,11 +11,18 @@ export interface ActionTagBlockTableConfigsType {
 export interface ActionTagBlockConfigType {
     tables: ActionTagBlockTableConfigsType;
 }
+export interface BlockActionTagForm extends ActionTagForm {
+    payload: {
+        set?: boolean | number;
+        value?: number;
+    };
+}
 export declare class CommonSqlActionTagBlockAdapter {
     private config;
     private readonly knex;
     private sqlQueryBuilder;
     private readonly blockConfigs;
+    private rateValidationRule;
     constructor(config: any, knex: any, sqlQueryBuilder: SqlQueryBuilder, blockConfigs: ActionTagBlockConfigType);
-    executeActionTagBlock(table: string, id: number, actionTagForm: ActionTagForm, opts: any): Promise<any>;
+    executeActionTagBlock(table: string, id: number, actionTagForm: BlockActionTagForm, opts: any): Promise<any>;
 }

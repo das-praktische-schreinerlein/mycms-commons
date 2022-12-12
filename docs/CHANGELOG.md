@@ -14,10 +14,13 @@
 - improved object-detection: add and use service-functions to create objects if not already defined
 - object-utils ignore empty src on object-explode
 - commons: extended fileutils to delete files and split json.files
+- commons: add ProcessUtils
+- commons: extend actiontag-blocked with visibility-value
 
 ### new features
 - commons: introduced itemjs-dataimporter
 - commons: extended fileutils to delete files and split json.files
+- commons: add ProcessUtils
 
 ### improvements
 - commons: improved itemsjs-adapter
@@ -26,6 +29,7 @@
 - commons: synced functionality of sql-filter to solr, itemsjs
 - commons: improved object-detection: add and use service-functions to create objects if not already defined
 - commons: use serial promises on multisearch to prevent overload on database
+- commons: extend actiontag-blocked with visibility-value
 
 ### bug fixes
 - commons: object/mapper-utils merge values to unique-values (default)
