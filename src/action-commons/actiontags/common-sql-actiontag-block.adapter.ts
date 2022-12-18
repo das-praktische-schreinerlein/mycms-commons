@@ -30,7 +30,7 @@ export class CommonSqlActionTagBlockAdapter {
     private readonly knex: any;
     private sqlQueryBuilder: SqlQueryBuilder;
     private readonly blockConfigs: ActionTagBlockConfigType;
-    private rateValidationRule = new NumberValidationRule(false, 0, 25, undefined);
+    private rateValidationRule = new NumberValidationRule(false, -99, 99, undefined);
 
     constructor(config: any, knex: any, sqlQueryBuilder: SqlQueryBuilder, blockConfigs: ActionTagBlockConfigType) {
         this.config = config;

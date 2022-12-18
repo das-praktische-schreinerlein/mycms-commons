@@ -5,7 +5,7 @@ var sql_utils_1 = require("../../search-commons/services/sql-utils");
 var generic_validator_util_1 = require("../../search-commons/model/forms/generic-validator.util");
 var CommonSqlActionTagBlockAdapter = /** @class */ (function () {
     function CommonSqlActionTagBlockAdapter(config, knex, sqlQueryBuilder, blockConfigs) {
-        this.rateValidationRule = new generic_validator_util_1.NumberValidationRule(false, 0, 25, undefined);
+        this.rateValidationRule = new generic_validator_util_1.NumberValidationRule(false, -99, 99, undefined);
         this.config = config;
         this.knex = knex;
         this.sqlQueryBuilder = sqlQueryBuilder;
