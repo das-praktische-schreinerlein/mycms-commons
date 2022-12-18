@@ -36,7 +36,7 @@ export interface CommonDocRecordType extends BaseEntityRecordType {
 
 export class CommonDocRecord extends BaseEntityRecord implements CommonDocRecordType {
     static cdocFields = {
-        blocked: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, -5, 5, undefined)),
+              blocked: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, -99, 99, undefined)),
 
         dateshow: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.DATE, new DateValidationRule(false)),
         descTxt: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.TEXT, new DescValidationRule(false)),
