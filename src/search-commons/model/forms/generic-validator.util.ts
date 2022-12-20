@@ -1,4 +1,4 @@
-import * as XRegExp from 'xregexp';
+import * as XRegExp from 'xregexp/lib';
 
 export enum GenericValidatorDatatypes {
     'FULLTEXT', 'ID', 'PERPAGE', 'PAGENUM', 'SORT',

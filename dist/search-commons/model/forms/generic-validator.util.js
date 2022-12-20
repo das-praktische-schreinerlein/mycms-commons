@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var XRegExp = require("xregexp");
+var XRegExp = require("xregexp/lib");
 var GenericValidatorDatatypes;
 (function (GenericValidatorDatatypes) {
     GenericValidatorDatatypes[GenericValidatorDatatypes["FULLTEXT"] = 0] = "FULLTEXT";
