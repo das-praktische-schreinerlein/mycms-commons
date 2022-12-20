@@ -16,11 +16,13 @@
 - commons: extended fileutils to delete files and split json.files
 - commons: add ProcessUtils
 - commons: extend actiontag-blocked with visibility-value
+- commons: moved common geo-functionality from frontend-commons to commons/geo-commons
 
 ### new features
 - commons: introduced itemjs-dataimporter
 - commons: extended fileutils to delete files and split json.files
 - commons: add ProcessUtils
+- commons: moved common geo-functionality from frontend-commons to commons/geo-commons
 
 ### improvements
 - commons: improved itemsjs-adapter
