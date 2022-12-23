@@ -24,7 +24,7 @@ var CommonDocDocExportService = /** @class */ (function () {
             ];
         };
         return this.dataService.batchProcessSearchResult(searchForm, callback, {
-            loadDetailsMode: undefined,
+            loadDetailsMode: 'full',
             loadTrack: false,
             showFacets: false,
             showForm: false

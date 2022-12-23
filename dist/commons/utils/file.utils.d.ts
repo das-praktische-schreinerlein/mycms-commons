@@ -5,6 +5,7 @@ export declare class FileUtils {
     static moveFile(srcPath: string, destPath: string, overwrite: boolean, allowParentSymLink?: boolean, allowFileSymLink?: boolean): Promise<string>;
     static moveDir(srcPath: string, destPath: string, overwrite: boolean, allowParentSymLink?: boolean): Promise<string>;
     static copyDir(srcPath: string, destPath: string, overwrite: boolean, allowParentSymLink?: boolean): Promise<string>;
+    static mergeJsonFiles(srcFiles: string[], targetFileName: string, idField?: string, parent?: string): Promise<string>;
     static splitJsonFile(srcFile: string, targetFileBase: string, targetFileSuffix: string, chunkSize: number, parent?: string, targetContentConverter?: Function): Promise<string[]>;
     static deleteFilesInDirectoryByPattern(targetBase: string, targetSuffix: string): Promise<string[]>;
 }

@@ -190,6 +190,71 @@ export class FileUtils {
         });
     }
 
+    public static mergeJsonFiles(srcFiles: string[], targetFileName: string, idField?: string, parent?: string): Promise<string> {
+
+        let err = this.checkFilePath(targetFileName, false,  false, false,
+            true, false);
+        if (err) {
+            return Promise.reject('targetFileName is invalid: ' + err);
+        }
+
+        const me = this;
+        return new Promise<string>((passed, failure) => {
+            let records = [];
+            const alreadyFoundIds = {}
+            for (const srcFile of srcFiles) {
+                let data;
+                try {
+                    data = fs.readFileSync(srcFile, {encoding: 'utf8'});
+                } catch (err) {
+                    console.error('error while merging json-file: ' + srcFile, err);
+                    return failure('error while reading srcFile: ' + err);
+                }
+
+                let jsonArray = JSON.parse(data);
+                if (parent) {
+                    jsonArray = jsonArray[parent];
+                }
+
+                if (!idField) {
+                    records = records.concat(jsonArray);
+                    continue;
+                }
+
+                for (let i = 0; i < jsonArray.length; i++) {
+                    const record = jsonArray[i];
+                    const id = record[idField];
+
+                    if (id && alreadyFoundIds[id]) {
+                        continue;
+                    }
+
+                    records.push(record);
+                    alreadyFoundIds[id] = true;
+                }
+
+            }
+
+            let result;
+            if (parent) {
+                const object  = {};
+                object[parent] = records;
+                result = JSON.stringify(object);
+            } else {
+                result = JSON.stringify(records);
+            }
+
+            try {
+                fs.writeFileSync(targetFileName, result);
+            } catch (err) {
+                console.error('error while merging json-files into: ' + targetFileName, err);
+                return failure('error while writing targetFileName: ' + err);
+            }
+
+            return passed(targetFileName);
+        });
+    }
+
     public static splitJsonFile(srcFile: string, targetFileBase: string, targetFileSuffix: string, chunkSize: number,
                                 parent?: string, targetContentConverter?: Function): Promise<string[]> {
 

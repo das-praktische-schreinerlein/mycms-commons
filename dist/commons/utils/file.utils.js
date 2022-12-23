@@ -158,6 +158,62 @@ var FileUtils = /** @class */ (function () {
             });
         });
     };
+    FileUtils.mergeJsonFiles = function (srcFiles, targetFileName, idField, parent) {
+        var err = this.checkFilePath(targetFileName, false, false, false, true, false);
+        if (err) {
+            return Promise.reject('targetFileName is invalid: ' + err);
+        }
+        var me = this;
+        return new Promise(function (passed, failure) {
+            var records = [];
+            var alreadyFoundIds = {};
+            for (var _i = 0, srcFiles_1 = srcFiles; _i < srcFiles_1.length; _i++) {
+                var srcFile = srcFiles_1[_i];
+                var data = void 0;
+                try {
+                    data = fs.readFileSync(srcFile, { encoding: 'utf8' });
+                }
+                catch (err) {
+                    console.error('error while merging json-file: ' + srcFile, err);
+                    return failure('error while reading srcFile: ' + err);
+                }
+                var jsonArray = JSON.parse(data);
+                if (parent) {
+                    jsonArray = jsonArray[parent];
+                }
+                if (!idField) {
+                    records = records.concat(jsonArray);
+                    continue;
+                }
+                for (var i = 0; i < jsonArray.length; i++) {
+                    var record = jsonArray[i];
+                    var id = record[idField];
+                    if (id && alreadyFoundIds[id]) {
+                        continue;
+                    }
+                    records.push(record);
+                    alreadyFoundIds[id] = true;
+                }
+            }
+            var result;
+            if (parent) {
+                var object = {};
+                object[parent] = records;
+                result = JSON.stringify(object);
+            }
+            else {
+                result = JSON.stringify(records);
+            }
+            try {
+                fs.writeFileSync(targetFileName, result);
+            }
+            catch (err) {
+                console.error('error while merging json-files into: ' + targetFileName, err);
+                return failure('error while writing targetFileName: ' + err);
+            }
+            return passed(targetFileName);
+        });
+    };
     FileUtils.splitJsonFile = function (srcFile, targetFileBase, targetFileSuffix, chunkSize, parent, targetContentConverter) {
         var _this = this;
         var err = this.checkFilePath(srcFile, false, false, true, true, true);

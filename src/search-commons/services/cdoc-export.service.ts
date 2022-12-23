@@ -61,7 +61,7 @@ export abstract class CommonDocDocExportService<R extends CommonDocRecord, F ext
         };
 
         return this.dataService.batchProcessSearchResult(searchForm, callback, {
-            loadDetailsMode: undefined,
+            loadDetailsMode: 'full',
             loadTrack: false,
             showFacets: false,
             showForm: false
