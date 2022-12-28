@@ -1,15 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var geo_formatter_1 = require("./geo.formatter");
 var AbstractGeoParser = /** @class */ (function () {
     function AbstractGeoParser() {
     }
     AbstractGeoParser.prototype.humanLen = function (l) {
-        if (l < 2000) {
-            return l.toFixed(0) + ' m';
-        }
-        else {
-            return (l / 1000).toFixed(1) + ' km';
-        }
+        return geo_formatter_1.GeoFormatter.humanLen(l);
     };
     AbstractGeoParser.prototype.polylineLen = function (ll) {
         var d = 0, p = null;

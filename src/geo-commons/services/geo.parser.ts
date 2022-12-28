@@ -1,14 +1,11 @@
 import {GeoElementBase, LatLngBase} from '../model/geoElementTypes';
+import {GeoFormatter} from './geo.formatter';
 
 export abstract class AbstractGeoParser<T extends LatLngBase>  {
     abstract parse(src: string, options): GeoElementBase<T>[];
 
     protected humanLen(l) {
-        if (l < 2000) {
-            return l.toFixed(0) + ' m';
-        } else {
-            return (l / 1000).toFixed(1) + ' km';
-        }
+        return GeoFormatter.humanLen(l);
     }
 
     protected polylineLen(ll: T[]) {
@@ -20,6 +17,7 @@ export abstract class AbstractGeoParser<T extends LatLngBase>  {
 
             p = ll[i];
         }
+
         return d;
     }
 }

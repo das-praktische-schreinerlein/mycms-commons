@@ -1,7 +1,7 @@
 import {AbstractGeoParser} from './geo.parser';
 import {DateUtils} from '../../commons/utils/date.utils';
 import {GeoGpxUtils} from './geogpx.utils';
-import {GeoElementBase, GeoElementType, LatLngBase} from '../model/geoElementTypes';
+import {GeoElementBase, GeoElementType, LatLngBase, LatLngTimeBase} from '../model/geoElementTypes';
 
 export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends AbstractGeoParser<T> {
     constructor(protected geoGpxUtils?: GeoGpxUtils) {
@@ -35,6 +35,100 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
         }
 
         return elements;
+    }
+
+    public createGpxTrack(name: string, type: string, segments: string[]): string {
+        let newGpx = '<trk><type>' + type + '</type><name>' + name + '</name>';
+        if (segments) {
+            for (let i = 0; i < segments.length; i++) {
+                const segment = segments[i];
+                newGpx = newGpx + segment;
+            }
+        }
+
+        newGpx = newGpx + '</trk>';
+
+        return newGpx;
+    }
+
+    public createGpxTrackSegment(points: LatLngBase[], defaultPosition: LatLngTimeBase): string {
+        if (!points || points.length <= 0) {
+            return '';
+        }
+
+        let lastTime = defaultPosition && defaultPosition.time
+            ? typeof defaultPosition.time === 'string'
+                ? defaultPosition.time
+                : defaultPosition.time.toISOString()
+            : undefined;
+        let lastAlt = defaultPosition && defaultPosition.alt
+            ? defaultPosition.alt
+            : undefined;
+
+        let newGpx = '<trkseg>';
+        for (let i = 0; i < points.length; i++) {
+            const point = points[i];
+            const time = point['time']
+                ? typeof point['time'] === 'string'
+                    ? point['time']
+                    : point['time'].toISOString()
+                : lastTime;
+            const alt = point['alt']
+                ? point['alt']
+                : lastAlt;
+
+            newGpx = newGpx + '<trkpt lat="' + point.lat + '" lon="' + point.lng + '">' +
+                (alt ? '<ele>' + alt + '</ele>' : '') +
+                (time ? '<time>' + time + '</time>' : '') +
+                '</trkpt>';
+
+            lastTime = time;
+            lastAlt = alt;
+        }
+
+        newGpx = newGpx + '</trkseg>';
+
+        return newGpx;
+    }
+
+    public createGpxRoute(name: string, type: string, points: LatLngBase[], defaultPosition: LatLngTimeBase): string {
+        if (!points || points.length <= 0) {
+            return '';
+        }
+
+        let lastTime = defaultPosition && defaultPosition.time
+            ? typeof defaultPosition.time === 'string'
+                ? defaultPosition.time
+                : defaultPosition.time.toISOString()
+            : undefined;
+        let lastAlt = defaultPosition && defaultPosition.alt !== 0
+            ? defaultPosition.alt
+            : undefined;
+
+        let newGpx = '<rte><type>' + type + '</type><name>' + name + '</name>';
+        for (let i = 0; i < points.length; i++) {
+            const point = points[i];
+            const time = point['time']
+                ? typeof point['time'] === 'string'
+                    ? point['time']
+                    : point['time'].toISOString()
+                : lastTime;
+            const alt = point['alt']
+                ? point['alt']
+                : lastAlt;
+
+            newGpx = newGpx + '<rtept lat="' + point.lat + '" lon="' + point.lng + '">' +
+                (alt ? '<ele>' + alt + '</ele>' : '') +
+                (time ? '<time>' + time + '</time>' : '') +
+                '</rtept>';
+
+            lastTime = time;
+            lastAlt = alt;
+        }
+
+        newGpx = newGpx + '</rte>';
+
+        return newGpx;
     }
 
     protected parseGpxDom(gpxDom: Document, options): GeoElementBase<T>[] {

@@ -45,6 +45,83 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
         }
         return elements;
     };
+    AbstractGeoGpxParser.prototype.createGpxTrack = function (name, type, segments) {
+        var newGpx = '<trk><type>' + type + '</type><name>' + name + '</name>';
+        if (segments) {
+            for (var i = 0; i < segments.length; i++) {
+                var segment = segments[i];
+                newGpx = newGpx + segment;
+            }
+        }
+        newGpx = newGpx + '</trk>';
+        return newGpx;
+    };
+    AbstractGeoGpxParser.prototype.createGpxTrackSegment = function (points, defaultPosition) {
+        if (!points || points.length <= 0) {
+            return '';
+        }
+        var lastTime = defaultPosition && defaultPosition.time
+            ? typeof defaultPosition.time === 'string'
+                ? defaultPosition.time
+                : defaultPosition.time.toISOString()
+            : undefined;
+        var lastAlt = defaultPosition && defaultPosition.alt
+            ? defaultPosition.alt
+            : undefined;
+        var newGpx = '<trkseg>';
+        for (var i = 0; i < points.length; i++) {
+            var point = points[i];
+            var time = point['time']
+                ? typeof point['time'] === 'string'
+                    ? point['time']
+                    : point['time'].toISOString()
+                : lastTime;
+            var alt = point['alt']
+                ? point['alt']
+                : lastAlt;
+            newGpx = newGpx + '<trkpt lat="' + point.lat + '" lon="' + point.lng + '">' +
+                (alt ? '<ele>' + alt + '</ele>' : '') +
+                (time ? '<time>' + time + '</time>' : '') +
+                '</trkpt>';
+            lastTime = time;
+            lastAlt = alt;
+        }
+        newGpx = newGpx + '</trkseg>';
+        return newGpx;
+    };
+    AbstractGeoGpxParser.prototype.createGpxRoute = function (name, type, points, defaultPosition) {
+        if (!points || points.length <= 0) {
+            return '';
+        }
+        var lastTime = defaultPosition && defaultPosition.time
+            ? typeof defaultPosition.time === 'string'
+                ? defaultPosition.time
+                : defaultPosition.time.toISOString()
+            : undefined;
+        var lastAlt = defaultPosition && defaultPosition.alt !== 0
+            ? defaultPosition.alt
+            : undefined;
+        var newGpx = '<rte><type>' + type + '</type><name>' + name + '</name>';
+        for (var i = 0; i < points.length; i++) {
+            var point = points[i];
+            var time = point['time']
+                ? typeof point['time'] === 'string'
+                    ? point['time']
+                    : point['time'].toISOString()
+                : lastTime;
+            var alt = point['alt']
+                ? point['alt']
+                : lastAlt;
+            newGpx = newGpx + '<rtept lat="' + point.lat + '" lon="' + point.lng + '">' +
+                (alt ? '<ele>' + alt + '</ele>' : '') +
+                (time ? '<time>' + time + '</time>' : '') +
+                '</rtept>';
+            lastTime = time;
+            lastAlt = alt;
+        }
+        newGpx = newGpx + '</rte>';
+        return newGpx;
+    };
     AbstractGeoGpxParser.prototype.parseGpxDom = function (gpxDom, options) {
         var j, i;
         var el;
