@@ -9,4 +9,5 @@ export declare abstract class AbstractTrackStatisticService<T extends LatLngBase
     formatMillisToHH24(l: number): number;
     protected abstract getLocalDateTimeForLatLng(position: T): Date;
     protected abstract getLatLngBounds(coords: T[]): B;
+    protected abstract calcDistance(from: T, to: T): number;
 }

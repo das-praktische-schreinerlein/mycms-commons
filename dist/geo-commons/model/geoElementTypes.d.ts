@@ -8,7 +8,6 @@ export interface LatLngBase {
     lat: number;
     lng: number;
     alt?: number;
-    distanceTo(otherLatLng: LatLngBase): number;
 }
 export interface LatLngTimeBase extends LatLngBase {
     time: Date;

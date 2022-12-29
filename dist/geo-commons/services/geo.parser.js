@@ -11,7 +11,7 @@ var AbstractGeoParser = /** @class */ (function () {
         var d = 0, p = null;
         for (var i = 0; i < ll.length; i++) {
             if (i && p) {
-                d += p.distanceTo(ll[i]);
+                d += this.calcDistance(p, ll[i]);
             }
             p = ll[i];
         }

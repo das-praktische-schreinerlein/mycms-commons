@@ -33,14 +33,20 @@ var AbstractTrackStatisticService = /** @class */ (function () {
         return this.trackStatistics(geoElement.points);
     };
     AbstractTrackStatisticService.prototype.trackStatistics = function (ll) {
-        var posStart = (ll.length > 0 ? ll[0] : undefined);
-        var posEnd = (ll.length > 0 ? ll[ll.length - 1] : undefined);
+        var posStart = ll.length > 0
+            ? ll[0]
+            : undefined;
+        var posEnd = ll.length > 0
+            ? ll[ll.length - 1]
+            : undefined;
         var dateStart = this.getLocalDateTimeForLatLng(posStart);
         var dateEnd = this.getLocalDateTimeForLatLng(posEnd);
         var t = {
             altAsc: undefined,
             altDesc: undefined,
-            dist: (ll.length > 0 ? 0 : undefined),
+            dist: ll.length > 0
+                ? 0
+                : undefined,
             velocity: undefined,
             altAscVelocity: undefined,
             altDescVelocity: undefined,
@@ -60,16 +66,20 @@ var AbstractTrackStatisticService = /** @class */ (function () {
         for (var i = 0; i < ll.length; i++) {
             var p = ll[i];
             if (p && l) {
-                t.dist += l.distanceTo(p);
+                t.dist += this.calcDistance(l, p);
             }
             if (p.alt !== undefined) {
                 if (t.altEnd !== undefined) {
                     var diff = math_utils_1.MathUtils.sub(math_utils_1.MathUtils.round(p.alt), math_utils_1.MathUtils.round(t.altEnd));
                     if (diff > 0) {
-                        t.altAsc = (t.altAsc !== undefined ? t.altAsc + diff : diff);
+                        t.altAsc = t.altAsc !== undefined
+                            ? t.altAsc + diff
+                            : diff;
                     }
                     else {
-                        t.altDesc = (t.altDesc !== undefined ? t.altDesc - diff : -diff);
+                        t.altDesc = t.altDesc !== undefined
+                            ? t.altDesc - diff
+                            : -diff;
                     }
                 }
                 t.altMin = math_utils_1.MathUtils.min(t.altMin, p.alt);

@@ -34,14 +34,20 @@ export abstract class AbstractTrackStatisticService<T extends LatLngBase, B exte
     }
 
     public trackStatistics(ll: T[]): TrackStatisticBase<T, B> {
-        const posStart: T = (ll.length > 0 ? ll[0] : undefined);
-        const posEnd: T = (ll.length > 0 ? ll[ll.length - 1] : undefined);
+        const posStart: T = ll.length > 0
+            ? ll[0]
+            : undefined;
+        const posEnd: T = ll.length > 0
+            ? ll[ll.length - 1]
+            : undefined;
         const dateStart = this.getLocalDateTimeForLatLng(posStart);
         const dateEnd = this.getLocalDateTimeForLatLng(posEnd);
         const t: TrackStatisticBase<T, B> = {
             altAsc: undefined,
             altDesc: undefined,
-            dist: (ll.length > 0 ? 0 : undefined),
+            dist: ll.length > 0
+                ? 0
+                : undefined,
             velocity: undefined,
             altAscVelocity: undefined,
             altDescVelocity: undefined,
@@ -62,15 +68,20 @@ export abstract class AbstractTrackStatisticService<T extends LatLngBase, B exte
         for (let i = 0; i < ll.length; i++) {
             const p = ll[i];
             if (p && l) {
-                t.dist += l.distanceTo(p);
+                t.dist += this.calcDistance(l, p);
             }
+
             if (p.alt !== undefined) {
                 if (t.altEnd !== undefined) {
                     const diff = MathUtils.sub(MathUtils.round(p.alt), MathUtils.round(t.altEnd));
                     if (diff > 0) {
-                        t.altAsc = (t.altAsc !== undefined ? t.altAsc + diff : diff);
+                        t.altAsc = t.altAsc !== undefined
+                            ? t.altAsc + diff
+                            : diff;
                     } else {
-                        t.altDesc = (t.altDesc !== undefined ? t.altDesc - diff : -diff);
+                        t.altDesc = t.altDesc !== undefined
+                            ? t.altDesc - diff
+                            : -diff;
                     }
                 }
 
@@ -80,6 +91,7 @@ export abstract class AbstractTrackStatisticService<T extends LatLngBase, B exte
                 if (t.altStart === undefined) {
                     t.altStart = p.alt;
                 }
+
                 t.altEnd = p.alt;
 
                 altSum = MathUtils.sum(altSum, p.alt);
@@ -87,9 +99,11 @@ export abstract class AbstractTrackStatisticService<T extends LatLngBase, B exte
             }
             l = p;
         }
+
         if (altSum > 0) {
             t.altAvg = altSum / altCount;
         }
+
         if (t.dateEnd !== undefined && t.dateStart !== undefined) {
             fullDuration = t.dateEnd.getTime() - t.dateStart.getTime();
             t.duration = this.formatMillisToHH24(fullDuration);
@@ -202,4 +216,6 @@ export abstract class AbstractTrackStatisticService<T extends LatLngBase, B exte
     protected abstract getLocalDateTimeForLatLng(position: T): Date;
 
     protected abstract getLatLngBounds(coords: T[]): B;
+
+    protected abstract calcDistance(from: T, to: T): number;
 }

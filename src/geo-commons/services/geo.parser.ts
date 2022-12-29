@@ -4,6 +4,8 @@ import {GeoFormatter} from './geo.formatter';
 export abstract class AbstractGeoParser<T extends LatLngBase>  {
     abstract parse(src: string, options): GeoElementBase<T>[];
 
+    protected abstract calcDistance(from: T, to: T): number;
+
     protected humanLen(l) {
         return GeoFormatter.humanLen(l);
     }
@@ -12,7 +14,7 @@ export abstract class AbstractGeoParser<T extends LatLngBase>  {
         let d = 0, p = null;
         for (let i = 0; i < ll.length; i++) {
             if (i && p) {
-                d += p.distanceTo(ll[i]);
+                d += this.calcDistance(p, ll[i]);
             }
 
             p = ll[i];
@@ -20,4 +22,5 @@ export abstract class AbstractGeoParser<T extends LatLngBase>  {
 
         return d;
     }
+
 }
