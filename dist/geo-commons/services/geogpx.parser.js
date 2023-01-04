@@ -38,17 +38,17 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
     };
     AbstractGeoGpxParser.prototype.parse = function (xml, options) {
         if (!xml) {
-            console.error('cant parse GeoGpxParser: empty');
+            console.error('GeoGpxParser cant parse: empty');
             return;
         }
         xml = this.geoGpxUtils.fixXml(xml);
         if (!(xml.startsWith('<?xml'))) {
-            console.error('cant parse GeoGpxParser: no valid xml');
+            console.error('GeoGpxParser cant parse: no valid xml');
             return;
         }
         var gpxDom = this.parseDomFromString(xml);
         if (gpxDom.getElementsByTagName('parsererror').length > 0) {
-            console.error('cant parse GeoGpxParser: parsererror', gpxDom.getElementsByTagName('parsererror')[0]);
+            console.error('GeoGpxParser cant parse: parsererror', gpxDom.getElementsByTagName('parsererror')[0]);
             return;
         }
         var elements = this.parseGpxDom(gpxDom, options);

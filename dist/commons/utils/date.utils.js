@@ -26,7 +26,7 @@ var DateUtils = /** @class */ (function () {
         if (date === undefined || date === null || (util_1.isString(date) && date.toString() === '') || !util_1.isString(date)) {
             return undefined;
         }
-        // parse Date for locatime
+        // parse Date for localtime ISO
         var dateParts = date.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):{0,1}(\d{2}){0,1}$/);
         if (dateParts !== null) {
             dateParts = dateParts.slice(1);
@@ -34,6 +34,31 @@ var DateUtils = /** @class */ (function () {
             date = new Date();
             date.setFullYear(dateParts[0], dateParts[1], dateParts[2]);
             date.setHours(dateParts[3], dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined ? dateParts[5] : 0);
+            date.setMilliseconds(0);
+            return date;
+        }
+        // parse Date for localtime German
+        dateParts = date.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
+        if (dateParts !== null) {
+            dateParts = dateParts.slice(1);
+            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
+            date = new Date();
+            date.setFullYear(dateParts[2], dateParts[1], dateParts[0]);
+            date.setHours(dateParts[3], dateParts[4], dateParts[5]);
+            date.setMilliseconds(0);
+            return date;
+        }
+        // parse Date for localtime German with timezone
+        dateParts = date.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2}) \(UTC([-+0-9])+\)$/);
+        if (dateParts !== null) {
+            dateParts = dateParts.slice(1);
+            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
+            date = new Date();
+            date.setFullYear(dateParts[2], dateParts[1], dateParts[0]);
+            var timezoneOffset = Number(dateParts[6]);
+            var hour = Number(dateParts[3]) + timezoneOffset - date.getTimezoneOffset() / 60; // add with date.timezoneOffset and local.timezoneOffset
+            date.setHours(hour, dateParts[4], dateParts[5]);
+            date.setMilliseconds(0);
             return date;
         }
         return new Date(Date.parse(date));

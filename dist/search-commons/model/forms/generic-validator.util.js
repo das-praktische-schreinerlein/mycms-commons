@@ -133,6 +133,7 @@ var RegExValidationReplaceRule = /** @class */ (function (_super) {
         if (this.maxLength !== undefined && value.length > this.maxLength) {
             return false;
         }
+        // TODO check if this is ok -> add test with multi-threading checks
         var res = XRegExp.match(value, this._checkRegEx, 'one');
         /**
         if (res === null) {
@@ -150,6 +151,7 @@ var RegExValidationReplaceRule = /** @class */ (function (_super) {
         if (typeof value !== 'string') {
             return undefined;
         }
+        // TODO check if this is ok -> add test with multi-threading checks
         var result = XRegExp.replace(value, this._replaceRegEx, this._replaceMent);
         // console.error("sanitize value:" + value + " to replaceValue: " + result);
         return result;

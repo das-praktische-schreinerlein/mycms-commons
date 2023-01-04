@@ -197,6 +197,7 @@ export class RegExValidationReplaceRule extends ValidationRule {
             return false;
         }
 
+        // TODO check if this is ok -> add test with multi-threading checks
         const res = XRegExp.match(value, this._checkRegEx, 'one');
 
         /**
@@ -217,6 +218,8 @@ export class RegExValidationReplaceRule extends ValidationRule {
         if (typeof value !== 'string') {
             return undefined;
         }
+
+        // TODO check if this is ok -> add test with multi-threading checks
         const result = XRegExp.replace(value, this._replaceRegEx, this._replaceMent);
         // console.error("sanitize value:" + value + " to replaceValue: " + result);
         return result;

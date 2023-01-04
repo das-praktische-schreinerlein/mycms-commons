@@ -29,19 +29,19 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
 
     public parse(xml: string, options): GeoElementBase<T>[] {
         if (!xml) {
-            console.error('cant parse GeoGpxParser: empty');
+            console.error('GeoGpxParser cant parse: empty');
             return;
         }
 
         xml = this.geoGpxUtils.fixXml(xml);
         if (!(xml.startsWith('<?xml'))) {
-            console.error('cant parse GeoGpxParser: no valid xml');
+            console.error('GeoGpxParser cant parse: no valid xml');
             return;
         }
 
         const gpxDom: Document = this.parseDomFromString(xml);
         if (gpxDom.getElementsByTagName('parsererror').length > 0) {
-            console.error('cant parse GeoGpxParser: parsererror', gpxDom.getElementsByTagName('parsererror')[0]);
+            console.error('GeoGpxParser cant parse: parsererror', gpxDom.getElementsByTagName('parsererror')[0]);
             return;
         }
 
