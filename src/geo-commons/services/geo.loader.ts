@@ -24,4 +24,12 @@ export class CommonGeoLoader {
             return resolve(this.parser.parse(src, options));
         });
     }
+
+    isResponsibleForSrc(src: string): boolean {
+        return this.parser.isResponsibleForSrc(src);
+    }
+
+    isResponsibleForFile(fileName: string): boolean {
+        return this.parser.isResponsibleForFile(fileName);
+    }
 }

@@ -9,4 +9,6 @@ export declare class StringUtils {
     static findNeedle(source: string, needle: string, findIdx: number): number;
     static padStart(source: string, paddingValue: string): string;
     static formatToShortFileNameDate(date: Date, dateSeparator: string): string;
+    static normalizeWhiteSpaceForParser(src: string): string;
+    static removeWhitespaces(src: string): string;
 }

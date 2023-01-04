@@ -109,4 +109,21 @@ export class StringUtils {
             StringUtils.padStart(date.getDate().toString(), '00')].join('');
     }
 
+    public static normalizeWhiteSpaceForParser(src: string): string {
+        if (src === undefined || src.length === 0) {
+            return src;
+        }
+
+        return src.replace(/[\r\n]+/g, '\n')
+            .replace(/\n \n/g, '\n')
+            .replace(/[ ]+/g, ' ')
+    }
+
+    public static removeWhitespaces(src: string): string {
+        if (src === undefined || src.length === 0) {
+            return src;
+        }
+
+        return src.replace(/[ \r\n\t]+/g, '');
+    }
 }

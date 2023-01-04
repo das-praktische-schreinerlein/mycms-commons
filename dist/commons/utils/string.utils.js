@@ -99,6 +99,20 @@ var StringUtils = /** @class */ (function () {
             dateSeparator,
             StringUtils.padStart(date.getDate().toString(), '00')].join('');
     };
+    StringUtils.normalizeWhiteSpaceForParser = function (src) {
+        if (src === undefined || src.length === 0) {
+            return src;
+        }
+        return src.replace(/[\r\n]+/g, '\n')
+            .replace(/\n \n/g, '\n')
+            .replace(/[ ]+/g, ' ');
+    };
+    StringUtils.removeWhitespaces = function (src) {
+        if (src === undefined || src.length === 0) {
+            return src;
+        }
+        return src.replace(/[ \r\n\t]+/g, '');
+    };
     return StringUtils;
 }());
 exports.StringUtils = StringUtils;

@@ -7,4 +7,6 @@ export declare class CommonGeoLoader {
     constructor(http: MinimalHttpBackendClient, parser: AbstractGeoParser<any>);
     loadDataFromUrl(url: string, options: any): Promise<GeoElementBase<any>[]>;
     loadData(src: string, options: any): Promise<GeoElementBase<any>[]>;
+    isResponsibleForSrc(src: string): boolean;
+    isResponsibleForFile(fileName: string): boolean;
 }

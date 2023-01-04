@@ -3,7 +3,24 @@ import {DateUtils} from '../../commons/utils/date.utils';
 import {GeoElementBase, GeoElementType, LatLngBase} from '../model/geoElementTypes';
 
 export abstract class AbstractGeoJsonParser<T extends LatLngBase> extends AbstractGeoParser<T> {
-    parse(json: string, options): GeoElementBase<T>[] {
+    public static isResponsibleForSrc(src: string): boolean {
+        return src !== undefined && /^[\r\n ]*\[[\r\n ]*{[\r\n ]*"track"/g.test(src);
+    }
+
+    public static isResponsibleForFile(fileName: string): boolean {
+        return fileName !== undefined &&
+            (fileName.toLowerCase().endsWith('.json') ||  fileName.toLowerCase().endsWith('.geojson'));
+    }
+
+    public isResponsibleForSrc(src: string): boolean {
+        return AbstractGeoJsonParser.isResponsibleForSrc(src);
+    }
+
+    public isResponsibleForFile(fileName: string): boolean {
+        return AbstractGeoJsonParser.isResponsibleForFile(fileName);
+    }
+
+    public parse(json: string, options): GeoElementBase<T>[] {
         const obj = typeof json === 'string'
             ? JSON.parse(json)
             : json;
@@ -29,7 +46,7 @@ export abstract class AbstractGeoJsonParser<T extends LatLngBase> extends Abstra
             }
         }
 
-        return [this.createGeoElement(GeoElementType.TRACK, coords, obj['track']['tName'])];
+        return [this.createGeoElement(GeoElementType.TRACK, coords, obj['track']['tName'] || obj['track']['kName'])];
     }
 
     protected abstract createGeoElement(type: GeoElementType, points: T[], name: string): GeoElementBase<T>;

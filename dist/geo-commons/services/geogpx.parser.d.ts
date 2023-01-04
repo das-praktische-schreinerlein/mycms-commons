@@ -3,7 +3,11 @@ import { GeoGpxUtils } from './geogpx.utils';
 import { GeoElementBase, GeoElementType, LatLngBase, LatLngTimeBase } from '../model/geoElementTypes';
 export declare abstract class AbstractGeoGpxParser<T extends LatLngBase> extends AbstractGeoParser<T> {
     protected geoGpxUtils?: GeoGpxUtils;
+    static isResponsibleForSrc(src: string): boolean;
+    static isResponsibleForFile(fileName: string): boolean;
     constructor(geoGpxUtils?: GeoGpxUtils);
+    isResponsibleForSrc(src: string): boolean;
+    isResponsibleForFile(fileName: string): boolean;
     parse(xml: string, options: any): GeoElementBase<T>[];
     createGpxTrack(name: string, type: string, segments: string[]): string;
     createGpxTrackSegment(points: LatLngBase[], defaultPosition: LatLngTimeBase): string;

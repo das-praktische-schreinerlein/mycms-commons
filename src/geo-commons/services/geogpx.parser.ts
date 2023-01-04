@@ -4,11 +4,27 @@ import {GeoGpxUtils} from './geogpx.utils';
 import {GeoElementBase, GeoElementType, LatLngBase, LatLngTimeBase} from '../model/geoElementTypes';
 
 export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends AbstractGeoParser<T> {
+    public static isResponsibleForSrc(src: string): boolean {
+        return src !== undefined && /^[\r\n ]*<(\?xml|gpx|trk|rte|wpt')/g.test(src);
+    }
+
+    public static isResponsibleForFile(fileName: string): boolean {
+        return fileName !== undefined && fileName.toLowerCase().endsWith('.gpx');
+    }
+
     constructor(protected geoGpxUtils?: GeoGpxUtils) {
         super();
         if (!geoGpxUtils) {
             this.geoGpxUtils = new GeoGpxUtils();
         }
+    }
+
+    public isResponsibleForSrc(src: string): boolean {
+        return AbstractGeoGpxParser.isResponsibleForSrc(src);
+    }
+
+    public isResponsibleForFile(fileName: string): boolean {
+        return AbstractGeoGpxParser.isResponsibleForFile(fileName);
     }
 
     public parse(xml: string, options): GeoElementBase<T>[] {

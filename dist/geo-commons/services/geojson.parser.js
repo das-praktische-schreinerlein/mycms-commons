@@ -18,6 +18,19 @@ var AbstractGeoJsonParser = /** @class */ (function (_super) {
     function AbstractGeoJsonParser() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    AbstractGeoJsonParser.isResponsibleForSrc = function (src) {
+        return src !== undefined && /^[\r\n ]*\[[\r\n ]*{[\r\n ]*"track"/g.test(src);
+    };
+    AbstractGeoJsonParser.isResponsibleForFile = function (fileName) {
+        return fileName !== undefined &&
+            (fileName.toLowerCase().endsWith('.json') || fileName.toLowerCase().endsWith('.geojson'));
+    };
+    AbstractGeoJsonParser.prototype.isResponsibleForSrc = function (src) {
+        return AbstractGeoJsonParser.isResponsibleForSrc(src);
+    };
+    AbstractGeoJsonParser.prototype.isResponsibleForFile = function (fileName) {
+        return AbstractGeoJsonParser.isResponsibleForFile(fileName);
+    };
     AbstractGeoJsonParser.prototype.parse = function (json, options) {
         var obj = typeof json === 'string'
             ? JSON.parse(json)
@@ -40,7 +53,7 @@ var AbstractGeoJsonParser = /** @class */ (function (_super) {
                 coords.push(this.createLatLng(record[0], record[1], record[2]));
             }
         }
-        return [this.createGeoElement(geoElementTypes_1.GeoElementType.TRACK, coords, obj['track']['tName'])];
+        return [this.createGeoElement(geoElementTypes_1.GeoElementType.TRACK, coords, obj['track']['tName'] || obj['track']['kName'])];
     };
     return AbstractGeoJsonParser;
 }(geo_parser_1.AbstractGeoParser));

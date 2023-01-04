@@ -24,6 +24,18 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
         }
         return _this;
     }
+    AbstractGeoGpxParser.isResponsibleForSrc = function (src) {
+        return src !== undefined && /^[\r\n ]*<(\?xml|gpx|trk|rte|wpt')/g.test(src);
+    };
+    AbstractGeoGpxParser.isResponsibleForFile = function (fileName) {
+        return fileName !== undefined && fileName.toLowerCase().endsWith('.gpx');
+    };
+    AbstractGeoGpxParser.prototype.isResponsibleForSrc = function (src) {
+        return AbstractGeoGpxParser.isResponsibleForSrc(src);
+    };
+    AbstractGeoGpxParser.prototype.isResponsibleForFile = function (fileName) {
+        return AbstractGeoGpxParser.isResponsibleForFile(fileName);
+    };
     AbstractGeoGpxParser.prototype.parse = function (xml, options) {
         if (!xml) {
             console.error('cant parse GeoGpxParser: empty');

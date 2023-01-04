@@ -24,6 +24,12 @@ var CommonGeoLoader = /** @class */ (function () {
             return resolve(_this.parser.parse(src, options));
         });
     };
+    CommonGeoLoader.prototype.isResponsibleForSrc = function (src) {
+        return this.parser.isResponsibleForSrc(src);
+    };
+    CommonGeoLoader.prototype.isResponsibleForFile = function (fileName) {
+        return this.parser.isResponsibleForFile(fileName);
+    };
     return CommonGeoLoader;
 }());
 exports.CommonGeoLoader = CommonGeoLoader;
