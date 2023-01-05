@@ -121,7 +121,6 @@ var AbstractGeoTxtParser = /** @class */ (function (_super) {
                 var time = res[5].trim();
                 var ele = res[6].trim();
                 var date = date_utils_1.DateUtils.parseDate(time); // TODO check this
-                // Zonen auswerten
                 if (latD.toUpperCase() === 'S') {
                     lat = '-' + lat;
                 }
@@ -145,7 +144,6 @@ var AbstractGeoTxtParser = /** @class */ (function (_super) {
                 var timezone = res[6].trim();
                 var ele = res[7].trim();
                 var date = date_utils_1.DateUtils.parseDate(time + ' ' + timezone); // TODO check this
-                // Zonen auswerten
                 if (latD.toUpperCase() === 'S') {
                     lat = '-' + lat;
                 }

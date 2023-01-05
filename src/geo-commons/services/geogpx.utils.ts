@@ -59,9 +59,7 @@ export class GeoGpxUtils {
             return xml;
         }
 
-        xml = xml.replace(/[\r\n]/g, ' ')
-            .replace(/[ ]+/g, ' ')
-
+        xml = this.trimXml(xml)
             .replace(/<gpx /g, '\n<gpx ')
             .replace(/<gpx>/g, '\n<gpx>')
             .replace(/<\/gpx>/g, '\n</gpx>')
@@ -84,6 +82,16 @@ export class GeoGpxUtils {
         ;
 
         return xml;
+    }
+
+    public trimXml(xml: string): string {
+        if (!xml) {
+            return xml;
+        }
+
+        return xml.replace(/[\r\n]+/g, '\n')
+            .replace(/\n+/g, ' ')
+            .replace(/[ ]+/g, ' ');
     }
 
     public createNewRouteGpx(name: string, type: string, points: LatLngBase[]): string {

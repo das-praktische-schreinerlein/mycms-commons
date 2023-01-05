@@ -48,8 +48,7 @@ var GeoGpxUtils = /** @class */ (function () {
         if (!xml) {
             return xml;
         }
-        xml = xml.replace(/[\r\n]/g, ' ')
-            .replace(/[ ]+/g, ' ')
+        xml = this.trimXml(xml)
             .replace(/<gpx /g, '\n<gpx ')
             .replace(/<gpx>/g, '\n<gpx>')
             .replace(/<\/gpx>/g, '\n</gpx>')
@@ -66,6 +65,14 @@ var GeoGpxUtils = /** @class */ (function () {
             .replace(/<trkpt /g, '\n      <trkpt ')
             .replace(/<rtept /g, '\n    <rtept ');
         return xml;
+    };
+    GeoGpxUtils.prototype.trimXml = function (xml) {
+        if (!xml) {
+            return xml;
+        }
+        return xml.replace(/[\r\n]+/g, '\n')
+            .replace(/\n+/g, ' ')
+            .replace(/[ ]+/g, ' ');
     };
     GeoGpxUtils.prototype.createNewRouteGpx = function (name, type, points) {
         var newGpx = '<rte> <type>' + type + '</type><name>' + name + '</name> ';
