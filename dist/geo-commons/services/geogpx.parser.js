@@ -230,7 +230,7 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
         if (typeEl.length && typeEl[0].childNodes[0].nodeValue === 'AREA') {
             type = geoElementTypes_1.GeoElementType.AREA;
         }
-        return this.createGeoElement(type, coords, name);
+        return this.createGeoElement(type, coords, undefined);
     };
     AbstractGeoGpxParser.prototype.parseWpt = function (e, gpxDom) {
         return this.createGeoElement(geoElementTypes_1.GeoElementType.WAYPOINT, [this.createLatLng(e.getAttribute('lat'), e.getAttribute('lon'))], undefined);

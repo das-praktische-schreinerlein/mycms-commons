@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_utils_1 = require("../../commons/utils/math.utils");
 var geo_formatter_1 = require("./geo.formatter");
+var geodate_utils_1 = require("./geodate.utils");
 var AbstractTrackStatisticService = /** @class */ (function () {
     function AbstractTrackStatisticService() {
     }
@@ -188,6 +189,9 @@ var AbstractTrackStatisticService = /** @class */ (function () {
     };
     AbstractTrackStatisticService.prototype.formatMillisToHH24 = function (l) {
         return geo_formatter_1.GeoFormatter.formatMillisToHH24(l);
+    };
+    AbstractTrackStatisticService.prototype.getLocalDateTimeForLatLng = function (position) {
+        return geodate_utils_1.GeoDateUtils.getLocalDateTimeForLatLng(position);
     };
     return AbstractTrackStatisticService;
 }());

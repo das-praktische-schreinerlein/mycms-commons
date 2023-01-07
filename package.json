@@ -32,6 +32,7 @@
     "knex": ">= 0.15.2",
     "promise-serial": ">= 0.1.5",
     "rxjs": ">= 6.6.0",
+    "tz-lookup": ">= 6.1.25",
     "xregexp": ">= 4.3.0"
   },
   "devDependencies": {
@@ -57,6 +58,7 @@
     "knex": "0.15.2",
     "promise-serial": "0.1.5",
     "rxjs": "6.6.0",
+    "tz-lookup": "6.1.25",
     "xregexp": "4.3.0"
   }
 }

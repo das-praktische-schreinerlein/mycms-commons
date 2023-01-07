@@ -271,7 +271,7 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
             type = GeoElementType.AREA;
         }
 
-        return this.createGeoElement(type, coords, name);
+        return this.createGeoElement(type, coords, undefined);
     }
 
     protected parseWpt(e, gpxDom): GeoElementBase<T> {

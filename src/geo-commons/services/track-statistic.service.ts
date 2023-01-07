@@ -1,6 +1,7 @@
 import {MathUtils} from '../../commons/utils/math.utils';
 import {GeoElementBase, LatLngBase, LatLngBoundsBase, TrackStatisticBase} from '../model/geoElementTypes';
 import {GeoFormatter} from './geo.formatter';
+import {GeoDateUtils} from './geodate.utils';
 
 export abstract class AbstractTrackStatisticService<T extends LatLngBase, B extends LatLngBoundsBase<T>>  {
     public emptyStatistic(): TrackStatisticBase<T, B> {
@@ -212,8 +213,10 @@ export abstract class AbstractTrackStatisticService<T extends LatLngBase, B exte
     public formatMillisToHH24(l: number): number {
         return GeoFormatter.formatMillisToHH24(l);
     }
-    
-    protected abstract getLocalDateTimeForLatLng(position: T): Date;
+
+    protected getLocalDateTimeForLatLng(position: T): Date {
+        return GeoDateUtils.getLocalDateTimeForLatLng(position);
+    }
 
     protected abstract getLatLngBounds(coords: T[]): B;
 
