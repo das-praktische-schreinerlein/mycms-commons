@@ -10,7 +10,6 @@ var sql_query_builder_1 = require("../../search-commons/services/sql-query.build
 var Promise_serial = require("promise-serial");
 var string_utils_1 = require("../../commons/utils/string.utils");
 var hierarchy_utils_1 = require("../../commons/utils/hierarchy.utils");
-// TODO
 var BackendGeoServiceConfigType = /** @class */ (function () {
     function BackendGeoServiceConfigType() {
     }
@@ -59,6 +58,7 @@ var BackendGeoService = /** @class */ (function () {
                 '  WHERE ' + geoEntityDbMapping.fields.id + ' = ?',
             parameters: [id]
         };
+        console.trace('call readGeoEntityForId sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);
@@ -109,12 +109,13 @@ var BackendGeoService = /** @class */ (function () {
         }
         var readSqlQuery = {
             sql: this.generateBaseSqlForTable(geoEntityDbMapping) +
-                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL' +
+                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackTxt + ' IS NOT NULL' +
                 (force
                     ? ''
-                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackTxt + ' IS NOT NULL'),
+                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL'),
             parameters: []
         };
+        console.trace('call readGeoEntitiesWithTxtButNoGpx sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);
@@ -131,9 +132,15 @@ var BackendGeoService = /** @class */ (function () {
         }
         var readSqlQuery = {
             sql: this.generateBaseSqlForTable(geoEntityDbMapping) +
-                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL',
+                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL' +
+                (force
+                    ? ''
+                    : '  AND ' + geoEntityDbMapping.fields.id + ' NOT IN (' +
+                        ' SELECT DISTINCT ' + geoEntityDbMapping.pointFields.refId +
+                        ' FROM ' + geoEntityDbMapping.pointTable + ')'),
             parameters: []
         };
+        console.trace('call readGeoEntitiesWithGpxButNoPoints sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);
@@ -153,6 +160,7 @@ var BackendGeoService = /** @class */ (function () {
                 '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL',
             parameters: []
         };
+        console.trace('call readGeoEntitiesWithGpx sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);

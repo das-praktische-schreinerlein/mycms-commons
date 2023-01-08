@@ -13,7 +13,6 @@ import * as Promise_serial from 'promise-serial';
 import {StringUtils} from '../../commons/utils/string.utils';
 import {HierarchyConfig, HierarchyUtils} from '../../commons/utils/hierarchy.utils';
 
-// TODO
 export class BackendGeoServiceConfigType {
     apiRouteTracksStaticDir: string;
     hierarchyConfig: HierarchyConfig;
@@ -65,6 +64,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             parameters: [id]
         };
 
+        console.trace('call readGeoEntityForId sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
@@ -123,13 +123,14 @@ export class BackendGeoService implements AbstractBackendGeoService {
 
         const readSqlQuery: RawSqlQueryData = {
             sql: this.generateBaseSqlForTable(geoEntityDbMapping) +
-                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL' +
+                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackTxt + ' IS NOT NULL' +
                 (force
                     ? ''
-                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackTxt + ' IS NOT NULL'),
+                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL'),
             parameters: []
         };
 
+        console.trace('call readGeoEntitiesWithTxtButNoGpx sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
@@ -149,10 +150,17 @@ export class BackendGeoService implements AbstractBackendGeoService {
 
         const readSqlQuery: RawSqlQueryData = {
             sql: this.generateBaseSqlForTable(geoEntityDbMapping) +
-                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL',
+                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL' +
+            (force
+                ? ''
+                : '  AND ' + geoEntityDbMapping.fields.id + ' NOT IN (' +
+                    ' SELECT DISTINCT ' + geoEntityDbMapping.pointFields.refId +
+                    ' FROM ' + geoEntityDbMapping.pointTable + ')'
+            ),
             parameters: []
         };
 
+        console.trace('call readGeoEntitiesWithGpxButNoPoints sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
@@ -176,6 +184,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             parameters: []
         };
 
+        console.trace('call readGeoEntitiesWithGpx sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
