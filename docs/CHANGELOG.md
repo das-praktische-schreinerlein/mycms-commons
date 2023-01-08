@@ -17,6 +17,7 @@
 - commons: add ProcessUtils
 - commons: extend actiontag-blocked with visibility-value
 - commons: moved common geo-functionality from frontend-commons to commons/geo-commons
+- build: upgraded typescript
 
 ### new features
 - commons: introduced itemjs-dataimporter
@@ -39,6 +40,7 @@
 - commons: fix invalid cache usage in datastore
 - commons: object-utils ignore empty src on object-explode
 - commons: use serial promises on multisearch to prevent overload on database
+- build: upgraded typescript
 
 ### breaking changes
 - none

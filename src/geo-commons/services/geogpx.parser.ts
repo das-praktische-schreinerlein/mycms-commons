@@ -149,7 +149,7 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
 
     protected parseGpxDom(gpxDom: Document, options): GeoElementBase<T>[] {
         let j, i;
-        let el: NodeListOf<Element>;
+        let el: HTMLCollectionOf<Element>;
         const elements = [], tags = [['rte', 'rtept'], ['trkseg', 'trkpt']];
 
         for (j = 0; j < tags.length; j++) {
