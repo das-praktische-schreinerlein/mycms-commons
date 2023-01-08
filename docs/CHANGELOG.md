@@ -33,6 +33,7 @@
 - commons: improved object-detection: add and use service-functions to create objects if not already defined
 - commons: use serial promises on multisearch to prevent overload on database
 - commons: extend actiontag-blocked with visibility-value
+- build: upgraded typescript
 
 ### bug fixes
 - commons: object/mapper-utils merge values to unique-values (default)
@@ -40,7 +41,6 @@
 - commons: fix invalid cache usage in datastore
 - commons: object-utils ignore empty src on object-explode
 - commons: use serial promises on multisearch to prevent overload on database
-- build: upgraded typescript
 
 ### breaking changes
 - none
