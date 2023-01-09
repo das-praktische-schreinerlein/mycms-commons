@@ -1,6 +1,7 @@
 import {AbstractGeoParser} from './geo.parser';
 import {DateUtils} from '../../commons/utils/date.utils';
 import {GeoElementBase, GeoElementType, LatLngBase} from '../model/geoElementTypes';
+import {GeoDateUtils} from './geodate.utils';
 
 export abstract class AbstractGeoTxtParser<T extends LatLngBase> extends AbstractGeoParser<T> {
     public static isResponsibleForSrc(src: string): boolean {
@@ -117,14 +118,15 @@ export abstract class AbstractGeoTxtParser<T extends LatLngBase> extends Abstrac
                 let lon = res[4].trim();
                 const time = res[5].trim();
                 const ele = res[6].trim();
-                const date = DateUtils.parseDate(time); // TODO check this
-
                 if (latD.toUpperCase() === 'S') {
                     lat = '-' + lat;
                 }
                 if (lonD.toUpperCase() === 'W') {
                     lon = '-' + lon;
                 }
+
+                const timeZone = GeoDateUtils.getTimezone(this.createLatLng(lat, lon));
+                const date = DateUtils.parseDate(time, timeZone);
 
                 coords.push(
                     this.createLatLng(lat, lon, ele, date));
@@ -141,10 +143,8 @@ export abstract class AbstractGeoTxtParser<T extends LatLngBase> extends Abstrac
                 const lonD = res[3].trim();
                 let lon = res[4].trim();
                 const time = res[5].trim();
-                const timezone = res[6].trim();
+                const txtTimeZone = res[6].trim();
                 const ele = res[7].trim();
-
-                const date = DateUtils.parseDate(time + ' ' + timezone); // TODO check this
 
                 if (latD.toUpperCase() === 'S') {
                     lat = '-' + lat;
@@ -152,6 +152,10 @@ export abstract class AbstractGeoTxtParser<T extends LatLngBase> extends Abstrac
                 if (lonD.toUpperCase() === 'W') {
                     lon = '-' + lon;
                 }
+
+                const timeZone = GeoDateUtils.getTimezone(this.createLatLng(lat, lon));
+                const date = DateUtils.parseDate(time, timeZone);
+
                 coords.push(
                     this.createLatLng(lat, lon, ele, date));
             } else {

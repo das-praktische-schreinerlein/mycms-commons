@@ -4,4 +4,5 @@ export declare class GeoDateUtils {
     static getTimezone(pos: LatLngBase): string;
     static getDateForTimezone(date: Date, timezone: string): Date;
     static getTimeOffsetToUtc(pos: LatLngTimeBase): number;
+    static getTimeOffset(timeZone: string): number;
 }

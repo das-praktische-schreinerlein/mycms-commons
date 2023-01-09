@@ -87,7 +87,7 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
             const time = point['time']
                 ? typeof point['time'] === 'string'
                     ? point['time']
-                    : point['time'].toISOString()
+                    : point['time'].toISOString() // TODO use Zulu time
                 : lastTime;
             const alt = point['alt']
                 ? point['alt']
@@ -115,7 +115,7 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
         let lastTime = defaultPosition && defaultPosition.time
             ? typeof defaultPosition.time === 'string'
                 ? defaultPosition.time
-                : defaultPosition.time.toISOString()
+                : defaultPosition.time.toISOString() // TODO use Zulu time
             : undefined;
         let lastAlt = defaultPosition && defaultPosition.alt !== 0
             ? defaultPosition.alt
@@ -255,8 +255,7 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
             }
 
             if (timeElement && timeElement.length > 0 && timeElement[0].childNodes.length) {
-                time = DateUtils.parseDate(
-                    timeElement[0].childNodes[0].nodeValue);
+                time = DateUtils.parseDate(timeElement[0].childNodes[0].nodeValue);  // HINT Date is ISO with ZULU-Time
             }
 
             coords.push(

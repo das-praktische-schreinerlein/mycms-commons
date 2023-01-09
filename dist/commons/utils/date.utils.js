@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("util");
 var string_utils_1 = require("./string.utils");
+var geodate_utils_1 = require("../../geo-commons/services/geodate.utils");
 var DateUtils = /** @class */ (function () {
     function DateUtils() {
     }
-    DateUtils.parseDate = function (date) {
+    DateUtils.parseDate = function (date, timezone) {
         if (date === undefined || date === null || (util_1.isString(date) && date.toString() === '')) {
             return undefined;
         }
@@ -14,7 +15,12 @@ var DateUtils = /** @class */ (function () {
                 date = new Date(date);
             }
             else if (util_1.isString(date)) {
-                return DateUtils.parseDateStringWithLocaltime(date);
+                if (timezone) {
+                    return DateUtils.parseDateStringWithLocaltime(date, timezone);
+                }
+                else {
+                    return DateUtils.parseDateStringWithLocaltime(date);
+                }
             }
             else {
                 return undefined;
@@ -22,46 +28,42 @@ var DateUtils = /** @class */ (function () {
         }
         return date;
     };
-    DateUtils.parseDateStringWithLocaltime = function (date) {
-        if (date === undefined || date === null || (util_1.isString(date) && date.toString() === '') || !util_1.isString(date)) {
+    DateUtils.parseDateStringWithLocaltime = function (dateSrc, timezone) {
+        if (dateSrc === undefined || dateSrc === null
+            || (util_1.isString(dateSrc) && dateSrc.toString() === '')
+            || !util_1.isString(dateSrc)) {
             return undefined;
         }
         // parse Date for localtime ISO
-        var dateParts = date.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):{0,1}(\d{2}){0,1}$/);
+        var dateParts = dateSrc.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):{0,1}(\d{2}){0,1}$/);
         if (dateParts !== null) {
             dateParts = dateParts.slice(1);
-            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
-            date = new Date();
-            date.setFullYear(dateParts[0], dateParts[1], dateParts[2]);
-            date.setHours(dateParts[3], dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined ? dateParts[5] : 0);
-            date.setMilliseconds(0);
+            var date = DateUtils.createDateForTimezone(dateParts[0], dateParts[1], dateParts[2], dateParts[3], dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined
+                ? Number(dateParts[5])
+                : 0, timezone);
             return date;
         }
         // parse Date for localtime German
-        dateParts = date.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
+        dateParts = dateSrc.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
         if (dateParts !== null) {
             dateParts = dateParts.slice(1);
-            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
-            date = new Date();
-            date.setFullYear(dateParts[2], dateParts[1], dateParts[0]);
-            date.setHours(dateParts[3], dateParts[4], dateParts[5]);
-            date.setMilliseconds(0);
+            var date = DateUtils.createDateForTimezone(dateParts[2], dateParts[1], dateParts[0], dateParts[3], dateParts[4], dateParts[5], timezone);
             return date;
         }
         // parse Date for localtime German with timezone
-        dateParts = date.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2}) \(UTC([-+0-9])+\)$/);
+        dateParts = dateSrc.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2}) \(UTC([-+0-9])+\)$/);
         if (dateParts !== null) {
             dateParts = dateParts.slice(1);
-            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
-            date = new Date();
-            date.setFullYear(dateParts[2], dateParts[1], dateParts[0]);
+            var tmpDate = new Date();
+            tmpDate.setFullYear(Number(dateParts[2]), Number(dateParts[1]), Number(dateParts[0]));
             var timezoneOffset = Number(dateParts[6]);
-            var hour = Number(dateParts[3]) + timezoneOffset - date.getTimezoneOffset() / 60; // add with date.timezoneOffset and local.timezoneOffset
-            date.setHours(hour, dateParts[4], dateParts[5]);
-            date.setMilliseconds(0);
+            var hour = Number(dateParts[3]) + timezoneOffset - tmpDate.getTimezoneOffset() / 60; // add with date.timezoneOffset and local.timezoneOffset
+            var date = DateUtils.createDateForTimezone(dateParts[2], dateParts[1], dateParts[1], hour, dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined
+                ? Number(dateParts[5])
+                : 0, timezone);
             return date;
         }
-        return new Date(Date.parse(date));
+        return new Date(Date.parse(dateSrc));
     };
     DateUtils.dateToLocalISOString = function (src) {
         var date = DateUtils.parseDate(src);
@@ -104,6 +106,25 @@ var DateUtils = /** @class */ (function () {
             string_utils_1.StringUtils.padStart(date.getMinutes().toString(), '00'),
             timeSeparator,
             string_utils_1.StringUtils.padStart(date.getSeconds().toString(), '00')].join('');
+    };
+    DateUtils.createDateForTimezone = function (year, month, day, hour, minute, second, timezone) {
+        var date = new Date();
+        month = (Number(month) - 1);
+        date.setFullYear(Number(year), Number(month), Number(day));
+        if (timezone) {
+            var offset = geodate_utils_1.GeoDateUtils.getTimeOffset(timezone);
+            var utcHour = Number(hour) + (offset) / 60;
+            date = new Date(Date.UTC(Number(year), Number(month), Number(day), Number(utcHour), Number(minute), second !== undefined
+                ? Number(second)
+                : 0));
+        }
+        else {
+            date.setHours(Number(hour), Number(minute), second > 5 && second !== undefined
+                ? Number(second)
+                : 0);
+            date.setMilliseconds(0);
+        }
+        return date;
     };
     return DateUtils;
 }());

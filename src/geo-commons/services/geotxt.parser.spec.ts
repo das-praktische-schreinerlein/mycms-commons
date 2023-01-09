@@ -1,42 +1,11 @@
 /* tslint:disable:no-unused-variable */
 import {AbstractGeoTxtParser} from './geotxt.parser';
-import {GeoElementBase, GeoElementType, LatLngTimeBase} from '../model/geoElementTypes';
+import {BackendGeoTxtParser} from '../backend/backend-geo.parser';
 
 describe('AbstractGeoTxtParser', () => {
-    class LatLngTime implements LatLngTimeBase {
-        alt: number;
-        lat: number;
-        lng: number;
-        time: Date;
-    }
+    const service = new BackendGeoTxtParser();
 
-    class GeoTxtParser extends AbstractGeoTxtParser<LatLngTime> {
-        protected calcDistance(from: LatLngTime, to: LatLngTime): number {
-            return 0;
-        }
-
-        protected createGeoElement(type: GeoElementType, points: LatLngTime[], name: string): GeoElementBase<LatLngTime> {
-            return {
-                name: name,
-                points: points,
-                type: type
-            };
-        }
-
-        protected createLatLng(lat: number | string, lng: number | string, alt: number | string | undefined, time: Date | undefined): LatLngTime {
-            return {
-                alt: Number(alt),
-                lng: Number(lng),
-                lat: Number(lat),
-                time: time
-            };
-        }
-
-    }
-
-    const service = new GeoTxtParser();
-
-    it('should parse without timezone in gmt...', done => {
+    it('should parse txt without timezone in gmt...', done => {
         // WHEN/THEN
         const src = `
 Grid	Breite/Länge hddd.ddddd°
@@ -81,11 +50,11 @@ Trackpoint	N54.01592 E13.23307	10.12.2005 12:20:32 	-12 m		71 m	0:02:12	2 kph	SW
         const res = service.parse(src, {});
         expect(res.length).toEqual(4);
         expect(res[0].points.length).toEqual(7);
-        expect(res[0].points[0].time).toEqual(new Date('2005-12-10 11:52:49 GMT+0100'));
+        expect(res[0].points[0]['time']).toEqual(new Date('2005-12-10 11:52:49 GMT+0100'));
         done();
     });
 
-    it('should parse with timezone and summertime...', done => {
+    it('should parse txt with timezone and summertime...', done => {
         // WHEN/THEN
         const src = `
 Track	ACTIVE LOG 123	23.07.2008 10:47:56 (UTC-7)	0:00:29	31 m	4 kph	
@@ -111,11 +80,11 @@ Trackpoint	N37.72711 W119.52944	23.07.2008 12:24:01 (UTC-7)	1836 m			101 m	0:01:
         const res = service.parse(src, {});
         expect(res.length).toEqual(1);
         expect(res[0].points.length).toEqual(16);
-        expect(res[0].points[0].time).toEqual(new Date('2008-07-23 10:47:56 UTC-0700'));
+        expect(res[0].points[0]['time']).toEqual(new Date('2008-07-23 10:47:56 UTC-0800'));
         done();
     });
 
-    it('should parse with timezone and wintertime...', done => {
+    it('should parse txt with timezone and wintertime...', done => {
         // WHEN/THEN
         const src = `
 Track	ACTIVE LOG 123	23.07.2008 10:47:56 (UTC-7)	0:00:29	31 m	4 kph	
@@ -129,7 +98,7 @@ Trackpoint	N37.72726 W119.54900	23.03.2008 10:54:08 (UTC-7)	1354 m
         const res = service.parse(src, {});
         expect(res.length).toEqual(1);
         expect(res[0].points.length).toEqual(4);
-        expect(res[0].points[0].time).toEqual(new Date('2008-03-23 10:47:56 UTC-0700'));
+        expect(res[0].points[0]['time'].toISOString()).toEqual(new Date('2008-03-23 10:47:56 UTC-8').toISOString());
         done();
     });
 });

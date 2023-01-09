@@ -89,7 +89,7 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
             var time = point['time']
                 ? typeof point['time'] === 'string'
                     ? point['time']
-                    : point['time'].toISOString()
+                    : point['time'].toISOString() // TODO use Zulu time
                 : lastTime;
             var alt = point['alt']
                 ? point['alt']
@@ -111,7 +111,7 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
         var lastTime = defaultPosition && defaultPosition.time
             ? typeof defaultPosition.time === 'string'
                 ? defaultPosition.time
-                : defaultPosition.time.toISOString()
+                : defaultPosition.time.toISOString() // TODO use Zulu time
             : undefined;
         var lastAlt = defaultPosition && defaultPosition.alt !== 0
             ? defaultPosition.alt
@@ -222,7 +222,7 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
                 ele = eleElement[0].childNodes[0].nodeValue;
             }
             if (timeElement && timeElement.length > 0 && timeElement[0].childNodes.length) {
-                time = date_utils_1.DateUtils.parseDate(timeElement[0].childNodes[0].nodeValue);
+                time = date_utils_1.DateUtils.parseDate(timeElement[0].childNodes[0].nodeValue); // HINT Date is ISO with ZULU-Time
             }
             coords.push(this.createLatLng(ptElement.getAttribute('lat'), ptElement.getAttribute('lon'), ele, time));
         }

@@ -36,6 +36,31 @@ var GeoDateUtils = /** @class */ (function () {
         var utcDate = GeoDateUtils.getDateForTimezone(origDate, 'Europe/London');
         return new Date(localDate.getTime() - utcDate.getTime()).getTime() / 60 / 60 / 1000;
     };
+    GeoDateUtils.getTimeOffset = function (timeZone) {
+        var timeZoneName = Intl.DateTimeFormat("ia", {
+            timeZoneName: "short",
+            timeZone: timeZone,
+        })
+            .formatToParts()
+            .find(function (i) { return i.type === "timeZoneName"; }).value;
+        var offset = timeZoneName.slice(3);
+        if (!offset) {
+            return 0;
+        }
+        var matchData = offset.match(/([+-])(\d+)(?::(\d+))?/);
+        if (!matchData)
+            throw "cannot parse timezone name: " + timeZoneName;
+        var sign = matchData[1], hour = matchData[2], minute = matchData[3];
+        var result = parseInt(hour) * 60;
+        if (sign === "+") {
+            result *= -1;
+        }
+        if (minute) {
+            result += parseInt(minute);
+        }
+        return result;
+    };
+    ;
     return GeoDateUtils;
 }());
 exports.GeoDateUtils = GeoDateUtils;

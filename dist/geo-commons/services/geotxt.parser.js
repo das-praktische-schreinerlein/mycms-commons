@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var geo_parser_1 = require("./geo.parser");
 var date_utils_1 = require("../../commons/utils/date.utils");
 var geoElementTypes_1 = require("../model/geoElementTypes");
+var geodate_utils_1 = require("./geodate.utils");
 var AbstractGeoTxtParser = /** @class */ (function (_super) {
     __extends(AbstractGeoTxtParser, _super);
     function AbstractGeoTxtParser() {
@@ -123,13 +124,14 @@ var AbstractGeoTxtParser = /** @class */ (function (_super) {
                 var lon = res[4].trim();
                 var time = res[5].trim();
                 var ele = res[6].trim();
-                var date = date_utils_1.DateUtils.parseDate(time); // TODO check this
                 if (latD.toUpperCase() === 'S') {
                     lat = '-' + lat;
                 }
                 if (lonD.toUpperCase() === 'W') {
                     lon = '-' + lon;
                 }
+                var timeZone = geodate_utils_1.GeoDateUtils.getTimezone(this.createLatLng(lat, lon));
+                var date = date_utils_1.DateUtils.parseDate(time, timeZone);
                 coords.push(this.createLatLng(lat, lon, ele, date));
             }
             else if (line.match(CONST_TRACKPOINT_GLOB)) {
@@ -144,15 +146,16 @@ var AbstractGeoTxtParser = /** @class */ (function (_super) {
                 var lonD = res[3].trim();
                 var lon = res[4].trim();
                 var time = res[5].trim();
-                var timezone = res[6].trim();
+                var txtTimeZone = res[6].trim();
                 var ele = res[7].trim();
-                var date = date_utils_1.DateUtils.parseDate(time + ' ' + timezone); // TODO check this
                 if (latD.toUpperCase() === 'S') {
                     lat = '-' + lat;
                 }
                 if (lonD.toUpperCase() === 'W') {
                     lon = '-' + lon;
                 }
+                var timeZone = geodate_utils_1.GeoDateUtils.getTimezone(this.createLatLng(lat, lon));
+                var date = date_utils_1.DateUtils.parseDate(time, timeZone);
                 coords.push(this.createLatLng(lat, lon, ele, date));
             }
             else {

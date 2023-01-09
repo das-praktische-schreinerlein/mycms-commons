@@ -1,8 +1,9 @@
 import {isDate, isNumber, isString} from 'util';
 import {StringUtils} from './string.utils';
+import {GeoDateUtils} from '../../geo-commons/services/geodate.utils';
 
 export class DateUtils {
-    public static parseDate(date: any): Date {
+    public static parseDate(date: any, timezone?: string): Date {
         if (date === undefined || date === null || (isString(date) && date.toString() === '')) {
             return undefined;
         }
@@ -11,7 +12,11 @@ export class DateUtils {
             if (isNumber(date )) {
                 date = new Date(date);
             } else if (isString(date)) {
-                return DateUtils.parseDateStringWithLocaltime(date);
+                if (timezone) {
+                    return DateUtils.parseDateStringWithLocaltime(date, timezone);
+                } else {
+                    return DateUtils.parseDateStringWithLocaltime(date);
+                }
             } else {
                 return undefined;
             }
@@ -20,51 +25,56 @@ export class DateUtils {
         return date;
     }
 
-    public static parseDateStringWithLocaltime(date: any): Date {
-        if (date === undefined || date === null || (isString(date) && date.toString() === '') || !isString(date)) {
+    public static parseDateStringWithLocaltime(dateSrc: any, timezone?: string): Date {
+        if (dateSrc === undefined || dateSrc === null
+            || (isString(dateSrc) && dateSrc.toString() === '')
+            || !isString(dateSrc)) {
             return undefined;
         }
 
         // parse Date for localtime ISO
-        let dateParts = date.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):{0,1}(\d{2}){0,1}$/);
-        if (dateParts !== null ) {
+        let dateParts = dateSrc.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):{0,1}(\d{2}){0,1}$/);
+        if (dateParts !== null) {
             dateParts = dateParts.slice(1);
-            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
-            date = new Date();
-            date.setFullYear(dateParts[0], dateParts[1], dateParts[2]);
-            date.setHours(dateParts[3], dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined ? dateParts[5] : 0);
-            date.setMilliseconds(0)
+            const date = DateUtils.createDateForTimezone(dateParts[0], dateParts[1], dateParts[2],
+                dateParts[3], dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined
+                    ? Number(dateParts[5])
+                    : 0, timezone);
 
             return date;
         }
 
         // parse Date for localtime German
-        dateParts = date.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
+        dateParts = dateSrc.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
         if (dateParts !== null ) {
             dateParts = dateParts.slice(1);
-            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
-            date = new Date();
-            date.setFullYear(dateParts[2], dateParts[1], dateParts[0]);
-            date.setHours(dateParts[3], dateParts[4], dateParts[5]);
-            date.setMilliseconds(0);
+
+            const date = DateUtils.createDateForTimezone(dateParts[2], dateParts[1], dateParts[0],
+                dateParts[3], dateParts[4], dateParts[5], timezone);
+
             return date;
         }
 
         // parse Date for localtime German with timezone
-        dateParts = date.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2}) \(UTC([-+0-9])+\)$/);
+        dateParts = dateSrc.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2}) \(UTC([-+0-9])+\)$/);
         if (dateParts !== null ) {
             dateParts = dateParts.slice(1);
-            dateParts[1] = (Number(dateParts[1]) - 1) + ''; // months are zero-based
-            date = new Date();
-            date.setFullYear(dateParts[2], dateParts[1], dateParts[0]);
+
+            const tmpDate = new Date();
+            tmpDate.setFullYear(Number(dateParts[2]), Number(dateParts[1]), Number(dateParts[0]));
+
             const timezoneOffset = Number(dateParts[6]);
-            const hour = Number(dateParts[3]) + timezoneOffset - date.getTimezoneOffset() / 60; // add with date.timezoneOffset and local.timezoneOffset
-            date.setHours(hour, dateParts[4], dateParts[5]);
-            date.setMilliseconds(0);
+            const hour = Number(dateParts[3]) + timezoneOffset - tmpDate.getTimezoneOffset() / 60; // add with date.timezoneOffset and local.timezoneOffset
+
+            const date = DateUtils.createDateForTimezone(dateParts[2], dateParts[1], dateParts[1],
+                hour, dateParts[4], dateParts.length > 5 && dateParts[5] !== undefined
+                    ? Number(dateParts[5])
+                    : 0, timezone);
+
             return date;
         }
 
-        return new Date(Date.parse(<any>date));
+        return new Date(Date.parse(<any>dateSrc));
     }
 
     public static dateToLocalISOString(src: any): string {
@@ -118,5 +128,32 @@ export class DateUtils {
             StringUtils.padStart(date.getMinutes().toString(), '00'),
             timeSeparator,
             StringUtils.padStart(date.getSeconds().toString(), '00')].join('');
+    }
+
+    public static createDateForTimezone(year: number | string, month: number | string, day: number | string,
+                                        hour: number | string, minute: number | string, second?: number | string,
+                                        timezone?: string): Date {
+        let date = new Date();
+        month = (Number(month) - 1);
+        date.setFullYear(Number(year), Number(month), Number(day));
+
+        if (timezone) {
+            const offset = GeoDateUtils.getTimeOffset(timezone);
+            const utcHour = Number(hour) + (offset) / 60;
+
+            date = new Date(Date.UTC(Number(year), Number(month), Number(day), Number(utcHour), Number(minute),
+                second !== undefined
+                    ? Number(second)
+                    : 0));
+        } else {
+            date.setHours(Number(hour), Number(minute),
+                second > 5 && second !== undefined
+                    ? Number(second)
+                    : 0);
+            date.setMilliseconds(0);
+        }
+
+
+        return date;
     }
 }
