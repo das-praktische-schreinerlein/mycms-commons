@@ -138,7 +138,7 @@ export class DateUtils {
         date.setFullYear(Number(year), Number(month), Number(day));
 
         if (timezone) {
-            const offset = GeoDateUtils.getTimeOffset(timezone);
+            const offset = GeoDateUtils.getTimeOffset(timezone, date);
             const utcHour = Number(hour) + (offset) / 60;
 
             date = new Date(Date.UTC(Number(year), Number(month), Number(day), Number(utcHour), Number(minute),

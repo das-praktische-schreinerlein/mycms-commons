@@ -81,7 +81,8 @@ export class BackendGeoService implements AbstractBackendGeoService {
     }
 
     public updateGeoEntity(entity: GeoEntity, fieldsToUpdate: string[]): Promise<GeoEntity> {
-        const geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type] || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
+        const geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type]
+            || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
         if (!geoEntityDbMapping) {
             return Promise.reject('no valid entityType:' + entity.type);
         }
@@ -94,7 +95,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             }
 
             dbFields.push(geoEntityDbMapping.fields[field]);
-            dbValues.push(entity[field] && entity[field] !== ''
+            dbValues.push(entity[field] !== undefined && entity[field] !== ''
                 ? entity[field]
                 : null);
         }
@@ -126,7 +127,8 @@ export class BackendGeoService implements AbstractBackendGeoService {
                 '  WHERE ' + geoEntityDbMapping.fields.gpsTrackTxt + ' IS NOT NULL' +
                 (force
                     ? ''
-                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL'),
+                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL') +
+                '  ORDER BY ' +  geoEntityDbMapping.fields.id,
             parameters: []
         };
 
@@ -151,12 +153,13 @@ export class BackendGeoService implements AbstractBackendGeoService {
         const readSqlQuery: RawSqlQueryData = {
             sql: this.generateBaseSqlForTable(geoEntityDbMapping) +
                 '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL' +
-            (force
-                ? ''
-                : '  AND ' + geoEntityDbMapping.fields.id + ' NOT IN (' +
-                    ' SELECT DISTINCT ' + geoEntityDbMapping.pointFields.refId +
-                    ' FROM ' + geoEntityDbMapping.pointTable + ')'
-            ),
+                (force
+                        ? ''
+                        : '  AND ' + geoEntityDbMapping.fields.id + ' NOT IN (' +
+                        ' SELECT DISTINCT ' + geoEntityDbMapping.pointFields.refId +
+                        ' FROM ' + geoEntityDbMapping.pointTable + ')'
+                ) +
+                '  ORDER BY ' +  geoEntityDbMapping.fields.id,
             parameters: []
         };
 
@@ -180,7 +183,8 @@ export class BackendGeoService implements AbstractBackendGeoService {
 
         const readSqlQuery: RawSqlQueryData = {
             sql: this.generateBaseSqlForTable(geoEntityDbMapping) +
-                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL',
+                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL' +
+                '  ORDER BY ' +  geoEntityDbMapping.fields.id,
             parameters: []
         };
 
@@ -246,7 +250,8 @@ export class BackendGeoService implements AbstractBackendGeoService {
             return Promise.reject('no valid gpx:' + entity.id);
         }
 
-        const geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type] || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
+        const geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type]
+            || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
         if (!geoEntityDbMapping || !geoEntityDbMapping.pointTable || !geoEntityDbMapping.pointFields) {
             return Promise.reject('no valid entityType:' + entity.type);
         }
@@ -263,21 +268,21 @@ export class BackendGeoService implements AbstractBackendGeoService {
         };
 
         const sql = 'INSERT INTO ' + geoEntityDbMapping.pointTable + '(' +
-                ' ' + geoEntityDbMapping.pointFields.refId +
-                ', ' + geoEntityDbMapping.pointFields.lat +
-                ', ' + geoEntityDbMapping.pointFields.lng +
-                ', ' + geoEntityDbMapping.pointFields.alt +
-                (geoEntityDbMapping.pointFields.time
-                        ? ', ' + geoEntityDbMapping.pointFields.time
-                        : ''
-                ) +
-                ')' +
-                ' VALUES(?, ?, ?, ?' +
-                (geoEntityDbMapping.pointFields.time
-                        ? ', ?'
-                        : ''
-                ) +
-                ')';
+            ' ' + geoEntityDbMapping.pointFields.refId +
+            ', ' + geoEntityDbMapping.pointFields.lat +
+            ', ' + geoEntityDbMapping.pointFields.lng +
+            ', ' + geoEntityDbMapping.pointFields.alt +
+            (geoEntityDbMapping.pointFields.time
+                    ? ', ' + geoEntityDbMapping.pointFields.time
+                    : ''
+            ) +
+            ')' +
+            ' VALUES(?, ?, ?, ?' +
+            (geoEntityDbMapping.pointFields.time
+                    ? ', ?'
+                    : ''
+            ) +
+            ')';
 
         const me = this;
         // console.trace('call saveGpxPointsToDatabase sql', deleteSqlQuery);
@@ -298,11 +303,19 @@ export class BackendGeoService implements AbstractBackendGeoService {
                             const time = point['time']
                                 ? GeoDateUtils.getLocalDateTimeForLatLng(point)
                                 : undefined;
-                            insertSqlQuery.parameters.push(time);
+                            insertSqlQuery.parameters.push(time !== undefined
+                                ? time
+                                : null);
                         }
 
                         // console.trace('call saveGpxPointsToDatabase sql', insertSqlQuery);
-                        return SqlUtils.executeRawSqlQueryData(me.knex, insertSqlQuery);
+                        return SqlUtils.executeRawSqlQueryData(me.knex, insertSqlQuery).then((result) => {
+                            return Promise.resolve(result);
+                        }).catch(reason => {
+                            console.error('ERROR - saveGpxPointsToDatabase for: ', entity.type, entity.id, entity.name,
+                                insertSqlQuery);
+                            return Promise.reject(reason);
+                        });
                     });
                 }
             }

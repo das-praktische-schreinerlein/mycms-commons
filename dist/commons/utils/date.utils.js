@@ -112,7 +112,7 @@ var DateUtils = /** @class */ (function () {
         month = (Number(month) - 1);
         date.setFullYear(Number(year), Number(month), Number(day));
         if (timezone) {
-            var offset = geodate_utils_1.GeoDateUtils.getTimeOffset(timezone);
+            var offset = geodate_utils_1.GeoDateUtils.getTimeOffset(timezone, date);
             var utcHour = Number(hour) + (offset) / 60;
             date = new Date(Date.UTC(Number(year), Number(month), Number(day), Number(utcHour), Number(minute), second !== undefined
                 ? Number(second)

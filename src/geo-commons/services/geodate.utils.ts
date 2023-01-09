@@ -43,13 +43,22 @@ export class GeoDateUtils  {
         return new Date(localDate.getTime() - utcDate.getTime()).getTime() / 60 / 60 / 1000;
     }
 
-    public static getTimeOffset(timeZone: string ){
-        const timeZoneName = Intl.DateTimeFormat("ia", {
+    public static getTimeOffset(timeZone: string, date?: Date): number {
+        if (!date) {
+            date = new Date(Date.UTC(1970, 1, 1));
+        }
+
+        const timeZoneObj =  Intl.DateTimeFormat("ia", {
             timeZoneName: "short",
             timeZone,
-        })
-            .formatToParts()
-            .find((i) => i.type === "timeZoneName").value;
+        });
+
+        return GeoDateUtils.getOffset(timeZoneObj, date);
+    }
+
+    private static getOffset(timeZoneObj: Intl.DateTimeFormat, date: Date): number {
+        const timeZoneParts = timeZoneObj.formatToParts(date);
+        const timeZoneName = timeZoneParts.find((i) => i.type === "timeZoneName").value;
 
         const offset = timeZoneName.slice(3);
         if (!offset) {
@@ -70,4 +79,5 @@ export class GeoDateUtils  {
         }
 
         return result;
-    };}
+    }
+}

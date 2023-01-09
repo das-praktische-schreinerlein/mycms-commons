@@ -36,13 +36,19 @@ var GeoDateUtils = /** @class */ (function () {
         var utcDate = GeoDateUtils.getDateForTimezone(origDate, 'Europe/London');
         return new Date(localDate.getTime() - utcDate.getTime()).getTime() / 60 / 60 / 1000;
     };
-    GeoDateUtils.getTimeOffset = function (timeZone) {
-        var timeZoneName = Intl.DateTimeFormat("ia", {
+    GeoDateUtils.getTimeOffset = function (timeZone, date) {
+        if (!date) {
+            date = new Date(Date.UTC(1970, 1, 1));
+        }
+        var timeZoneObj = Intl.DateTimeFormat("ia", {
             timeZoneName: "short",
             timeZone: timeZone,
-        })
-            .formatToParts()
-            .find(function (i) { return i.type === "timeZoneName"; }).value;
+        });
+        return GeoDateUtils.getOffset(timeZoneObj, date);
+    };
+    GeoDateUtils.getOffset = function (timeZoneObj, date) {
+        var timeZoneParts = timeZoneObj.formatToParts(date);
+        var timeZoneName = timeZoneParts.find(function (i) { return i.type === "timeZoneName"; }).value;
         var offset = timeZoneName.slice(3);
         if (!offset) {
             return 0;
@@ -60,7 +66,6 @@ var GeoDateUtils = /** @class */ (function () {
         }
         return result;
     };
-    ;
     return GeoDateUtils;
 }());
 exports.GeoDateUtils = GeoDateUtils;

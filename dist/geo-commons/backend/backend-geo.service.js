@@ -71,7 +71,8 @@ var BackendGeoService = /** @class */ (function () {
         });
     };
     BackendGeoService.prototype.updateGeoEntity = function (entity, fieldsToUpdate) {
-        var geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type] || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
+        var geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type]
+            || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
         if (!geoEntityDbMapping) {
             return Promise.reject('no valid entityType:' + entity.type);
         }
@@ -83,7 +84,7 @@ var BackendGeoService = /** @class */ (function () {
                 return Promise.reject('no valid entityType:' + entity.type + ' missing field:' + field);
             }
             dbFields.push(geoEntityDbMapping.fields[field]);
-            dbValues.push(entity[field] && entity[field] !== ''
+            dbValues.push(entity[field] !== undefined && entity[field] !== ''
                 ? entity[field]
                 : null);
         }
@@ -112,7 +113,8 @@ var BackendGeoService = /** @class */ (function () {
                 '  WHERE ' + geoEntityDbMapping.fields.gpsTrackTxt + ' IS NOT NULL' +
                 (force
                     ? ''
-                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL'),
+                    : '  AND ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NULL') +
+                '  ORDER BY ' + geoEntityDbMapping.fields.id,
             parameters: []
         };
         console.trace('call readGeoEntitiesWithTxtButNoGpx sql', readSqlQuery);
@@ -137,7 +139,8 @@ var BackendGeoService = /** @class */ (function () {
                     ? ''
                     : '  AND ' + geoEntityDbMapping.fields.id + ' NOT IN (' +
                         ' SELECT DISTINCT ' + geoEntityDbMapping.pointFields.refId +
-                        ' FROM ' + geoEntityDbMapping.pointTable + ')'),
+                        ' FROM ' + geoEntityDbMapping.pointTable + ')') +
+                '  ORDER BY ' + geoEntityDbMapping.fields.id,
             parameters: []
         };
         console.trace('call readGeoEntitiesWithGpxButNoPoints sql', readSqlQuery);
@@ -157,7 +160,8 @@ var BackendGeoService = /** @class */ (function () {
         }
         var readSqlQuery = {
             sql: this.generateBaseSqlForTable(geoEntityDbMapping) +
-                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL',
+                '  WHERE ' + geoEntityDbMapping.fields.gpsTrackSrc + ' IS NOT NULL' +
+                '  ORDER BY ' + geoEntityDbMapping.fields.id,
             parameters: []
         };
         console.trace('call readGeoEntitiesWithGpx sql', readSqlQuery);
@@ -209,7 +213,8 @@ var BackendGeoService = /** @class */ (function () {
         if (entity.gpsTrackSrc === undefined || !geogpx_parser_1.AbstractGeoGpxParser.isResponsibleForSrc(entity.gpsTrackSrc)) {
             return Promise.reject('no valid gpx:' + entity.id);
         }
-        var geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type] || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
+        var geoEntityDbMapping = this.geoEntityDbMapping.tables[entity.type]
+            || this.geoEntityDbMapping.tables[entity.type.toLowerCase()];
         if (!geoEntityDbMapping || !geoEntityDbMapping.pointTable || !geoEntityDbMapping.pointFields) {
             return Promise.reject('no valid entityType:' + entity.type);
         }
@@ -255,10 +260,17 @@ var BackendGeoService = /** @class */ (function () {
                             var time = point['time']
                                 ? geodate_utils_1.GeoDateUtils.getLocalDateTimeForLatLng(point)
                                 : undefined;
-                            insertSqlQuery.parameters.push(time);
+                            insertSqlQuery.parameters.push(time !== undefined
+                                ? time
+                                : null);
                         }
                         // console.trace('call saveGpxPointsToDatabase sql', insertSqlQuery);
-                        return sql_utils_1.SqlUtils.executeRawSqlQueryData(me.knex, insertSqlQuery);
+                        return sql_utils_1.SqlUtils.executeRawSqlQueryData(me.knex, insertSqlQuery).then(function (result) {
+                            return Promise.resolve(result);
+                        }).catch(function (reason) {
+                            console.error('ERROR - saveGpxPointsToDatabase for: ', entity.type, entity.id, entity.name, insertSqlQuery);
+                            return Promise.reject(reason);
+                        });
                     });
                 };
                 for (var _a = 0, _b = geoElement.points; _a < _b.length; _a++) {
