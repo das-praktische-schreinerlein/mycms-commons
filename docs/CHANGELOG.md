@@ -18,6 +18,7 @@
 - commons: extend actiontag-blocked with visibility-value
 - commons: moved common geo-functionality from frontend-commons to commons/geo-commons
 - build: upgraded typescript
+- commons: make export-naming configurable
 
 ### new features
 - commons: introduced itemjs-dataimporter
@@ -34,6 +35,7 @@
 - commons: use serial promises on multisearch to prevent overload on database
 - commons: extend actiontag-blocked with visibility-value
 - build: upgraded typescript
+- commons: make export-naming configurable
 
 ### bug fixes
 - commons: object/mapper-utils merge values to unique-values (default)

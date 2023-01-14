@@ -120,7 +120,13 @@ var CommonDocDocExportService = /** @class */ (function () {
             console.error('no recordexport', processingOptions.exportBaseFileName);
             return Promise.resolve('');
         }
-        var m3uPath = processingOptions.exportBasePath + '/' + processingOptions.exportBaseFileName + '.mdocexport.json';
+        var jsonBaseElement = processingOptions.jsonBaseElement
+            ? processingOptions.jsonBaseElement
+            : 'mdocs';
+        var nameBase = processingOptions.jsonBaseElement
+            ? processingOptions.jsonBaseElement
+            : 'mdoc';
+        var m3uPath = processingOptions.exportBasePath + '/' + processingOptions.exportBaseFileName + '.' + nameBase + 'export.json';
         if (fs.existsSync(m3uPath) && !fs.statSync(m3uPath).isFile()) {
             return Promise.reject('exportBaseFileName must be file');
         }
@@ -128,7 +134,7 @@ var CommonDocDocExportService = /** @class */ (function () {
             fs.appendFileSync(m3uPath, output);
         };
         var me = this;
-        fs.writeFileSync(m3uPath, '{"mdocs": [');
+        fs.writeFileSync(m3uPath, '{"' + jsonBaseElement + '": [');
         return me.generateRelatedExportDocs(baseSearchForm, baseSearchRecords, writerCallback, recordConverter).then(function (value) {
             writerCallback(']}');
             return Promise.resolve(value);

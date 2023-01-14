@@ -10,6 +10,7 @@ export interface ExportProcessingOptions {
     fileNameProfile: string;
     exportBasePath: string;
     exportBaseFileName: string;
+    jsonBaseElement?: string;
 }
 export interface ExportProcessingMediaFileResultMappingType {
     audioFile?: string;

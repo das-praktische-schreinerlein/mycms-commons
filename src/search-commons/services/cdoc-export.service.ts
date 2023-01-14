@@ -12,6 +12,7 @@ export interface ExportProcessingOptions {
     fileNameProfile: string;
     exportBasePath: string;
     exportBaseFileName: string;
+    jsonBaseElement?: string; // TODO make it required in next major-version
 }
 
 export interface ExportProcessingMediaFileResultMappingType {
@@ -185,7 +186,13 @@ export abstract class CommonDocDocExportService<R extends CommonDocRecord, F ext
             return Promise.resolve('');
         }
 
-        const m3uPath = processingOptions.exportBasePath + '/' + processingOptions.exportBaseFileName + '.mdocexport.json';
+        const jsonBaseElement = processingOptions.jsonBaseElement
+            ? processingOptions.jsonBaseElement
+            : 'mdocs';
+        const nameBase = processingOptions.jsonBaseElement
+            ? processingOptions.jsonBaseElement
+            : 'mdoc';
+        const m3uPath = processingOptions.exportBasePath + '/' + processingOptions.exportBaseFileName + '.' + nameBase + 'export.json';
         if (fs.existsSync(m3uPath) && !fs.statSync(m3uPath).isFile()) {
             return Promise.reject('exportBaseFileName must be file');
         }
@@ -194,7 +201,7 @@ export abstract class CommonDocDocExportService<R extends CommonDocRecord, F ext
         };
 
         const me = this;
-        fs.writeFileSync(m3uPath, '{"mdocs": [');
+        fs.writeFileSync(m3uPath, '{"' + jsonBaseElement + '": [');
         return me.generateRelatedExportDocs(baseSearchForm, baseSearchRecords, writerCallback, recordConverter).then(value => {
             writerCallback(']}');
             return Promise.resolve(value);
