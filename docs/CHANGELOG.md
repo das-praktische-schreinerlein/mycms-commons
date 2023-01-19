@@ -2,7 +2,7 @@
  
 # Versions
 
-## 5.6.0
+## 5.6.0 (2023-01-19)
 - improved itemsjs-adapter
 - introduced itemjs-dataimporter
 - added query-params to GenericSearchFormSearchFormConverter
