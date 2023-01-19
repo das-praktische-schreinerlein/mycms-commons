@@ -159,7 +159,7 @@ var AbstractGeoTxtParser = /** @class */ (function (_super) {
                 coords.push(this.createLatLng(lat, lon, ele, date));
             }
             else {
-                console.trace('GeoTxtParser: cant parse Trackpoint', line);
+                console.debug('GeoTxtParser: cant parse Trackpoint', line);
             }
         }
         var type = geoElementTypes_1.GeoElementType.TRACK;

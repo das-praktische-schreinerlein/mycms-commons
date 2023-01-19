@@ -64,7 +64,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             parameters: [id]
         };
 
-        console.trace('call readGeoEntityForId sql', readSqlQuery);
+        // console.debug('call readGeoEntityForId sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
@@ -107,7 +107,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             parameters: dbValues.concat([entity.id])
         };
 
-        // console.trace('call updateGeoEntity sql', updateSqlQuery, entity);
+        // console.debug('call updateGeoEntity sql', updateSqlQuery, entity);
         return SqlUtils.executeRawSqlQueryData(this.knex, updateSqlQuery).then( () => {
             console.log('DONE - updateGeoEntity for: ', entity.type, entity.id, entity.name, fieldsToUpdate);
             return Promise.resolve(entity);
@@ -132,7 +132,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             parameters: []
         };
 
-        console.trace('call readGeoEntitiesWithTxtButNoGpx sql', readSqlQuery);
+        // console.debug('call readGeoEntitiesWithTxtButNoGpx sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
@@ -163,7 +163,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             parameters: []
         };
 
-        console.trace('call readGeoEntitiesWithGpxButNoPoints sql', readSqlQuery);
+        // console.debug('call readGeoEntitiesWithGpxButNoPoints sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
@@ -188,7 +188,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             parameters: []
         };
 
-        console.trace('call readGeoEntitiesWithGpx sql', readSqlQuery);
+        // console.debug('call readGeoEntitiesWithGpx sql', readSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(dbResults => {
             const records: GeoEntity[] = [];
             BackendGeoService.mapDBResultOnGeoEntity(
@@ -285,7 +285,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
             ')';
 
         const me = this;
-        // console.trace('call saveGpxPointsToDatabase sql', deleteSqlQuery);
+        // console.debug('call saveGpxPointsToDatabase sql', deleteSqlQuery);
         return SqlUtils.executeRawSqlQueryData(this.knex, deleteSqlQuery).then( () => {
             const promises = [];
             for (const geoElement of geoElements) {
@@ -308,7 +308,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
                                 : null);
                         }
 
-                        // console.trace('call saveGpxPointsToDatabase sql', insertSqlQuery);
+                        // console.debug('call saveGpxPointsToDatabase sql', insertSqlQuery);
                         return SqlUtils.executeRawSqlQueryData(me.knex, insertSqlQuery).then((result) => {
                             return Promise.resolve(result);
                         }).catch(reason => {

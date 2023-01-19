@@ -159,7 +159,7 @@ export abstract class AbstractGeoTxtParser<T extends LatLngBase> extends Abstrac
                 coords.push(
                     this.createLatLng(lat, lon, ele, date));
             } else {
-                console.trace('GeoTxtParser: cant parse Trackpoint', line);
+                console.debug('GeoTxtParser: cant parse Trackpoint', line);
             }
         }
 

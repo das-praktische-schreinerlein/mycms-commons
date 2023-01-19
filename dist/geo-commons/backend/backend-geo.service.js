@@ -58,7 +58,7 @@ var BackendGeoService = /** @class */ (function () {
                 '  WHERE ' + geoEntityDbMapping.fields.id + ' = ?',
             parameters: [id]
         };
-        console.trace('call readGeoEntityForId sql', readSqlQuery);
+        // console.debug('call readGeoEntityForId sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);
@@ -94,7 +94,7 @@ var BackendGeoService = /** @class */ (function () {
                 ' WHERE ' + geoEntityDbMapping.fields.id + ' = ?',
             parameters: dbValues.concat([entity.id])
         };
-        // console.trace('call updateGeoEntity sql', updateSqlQuery, entity);
+        // console.debug('call updateGeoEntity sql', updateSqlQuery, entity);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, updateSqlQuery).then(function () {
             console.log('DONE - updateGeoEntity for: ', entity.type, entity.id, entity.name, fieldsToUpdate);
             return Promise.resolve(entity);
@@ -117,7 +117,7 @@ var BackendGeoService = /** @class */ (function () {
                 '  ORDER BY ' + geoEntityDbMapping.fields.id,
             parameters: []
         };
-        console.trace('call readGeoEntitiesWithTxtButNoGpx sql', readSqlQuery);
+        // console.debug('call readGeoEntitiesWithTxtButNoGpx sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);
@@ -143,7 +143,7 @@ var BackendGeoService = /** @class */ (function () {
                 '  ORDER BY ' + geoEntityDbMapping.fields.id,
             parameters: []
         };
-        console.trace('call readGeoEntitiesWithGpxButNoPoints sql', readSqlQuery);
+        // console.debug('call readGeoEntitiesWithGpxButNoPoints sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);
@@ -164,7 +164,7 @@ var BackendGeoService = /** @class */ (function () {
                 '  ORDER BY ' + geoEntityDbMapping.fields.id,
             parameters: []
         };
-        console.trace('call readGeoEntitiesWithGpx sql', readSqlQuery);
+        // console.debug('call readGeoEntitiesWithGpx sql', readSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, readSqlQuery).then(function (dbResults) {
             var records = [];
             BackendGeoService.mapDBResultOnGeoEntity(_this.sqlQueryBuilder.extractDbResult(dbResults, _this.knex.client['config']['client']), records);
@@ -242,7 +242,7 @@ var BackendGeoService = /** @class */ (function () {
                 : '') +
             ')';
         var me = this;
-        // console.trace('call saveGpxPointsToDatabase sql', deleteSqlQuery);
+        // console.debug('call saveGpxPointsToDatabase sql', deleteSqlQuery);
         return sql_utils_1.SqlUtils.executeRawSqlQueryData(this.knex, deleteSqlQuery).then(function () {
             var promises = [];
             for (var _i = 0, geoElements_2 = geoElements; _i < geoElements_2.length; _i++) {
@@ -264,7 +264,7 @@ var BackendGeoService = /** @class */ (function () {
                                 ? time
                                 : null);
                         }
-                        // console.trace('call saveGpxPointsToDatabase sql', insertSqlQuery);
+                        // console.debug('call saveGpxPointsToDatabase sql', insertSqlQuery);
                         return sql_utils_1.SqlUtils.executeRawSqlQueryData(me.knex, insertSqlQuery).then(function (result) {
                             return Promise.resolve(result);
                         }).catch(function (reason) {
