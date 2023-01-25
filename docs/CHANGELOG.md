@@ -2,6 +2,22 @@
  
 # Versions
 
+## 5.7.0
+- added mediameta-components
+
+### new features
+- commons: added mediameta-components
+
+### improvements
+- none
+
+### bug fixes
+- none
+
+### breaking changes
+- none
+
+
 ## 5.6.0 (2023-01-19)
 - improved itemsjs-adapter
 - introduced itemjs-dataimporter
