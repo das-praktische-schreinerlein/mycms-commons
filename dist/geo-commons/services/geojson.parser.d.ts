@@ -1,6 +1,7 @@
 import { AbstractGeoParser } from './geo.parser';
 import { GeoElementBase, GeoElementType, LatLngBase } from '../model/geoElementTypes';
 export declare abstract class AbstractGeoJsonParser<T extends LatLngBase> extends AbstractGeoParser<T> {
+    private nameValidationRule;
     static isResponsibleForSrc(src: string): boolean;
     static isResponsibleForFile(fileName: string): boolean;
     isResponsibleForSrc(src: string): boolean;

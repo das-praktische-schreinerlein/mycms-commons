@@ -16,10 +16,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var geo_parser_1 = require("./geo.parser");
 var date_utils_1 = require("../../commons/utils/date.utils");
 var geoElementTypes_1 = require("../model/geoElementTypes");
+var generic_validator_util_1 = require("../../search-commons/model/forms/generic-validator.util");
 var AbstractGeoJsonParser = /** @class */ (function (_super) {
     __extends(AbstractGeoJsonParser, _super);
     function AbstractGeoJsonParser() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.nameValidationRule = new generic_validator_util_1.NameValidationRule(false);
+        return _this;
     }
     AbstractGeoJsonParser.isResponsibleForSrc = function (src) {
         return src !== undefined && /^[\r\n ]*\[[\r\n ]*{[\r\n ]*"track"/g.test(src);
@@ -65,8 +68,8 @@ var AbstractGeoJsonParser = /** @class */ (function (_super) {
         return this.createJson(name, type, [this.createJsonPointSegment(points)]);
     };
     AbstractGeoJsonParser.prototype.createJson = function (name, type, pointSegments) {
-        return '{ "track": {"' +
-            '"tName":"' + name + '",' +
+        return '{ "track": {' +
+            '"tName":"' + this.nameValidationRule.sanitize(name).replace('"', '') + '",' +
             '"type":"' + type + '",' +
             '"header":["lat","lon","ele"],' +
             '"records":[' +

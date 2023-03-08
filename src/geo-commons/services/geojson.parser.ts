@@ -1,8 +1,11 @@
 import {AbstractGeoParser} from './geo.parser';
 import {DateUtils} from '../../commons/utils/date.utils';
 import {GeoElementBase, GeoElementType, LatLngBase} from '../model/geoElementTypes';
+import {NameValidationRule} from '../../search-commons/model/forms/generic-validator.util';
 
 export abstract class AbstractGeoJsonParser<T extends LatLngBase> extends AbstractGeoParser<T> {
+    private nameValidationRule = new NameValidationRule(false);
+
     public static isResponsibleForSrc(src: string): boolean {
         return src !== undefined && /^[\r\n ]*\[[\r\n ]*{[\r\n ]*"track"/g.test(src);
     }
@@ -60,8 +63,8 @@ export abstract class AbstractGeoJsonParser<T extends LatLngBase> extends Abstra
     }
 
     protected createJson(name: string, type: string, pointSegments: string[]): string {
-        return '{ "track": {"' +
-            '"tName":"' + name + '",' +
+        return '{ "track": {' +
+            '"tName":"' + this.nameValidationRule.sanitize(name).replace('"', '') + '",' +
             '"type":"' + type + '",' +
             '"header":["lat","lon","ele"],' +
             '"records":[' +
