@@ -4,11 +4,11 @@
 
 ## 5.7.0
 - added mediameta-components
-- improved geoUtils to createTrack+Route via commons parer and implemented for json too
+- improved geoUtils to createTrack+Route via commons parser and implemented for json too
 
 ### new features
 - commons: added mediameta-components
-- commons: improved geoUtils to createTrack+Route via commons parer and implemented for json too
+- commons: improved geoUtils to createTrack+Route via commons parser and implemented for json too
 
 ### improvements
 - none
