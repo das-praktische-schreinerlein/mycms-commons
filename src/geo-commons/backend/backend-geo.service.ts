@@ -399,7 +399,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
         const existsFileCheck = FileUtils.checkFilePath(filePath, false, false, true, true, false);
         if (force || existsFileCheck) {
             let trackSrc = undefined;
-            let geoElements = this.gpxParser.parse(entity.gpsTrackSrc, undefined);
+            let geoElements = this.gpxParser.parse(entity.gpsTrackSrc, {});
             switch (entity.type) {
                 case 'TRACK':
                     trackSrc = this.jsonParser.createTrack(entity.name, entity.type,

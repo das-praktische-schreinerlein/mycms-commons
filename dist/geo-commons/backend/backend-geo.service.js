@@ -345,7 +345,7 @@ var BackendGeoService = /** @class */ (function () {
         var existsFileCheck = file_utils_1.FileUtils.checkFilePath(filePath, false, false, true, true, false);
         if (force || existsFileCheck) {
             var trackSrc = undefined;
-            var geoElements = this.gpxParser.parse(entity.gpsTrackSrc, undefined);
+            var geoElements = this.gpxParser.parse(entity.gpsTrackSrc, {});
             switch (entity.type) {
                 case 'TRACK':
                     trackSrc = this.jsonParser.createTrack(entity.name, entity.type, geoElements.map(function (geoElement) { return geoElement.points; }), undefined);
