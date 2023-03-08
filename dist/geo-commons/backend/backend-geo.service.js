@@ -17,11 +17,12 @@ var BackendGeoServiceConfigType = /** @class */ (function () {
 }());
 exports.BackendGeoServiceConfigType = BackendGeoServiceConfigType;
 var BackendGeoService = /** @class */ (function () {
-    function BackendGeoService(backendConfig, knex, gpxParser, txtParser, gpxUtils, geoEntityDbMapping) {
+    function BackendGeoService(backendConfig, knex, gpxParser, txtParser, jsonParser, gpxUtils, geoEntityDbMapping) {
         this.backendConfig = backendConfig;
         this.knex = knex;
         this.gpxParser = gpxParser;
         this.txtParser = txtParser;
+        this.jsonParser = jsonParser;
         this.gpxUtils = gpxUtils;
         this.geoEntityDbMapping = geoEntityDbMapping;
         this.sqlQueryBuilder = new sql_query_builder_1.SqlQueryBuilder();
@@ -321,6 +322,54 @@ var BackendGeoService = /** @class */ (function () {
             }
         }
         console.log('SKIPPED already exists - exportGpxToFile for: ', entity.type, entity.id, entity.name, filePath);
+        return Promise.resolve(entity);
+    };
+    BackendGeoService.prototype.exportJsonToFile = function (entity, force) {
+        if (entity === undefined) {
+            return Promise.reject('no valid entity:' + entity);
+        }
+        if (entity.gpsTrackSrc === undefined || !geogpx_parser_1.AbstractGeoGpxParser.isResponsibleForSrc(entity.gpsTrackSrc)) {
+            return Promise.reject('no valid gpx:' + entity.id);
+        }
+        var flagUpdateName = false;
+        if (entity.gpsTrackBasefile === undefined || entity.gpsTrackBasefile === null
+            || entity.gpsTrackBasefile.length < 10) {
+            entity.gpsTrackBasefile = this.generateGeoFileName(entity);
+            flagUpdateName = true;
+        }
+        var filePath = this.backendConfig.apiRouteTracksStaticDir + '/' + entity.gpsTrackBasefile + '.json';
+        var errFileCheck = file_utils_1.FileUtils.checkFilePath(filePath, false, false, false, true, false);
+        if (errFileCheck) {
+            return Promise.reject('no valid json-filePath:' + filePath);
+        }
+        var existsFileCheck = file_utils_1.FileUtils.checkFilePath(filePath, false, false, true, true, false);
+        if (force || existsFileCheck) {
+            var trackSrc = undefined;
+            var geoElements = this.gpxParser.parse(entity.gpsTrackSrc, undefined);
+            switch (entity.type) {
+                case 'TRACK':
+                    trackSrc = this.jsonParser.createTrack(entity.name, entity.type, geoElements.map(function (geoElement) { return geoElement.points; }), undefined);
+                    break;
+                case 'ROUTE':
+                    trackSrc = this.jsonParser.createRoute(entity.name, entity.type, geoElements.map(function (geoElement) { return geoElement.points; })
+                        .reduce(function (previousValue, currentValue) { return [].concat(previousValue, currentValue); }), undefined);
+                    break;
+                default:
+                    return Promise.reject('unknown entitytype:' + entity.type + ' for id:' + entity.id);
+            }
+            try {
+                fs.writeFileSync(filePath, trackSrc);
+            }
+            catch (err) {
+                console.error('error while writing json-file: ' + filePath, err);
+                return Promise.reject('error while writing json-file: ' + err);
+            }
+            console.log('DONE - exportJsonToFile for: ', entity.type, entity.id, entity.name, filePath);
+            if (flagUpdateName) {
+                return this.updateGeoEntity(entity, ['gpsTrackBasefile']);
+            }
+        }
+        console.log('SKIPPED already exists - exportJsonToFile for: ', entity.type, entity.id, entity.name, filePath);
         return Promise.resolve(entity);
     };
     BackendGeoService.prototype.generateGeoFileName = function (entity) {

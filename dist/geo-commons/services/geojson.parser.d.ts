@@ -6,7 +6,7 @@ export declare abstract class AbstractGeoJsonParser<T extends LatLngBase> extend
     isResponsibleForSrc(src: string): boolean;
     isResponsibleForFile(fileName: string): boolean;
     parse(json: string, options: any): GeoElementBase<T>[];
-    createTrack(name: string, type: string, segments: [T[]], defaultPosition: T): string;
+    createTrack(name: string, type: string, segments: T[][], defaultPosition: T): string;
     createRoute(name: string, type: string, points: T[], defaultPosition: T): string;
     createJsonTrack(name: string, type: string, segments: string[]): string;
     createJsonTrackSegment(points: T[], defaultPosition: T): string;

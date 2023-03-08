@@ -33,7 +33,7 @@ export abstract class AbstractGeoJsonParser<T extends LatLngBase> extends Abstra
         return elements;
     }
 
-    public createTrack(name: string, type: string, segments: [T[]], defaultPosition: T): string {
+    public createTrack(name: string, type: string, segments: T[][], defaultPosition: T): string {
         const gpxSegments: string[] = [];
         for (const segment of segments) {
             gpxSegments.push(

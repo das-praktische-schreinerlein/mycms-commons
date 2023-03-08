@@ -9,7 +9,7 @@ export declare abstract class AbstractGeoGpxParser<T extends LatLngBase> extends
     isResponsibleForSrc(src: string): boolean;
     isResponsibleForFile(fileName: string): boolean;
     parse(xml: string, options: any): GeoElementBase<T>[];
-    createTrack(name: string, type: string, segments: [T[]], defaultPosition: T): string;
+    createTrack(name: string, type: string, segments: T[][], defaultPosition: T): string;
     createRoute(name: string, type: string, points: T[], defaultPosition: T): string;
     createGpxTrack(name: string, type: string, segments: string[]): string;
     createGpxTrackSegment(points: LatLngBase[], defaultPosition: LatLngBase): string;

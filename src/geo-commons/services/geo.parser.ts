@@ -8,7 +8,7 @@ export abstract class AbstractGeoParser<T extends LatLngBase>  {
 
     abstract parse(src: string, options): GeoElementBase<T>[];
 
-    createTrack(name: string, type: string, segments: [T[]], defaultPosition: T): string {
+    createTrack(name: string, type: string, segments: T[][], defaultPosition: T): string {
         throw new Error('not implemented');
     }
 

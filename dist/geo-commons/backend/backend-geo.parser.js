@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var geogpx_parser_1 = require("../services/geogpx.parser");
+var geojson_parser_1 = require("../services/geojson.parser");
 var geotxt_parser_1 = require("../services/geotxt.parser");
 var backend_geo_types_1 = require("./backend-geo.types");
 var xmldom_1 = require("@xmldom/xmldom");
@@ -87,4 +88,21 @@ var BackendGeoTxtParser = /** @class */ (function (_super) {
     return BackendGeoTxtParser;
 }(geotxt_parser_1.AbstractGeoTxtParser));
 exports.BackendGeoTxtParser = BackendGeoTxtParser;
+var BackendGeoJsonParser = /** @class */ (function (_super) {
+    __extends(BackendGeoJsonParser, _super);
+    function BackendGeoJsonParser() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BackendGeoJsonParser.prototype.createLatLng = function (lat, lng, alt, time) {
+        return BackendGeoUtils.createLatLng(lat, lng, alt, time);
+    };
+    BackendGeoJsonParser.prototype.createGeoElement = function (type, points, name) {
+        return BackendGeoUtils.createGeoElement(type, points, name);
+    };
+    BackendGeoJsonParser.prototype.calcDistance = function (from, to) {
+        return BackendGeoUtils.calcDistance(from, to);
+    };
+    return BackendGeoJsonParser;
+}(geojson_parser_1.AbstractGeoJsonParser));
+exports.BackendGeoJsonParser = BackendGeoJsonParser;
 //# sourceMappingURL=backend-geo.parser.js.map

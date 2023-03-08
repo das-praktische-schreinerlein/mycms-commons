@@ -3,7 +3,7 @@ import {AbstractGeoGpxParser} from '../services/geogpx.parser';
 import {GeoDateUtils} from '../services/geodate.utils';
 import {FileUtils} from '../../commons/utils/file.utils';
 import * as fs from 'fs';
-import {BackendGeoGpxParser, BackendGeoTxtParser} from './backend-geo.parser';
+import {BackendGeoGpxParser, BackendGeoJsonParser, BackendGeoTxtParser} from './backend-geo.parser';
 import {GeoElementType} from '../model/geoElementTypes';
 import {GeoGpxUtils} from '../services/geogpx.utils';
 import {AbstractBackendGeoService} from './abstract-backend-geo.service';
@@ -47,6 +47,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
                 protected knex,
                 protected gpxParser: BackendGeoGpxParser,
                 protected txtParser: BackendGeoTxtParser,
+                protected jsonParser: BackendGeoJsonParser,
                 protected gpxUtils: GeoGpxUtils,
                 protected geoEntityDbMapping: GeoEntityTableDbMapping) {
         this.sqlQueryBuilder = new SqlQueryBuilder();
@@ -369,6 +370,65 @@ export class BackendGeoService implements AbstractBackendGeoService {
         }
 
         console.log('SKIPPED already exists - exportGpxToFile for: ', entity.type, entity.id, entity.name, filePath);
+
+        return Promise.resolve(entity);
+    }
+
+    public exportJsonToFile(entity: GeoEntity, force: boolean): Promise<GeoEntity> {
+        if (entity === undefined) {
+            return Promise.reject('no valid entity:' + entity);
+        }
+
+        if (entity.gpsTrackSrc === undefined || !AbstractGeoGpxParser.isResponsibleForSrc(entity.gpsTrackSrc)) {
+            return Promise.reject('no valid gpx:' + entity.id);
+        }
+
+        let flagUpdateName = false;
+        if (entity.gpsTrackBasefile === undefined || entity.gpsTrackBasefile === null
+            || entity.gpsTrackBasefile.length < 10) {
+            entity.gpsTrackBasefile = this.generateGeoFileName(entity);
+            flagUpdateName = true;
+        }
+
+        const filePath = this.backendConfig.apiRouteTracksStaticDir + '/' + entity.gpsTrackBasefile + '.json';
+        const errFileCheck = FileUtils.checkFilePath(filePath, false, false, false, true, false);
+        if (errFileCheck) {
+            return Promise.reject('no valid json-filePath:' + filePath);
+        }
+
+        const existsFileCheck = FileUtils.checkFilePath(filePath, false, false, true, true, false);
+        if (force || existsFileCheck) {
+            let trackSrc = undefined;
+            let geoElements = this.gpxParser.parse(entity.gpsTrackSrc, undefined);
+            switch (entity.type) {
+                case 'TRACK':
+                    trackSrc = this.jsonParser.createTrack(entity.name, entity.type,
+                        geoElements.map(geoElement => geoElement.points), undefined);
+                    break;
+                case 'ROUTE':
+                    trackSrc = this.jsonParser.createRoute(entity.name, entity.type,
+                        geoElements.map(geoElement => geoElement.points)
+                            .reduce((previousValue, currentValue) => [].concat(previousValue, currentValue)),
+                        undefined);
+                    break;
+                default:
+                    return Promise.reject('unknown entitytype:' + entity.type + ' for id:' + entity.id);
+            }
+
+            try {
+                fs.writeFileSync(filePath, trackSrc);
+            } catch (err) {
+                console.error('error while writing json-file: ' + filePath, err);
+                return Promise.reject('error while writing json-file: ' + err);
+            }
+
+            console.log('DONE - exportJsonToFile for: ', entity.type, entity.id, entity.name, filePath);
+            if (flagUpdateName) {
+                return this.updateGeoEntity(entity, ['gpsTrackBasefile']);
+            }
+        }
+
+        console.log('SKIPPED already exists - exportJsonToFile for: ', entity.type, entity.id, entity.name, filePath);
 
         return Promise.resolve(entity);
     }

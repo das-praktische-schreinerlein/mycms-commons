@@ -1,6 +1,7 @@
 import { GeoElementType } from '../model/geoElementTypes';
 import { AbstractGeoParser } from '../services/geo.parser';
 import { AbstractGeoGpxParser } from '../services/geogpx.parser';
+import { AbstractGeoJsonParser } from '../services/geojson.parser';
 import { AbstractGeoTxtParser } from '../services/geotxt.parser';
 import { BackendGeoElement, BackendLatLng } from './backend-geo.types';
 export declare class BackendGeoUtils {
@@ -17,6 +18,11 @@ export declare class BackendGeoGpxParser extends AbstractGeoGpxParser<BackendLat
     protected calcDistance(from: BackendLatLng, to: BackendLatLng): number;
 }
 export declare class BackendGeoTxtParser extends AbstractGeoTxtParser<BackendLatLng> implements BackendGeoParser {
+    protected createLatLng(lat: string | number, lng: string | number, alt?: number, time?: Date): BackendLatLng;
+    protected createGeoElement(type: GeoElementType, points: BackendLatLng[], name: string): BackendGeoElement;
+    protected calcDistance(from: BackendLatLng, to: BackendLatLng): number;
+}
+export declare class BackendGeoJsonParser extends AbstractGeoJsonParser<BackendLatLng> implements BackendGeoParser {
     protected createLatLng(lat: string | number, lng: string | number, alt?: number, time?: Date): BackendLatLng;
     protected createGeoElement(type: GeoElementType, points: BackendLatLng[], name: string): BackendGeoElement;
     protected calcDistance(from: BackendLatLng, to: BackendLatLng): number;
