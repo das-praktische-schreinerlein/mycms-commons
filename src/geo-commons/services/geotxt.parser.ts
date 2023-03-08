@@ -99,11 +99,11 @@ export abstract class AbstractGeoTxtParser<T extends LatLngBase> extends Abstrac
 
     protected parseTrkSeg(name, lines: string[], options: {}): GeoElementBase<T> {
         const coords: T[] = [];
-        for (let i = 0; i < lines.length; i++) {
-            const CONST_TRACKPOINT_LEGACY =/Trackpoint[\t ]+([NS])([0-9.]*)[\t ]+([EW])([0-9.]*)[\t ]+(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d:\d\d)[\t ]+([0-9-]*) m.*/g;
-            const CONST_TRACKPOINT_GLOB =/Trackpoint[\t ]+([NS])([0-9.]*)[\t ]+([EW])([0-9.]*)[\t ]+(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d:\d\d)( \(UTC[+-0-9].*\))[\t ]+([0-9-]*) m.*/g;
+        for (const element of lines) {
+            const CONST_TRACKPOINT_LEGACY = /Trackpoint[\t ]+([NS])([0-9.]*)[\t ]+([EW])([0-9.]*)[\t ]+(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d:\d\d)[\t ]+([0-9-]*) m.*/g;
+            const CONST_TRACKPOINT_GLOB = /Trackpoint[\t ]+([NS])([0-9.]*)[\t ]+([EW])([0-9.]*)[\t ]+(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d:\d\d)( \(UTC[+-0-9].*\))[\t ]+([0-9-]*) m.*/g;
 
-            const line = lines[i];
+            const line = element;
             if (line.match(CONST_TRACKPOINT_LEGACY)) {
                 // Trackpoint N53.99300 E13.17541 10.12.2005 14:17:51 2 m 96 m 0:01:54 3 kph
                 const res = CONST_TRACKPOINT_LEGACY.exec(line);

@@ -4,6 +4,12 @@ var geo_formatter_1 = require("./geo.formatter");
 var AbstractGeoParser = /** @class */ (function () {
     function AbstractGeoParser() {
     }
+    AbstractGeoParser.prototype.createTrack = function (name, type, segments, defaultPosition) {
+        throw new Error('not implemented');
+    };
+    AbstractGeoParser.prototype.createRoute = function (name, type, points, defaultPosition) {
+        throw new Error('not implemented');
+    };
     AbstractGeoParser.prototype.humanLen = function (l) {
         return geo_formatter_1.GeoFormatter.humanLen(l);
     };

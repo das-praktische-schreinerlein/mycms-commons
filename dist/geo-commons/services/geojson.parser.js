@@ -44,6 +44,46 @@ var AbstractGeoJsonParser = /** @class */ (function (_super) {
         }
         return elements;
     };
+    AbstractGeoJsonParser.prototype.createTrack = function (name, type, segments, defaultPosition) {
+        var gpxSegments = [];
+        for (var _i = 0, segments_1 = segments; _i < segments_1.length; _i++) {
+            var segment = segments_1[_i];
+            gpxSegments.push(this.createJsonTrackSegment(segment, defaultPosition));
+        }
+        return this.createJsonTrack(name, type, gpxSegments);
+    };
+    AbstractGeoJsonParser.prototype.createRoute = function (name, type, points, defaultPosition) {
+        return this.createJsonRoute(name, type, points, defaultPosition);
+    };
+    AbstractGeoJsonParser.prototype.createJsonTrack = function (name, type, segments) {
+        return this.createJson(name, type, segments);
+    };
+    AbstractGeoJsonParser.prototype.createJsonTrackSegment = function (points, defaultPosition) {
+        return this.createJsonPointSegment(points);
+    };
+    AbstractGeoJsonParser.prototype.createJsonRoute = function (name, type, points, defaultPosition) {
+        return this.createJson(name, type, [this.createJsonPointSegment(points)]);
+    };
+    AbstractGeoJsonParser.prototype.createJson = function (name, type, pointSegments) {
+        return '{ "track": {"' +
+            '"tName":""' + name + '"",' +
+            '"type":""' + type + '"",' +
+            '"header":["lat","lon","ele"],' +
+            '"records":[' +
+            pointSegments.join(',') +
+            ']' +
+            '}}';
+    };
+    AbstractGeoJsonParser.prototype.createJsonPointSegment = function (points) {
+        var _this = this;
+        return points.map(function (point) { return _this.createJsonPoint(point); }).join(',');
+    };
+    AbstractGeoJsonParser.prototype.createJsonPoint = function (point) {
+        var alt = point['alt']
+            ? point['alt']
+            : undefined;
+        return '[' + [point.lat, point.lng, alt].join(',') + ']';
+    };
     AbstractGeoJsonParser.prototype.parseJsonObj = function (obj, options) {
         var j;
         var coords = [];

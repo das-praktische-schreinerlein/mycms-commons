@@ -107,10 +107,11 @@ var AbstractGeoTxtParser = /** @class */ (function (_super) {
     };
     AbstractGeoTxtParser.prototype.parseTrkSeg = function (name, lines, options) {
         var coords = [];
-        for (var i = 0; i < lines.length; i++) {
+        for (var _i = 0, lines_2 = lines; _i < lines_2.length; _i++) {
+            var element = lines_2[_i];
             var CONST_TRACKPOINT_LEGACY = /Trackpoint[\t ]+([NS])([0-9.]*)[\t ]+([EW])([0-9.]*)[\t ]+(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d:\d\d)[\t ]+([0-9-]*) m.*/g;
             var CONST_TRACKPOINT_GLOB = /Trackpoint[\t ]+([NS])([0-9.]*)[\t ]+([EW])([0-9.]*)[\t ]+(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d:\d\d)( \(UTC[+-0-9].*\))[\t ]+([0-9-]*) m.*/g;
-            var line = lines[i];
+            var line = element;
             if (line.match(CONST_TRACKPOINT_LEGACY)) {
                 // Trackpoint N53.99300 E13.17541 10.12.2005 14:17:51 2 m 96 m 0:01:54 3 kph
                 var res = CONST_TRACKPOINT_LEGACY.exec(line);

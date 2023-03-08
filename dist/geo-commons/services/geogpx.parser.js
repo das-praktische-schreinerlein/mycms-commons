@@ -60,11 +60,23 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
         }
         return elements;
     };
+    AbstractGeoGpxParser.prototype.createTrack = function (name, type, segments, defaultPosition) {
+        var gpxSegments = [];
+        for (var _i = 0, segments_1 = segments; _i < segments_1.length; _i++) {
+            var segment = segments_1[_i];
+            gpxSegments.push(this.createGpxTrackSegment(segment, defaultPosition));
+        }
+        return this.createGpxTrack(name, type, gpxSegments);
+    };
+    AbstractGeoGpxParser.prototype.createRoute = function (name, type, points, defaultPosition) {
+        return this.createGpxRoute(name, type, points, defaultPosition);
+    };
     AbstractGeoGpxParser.prototype.createGpxTrack = function (name, type, segments) {
         var newGpx = '<trk><type>' + type + '</type><name>' + name + '</name>';
         if (segments) {
-            for (var i = 0; i < segments.length; i++) {
-                var segment = segments[i];
+            for (var _i = 0, segments_2 = segments; _i < segments_2.length; _i++) {
+                var element = segments_2[_i];
+                var segment = element;
                 newGpx = newGpx + segment;
             }
         }
@@ -75,17 +87,18 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
         if (!points || points.length <= 0) {
             return '';
         }
-        var lastTime = defaultPosition && defaultPosition.time
-            ? typeof defaultPosition.time === 'string'
-                ? defaultPosition.time
-                : defaultPosition.time.toISOString()
+        var lastTime = defaultPosition && defaultPosition['time']
+            ? typeof defaultPosition['time'] === 'string'
+                ? defaultPosition['time']
+                : defaultPosition['time'].toISOString() // TODO use Zulu time
             : undefined;
         var lastAlt = defaultPosition && defaultPosition.alt
             ? defaultPosition.alt
             : undefined;
         var newGpx = '<trkseg>';
-        for (var i = 0; i < points.length; i++) {
-            var point = points[i];
+        for (var _i = 0, points_1 = points; _i < points_1.length; _i++) {
+            var element = points_1[_i];
+            var point = element;
             var time = point['time']
                 ? typeof point['time'] === 'string'
                     ? point['time']
@@ -108,17 +121,18 @@ var AbstractGeoGpxParser = /** @class */ (function (_super) {
         if (!points || points.length <= 0) {
             return '';
         }
-        var lastTime = defaultPosition && defaultPosition.time
-            ? typeof defaultPosition.time === 'string'
-                ? defaultPosition.time
-                : defaultPosition.time.toISOString() // TODO use Zulu time
+        var lastTime = defaultPosition && defaultPosition['time']
+            ? typeof defaultPosition['time'] === 'string'
+                ? defaultPosition['time']
+                : defaultPosition['time'].toISOString() // TODO use Zulu time
             : undefined;
         var lastAlt = defaultPosition && defaultPosition.alt !== 0
             ? defaultPosition.alt
             : undefined;
         var newGpx = '<rte><type>' + type + '</type><name>' + name + '</name>';
-        for (var i = 0; i < points.length; i++) {
-            var point = points[i];
+        for (var _i = 0, points_2 = points; _i < points_2.length; _i++) {
+            var element = points_2[_i];
+            var point = element;
             var time = point['time']
                 ? typeof point['time'] === 'string'
                     ? point['time']

@@ -8,6 +8,14 @@ export abstract class AbstractGeoParser<T extends LatLngBase>  {
 
     abstract parse(src: string, options): GeoElementBase<T>[];
 
+    createTrack(name: string, type: string, segments: [T[]], defaultPosition: T): string {
+        throw new Error('not implemented');
+    }
+
+    createRoute(name: string, type: string, points: T[], defaultPosition: T): string {
+        throw new Error('not implemented');
+    }
+
     protected abstract calcDistance(from: T, to: T): number;
 
     protected humanLen(l) {

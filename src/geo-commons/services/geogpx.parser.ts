@@ -53,11 +53,25 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
         return elements;
     }
 
+    public createTrack(name: string, type: string, segments: [T[]], defaultPosition: T): string {
+        const gpxSegments: string[] = [];
+        for (const segment of segments) {
+            gpxSegments.push(
+                this.createGpxTrackSegment(segment, defaultPosition));
+        }
+
+        return this.createGpxTrack(name, type, gpxSegments);
+    }
+
+    public createRoute(name: string, type: string, points: T[], defaultPosition: T): string {
+        return this.createGpxRoute(name, type, points, defaultPosition)
+    }
+
     public createGpxTrack(name: string, type: string, segments: string[]): string {
         let newGpx = '<trk><type>' + type + '</type><name>' + name + '</name>';
         if (segments) {
-            for (let i = 0; i < segments.length; i++) {
-                const segment = segments[i];
+            for (const element of segments) {
+                const segment = element;
                 newGpx = newGpx + segment;
             }
         }
@@ -67,23 +81,23 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
         return newGpx;
     }
 
-    public createGpxTrackSegment(points: LatLngBase[], defaultPosition: LatLngTimeBase): string {
+    public createGpxTrackSegment(points: LatLngBase[], defaultPosition: LatLngBase): string {
         if (!points || points.length <= 0) {
             return '';
         }
 
-        let lastTime = defaultPosition && defaultPosition.time
-            ? typeof defaultPosition.time === 'string'
-                ? defaultPosition.time
-                : defaultPosition.time.toISOString()
+        let lastTime = defaultPosition && defaultPosition['time']
+            ? typeof defaultPosition['time'] === 'string'
+                ? defaultPosition['time']
+                : defaultPosition['time'].toISOString() // TODO use Zulu time
             : undefined;
         let lastAlt = defaultPosition && defaultPosition.alt
             ? defaultPosition.alt
             : undefined;
 
         let newGpx = '<trkseg>';
-        for (let i = 0; i < points.length; i++) {
-            const point = points[i];
+        for (const element of points) {
+            const point = element;
             const time = point['time']
                 ? typeof point['time'] === 'string'
                     ? point['time']
@@ -107,23 +121,23 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
         return newGpx;
     }
 
-    public createGpxRoute(name: string, type: string, points: LatLngBase[], defaultPosition: LatLngTimeBase): string {
+    public createGpxRoute(name: string, type: string, points: LatLngBase[], defaultPosition: LatLngBase): string {
         if (!points || points.length <= 0) {
             return '';
         }
 
-        let lastTime = defaultPosition && defaultPosition.time
-            ? typeof defaultPosition.time === 'string'
-                ? defaultPosition.time
-                : defaultPosition.time.toISOString() // TODO use Zulu time
+        let lastTime = defaultPosition && defaultPosition['time']
+            ? typeof defaultPosition['time'] === 'string'
+                ? defaultPosition['time']
+                : defaultPosition['time'].toISOString() // TODO use Zulu time
             : undefined;
         let lastAlt = defaultPosition && defaultPosition.alt !== 0
             ? defaultPosition.alt
             : undefined;
 
         let newGpx = '<rte><type>' + type + '</type><name>' + name + '</name>';
-        for (let i = 0; i < points.length; i++) {
-            const point = points[i];
+        for (const element of points) {
+            const point = element;
             const time = point['time']
                 ? typeof point['time'] === 'string'
                     ? point['time']
@@ -241,7 +255,7 @@ export abstract class AbstractGeoGpxParser<T extends LatLngBase> extends Abstrac
             return;
         }
 
-        const coords = [];
+        const coords: T[] = [];
         for (let i = 0; i < el.length; i++) {
             const ptElement = el[i];
             const eleElement = ptElement.getElementsByTagName('ele');
