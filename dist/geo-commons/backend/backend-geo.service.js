@@ -320,6 +320,7 @@ var BackendGeoService = /** @class */ (function () {
             if (flagUpdateName) {
                 return this.updateGeoEntity(entity, ['gpsTrackBasefile']);
             }
+            return Promise.resolve(entity);
         }
         console.log('SKIPPED already exists - exportGpxToFile for: ', entity.type, entity.id, entity.name, filePath);
         return Promise.resolve(entity);
@@ -377,6 +378,7 @@ var BackendGeoService = /** @class */ (function () {
             if (flagUpdateName) {
                 return this.updateGeoEntity(entity, ['gpsTrackBasefile']);
             }
+            return Promise.resolve(entity);
         }
         console.log('SKIPPED already exists - exportJsonToFile for: ', entity.type, entity.id, entity.name, filePath);
         return Promise.resolve(entity);

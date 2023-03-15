@@ -367,6 +367,8 @@ export class BackendGeoService implements AbstractBackendGeoService {
             if (flagUpdateName) {
                 return this.updateGeoEntity(entity, ['gpsTrackBasefile']);
             }
+
+            return Promise.resolve(entity);
         }
 
         console.log('SKIPPED already exists - exportGpxToFile for: ', entity.type, entity.id, entity.name, filePath);
@@ -435,6 +437,8 @@ export class BackendGeoService implements AbstractBackendGeoService {
             if (flagUpdateName) {
                 return this.updateGeoEntity(entity, ['gpsTrackBasefile']);
             }
+
+            return Promise.resolve(entity);
         }
 
         console.log('SKIPPED already exists - exportJsonToFile for: ', entity.type, entity.id, entity.name, filePath);
