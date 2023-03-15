@@ -351,7 +351,16 @@ var BackendGeoService = /** @class */ (function () {
                     trackSrc = this.jsonParser.createTrack(entity.name, entity.type, geoElements.map(function (geoElement) { return geoElement.points; }), undefined);
                     break;
                 case 'ROUTE':
-                    trackSrc = this.jsonParser.createRoute(entity.name, entity.type, geoElements.map(function (geoElement) { return geoElement.points; })
+                    // use tracks instead of route because of more information (time), route only as fallback
+                    var tourSrcGeoElements = geoElements.length < 2
+                        ? geoElements
+                        : geoElements.filter(function (geoElement) {
+                            return geoElement.type === undefined || geoElement.type === geoElementTypes_1.GeoElementType.TRACK;
+                        });
+                    if (tourSrcGeoElements.length === 0) {
+                        tourSrcGeoElements = geoElements.filter(function (geoElement) { return geoElement.type === geoElementTypes_1.GeoElementType.ROUTE; });
+                    }
+                    trackSrc = this.jsonParser.createRoute(entity.name, entity.type, tourSrcGeoElements.map(function (geoElement) { return geoElement.points; })
                         .reduce(function (previousValue, currentValue) { return [].concat(previousValue, currentValue); }), undefined);
                     break;
                 default:

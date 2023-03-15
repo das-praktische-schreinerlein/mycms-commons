@@ -8,4 +8,7 @@ export interface AbstractBackendGeoService {
     saveGpxPointsToDatabase(entity: GeoEntity, force: boolean): Promise<GeoEntity>;
 
     exportGpxToFile(entity: GeoEntity, force: boolean): Promise<GeoEntity>;
+
+    exportJsonToFile(entity: GeoEntity, force: boolean): Promise<GeoEntity>;
+
 }

@@ -22,6 +22,23 @@ var CommonActiontagGpxExportAdapter = /** @class */ (function () {
             return Promise.reject(reason);
         });
     };
+    CommonActiontagGpxExportAdapter.prototype.executeActionTagExportGeoJson = function (table, id, actionTagForm) {
+        var _this = this;
+        if (!js_data_1.utils.isInteger(id)) {
+            return Promise.reject('actiontag ' + actionTagForm.key + ' id not an integer');
+        }
+        return this.backendGeoService.readGeoEntityForId(table, id).then(function (entity) {
+            if (entity === undefined) {
+                return Promise.reject('no valid entity for id:' + id);
+            }
+            return _this.backendGeoService.exportJsonToFile(entity, true);
+        }).then(function () {
+            return Promise.resolve(true);
+        }).catch(function errorPlaylist(reason) {
+            console.error('_doActionTag ExportGeoJson ' + table + ' failed:', reason);
+            return Promise.reject(reason);
+        });
+    };
     return CommonActiontagGpxExportAdapter;
 }());
 exports.CommonActiontagGpxExportAdapter = CommonActiontagGpxExportAdapter;

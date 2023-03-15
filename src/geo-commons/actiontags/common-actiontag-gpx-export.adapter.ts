@@ -33,4 +33,23 @@ export class CommonActiontagGpxExportAdapter {
             return Promise.reject(reason);
         });
     }
+
+    public executeActionTagExportGeoJson(table: string, id: number, actionTagForm: GpxExportActionTagForm): Promise<any> {
+        if (!utils.isInteger(id)) {
+            return Promise.reject('actiontag ' + actionTagForm.key + ' id not an integer');
+        }
+
+        return this.backendGeoService.readGeoEntityForId(table, id).then(entity => {
+            if (entity === undefined) {
+                return Promise.reject('no valid entity for id:' + id);
+            }
+
+            return this.backendGeoService.exportJsonToFile(entity, true);
+        }).then(() => {
+            return Promise.resolve(true);
+        }).catch(function errorPlaylist(reason) {
+            console.error('_doActionTag ExportGeoJson ' + table + ' failed:', reason);
+            return Promise.reject(reason);
+        });
+    }
 }

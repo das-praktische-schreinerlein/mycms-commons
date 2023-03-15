@@ -7,4 +7,5 @@ export declare class CommonActiontagGpxExportAdapter {
     private readonly backendGeoService;
     constructor(backendGeoService: AbstractBackendGeoService);
     executeActionTagExportGpx(table: string, id: number, actionTagForm: GpxExportActionTagForm): Promise<any>;
+    executeActionTagExportGeoJson(table: string, id: number, actionTagForm: GpxExportActionTagForm): Promise<any>;
 }

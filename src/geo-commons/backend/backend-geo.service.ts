@@ -406,8 +406,17 @@ export class BackendGeoService implements AbstractBackendGeoService {
                         geoElements.map(geoElement => geoElement.points), undefined);
                     break;
                 case 'ROUTE':
+                    // use tracks instead of route because of more information (time), route only as fallback
+                    let tourSrcGeoElements = geoElements.length < 2
+                        ? geoElements
+                        : geoElements.filter(geoElement =>
+                            geoElement.type === undefined || geoElement.type === GeoElementType.TRACK);
+                    if (tourSrcGeoElements.length === 0) {
+                        tourSrcGeoElements = geoElements.filter(geoElement => geoElement.type === GeoElementType.ROUTE);
+                    }
+
                     trackSrc = this.jsonParser.createRoute(entity.name, entity.type,
-                        geoElements.map(geoElement => geoElement.points)
+                        tourSrcGeoElements.map(geoElement => geoElement.points)
                             .reduce((previousValue, currentValue) => [].concat(previousValue, currentValue)),
                         undefined);
                     break;
