@@ -1,6 +1,6 @@
 {
   "name": "@dps/mycms-commons",
-  "version": "5.7.0",
+  "version": "6.0.0",
   "license": "Apache-2.0",
   "main": "dist/",
   "types": "dist/",
@@ -30,11 +30,11 @@
     "itemsjs": ">= 2.1.20",
     "js-data": ">= 3.0.8",
     "js-data-http": ">= 3.0.1",
-    "knex": ">= 0.15.2",
+    "knex": ">= 0.20.10",
     "promise-serial": ">= 0.1.5",
     "rxjs": ">= 6.6.0",
     "tz-lookup": ">= 6.1.25",
-    "xregexp": ">= 4.3.0"
+    "xregexp": ">= 4.4.1"
   },
   "devDependencies": {
     "@types/jasmine": "3.5.11",
@@ -42,25 +42,25 @@
     "@xmldom/xmldom": "0.8.6",
     "cpx": "1.5.0",
     "codelyzer": "5.2.2",
-    "cross-os": "1.3.0",
+    "cross-os": "1.5.0",
     "istanbul": "0.4.5",
     "jasmine": "3.5.0",
-    "jasmine-core": "3.5.0",
-    "jasmine-spec-reporter": "5.0.2",
-    "mkdirp": "1.0.4",
-    "patch-package": "6.2.2",
+    "jasmine-core": "4.0.1",
+    "jasmine-spec-reporter": "7.0.0",
+    "mkdirp": "2.1.5",
+    "patch-package": "6.5.1",
     "remap-istanbul": "0.13.0",
     "rimraf": "3.0.2",
-    "tslint": "6.1.2",
+    "tslint": "6.1.3",
     "typescript": "3.2.4",
     "geo-coder": "0.2.1",
     "itemsjs": "2.1.20",
     "js-data": "3.0.8",
     "js-data-http": "3.0.1",
-    "knex": "0.15.2",
+    "knex": "0.20.10",
     "promise-serial": "0.1.5",
     "rxjs": "6.6.0",
     "tz-lookup": "6.1.25",
-    "xregexp": "4.3.0"
+    "xregexp": "4.4.1"
   }
 }

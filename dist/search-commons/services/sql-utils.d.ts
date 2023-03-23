@@ -16,5 +16,5 @@ export declare class SqlUtils {
     static concatRawSqlQueryData(part1: RawSqlQueryData, joiner: string, part2: RawSqlQueryData): RawSqlQueryData;
     static mapParametersToPlaceholders(parameters: any[]): string[];
     static mapParametersToPlaceholderString(parameters: any[]): string;
-    static executeRawSqlQueryData(db: knex, query: RawSqlQueryData): Promise<any>;
+    static executeRawSqlQueryData(db: knex.Client, query: RawSqlQueryData): Promise<any>;
 }

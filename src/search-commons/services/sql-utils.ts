@@ -105,7 +105,7 @@ export class SqlUtils {
         return SqlUtils.mapParametersToPlaceholders(parameters).join(', ');
     }
 
-    public static executeRawSqlQueryData(db: knex, query: RawSqlQueryData): Promise<any> {
+    public static executeRawSqlQueryData(db: knex.Client, query: RawSqlQueryData): Promise<any> {
         return db.raw(query.sql, query.parameters);
     }
 }

@@ -2,6 +2,24 @@
  
 # Versions
 
+## 6.0.0
+- bumped up deps
+- moved ValidationRules to commons
+
+### new features
+- none
+
+### improvements
+- none
+
+### bug fixes
+- none
+
+### breaking changes
+- bumped up deps
+- moved ValidationRules to commons
+
+
 ## 5.7.0 (2023-03-18)
 - added mediameta-components
 - improved geoUtils to createTrack+Route via commons parser and implemented for json too
