@@ -304,7 +304,7 @@ exports.StringNumberValidationRule = StringNumberValidationRule;
 var DateValidationRule = /** @class */ (function (_super) {
     __extends(DateValidationRule, _super);
     function DateValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-0-9.: Tt]*$', 'gi'), new XRegExp('[^-0-9.: Tt]*', 'gi'), '', 50) || this;
+        return _super.call(this, required, XRegExp('^[-0-9.: Tt]*$', 'gi'), XRegExp('[^-0-9.: Tt]*', 'gi'), '', 50) || this;
     }
     return DateValidationRule;
 }(RegExValidationReplaceRule));
@@ -312,7 +312,7 @@ exports.DateValidationRule = DateValidationRule;
 var IdValidationRule = /** @class */ (function (_super) {
     __extends(IdValidationRule, _super);
     function IdValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[a-zA-Z_0-9.]*$', 'gi'), new XRegExp('[^a-zA-Z_0-9.]*', 'gi'), '', 100) || this;
+        return _super.call(this, required, XRegExp('^[a-zA-Z_0-9.]*$', 'gi'), XRegExp('[^a-zA-Z_0-9.]*', 'gi'), '', 100) || this;
     }
     return IdValidationRule;
 }(RegExValidationReplaceRule));
@@ -320,7 +320,7 @@ exports.IdValidationRule = IdValidationRule;
 var IdCsvValidationRule = /** @class */ (function (_super) {
     __extends(IdCsvValidationRule, _super);
     function IdCsvValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[a-zA-Z_0-9,.]*$', 'gi'), new XRegExp('[^a-zA-Z_0-9,.]*', 'gi'), '', 20000) || this;
+        return _super.call(this, required, XRegExp('^[a-zA-Z_0-9,.]*$', 'gi'), XRegExp('[^a-zA-Z_0-9,.]*', 'gi'), '', 20000) || this;
     }
     return IdCsvValidationRule;
 }(RegExValidationReplaceRule));
@@ -336,7 +336,7 @@ exports.DbIdValidationRule = DbIdValidationRule;
 var DbIdCsvValidationRule = /** @class */ (function (_super) {
     __extends(DbIdCsvValidationRule, _super);
     function DbIdCsvValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[0-9,]*$', 'gi'), new XRegExp('[^0-9,]*', 'gi'), '', 20000) || this;
+        return _super.call(this, required, XRegExp('^[0-9,]*$', 'gi'), XRegExp('[^0-9,]*', 'gi'), '', 20000) || this;
     }
     return DbIdCsvValidationRule;
 }(RegExValidationReplaceRule));
@@ -344,7 +344,7 @@ exports.DbIdCsvValidationRule = DbIdCsvValidationRule;
 var KeyParamsValidationRule = /** @class */ (function (_super) {
     __extends(KeyParamsValidationRule, _super);
     function KeyParamsValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*$', 'gi'), new XRegExp('[^-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*', 'gi'), '', 1500) || this;
+        return _super.call(this, required, XRegExp('^[-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*$', 'gi'), XRegExp('[^-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*', 'gi'), '', 1500) || this;
     }
     return KeyParamsValidationRule;
 }(RegExValidationReplaceRule));
@@ -352,7 +352,7 @@ exports.KeyParamsValidationRule = KeyParamsValidationRule;
 var ExtendedKeyParamsValidationRule = /** @class */ (function (_super) {
     __extends(ExtendedKeyParamsValidationRule, _super);
     function ExtendedKeyParamsValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*$', 'gi'), new XRegExp('[^-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*', 'gi'), '', 2000) || this;
+        return _super.call(this, required, XRegExp('^[-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*$', 'gi'), XRegExp('[^-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*', 'gi'), '', 2000) || this;
     }
     return ExtendedKeyParamsValidationRule;
 }(RegExValidationReplaceRule));
@@ -360,7 +360,7 @@ exports.ExtendedKeyParamsValidationRule = ExtendedKeyParamsValidationRule;
 var KeywordValidationRule = /** @class */ (function (_super) {
     __extends(KeywordValidationRule, _super);
     function KeywordValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*$', 'gi'), new XRegExp('[^-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*', 'gi'), '', 1500) || this;
+        return _super.call(this, required, XRegExp('^[-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*$', 'gi'), XRegExp('[^-a-zA-Z_0-9äöüßÄÖÜ,;:. ]*', 'gi'), '', 1500) || this;
     }
     return KeywordValidationRule;
 }(RegExValidationReplaceRule));
@@ -368,7 +368,7 @@ exports.KeywordValidationRule = KeywordValidationRule;
 var NearbyParamValidationRule = /** @class */ (function (_super) {
     __extends(NearbyParamValidationRule, _super);
     function NearbyParamValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-0-9._]*$', 'gi'), new XRegExp('[^-0-9._]*', 'gi'), '', 100) || this;
+        return _super.call(this, required, XRegExp('^[-0-9._]*$', 'gi'), XRegExp('[^-0-9._]*', 'gi'), '', 100) || this;
     }
     return NearbyParamValidationRule;
 }(RegExValidationReplaceRule));
@@ -376,7 +376,7 @@ exports.NearbyParamValidationRule = NearbyParamValidationRule;
 var TextValidationRule = /** @class */ (function (_super) {
     __extends(TextValidationRule, _super);
     function TextValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*$', 'gi'), new XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 1500) || this;
+        return _super.call(this, required, XRegExp('^[-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*$', 'gi'), XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 1500) || this;
     }
     return TextValidationRule;
 }(RegExValidationReplaceRule));
@@ -384,7 +384,7 @@ exports.TextValidationRule = TextValidationRule;
 var NameValidationRule = /** @class */ (function (_super) {
     __extends(NameValidationRule, _super);
     function NameValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[' + RegExValidationReplaceRule.nameRule + ']*$', 'gi'), new XRegExp('[^' + RegExValidationReplaceRule.nameRule + ']*', 'gi'), '', 200) || this;
+        return _super.call(this, required, XRegExp('^[' + RegExValidationReplaceRule.nameRule + ']*$', 'gi'), XRegExp('[^' + RegExValidationReplaceRule.nameRule + ']*', 'gi'), '', 200) || this;
     }
     return NameValidationRule;
 }(RegExValidationReplaceRule));
@@ -392,7 +392,7 @@ exports.NameValidationRule = NameValidationRule;
 var SolrValidationRule = /** @class */ (function (_super) {
     __extends(SolrValidationRule, _super);
     function SolrValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*$', 'gi'), new XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 100) || this;
+        return _super.call(this, required, XRegExp('^[-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*$', 'gi'), XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 100) || this;
     }
     return SolrValidationRule;
 }(RegExValidationReplaceRule));
@@ -400,7 +400,7 @@ exports.SolrValidationRule = SolrValidationRule;
 var GeoLocValidationRule = /** @class */ (function (_super) {
     __extends(GeoLocValidationRule, _super);
     function GeoLocValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-0-9,.]*$', 'gi'), new XRegExp('[^-0-9,.]*', 'gi'), '', 50) || this;
+        return _super.call(this, required, XRegExp('^[-0-9,.]*$', 'gi'), XRegExp('[^-0-9,.]*', 'gi'), '', 50) || this;
     }
     return GeoLocValidationRule;
 }(RegExValidationReplaceRule));
@@ -408,7 +408,7 @@ exports.GeoLocValidationRule = GeoLocValidationRule;
 var HierarchyValidationRule = /** @class */ (function (_super) {
     __extends(HierarchyValidationRule, _super);
     function HierarchyValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[' + RegExValidationReplaceRule.hierarchyRule + ']*$', 'gi'), new XRegExp('[^' + RegExValidationReplaceRule.hierarchyRule + ']*', 'gi'), '', 400) || this;
+        return _super.call(this, required, XRegExp('^[' + RegExValidationReplaceRule.hierarchyRule + ']*$', 'gi'), XRegExp('[^' + RegExValidationReplaceRule.hierarchyRule + ']*', 'gi'), '', 400) || this;
     }
     return HierarchyValidationRule;
 }(RegExValidationReplaceRule));
@@ -418,7 +418,7 @@ var GpsTrackValidationRule = /** @class */ (function (_super) {
     function GpsTrackValidationRule(required) {
         var _this = this;
         var characters = '-A-Za-z0-9' + XRegExp.escape('äöüßÄÖÜ/"+=;,:._*?!<>()[] ');
-        _this = _super.call(this, required, new XRegExp('^[' + characters + '\t\r\n]*$', 'gi'), new XRegExp('[^' + characters + '\t\r\n]*', 'gi'), '', 1000000) || this;
+        _this = _super.call(this, required, XRegExp('^[' + characters + '\t\r\n]*$', 'gi'), XRegExp('[^' + characters + '\t\r\n]*', 'gi'), '', 1000000) || this;
         return _this;
     }
     return GpsTrackValidationRule;
@@ -427,7 +427,7 @@ exports.GpsTrackValidationRule = GpsTrackValidationRule;
 var RouteValidationRule = /** @class */ (function (_super) {
     __extends(RouteValidationRule, _super);
     function RouteValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9äöüßÄÖÜ/+;,:._*]*$', 'gi'), new XRegExp('[^-A-Za-z0-9äöüßÄÖÜ/+;,:._*]*', 'gi'), '', 2000) || this;
+        return _super.call(this, required, XRegExp('^[-A-Za-z0-9äöüßÄÖÜ/+;,:._*]*$', 'gi'), XRegExp('[^-A-Za-z0-9äöüßÄÖÜ/+;,:._*]*', 'gi'), '', 2000) || this;
     }
     return RouteValidationRule;
 }(RegExValidationReplaceRule));
@@ -435,7 +435,7 @@ exports.RouteValidationRule = RouteValidationRule;
 var ShowRouteValidationRule = /** @class */ (function (_super) {
     __extends(ShowRouteValidationRule, _super);
     function ShowRouteValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9/_]*$', 'gi'), new XRegExp('[^-A-Za-z0-9/_]*', 'gi'), '', 2000) || this;
+        return _super.call(this, required, XRegExp('^[-A-Za-z0-9/_]*$', 'gi'), XRegExp('[^-A-Za-z0-9/_]*', 'gi'), '', 2000) || this;
     }
     return ShowRouteValidationRule;
 }(RegExValidationReplaceRule));
@@ -443,7 +443,7 @@ exports.ShowRouteValidationRule = ShowRouteValidationRule;
 var HtmlValidationRule = /** @class */ (function (_super) {
     __extends(HtmlValidationRule, _super);
     function HtmlValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[' + RegExValidationReplaceRule.textRule + ']*$', 'gi'), new XRegExp('[^' + RegExValidationReplaceRule.textRule + ']*', 'gi'), '', 10000) || this;
+        return _super.call(this, required, XRegExp('^[' + RegExValidationReplaceRule.textRule + ']*$', 'gi'), XRegExp('[^' + RegExValidationReplaceRule.textRule + ']*', 'gi'), '', 10000) || this;
     }
     return HtmlValidationRule;
 }(RegExValidationReplaceRule));
@@ -467,7 +467,7 @@ exports.DescValidationRule = DescValidationRule;
 var FilenameValidationRule = /** @class */ (function (_super) {
     __extends(FilenameValidationRule, _super);
     function FilenameValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9_]*$', 'gi'), new XRegExp('[^-A-Za-z0-9_]*', 'gi'), '', 260) || this;
+        return _super.call(this, required, XRegExp('^[-A-Za-z0-9_]*$', 'gi'), XRegExp('[^-A-Za-z0-9_]*', 'gi'), '', 260) || this;
     }
     return FilenameValidationRule;
 }(RegExValidationReplaceRule));
@@ -475,7 +475,7 @@ exports.FilenameValidationRule = FilenameValidationRule;
 var SimpleInsecurePathValidationRule = /** @class */ (function (_super) {
     __extends(SimpleInsecurePathValidationRule, _super);
     function SimpleInsecurePathValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[^\$\&\"\*]*$', 'gi'), new XRegExp('[\$\&\"\*]*', 'gi'), '', 4096) || this;
+        return _super.call(this, required, XRegExp('^[^\$\&\"\*]*$', 'gi'), XRegExp('[\$\&\"\*]*', 'gi'), '', 4096) || this;
     }
     return SimpleInsecurePathValidationRule;
 }(RegExValidationReplaceRule));
@@ -483,9 +483,33 @@ exports.SimpleInsecurePathValidationRule = SimpleInsecurePathValidationRule;
 var PasswordValidationRule = /** @class */ (function (_super) {
     __extends(PasswordValidationRule, _super);
     function PasswordValidationRule(required) {
-        return _super.call(this, required, new XRegExp('^[-A-Za-z0-9_@\(\)<>:]*$', 'gi'), new XRegExp('[^-A-Za-z0-9_@\(\)<>:]*', 'gi'), '', 50) || this;
+        return _super.call(this, required, XRegExp('^[-A-Za-z0-9_@\(\)<>:]*$', 'gi'), XRegExp('[^-A-Za-z0-9_@\(\)<>:]*', 'gi'), '', 50) || this;
     }
     return PasswordValidationRule;
 }(RegExValidationReplaceRule));
 exports.PasswordValidationRule = PasswordValidationRule;
+var SimpleConfigFilePathValidationRule = /** @class */ (function (_super) {
+    __extends(SimpleConfigFilePathValidationRule, _super);
+    function SimpleConfigFilePathValidationRule(required) {
+        return _super.call(this, required, XRegExp('^[-_.a-zA-Z0-9:\/\\\\]*$', 'gi'), XRegExp('[-_.a-zA-Z0-9:\/\\\\]*', 'gi'), '', 4096) || this;
+    }
+    return SimpleConfigFilePathValidationRule;
+}(RegExValidationReplaceRule));
+exports.SimpleConfigFilePathValidationRule = SimpleConfigFilePathValidationRule;
+var SimpleFilePathValidationRule = /** @class */ (function (_super) {
+    __extends(SimpleFilePathValidationRule, _super);
+    function SimpleFilePathValidationRule(required) {
+        return _super.call(this, required, XRegExp('^[-_.a-zA-Z0-9\:\/\\\\ \\p{LC}]*$', 'gi'), XRegExp('[-_.a-zA-Z0-9\:\/\\\\ \\p{LC}]*', 'gi'), '', 4096) || this;
+    }
+    return SimpleFilePathValidationRule;
+}(RegExValidationReplaceRule));
+exports.SimpleFilePathValidationRule = SimpleFilePathValidationRule;
+var SimpleFilePathListValidationRule = /** @class */ (function (_super) {
+    __extends(SimpleFilePathListValidationRule, _super);
+    function SimpleFilePathListValidationRule(required) {
+        return _super.call(this, required, XRegExp('^[-,_.a-zA-Z0-9\:\/\\\\ \\p{LC}]*$', 'gi'), XRegExp('[-,_.a-zA-Z0-9\:\/\\\\ \\p{LC}]*', 'gi'), '', 4096) || this;
+    }
+    return SimpleFilePathListValidationRule;
+}(RegExValidationReplaceRule));
+exports.SimpleFilePathListValidationRule = SimpleFilePathListValidationRule;
 //# sourceMappingURL=generic-validator.util.js.map

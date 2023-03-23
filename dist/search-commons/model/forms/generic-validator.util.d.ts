@@ -173,3 +173,12 @@ export declare class SimpleInsecurePathValidationRule extends RegExValidationRep
 export declare class PasswordValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean);
 }
+export declare class SimpleConfigFilePathValidationRule extends RegExValidationReplaceRule {
+    constructor(required: boolean);
+}
+export declare class SimpleFilePathValidationRule extends RegExValidationReplaceRule {
+    constructor(required: boolean);
+}
+export declare class SimpleFilePathListValidationRule extends RegExValidationReplaceRule {
+    constructor(required: boolean);
+}
