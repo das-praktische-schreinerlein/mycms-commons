@@ -8,6 +8,8 @@ import {SearchParameterUtils} from '../../search-commons/services/searchparamete
 export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, PDocSearchResult> {
 
     private validMoreFilterNames = {
+        // TODO
+        //  filters subtype....
     };
 
     constructor(private searchParameterUtils: SearchParameterUtils) {
@@ -28,18 +30,21 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
                 'likei': '%' + searchForm.fulltext + '%'
             };
         }
+
         if (searchForm.what !== undefined && searchForm.what.length > 0) {
             filter = filter || {};
             filter['keywords_txt'] = {
                 'in': searchForm.what.split(/,/)
             };
         }
+
         if (searchForm.type !== undefined && searchForm.type.length > 0) {
             filter = filter || {};
             filter['type_txt'] = {
                 'in': searchForm.type.split(/,/)
             };
         }
+
         if (searchForm.moreFilter !== undefined && searchForm.moreFilter.length > 0) {
             filter = filter || {};
             const moreFilters = searchForm.moreFilter.split(/;/);
@@ -53,6 +58,9 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
                 }
             }
         }
+
+        // TODO
+        //  filters subtype....
 
         if (filter !== undefined) {
             query['where'] = filter;

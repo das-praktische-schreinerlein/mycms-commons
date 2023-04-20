@@ -20,7 +20,10 @@ var PDocDataStore = /** @class */ (function (_super) {
     function PDocDataStore(searchParameterUtils) {
         var _this = _super.call(this, []) || this;
         _this.searchParameterUtils = searchParameterUtils;
-        _this.validMoreFilterNames = {};
+        _this.validMoreFilterNames = {
+        // TODO
+        //  filters subtype....
+        };
         return _this;
     }
     PDocDataStore.prototype.createQueryFromForm = function (searchForm) {
@@ -60,6 +63,8 @@ var PDocDataStore = /** @class */ (function (_super) {
                 }
             }
         }
+        // TODO
+        //  filters subtype....
         if (filter !== undefined) {
             query['where'] = filter;
         }

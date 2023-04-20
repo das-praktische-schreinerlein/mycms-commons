@@ -108,7 +108,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
     }
 
     getByIdFromLocalStore(id: string): R {
-        return this.getByIdFromLocalStore(id);
+        return this.searchService.getByIdFromLocalStore(id);
     }
 
     public clearLocalStore(): void {

@@ -1,26 +1,20 @@
-import {GenericSearchForm, GenericSearchFormFieldConfig} from '../../../search-commons/model/forms/generic-searchform';
 import {
-    GenericValidatorDatatypes,
-    IdCsvValidationRule,
-    KeyParamsValidationRule
-} from '../../../search-commons/model/forms/generic-validator.util';
+    CommonDocSearchForm,
+    CommonDocSearchFormFactory,
+    CommonDocSearchFormValidator
+} from "../../../search-commons/model/forms/cdoc-searchform";
 
-export class PDocSearchForm extends GenericSearchForm {
+export class PDocSearchForm extends CommonDocSearchForm {
+
+    // TODO filter by locale
+    // TODO filter by profiles
+    // TODO filter by permissions
+
     static pdocFields = {
-        what: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.WHAT_KEY_CSV, new IdCsvValidationRule(false)),
-        moreFilter: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.FILTER_LIST, new KeyParamsValidationRule(false)),
-        type: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false))
     };
-
-    what: string;
-    moreFilter: string;
-    type: string;
 
     constructor(values: {}) {
         super(values);
-        this.what = PDocSearchForm.pdocFields.what.validator.sanitize(values['what']) || '';
-        this.moreFilter = PDocSearchForm.pdocFields.moreFilter.validator.sanitize(values['moreFilter']) || '';
-        this.type = PDocSearchForm.pdocFields.type.validator.sanitize(values['type']) || '';
     }
 
     toString() {
@@ -32,5 +26,41 @@ export class PDocSearchForm extends GenericSearchForm {
             '  perPage: ' + this.perPage + '\n' +
             '  pageNum: ' + this.pageNum + '' +
             '}';
+    }
+}
+
+export class PDocSearchFormFactory {
+    static getSanitizedValues(values: {}): any  {
+        const sanitizedValues = CommonDocSearchFormFactory.getSanitizedValues(values);
+
+        return sanitizedValues;
+    }
+
+    static getSanitizedValuesFromForm(searchForm: PDocSearchForm): any {
+        return PDocSearchFormFactory.getSanitizedValues(searchForm);
+    }
+
+    static createSanitized(values: {}): PDocSearchForm {
+        const sanitizedValues = PDocSearchFormFactory.getSanitizedValues(values);
+
+        return new PDocSearchForm(sanitizedValues);
+    }
+
+    static cloneSanitized(searchForm: PDocSearchForm): PDocSearchForm {
+        const sanitizedValues = PDocSearchFormFactory.getSanitizedValuesFromForm(searchForm);
+
+        return new PDocSearchForm(sanitizedValues);
+    }
+}
+
+export class PDocSearchFormValidator {
+    static isValidValues(values: {}): boolean {
+        let state = CommonDocSearchFormValidator.isValidValues(values);
+
+        return state;
+    }
+
+    static isValid(searchForm: PDocSearchForm): boolean {
+        return PDocSearchFormValidator.isValidValues(searchForm);
     }
 }

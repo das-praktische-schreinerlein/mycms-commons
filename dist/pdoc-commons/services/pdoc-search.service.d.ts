@@ -1,10 +1,10 @@
 import { PDocRecord } from '../model/records/pdoc-record';
 import { PDocSearchResult } from '../model/container/pdoc-searchresult';
-import { GenericSearchService } from '../../search-commons/services/generic-search.service';
 import { PDocSearchForm } from '../model/forms/pdoc-searchform';
 import { PDocDataStore } from './pdoc-data.store';
 import { Facets } from '../../search-commons/model/container/facets';
-export declare class PDocSearchService extends GenericSearchService<PDocRecord, PDocSearchForm, PDocSearchResult> {
+import { CommonDocSearchService } from "../../search-commons/services/cdoc-search.service";
+export declare class PDocSearchService extends CommonDocSearchService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: PDocDataStore);
     createDefaultSearchForm(): PDocSearchForm;
     getBaseMapperName(): string;
@@ -15,5 +15,4 @@ export declare class PDocSearchService extends GenericSearchService<PDocRecord, 
     newSearchResult(pdocSearchForm: PDocSearchForm, recordCount: number, currentRecords: PDocRecord[], facets: Facets): PDocSearchResult;
     cloneSanitizedSearchForm(src: PDocSearchForm): PDocSearchForm;
     createSanitizedSearchForm(values: {}): PDocSearchForm;
-    doMultiSearch(searchForm: PDocSearchForm, ids: string[]): Promise<PDocSearchResult>;
 }

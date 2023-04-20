@@ -15,8 +15,8 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var pdoc_record_1 = require("../model/records/pdoc-record");
 var pdoc_searchresult_1 = require("../model/container/pdoc-searchresult");
-var generic_search_service_1 = require("../../search-commons/services/generic-search.service");
 var pdoc_searchform_1 = require("../model/forms/pdoc-searchform");
+var cdoc_search_service_1 = require("../../search-commons/services/cdoc-search.service");
 var PDocSearchService = /** @class */ (function (_super) {
     __extends(PDocSearchService, _super);
     function PDocSearchService(dataStore) {
@@ -44,15 +44,12 @@ var PDocSearchService = /** @class */ (function (_super) {
         return new pdoc_searchresult_1.PDocSearchResult(pdocSearchForm, recordCount, currentRecords, facets);
     };
     PDocSearchService.prototype.cloneSanitizedSearchForm = function (src) {
-        return undefined;
+        return pdoc_searchform_1.PDocSearchFormFactory.cloneSanitized(src);
     };
     PDocSearchService.prototype.createSanitizedSearchForm = function (values) {
-        return undefined;
-    };
-    PDocSearchService.prototype.doMultiSearch = function (searchForm, ids) {
-        return undefined;
+        return pdoc_searchform_1.PDocSearchFormFactory.createSanitized(values);
     };
     return PDocSearchService;
-}(generic_search_service_1.GenericSearchService));
+}(cdoc_search_service_1.CommonDocSearchService));
 exports.PDocSearchService = PDocSearchService;
 //# sourceMappingURL=pdoc-search.service.js.map

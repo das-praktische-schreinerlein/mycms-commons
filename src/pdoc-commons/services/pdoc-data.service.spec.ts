@@ -9,9 +9,10 @@ describe('PDocDataService', () => {
     let pDoc1: PDocRecord = undefined;
     let pDoc2: PDocRecord = undefined;
     let service: PDocDataService;
+    let datastore: PDocDataStore;
 
     beforeEach(() => {
-        const datastore = new PDocDataStore(new SearchParameterUtils());
+        datastore = new PDocDataStore(new SearchParameterUtils());
         service = new PDocDataService(datastore);
         service.setWritable(true);
         pDoc1 = new PDocRecord({desc: '', name: 'TestpDoc1', persons: '', id: '1'});
@@ -161,7 +162,7 @@ describe('PDocDataService', () => {
                 service.addMany([pDoc1, pDoc2]),
                 service.getAll(),
                 service.updateById('1', {
-                    name: 'new name'
+                    id: '1', name: 'new name', type: 'page'
                 }),
                 service.getById('1')
             ).subscribe(
@@ -189,7 +190,7 @@ describe('PDocDataService', () => {
                 service.addMany([pDoc1, pDoc2]),
                 service.getAll(),
                 service.updateById('26', {
-                    name: 'new name'
+                    id: '26', name: 'new name', type: 'page'
                 }),
                 service.getById('26')
             ).subscribe(

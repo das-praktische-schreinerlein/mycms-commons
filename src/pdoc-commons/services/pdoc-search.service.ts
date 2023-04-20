@@ -1,11 +1,11 @@
 import {PDocRecord} from '../model/records/pdoc-record';
 import {PDocSearchResult} from '../model/container/pdoc-searchresult';
-import {GenericSearchService} from '../../search-commons/services/generic-search.service';
-import {PDocSearchForm} from '../model/forms/pdoc-searchform';
+import {PDocSearchForm, PDocSearchFormFactory} from '../model/forms/pdoc-searchform';
 import {PDocDataStore} from './pdoc-data.store';
 import {Facets} from '../../search-commons/model/container/facets';
+import {CommonDocSearchService} from "../../search-commons/services/cdoc-search.service";
 
-export class PDocSearchService extends GenericSearchService <PDocRecord, PDocSearchForm, PDocSearchResult> {
+export class PDocSearchService extends CommonDocSearchService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: PDocDataStore) {
         super(dataStore, 'pdoc');
     }
@@ -40,14 +40,11 @@ export class PDocSearchService extends GenericSearchService <PDocRecord, PDocSea
     }
 
     public cloneSanitizedSearchForm(src: PDocSearchForm): PDocSearchForm {
-        return undefined;
+        return PDocSearchFormFactory.cloneSanitized(src);
     }
 
     public createSanitizedSearchForm(values: {}): PDocSearchForm {
-        return undefined;
+        return PDocSearchFormFactory.createSanitized(values);
     }
 
-    doMultiSearch(searchForm: PDocSearchForm, ids: string[]): Promise<PDocSearchResult> {
-        return undefined;
-    }
 }

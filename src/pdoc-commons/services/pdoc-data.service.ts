@@ -2,84 +2,76 @@ import {PDocRecord, PDocRecordRelation} from '../model/records/pdoc-record';
 import {PDocDataStore} from './pdoc-data.store';
 import {PDocSearchService} from './pdoc-search.service';
 import {PDocRecordSchema} from '../model/schemas/pdoc-record-schema';
+import {CommonDocDataService} from "../../search-commons/services/cdoc-data.service";
+import {PDocSearchForm} from "../model/forms/pdoc-searchform";
+import {PDocSearchResult} from "../model/container/pdoc-searchresult";
+import {BaseJoinRecord} from "../../search-commons/model/records/basejoin-record";
+import {PDocAdapterResponseMapper} from "./pdoc-adapter-response.mapper";
+import {ActionTagForm} from "../../commons/utils/actiontag.utils";
 
-export class PDocDataService extends PDocSearchService {
-    private writable = false;
-
+export class PDocDataService extends CommonDocDataService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: PDocDataStore) {
-        super(dataStore);
+        super(dataStore, new PDocSearchService(dataStore), new PDocAdapterResponseMapper({}));
+    }
+
+    public createRecord(props, opts): PDocRecord {
+        return <PDocRecord>this.dataStore.createRecord(this.getBaseMapperName(), props, opts);
+    }
+
+    protected defineDatastoreMapper(): void {
         this.dataStore.defineMapper('pdoc', PDocRecord, PDocRecordSchema, PDocRecordRelation);
     }
 
-    generateNewId(): string {
-        return (new Date()).getTime().toString();
+    protected defineIdMappingAlliases(): {} {
+        return {
+        };
     }
 
-    createRecord(props, opts): PDocRecord {
-        return this.dataStore.createRecord(this.searchMapperName, props, opts);
+    protected defineIdMappings(): string[] {
+        return ['playlistId'];
     }
 
-    // Simulate POST /pdocs
-    add(pdoc: PDocRecord, opts?: any): Promise<PDocRecord> {
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.create('pdoc', pdoc, opts);
+    protected defineTypeMappings(): {} {
+        return {
+            playlist: 'playlistId'
+        };
     }
 
-    // Simulate POST /pdocs
-    addMany(pdocs: PDocRecord[], opts?: any): Promise<PDocRecord[]> {
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.createMany('pdoc', pdocs, opts);
+    protected onImportRecordNewRecordProcessDefaults(record: PDocRecord, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void {
+        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
     }
 
-    // Simulate DELETE /pdocs/:id
-    deleteById(id: string, opts?: any): Promise<PDocRecord> {
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.destroy('pdoc', id, opts);
-    }
-
-    // Simulate PUT /pdocs/:id
-    updateById(id: string, values: Object = {}, opts?: any): Promise<PDocRecord> {
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.update('pdoc', id, values, opts);
-    }
-
-    getSubDocuments(pdoc: PDocRecord): PDocRecord[] {
-        const sections: PDocRecord[] = [];
-        if (!pdoc) {
-            return [];
-        }
-
-        const ids = pdoc.subSectionIds !== undefined ? pdoc.subSectionIds.split(/,/) : [];
-        for (const id of ids) {
-            if (id === undefined || id.length === 0) {
-                continue;
-            }
-
-            const section = this.getByIdFromLocalStore(id);
-            if (section !== undefined) {
-                sections.push(section);
-            } else {
-                // console.warn('getSubSections: section not found:', LogUtils.sanitizeLogMsg(id));
+    protected remapBaseJoins(baseJoins: BaseJoinRecord[], refIdFieldName: any, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void {
+        if (baseJoins) {
+            for (const join of baseJoins) {
+                const refIdMapping = recordIdMapping[refIdFieldName];
+                const refId = join.refId;
+                if (refIdMapping && refIdMapping[refId]) {
+                    console.log('orig join: ' + join.id + ' map join ref ' + refIdFieldName + ' ' + refId
+                        + '->' + refIdMapping[refId]);
+                    join.refId = refIdMapping[refId] + '';
+                } else {
+                    console.warn('WARNING NO Id-Mapping orig join: ' + join.id + ' map baseJoin ref ' + refIdFieldName + ' ' + refId
+                        + '->' + refIdMapping[refId]);
+                }
             }
         }
-
-        return sections;
     }
 
-
-    setWritable(writable: boolean) {
-        this.writable = writable;
+    protected generateImportRecordQuery(record: PDocRecord): {} {
+        return {
+            where: {
+                name_s: {
+                    'in': [record.name]
+                },
+                type_txt: {
+                    'in': [record.type.toLowerCase()]
+                }
+            }
+        };
     }
 
-    isWritable(): boolean {
-        return this.writable;
+    protected addAdditionalActionTagForms(origRecord: PDocRecord, newRecord: PDocRecord, actionTagForms: ActionTagForm[]) {
     }
+
 }

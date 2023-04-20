@@ -73,7 +73,7 @@ var CommonDocDataService = /** @class */ (function () {
         return this.searchService.getById(id, opts);
     };
     CommonDocDataService.prototype.getByIdFromLocalStore = function (id) {
-        return this.getByIdFromLocalStore(id);
+        return this.searchService.getByIdFromLocalStore(id);
     };
     CommonDocDataService.prototype.clearLocalStore = function () {
         this.searchService.clearLocalStore();

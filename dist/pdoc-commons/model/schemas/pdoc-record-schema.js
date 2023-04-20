@@ -9,6 +9,10 @@ exports.PDocRecordSchema = new js_data_1.Schema({
     extends: base_entity_record_schema_1.BaseEntityRecordSchema,
     type: 'object',
     properties: {
+        // TODO sync with model
+        blocked: { type: 'number' },
+        // TODO: add type validation ifor date in later version -> but date-values can be string|Date
+        dateshow: {},
         css: { type: 'string' },
         descTxt: { type: 'string' },
         descMd: { type: 'string' },

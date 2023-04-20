@@ -16,77 +16,66 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var pdoc_record_1 = require("../model/records/pdoc-record");
 var pdoc_search_service_1 = require("./pdoc-search.service");
 var pdoc_record_schema_1 = require("../model/schemas/pdoc-record-schema");
+var cdoc_data_service_1 = require("../../search-commons/services/cdoc-data.service");
+var pdoc_adapter_response_mapper_1 = require("./pdoc-adapter-response.mapper");
 var PDocDataService = /** @class */ (function (_super) {
     __extends(PDocDataService, _super);
     function PDocDataService(dataStore) {
-        var _this = _super.call(this, dataStore) || this;
-        _this.writable = false;
-        _this.dataStore.defineMapper('pdoc', pdoc_record_1.PDocRecord, pdoc_record_schema_1.PDocRecordSchema, pdoc_record_1.PDocRecordRelation);
-        return _this;
+        return _super.call(this, dataStore, new pdoc_search_service_1.PDocSearchService(dataStore), new pdoc_adapter_response_mapper_1.PDocAdapterResponseMapper({})) || this;
     }
-    PDocDataService.prototype.generateNewId = function () {
-        return (new Date()).getTime().toString();
-    };
     PDocDataService.prototype.createRecord = function (props, opts) {
-        return this.dataStore.createRecord(this.searchMapperName, props, opts);
+        return this.dataStore.createRecord(this.getBaseMapperName(), props, opts);
     };
-    // Simulate POST /pdocs
-    PDocDataService.prototype.add = function (pdoc, opts) {
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.create('pdoc', pdoc, opts);
+    PDocDataService.prototype.defineDatastoreMapper = function () {
+        this.dataStore.defineMapper('pdoc', pdoc_record_1.PDocRecord, pdoc_record_schema_1.PDocRecordSchema, pdoc_record_1.PDocRecordRelation);
     };
-    // Simulate POST /pdocs
-    PDocDataService.prototype.addMany = function (pdocs, opts) {
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.createMany('pdoc', pdocs, opts);
+    PDocDataService.prototype.defineIdMappingAlliases = function () {
+        return {};
     };
-    // Simulate DELETE /pdocs/:id
-    PDocDataService.prototype.deleteById = function (id, opts) {
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.destroy('pdoc', id, opts);
+    PDocDataService.prototype.defineIdMappings = function () {
+        return ['playlistId'];
     };
-    // Simulate PUT /pdocs/:id
-    PDocDataService.prototype.updateById = function (id, values, opts) {
-        if (values === void 0) { values = {}; }
-        if (!this.isWritable()) {
-            throw new Error('PDocDataService configured: not writable');
-        }
-        return this.dataStore.update('pdoc', id, values, opts);
+    PDocDataService.prototype.defineTypeMappings = function () {
+        return {
+            playlist: 'playlistId'
+        };
     };
-    PDocDataService.prototype.getSubDocuments = function (pdoc) {
-        var sections = [];
-        if (!pdoc) {
-            return [];
-        }
-        var ids = pdoc.subSectionIds !== undefined ? pdoc.subSectionIds.split(/,/) : [];
-        for (var _i = 0, ids_1 = ids; _i < ids_1.length; _i++) {
-            var id = ids_1[_i];
-            if (id === undefined || id.length === 0) {
-                continue;
-            }
-            var section = this.getByIdFromLocalStore(id);
-            if (section !== undefined) {
-                sections.push(section);
-            }
-            else {
-                // console.warn('getSubSections: section not found:', LogUtils.sanitizeLogMsg(id));
+    PDocDataService.prototype.onImportRecordNewRecordProcessDefaults = function (record, recordIdMapping, recordRecoverIdMapping) {
+        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
+    };
+    PDocDataService.prototype.remapBaseJoins = function (baseJoins, refIdFieldName, recordIdMapping, recordRecoverIdMapping) {
+        if (baseJoins) {
+            for (var _i = 0, baseJoins_1 = baseJoins; _i < baseJoins_1.length; _i++) {
+                var join = baseJoins_1[_i];
+                var refIdMapping = recordIdMapping[refIdFieldName];
+                var refId = join.refId;
+                if (refIdMapping && refIdMapping[refId]) {
+                    console.log('orig join: ' + join.id + ' map join ref ' + refIdFieldName + ' ' + refId
+                        + '->' + refIdMapping[refId]);
+                    join.refId = refIdMapping[refId] + '';
+                }
+                else {
+                    console.warn('WARNING NO Id-Mapping orig join: ' + join.id + ' map baseJoin ref ' + refIdFieldName + ' ' + refId
+                        + '->' + refIdMapping[refId]);
+                }
             }
         }
-        return sections;
     };
-    PDocDataService.prototype.setWritable = function (writable) {
-        this.writable = writable;
+    PDocDataService.prototype.generateImportRecordQuery = function (record) {
+        return {
+            where: {
+                name_s: {
+                    'in': [record.name]
+                },
+                type_txt: {
+                    'in': [record.type.toLowerCase()]
+                }
+            }
+        };
     };
-    PDocDataService.prototype.isWritable = function () {
-        return this.writable;
+    PDocDataService.prototype.addAdditionalActionTagForms = function (origRecord, newRecord, actionTagForms) {
     };
     return PDocDataService;
-}(pdoc_search_service_1.PDocSearchService));
+}(cdoc_data_service_1.CommonDocDataService));
 exports.PDocDataService = PDocDataService;
 //# sourceMappingURL=pdoc-data.service.js.map

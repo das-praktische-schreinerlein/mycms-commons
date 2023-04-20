@@ -5,9 +5,10 @@
 ## 6.0.0
 - bumped up deps
 - moved ValidationRules to commons
+- introduced fully featured pdoc-services derived from cdoc
 
 ### new features
-- none
+- introduced fully featured pdoc-services derived from cdoc
 
 ### improvements
 - none
@@ -18,6 +19,7 @@
 ### breaking changes
 - bumped up deps
 - moved ValidationRules to commons
+- use StaticPagesDataService instead of PDocDataService
 
 
 ## 5.7.0 (2023-03-18)

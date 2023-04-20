@@ -1,16 +1,19 @@
 import { PDocRecord } from '../model/records/pdoc-record';
 import { PDocDataStore } from './pdoc-data.store';
-import { PDocSearchService } from './pdoc-search.service';
-export declare class PDocDataService extends PDocSearchService {
-    private writable;
+import { CommonDocDataService } from "../../search-commons/services/cdoc-data.service";
+import { PDocSearchForm } from "../model/forms/pdoc-searchform";
+import { PDocSearchResult } from "../model/container/pdoc-searchresult";
+import { BaseJoinRecord } from "../../search-commons/model/records/basejoin-record";
+import { ActionTagForm } from "../../commons/utils/actiontag.utils";
+export declare class PDocDataService extends CommonDocDataService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: PDocDataStore);
-    generateNewId(): string;
     createRecord(props: any, opts: any): PDocRecord;
-    add(pdoc: PDocRecord, opts?: any): Promise<PDocRecord>;
-    addMany(pdocs: PDocRecord[], opts?: any): Promise<PDocRecord[]>;
-    deleteById(id: string, opts?: any): Promise<PDocRecord>;
-    updateById(id: string, values?: Object, opts?: any): Promise<PDocRecord>;
-    getSubDocuments(pdoc: PDocRecord): PDocRecord[];
-    setWritable(writable: boolean): void;
-    isWritable(): boolean;
+    protected defineDatastoreMapper(): void;
+    protected defineIdMappingAlliases(): {};
+    protected defineIdMappings(): string[];
+    protected defineTypeMappings(): {};
+    protected onImportRecordNewRecordProcessDefaults(record: PDocRecord, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void;
+    protected remapBaseJoins(baseJoins: BaseJoinRecord[], refIdFieldName: any, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void;
+    protected generateImportRecordQuery(record: PDocRecord): {};
+    protected addAdditionalActionTagForms(origRecord: PDocRecord, newRecord: PDocRecord, actionTagForms: ActionTagForm[]): void;
 }

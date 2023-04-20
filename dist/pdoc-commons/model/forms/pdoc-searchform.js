@@ -13,16 +13,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var generic_searchform_1 = require("../../../search-commons/model/forms/generic-searchform");
-var generic_validator_util_1 = require("../../../search-commons/model/forms/generic-validator.util");
+var cdoc_searchform_1 = require("../../../search-commons/model/forms/cdoc-searchform");
 var PDocSearchForm = /** @class */ (function (_super) {
     __extends(PDocSearchForm, _super);
     function PDocSearchForm(values) {
-        var _this = _super.call(this, values) || this;
-        _this.what = PDocSearchForm.pdocFields.what.validator.sanitize(values['what']) || '';
-        _this.moreFilter = PDocSearchForm.pdocFields.moreFilter.validator.sanitize(values['moreFilter']) || '';
-        _this.type = PDocSearchForm.pdocFields.type.validator.sanitize(values['type']) || '';
-        return _this;
+        return _super.call(this, values) || this;
     }
     PDocSearchForm.prototype.toString = function () {
         return 'PDocSearchForm {\n' +
@@ -34,12 +29,45 @@ var PDocSearchForm = /** @class */ (function (_super) {
             '  pageNum: ' + this.pageNum + '' +
             '}';
     };
-    PDocSearchForm.pdocFields = {
-        what: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.WHAT_KEY_CSV, new generic_validator_util_1.IdCsvValidationRule(false)),
-        moreFilter: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.FILTER_LIST, new generic_validator_util_1.KeyParamsValidationRule(false)),
-        type: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID_CSV, new generic_validator_util_1.IdCsvValidationRule(false))
-    };
+    // TODO filter by locale
+    // TODO filter by profiles
+    // TODO filter by permissions
+    PDocSearchForm.pdocFields = {};
     return PDocSearchForm;
-}(generic_searchform_1.GenericSearchForm));
+}(cdoc_searchform_1.CommonDocSearchForm));
 exports.PDocSearchForm = PDocSearchForm;
+var PDocSearchFormFactory = /** @class */ (function () {
+    function PDocSearchFormFactory() {
+    }
+    PDocSearchFormFactory.getSanitizedValues = function (values) {
+        var sanitizedValues = cdoc_searchform_1.CommonDocSearchFormFactory.getSanitizedValues(values);
+        return sanitizedValues;
+    };
+    PDocSearchFormFactory.getSanitizedValuesFromForm = function (searchForm) {
+        return PDocSearchFormFactory.getSanitizedValues(searchForm);
+    };
+    PDocSearchFormFactory.createSanitized = function (values) {
+        var sanitizedValues = PDocSearchFormFactory.getSanitizedValues(values);
+        return new PDocSearchForm(sanitizedValues);
+    };
+    PDocSearchFormFactory.cloneSanitized = function (searchForm) {
+        var sanitizedValues = PDocSearchFormFactory.getSanitizedValuesFromForm(searchForm);
+        return new PDocSearchForm(sanitizedValues);
+    };
+    return PDocSearchFormFactory;
+}());
+exports.PDocSearchFormFactory = PDocSearchFormFactory;
+var PDocSearchFormValidator = /** @class */ (function () {
+    function PDocSearchFormValidator() {
+    }
+    PDocSearchFormValidator.isValidValues = function (values) {
+        var state = cdoc_searchform_1.CommonDocSearchFormValidator.isValidValues(values);
+        return state;
+    };
+    PDocSearchFormValidator.isValid = function (searchForm) {
+        return PDocSearchFormValidator.isValidValues(searchForm);
+    };
+    return PDocSearchFormValidator;
+}());
+exports.PDocSearchFormValidator = PDocSearchFormValidator;
 //# sourceMappingURL=pdoc-searchform.js.map
