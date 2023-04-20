@@ -34,7 +34,7 @@
     "promise-serial": ">= 0.1.5",
     "rxjs": ">= 6.6.0",
     "tz-lookup": ">= 6.1.25",
-    "xregexp": ">= 4.4.1"
+    "xregexp": ">= 4.3.0 < 4.4.0"
   },
   "devDependencies": {
     "@types/jasmine": "3.5.11",
@@ -61,6 +61,6 @@
     "promise-serial": "0.1.5",
     "rxjs": "6.6.0",
     "tz-lookup": "6.1.25",
-    "xregexp": "4.4.1"
+    "xregexp": "4.3.0"
   }
 }
