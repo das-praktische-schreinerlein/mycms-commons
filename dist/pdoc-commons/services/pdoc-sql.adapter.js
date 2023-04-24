@@ -149,7 +149,6 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
         this.remapFulltextFilter(adapterQuery, tableConfig, 'html', 'SF_searchTrackKeywordsOnly', 'track_keywords_txt', 'in');
         return this.sqlQueryBuilder.queryTransformToAdapterSelectQuery(tableConfig, method, adapterQuery, opts);
     };
-    // TODO move to commons
     PDocSqlAdapter.prototype.remapFulltextFilter = function (adapterQuery, tableConfig, fulltextFilterName, fulltextNewTrigger, fulltextNewFilterName, fullTextNewAction) {
         if (adapterQuery.where && adapterQuery.where[fulltextFilterName] &&
             tableConfig.filterMapping.hasOwnProperty(fulltextNewFilterName)) {

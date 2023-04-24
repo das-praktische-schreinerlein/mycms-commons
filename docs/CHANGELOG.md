@@ -6,9 +6,11 @@
 - bumped up deps
 - moved ValidationRules to commons
 - introduced fully featured pdoc-services derived from cdoc
+- moved track-colors to commons
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
+- moved track-colors to commons
 
 ### improvements
 - none

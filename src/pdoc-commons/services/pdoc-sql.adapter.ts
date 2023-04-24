@@ -189,7 +189,6 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
     }
 
 
-    // TODO move to commons
     protected remapFulltextFilter(adapterQuery: AdapterQuery, tableConfig: TableConfig, fulltextFilterName: string,
                                   fulltextNewTrigger: string, fulltextNewFilterName: string, fullTextNewAction: string) {
         if (adapterQuery.where && adapterQuery.where[fulltextFilterName] &&

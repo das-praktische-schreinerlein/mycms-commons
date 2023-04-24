@@ -1,5 +1,4 @@
 "use strict";
-// TODO move to commons
 Object.defineProperty(exports, "__esModule", { value: true });
 var Circular = /** @class */ (function () {
     function Circular(arr, startIndex) {

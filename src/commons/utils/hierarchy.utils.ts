@@ -1,5 +1,3 @@
-// TODO move to commons
-
 export class Circular {
     protected arr: any[];
     protected currentIndex: number;
