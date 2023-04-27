@@ -62,4 +62,5 @@ export declare abstract class GenericSqlAdapter<R extends Record, F extends Gene
     protected queryTransformToAdapterSelectQuery(method: string, mapper: Mapper, params: any, opts: any): SelectQueryData;
     protected queryTransformToAdapterWriteQuery(method: string, mapper: Mapper, props: any, opts: any): WriteQueryData;
     protected extractSingleElement(values: any): string;
+    protected remapFulltextFilter(adapterQuery: AdapterQuery, tableConfig: TableConfig, fulltextFilterName: string, fulltextNewTrigger: string, fulltextNewFilterName: string, fullTextNewAction: string): void;
 }

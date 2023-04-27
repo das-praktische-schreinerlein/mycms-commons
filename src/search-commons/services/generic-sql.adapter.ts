@@ -759,5 +759,35 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         return undefined;
     }
 
+    protected remapFulltextFilter(adapterQuery: AdapterQuery, tableConfig: TableConfig, fulltextFilterName: string,
+                                  fulltextNewTrigger: string, fulltextNewFilterName: string, fullTextNewAction: string) {
+        if (adapterQuery.where && adapterQuery.where[fulltextFilterName] &&
+            tableConfig.filterMapping.hasOwnProperty(fulltextNewFilterName)) {
+            const filter = adapterQuery.where[fulltextFilterName];
+            const action = Object.getOwnPropertyNames(filter)[0];
+            const value: string[] = adapterQuery.where[fulltextFilterName][action];
+
+            if (value.join(' ')
+                .includes(fulltextNewTrigger)) {
+
+                const fulltextValues = [];
+                adapterQuery.where[fulltextNewFilterName] = [];
+                for (let fulltextValue of value) {
+                    fulltextValue = fulltextValue.split(fulltextNewTrigger)
+                        .join('')
+                        .trim();
+                    if (fulltextValue && fulltextValue.length > 0) {
+                        fulltextValues.push(fulltextValue);
+                    }
+                }
+
+                adapterQuery.where[fulltextNewFilterName] = {};
+                adapterQuery.where[fulltextNewFilterName][fullTextNewAction] = fulltextValues;
+
+                adapterQuery.where[fulltextFilterName] = undefined;
+                delete adapterQuery.where[fulltextFilterName];
+            }
+        }
+    }
 }
 

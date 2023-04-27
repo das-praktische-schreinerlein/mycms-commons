@@ -61,4 +61,39 @@ export abstract class BeanUtils {
 
         return context;
     }
+
+    public static jsonStringify(object: any, whiteList ?: string[], blackList ?: string[], removeBuffersGreaterThan ?: number): string {
+        if (!object) {
+            return undefined;
+        }
+
+        return JSON.stringify(object, (key, value) => {
+            if (value === null || value === undefined) {
+                return undefined;
+            }
+
+            if (whiteList && whiteList.length > 0 && !whiteList.includes(key)) {
+                return undefined;
+            }
+
+            if (blackList && blackList.length > 0 && blackList.includes(key)) {
+                return undefined;
+            }
+
+            if (removeBuffersGreaterThan !== undefined && removeBuffersGreaterThan > -1 &&
+                (
+                    (value['type'] === 'Buffer' && value['data'] && value['data'].length > removeBuffersGreaterThan) ||
+                    (Buffer.isBuffer(value) && value.length > removeBuffersGreaterThan)
+                )) {
+                return undefined;
+            }
+
+            if ((typeof value === 'string' || value instanceof String)) {
+                value = value.trim();
+            }
+
+            return value;
+        });
+    }
+
 }
