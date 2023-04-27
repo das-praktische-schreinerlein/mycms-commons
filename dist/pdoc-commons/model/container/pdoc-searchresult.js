@@ -13,7 +13,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var generic_searchresult_1 = require("../../../search-commons/model/container/generic-searchresult");
+var pdoc_record_1 = require("../records/pdoc-record");
+var cdoc_searchresult_1 = require("../../../search-commons/model/container/cdoc-searchresult");
 var PDocSearchResult = /** @class */ (function (_super) {
     __extends(PDocSearchResult, _super);
     function PDocSearchResult(pdocSearchForm, recordCount, currentRecords, facets) {
@@ -27,33 +28,32 @@ var PDocSearchResult = /** @class */ (function (_super) {
             '  searchFormGroup: ' + this.searchForm + '' +
             '}';
     };
-    PDocSearchResult.prototype.toSerializableJsonObj = function () {
+    PDocSearchResult.prototype.toSerializableJsonObj = function (anonymizeMedia) {
         var _this = this;
         var result = {
             'recordCount': this.recordCount,
             'searchForm': this.searchForm,
             'currentRecords': [],
             'facets': {
-                facets: {}
+                facets: {},
+                selectLimits: {}
             }
         };
         if (Array.isArray(this.currentRecords)) {
             for (var i = 0; i < this.currentRecords.length; i++) {
-                var record = {};
-                for (var key in this.currentRecords[i]) {
-                    record[key] = this.currentRecords[i][key];
-                }
+                var record = pdoc_record_1.PDocRecord.cloneToSerializeToJsonObj(this.currentRecords[i], anonymizeMedia);
                 result.currentRecords.push(record);
             }
         }
         if (this.facets && this.facets.facets) {
             this.facets.facets.forEach(function (value, key) {
                 result.facets.facets[key] = _this.facets.facets.get(key).facet;
+                result.facets.selectLimits[key] = _this.facets.facets.get(key).selectLimit;
             });
         }
         return result;
     };
     return PDocSearchResult;
-}(generic_searchresult_1.GenericSearchResult));
+}(cdoc_searchresult_1.CommonDocSearchResult));
 exports.PDocSearchResult = PDocSearchResult;
 //# sourceMappingURL=pdoc-searchresult.js.map

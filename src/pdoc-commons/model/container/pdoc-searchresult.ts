@@ -1,9 +1,9 @@
 import {PDocSearchForm} from '../forms/pdoc-searchform';
 import {PDocRecord} from '../records/pdoc-record';
-import {GenericSearchResult} from '../../../search-commons/model/container/generic-searchresult';
 import {Facet, Facets} from '../../../search-commons/model/container/facets';
+import {CommonDocSearchResult} from '../../../search-commons/model/container/cdoc-searchresult';
 
-export class PDocSearchResult extends GenericSearchResult <PDocRecord, PDocSearchForm> {
+export class PDocSearchResult extends CommonDocSearchResult <PDocRecord, PDocSearchForm> {
     constructor(pdocSearchForm: PDocSearchForm, recordCount: number, currentRecords: PDocRecord[], facets: Facets) {
         super(pdocSearchForm, recordCount, currentRecords, facets);
     }
@@ -17,27 +17,27 @@ export class PDocSearchResult extends GenericSearchResult <PDocRecord, PDocSearc
             '}';
     }
 
-    toSerializableJsonObj(): {} {
+    toSerializableJsonObj(anonymizeMedia?: boolean): {} {
         const result = {
             'recordCount': this.recordCount,
             'searchForm': this.searchForm,
             'currentRecords': [],
             'facets': {
-                facets: {}
+                facets: {},
+                selectLimits: {}
             }
         };
         if (Array.isArray(this.currentRecords)) {
             for (let i = 0; i < this.currentRecords.length; i++) {
-                const record = {};
-                for (const key in this.currentRecords[i]) {
-                    record[key] = this.currentRecords[i][key];
-                }
+                const record = PDocRecord.cloneToSerializeToJsonObj(this.currentRecords[i], anonymizeMedia);
+
                 result.currentRecords.push(record);
             }
         }
         if (this.facets && this.facets.facets) {
             this.facets.facets.forEach((value: Facet, key: string) => {
                 result.facets.facets[key] = this.facets.facets.get(key).facet;
+                result.facets.selectLimits[key] = this.facets.facets.get(key).selectLimit;
             });
         }
         return result;
