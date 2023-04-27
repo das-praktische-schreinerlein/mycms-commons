@@ -1,4 +1,4 @@
-import { BaseEntityRecord, BaseEntityRecordRelationsType } from '../../../search-commons/model/records/base-entity-record';
+import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordRelationsType } from '../../../search-commons/model/records/base-entity-record';
 import { CommonDocRecord, CommonDocRecordFactory, CommonDocRecordType, CommonDocRecordValidator } from "../../../search-commons/model/records/cdoc-entity-record";
 export interface PDocRecordType extends CommonDocRecordType {
     css: string;
@@ -19,6 +19,7 @@ export interface PDocRecordType extends CommonDocRecordType {
     teaser: string;
     theme: string;
     type: string;
+    pageId: number;
 }
 export declare let PDocRecordRelation: BaseEntityRecordRelationsType;
 export declare class PDocRecord extends CommonDocRecord implements PDocRecordType {
@@ -44,9 +45,12 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
     teaser: string;
     theme: string;
     type: string;
+    pageId: number;
     static pdocRelationNames: any[];
     static pdocValidationRelationNames: any[];
-    static pdocFields: {};
+    static pdocFields: {
+        pageId: BaseEntityRecordFieldConfig;
+    };
     static cloneToSerializeToJsonObj(baseRecord: PDocRecord, anonymizeMedia?: boolean): {};
     toString(): string;
     toSerializableJsonObj(anonymizeMedia?: boolean): {};

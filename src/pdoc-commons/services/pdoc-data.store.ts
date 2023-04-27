@@ -1,15 +1,26 @@
 import {GenericDataStore} from '../../search-commons/services/generic-data.store';
 import {PDocSearchResult} from '../model/container/pdoc-searchresult';
 import {PDocSearchForm} from '../model/forms/pdoc-searchform';
-import {PDocRecord} from '../model/records/pdoc-record';
+import {PDocRecord, PDocRecordRelation} from '../model/records/pdoc-record';
 import {Facets} from '../../search-commons/model/container/facets';
 import {SearchParameterUtils} from '../../search-commons/services/searchparameter.utils';
 
 export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, PDocSearchResult> {
 
-    private validMoreFilterNames = {
-        // TODO
-        //  filters subtype....
+    static UPDATE_RELATION = [].concat(PDocRecordRelation.hasOne ? Object.keys(PDocRecordRelation.hasOne) : [])
+        .concat(PDocRecordRelation.hasMany ? Object.keys(PDocRecordRelation.hasMany) : []);
+    private validMoreNumberFilterNames = {
+        page_id_i: true,
+        page_id_is: true
+    };
+    private validMoreInFilterNames = {
+        id: true,
+        id_notin_is: true,
+        doublettes: true,
+        noSubType: true,
+        initial_s: true,
+        todoDesc: true,
+        todoKeywords: true
     };
 
     constructor(private searchParameterUtils: SearchParameterUtils) {
@@ -23,18 +34,11 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
             return query;
         }
 
-        let filter = undefined;
+        let filter: {} = undefined;
         if (searchForm.fulltext !== undefined && searchForm.fulltext.length > 0) {
             filter = filter || {};
             filter['html'] = {
-                'likei': '%' + searchForm.fulltext + '%'
-            };
-        }
-
-        if (searchForm.what !== undefined && searchForm.what.length > 0) {
-            filter = filter || {};
-            filter['keywords_txt'] = {
-                'in': searchForm.what.split(/,/)
+                'likein': searchForm.fulltext.split(' OR ')
             };
         }
 
@@ -44,6 +48,19 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
                 'in': searchForm.type.split(/,/)
             };
         }
+        if (searchForm.subtype !== undefined && searchForm.subtype.length > 0) {
+            filter = filter || {};
+            filter['subtype_ss'] = {
+                'in': searchForm.subtype.split(/,/)
+            };
+        }
+
+        if (searchForm.initial !== undefined && searchForm.initial.length > 0) {
+            filter = filter || {};
+            filter['initial_s'] = {
+                'in': searchForm.initial.split(/,/)
+            };
+        }
 
         if (searchForm.moreFilter !== undefined && searchForm.moreFilter.length > 0) {
             filter = filter || {};
@@ -51,7 +68,11 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
             for (const index in moreFilters) {
                 const moreFilter = moreFilters[index];
                 const [filterName, values] = moreFilter.split(/:/);
-                if (filterName && values && this.validMoreFilterNames[filterName] === true) {
+                if (filterName && values && this.validMoreNumberFilterNames[filterName] === true) {
+                    filter[filterName] = {
+                        'in_number': values.split(/,/)
+                    };
+                } else if (filterName && values && this.validMoreInFilterNames[filterName] === true) {
                     filter[filterName] = {
                         'in': values.split(/,/)
                     };
@@ -60,7 +81,7 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
         }
 
         // TODO
-        //  filters subtype....
+        //  filters
 
         if (filter !== undefined) {
             query['where'] = filter;

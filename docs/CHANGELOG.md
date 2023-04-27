@@ -7,13 +7,16 @@
 - moved ValidationRules to commons
 - introduced fully featured pdoc-services derived from cdoc
 - moved track-colors to commons
+- improved SqlAdapter with remapFulltextFilter
+- improved BeanUtils with remapFulltextFilter
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
 - moved track-colors to commons
 
 ### improvements
-- none
+- improved SqlAdapter with remapFulltextFilter
+- improved BeanUtils with jsonStringify
 
 ### bug fixes
 - none

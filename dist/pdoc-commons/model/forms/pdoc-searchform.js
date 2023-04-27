@@ -14,16 +14,21 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var cdoc_searchform_1 = require("../../../search-commons/model/forms/cdoc-searchform");
+var generic_searchform_1 = require("../../../search-commons/model/forms/generic-searchform");
+var generic_validator_util_1 = require("../../../search-commons/model/forms/generic-validator.util");
 var PDocSearchForm = /** @class */ (function (_super) {
     __extends(PDocSearchForm, _super);
     function PDocSearchForm(values) {
-        return _super.call(this, values) || this;
+        var _this = _super.call(this, values) || this;
+        _this.subtype = values['subtype'] || '';
+        return _this;
     }
     PDocSearchForm.prototype.toString = function () {
         return 'PDocSearchForm {\n' +
             '  what: ' + this.what + '\n' +
             '  fulltext: ' + this.fulltext + '\n' +
             '  type: ' + this.type + '\n' +
+            '  subtype: ' + this.subtype + '\n' +
             '  sort: ' + this.sort + '\n' +
             '  perPage: ' + this.perPage + '\n' +
             '  pageNum: ' + this.pageNum + '' +
@@ -32,7 +37,9 @@ var PDocSearchForm = /** @class */ (function (_super) {
     // TODO filter by locale
     // TODO filter by profiles
     // TODO filter by permissions
-    PDocSearchForm.pdocFields = {};
+    PDocSearchForm.pdocFields = {
+        subtype: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID_CSV, new generic_validator_util_1.IdCsvValidationRule(false)),
+    };
     return PDocSearchForm;
 }(cdoc_searchform_1.CommonDocSearchForm));
 exports.PDocSearchForm = PDocSearchForm;
@@ -41,6 +48,7 @@ var PDocSearchFormFactory = /** @class */ (function () {
     }
     PDocSearchFormFactory.getSanitizedValues = function (values) {
         var sanitizedValues = cdoc_searchform_1.CommonDocSearchFormFactory.getSanitizedValues(values);
+        sanitizedValues.subtype = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['subtype']) || '';
         return sanitizedValues;
     };
     PDocSearchFormFactory.getSanitizedValuesFromForm = function (searchForm) {
@@ -62,6 +70,7 @@ var PDocSearchFormValidator = /** @class */ (function () {
     }
     PDocSearchFormValidator.isValidValues = function (values) {
         var state = cdoc_searchform_1.CommonDocSearchFormValidator.isValidValues(values);
+        state = PDocSearchForm.pdocFields.subtype.validator.isValid(values['subtype']) && state;
         return state;
     };
     PDocSearchFormValidator.isValid = function (searchForm) {

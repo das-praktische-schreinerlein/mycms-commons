@@ -3,18 +3,26 @@ import {
     CommonDocSearchFormFactory,
     CommonDocSearchFormValidator
 } from "../../../search-commons/model/forms/cdoc-searchform";
+import {GenericSearchFormFieldConfig} from '../../../search-commons/model/forms/generic-searchform';
+import {
+    GenericValidatorDatatypes,
+    IdCsvValidationRule
+} from '../../../search-commons/model/forms/generic-validator.util';
 
 export class PDocSearchForm extends CommonDocSearchForm {
 
     // TODO filter by locale
     // TODO filter by profiles
     // TODO filter by permissions
-
     static pdocFields = {
+        subtype: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
     };
+
+    subtype: string;
 
     constructor(values: {}) {
         super(values);
+        this.subtype = values['subtype'] || '';
     }
 
     toString() {
@@ -22,6 +30,7 @@ export class PDocSearchForm extends CommonDocSearchForm {
             '  what: ' + this.what + '\n' +
             '  fulltext: ' + this.fulltext + '\n' +
             '  type: ' + this.type + '\n' +
+            '  subtype: ' + this.subtype + '\n' +
             '  sort: ' + this.sort + '\n' +
             '  perPage: ' + this.perPage + '\n' +
             '  pageNum: ' + this.pageNum + '' +
@@ -32,6 +41,8 @@ export class PDocSearchForm extends CommonDocSearchForm {
 export class PDocSearchFormFactory {
     static getSanitizedValues(values: {}): any  {
         const sanitizedValues = CommonDocSearchFormFactory.getSanitizedValues(values);
+
+        sanitizedValues.subtype = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['subtype']) || '';
 
         return sanitizedValues;
     }
@@ -56,6 +67,8 @@ export class PDocSearchFormFactory {
 export class PDocSearchFormValidator {
     static isValidValues(values: {}): boolean {
         let state = CommonDocSearchFormValidator.isValidValues(values);
+
+        state = PDocSearchForm.pdocFields.subtype.validator.isValid(values['subtype']) && state;
 
         return state;
     }

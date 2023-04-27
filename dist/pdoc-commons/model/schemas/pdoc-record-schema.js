@@ -10,6 +10,7 @@ exports.PDocRecordSchema = new js_data_1.Schema({
     type: 'object',
     properties: {
         // TODO sync with model
+        pageId: { type: 'number' },
         blocked: { type: 'number' },
         // TODO: add type validation ifor date in later version -> but date-values can be string|Date
         dateshow: {},

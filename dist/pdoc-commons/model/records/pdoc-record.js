@@ -13,8 +13,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var base_entity_record_1 = require("../../../search-commons/model/records/base-entity-record");
 var cdoc_entity_record_1 = require("../../../search-commons/model/records/cdoc-entity-record");
 var util_1 = require("util");
+var generic_validator_util_1 = require("../../../search-commons/model/forms/generic-validator.util");
 exports.PDocRecordRelation = {
     hasOne: {},
     hasMany: {}
@@ -77,7 +79,9 @@ var PDocRecord = /** @class */ (function (_super) {
         .concat(exports.PDocRecordRelation.hasOne ? Object.keys(exports.PDocRecordRelation.hasOne).map(function (key) {
         return exports.PDocRecordRelation.hasOne[key].localField;
     }) : []);
-    PDocRecord.pdocFields = {};
+    PDocRecord.pdocFields = {
+        pageId: new base_entity_record_1.BaseEntityRecordFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID, new generic_validator_util_1.DbIdValidationRule(false)),
+    };
     return PDocRecord;
 }(cdoc_entity_record_1.CommonDocRecord));
 exports.PDocRecord = PDocRecord;

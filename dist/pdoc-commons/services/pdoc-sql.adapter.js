@@ -149,32 +149,6 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
         this.remapFulltextFilter(adapterQuery, tableConfig, 'html', 'SF_searchTrackKeywordsOnly', 'track_keywords_txt', 'in');
         return this.sqlQueryBuilder.queryTransformToAdapterSelectQuery(tableConfig, method, adapterQuery, opts);
     };
-    PDocSqlAdapter.prototype.remapFulltextFilter = function (adapterQuery, tableConfig, fulltextFilterName, fulltextNewTrigger, fulltextNewFilterName, fullTextNewAction) {
-        if (adapterQuery.where && adapterQuery.where[fulltextFilterName] &&
-            tableConfig.filterMapping.hasOwnProperty(fulltextNewFilterName)) {
-            var filter = adapterQuery.where[fulltextFilterName];
-            var action = Object.getOwnPropertyNames(filter)[0];
-            var value = adapterQuery.where[fulltextFilterName][action];
-            if (value.join(' ')
-                .includes(fulltextNewTrigger)) {
-                var fulltextValues = [];
-                adapterQuery.where[fulltextNewFilterName] = [];
-                for (var _i = 0, value_1 = value; _i < value_1.length; _i++) {
-                    var fulltextValue = value_1[_i];
-                    fulltextValue = fulltextValue.split(fulltextNewTrigger)
-                        .join('')
-                        .trim();
-                    if (fulltextValue && fulltextValue.length > 0) {
-                        fulltextValues.push(fulltextValue);
-                    }
-                }
-                adapterQuery.where[fulltextNewFilterName] = {};
-                adapterQuery.where[fulltextNewFilterName][fullTextNewAction] = fulltextValues;
-                adapterQuery.where[fulltextFilterName] = undefined;
-                delete adapterQuery.where[fulltextFilterName];
-            }
-        }
-    };
     return PDocSqlAdapter;
 }(generic_sql_adapter_1.GenericSqlAdapter));
 exports.PDocSqlAdapter = PDocSqlAdapter;

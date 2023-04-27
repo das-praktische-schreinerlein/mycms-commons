@@ -6,7 +6,9 @@ import { Facets } from '../../search-commons/model/container/facets';
 import { SearchParameterUtils } from '../../search-commons/services/searchparameter.utils';
 export declare class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, PDocSearchResult> {
     private searchParameterUtils;
-    private validMoreFilterNames;
+    static UPDATE_RELATION: any[];
+    private validMoreNumberFilterNames;
+    private validMoreInFilterNames;
     constructor(searchParameterUtils: SearchParameterUtils);
     createQueryFromForm(searchForm: PDocSearchForm): Object;
     createSearchResult(searchForm: PDocSearchForm, recordCount: number, records: PDocRecord[], facets: Facets): PDocSearchResult;

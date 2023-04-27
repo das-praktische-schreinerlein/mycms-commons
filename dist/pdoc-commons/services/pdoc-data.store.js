@@ -15,14 +15,24 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var generic_data_store_1 = require("../../search-commons/services/generic-data.store");
 var pdoc_searchresult_1 = require("../model/container/pdoc-searchresult");
+var pdoc_record_1 = require("../model/records/pdoc-record");
 var PDocDataStore = /** @class */ (function (_super) {
     __extends(PDocDataStore, _super);
     function PDocDataStore(searchParameterUtils) {
         var _this = _super.call(this, []) || this;
         _this.searchParameterUtils = searchParameterUtils;
-        _this.validMoreFilterNames = {
-        // TODO
-        //  filters subtype....
+        _this.validMoreNumberFilterNames = {
+            page_id_i: true,
+            page_id_is: true
+        };
+        _this.validMoreInFilterNames = {
+            id: true,
+            id_notin_is: true,
+            doublettes: true,
+            noSubType: true,
+            initial_s: true,
+            todoDesc: true,
+            todoKeywords: true
         };
         return _this;
     }
@@ -35,13 +45,7 @@ var PDocDataStore = /** @class */ (function (_super) {
         if (searchForm.fulltext !== undefined && searchForm.fulltext.length > 0) {
             filter = filter || {};
             filter['html'] = {
-                'likei': '%' + searchForm.fulltext + '%'
-            };
-        }
-        if (searchForm.what !== undefined && searchForm.what.length > 0) {
-            filter = filter || {};
-            filter['keywords_txt'] = {
-                'in': searchForm.what.split(/,/)
+                'likein': searchForm.fulltext.split(' OR ')
             };
         }
         if (searchForm.type !== undefined && searchForm.type.length > 0) {
@@ -50,13 +54,30 @@ var PDocDataStore = /** @class */ (function (_super) {
                 'in': searchForm.type.split(/,/)
             };
         }
+        if (searchForm.subtype !== undefined && searchForm.subtype.length > 0) {
+            filter = filter || {};
+            filter['subtype_ss'] = {
+                'in': searchForm.subtype.split(/,/)
+            };
+        }
+        if (searchForm.initial !== undefined && searchForm.initial.length > 0) {
+            filter = filter || {};
+            filter['initial_s'] = {
+                'in': searchForm.initial.split(/,/)
+            };
+        }
         if (searchForm.moreFilter !== undefined && searchForm.moreFilter.length > 0) {
             filter = filter || {};
             var moreFilters = searchForm.moreFilter.split(/;/);
             for (var index in moreFilters) {
                 var moreFilter = moreFilters[index];
                 var _a = moreFilter.split(/:/), filterName = _a[0], values = _a[1];
-                if (filterName && values && this.validMoreFilterNames[filterName] === true) {
+                if (filterName && values && this.validMoreNumberFilterNames[filterName] === true) {
+                    filter[filterName] = {
+                        'in_number': values.split(/,/)
+                    };
+                }
+                else if (filterName && values && this.validMoreInFilterNames[filterName] === true) {
                     filter[filterName] = {
                         'in': values.split(/,/)
                     };
@@ -64,7 +85,7 @@ var PDocDataStore = /** @class */ (function (_super) {
             }
         }
         // TODO
-        //  filters subtype....
+        //  filters
         if (filter !== undefined) {
             query['where'] = filter;
         }
@@ -73,6 +94,8 @@ var PDocDataStore = /** @class */ (function (_super) {
     PDocDataStore.prototype.createSearchResult = function (searchForm, recordCount, records, facets) {
         return new pdoc_searchresult_1.PDocSearchResult(searchForm, recordCount, records, facets);
     };
+    PDocDataStore.UPDATE_RELATION = [].concat(pdoc_record_1.PDocRecordRelation.hasOne ? Object.keys(pdoc_record_1.PDocRecordRelation.hasOne) : [])
+        .concat(pdoc_record_1.PDocRecordRelation.hasMany ? Object.keys(pdoc_record_1.PDocRecordRelation.hasMany) : []);
     return PDocDataStore;
 }(generic_data_store_1.GenericDataStore));
 exports.PDocDataStore = PDocDataStore;

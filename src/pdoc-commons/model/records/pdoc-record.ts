@@ -1,5 +1,5 @@
 import {
-    BaseEntityRecord,
+    BaseEntityRecord, BaseEntityRecordFieldConfig,
     BaseEntityRecordRelationsType
 } from '../../../search-commons/model/records/base-entity-record';
 import {
@@ -9,6 +9,10 @@ import {
     CommonDocRecordValidator
 } from "../../../search-commons/model/records/cdoc-entity-record";
 import {isArray} from 'util';
+import {
+    DbIdValidationRule,
+    GenericValidatorDatatypes
+} from '../../../search-commons/model/forms/generic-validator.util';
 
 export interface PDocRecordType extends CommonDocRecordType {
     css: string;
@@ -32,6 +36,8 @@ export interface PDocRecordType extends CommonDocRecordType {
     teaser: string;
     theme: string;
     type: string;
+
+    pageId: number;
 
     // TODO locale
     // TODO profiles
@@ -70,6 +76,9 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
     theme: string;
     type: string;
 
+
+    pageId: number;
+
     static pdocRelationNames = []
         .concat(PDocRecordRelation.hasOne ? Object.keys(PDocRecordRelation.hasOne).map(key => {
             return PDocRecordRelation.hasOne[key].localField;
@@ -84,6 +93,7 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
         }) : []);
 
     static pdocFields = {
+        pageId: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new DbIdValidationRule(false)),
     };
 
     static cloneToSerializeToJsonObj(baseRecord: PDocRecord, anonymizeMedia?: boolean): {}  {

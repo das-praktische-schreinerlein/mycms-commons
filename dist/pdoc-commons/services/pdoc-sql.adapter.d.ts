@@ -24,5 +24,4 @@ export declare class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSe
     protected saveDetailData(method: string, mapper: Mapper, id: string | number, props: any, opts?: any): Promise<boolean>;
     protected _doActionTag(mapper: Mapper, record: PDocRecord, actionTagForm: ActionTagForm, opts: any): Promise<any>;
     protected queryTransformToAdapterSelectQuery(method: string, mapper: Mapper, params: any, opts: any): SelectQueryData;
-    protected remapFulltextFilter(adapterQuery: AdapterQuery, tableConfig: TableConfig, fulltextFilterName: string, fulltextNewTrigger: string, fulltextNewFilterName: string, fullTextNewAction: string): void;
 }

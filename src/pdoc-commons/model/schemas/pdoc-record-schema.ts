@@ -9,6 +9,7 @@ export const PDocRecordSchema = new Schema({
     type: 'object',
     properties: {
         // TODO sync with model
+        pageId: {type: 'number'},
 
         blocked: {type: 'number'},
 
