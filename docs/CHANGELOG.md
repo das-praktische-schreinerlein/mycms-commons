@@ -8,7 +8,7 @@
 - introduced fully featured pdoc-services derived from cdoc
 - moved track-colors to commons
 - improved SqlAdapter with remapFulltextFilter
-- improved BeanUtils with remapFulltextFilter
+- improved BeanUtils with jsonStringify
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
