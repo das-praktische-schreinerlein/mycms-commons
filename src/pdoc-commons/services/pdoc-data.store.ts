@@ -18,7 +18,10 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
         id_notin_is: true,
         doublettes: true,
         noSubType: true,
+        key_ss: true,
+        langkey_ss: true,
         initial_s: true,
+        theme_ss: true,
         todoDesc: true,
         todoKeywords: true
     };

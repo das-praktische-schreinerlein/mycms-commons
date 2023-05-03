@@ -25,6 +25,7 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         const values = {};
         values['id'] = props.id;
 
+        // common
         values['blocked_i'] = props.blocked;
         values['dateshow_dt'] = props.dateshow;
         values['desc_txt'] = props.descTxt;
@@ -33,17 +34,31 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['keywords_txt'] =
             (props.keywords ? props.keywords.split(', ').join(',') : '');
         values['name_s'] = props.name;
-        values['key_s'] = MapperUtils.generateDoubletteValue(props.name);
         values['playlists_txt'] =
             (props.playlists ? props.playlists.split(', ').join(',,') : '');
-        values['type_s'] = props.type;
         values['subtype_s'] = props.subtype;
+        values['type_s'] = props.type;
+
+        // page
+        values['css_s'] = props.css;
+        values['heading_s'] = props.heading;
+        values['image_s'] = props.image;
+        values['key_s'] = props.key;
+        values['langkey_s'] = props.langkey;
+        values['teaser_s'] = props.teaser;
+        values['theme_s'] = props.theme;
 
         values['html_txt'] = [
             values['desc_txt'],
             values['name_s'],
+            values['heading_s'],
+            values['teaser_s'],
+            values['key_s'],
+            values['langkey_s'],
             values['keywords_txt'],
-            values['type_s']].join(' ');
+            values['type_s'],
+            values['subtype_s']
+        ].join(' ');
 
 
         return values;
@@ -64,6 +79,8 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
     mapResponseDocument(mapper: Mapper, doc: any, mapping: {}): Record {
         const values = {};
         values['id'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'id', undefined);
+
+        // commons
         const subtypeField = doc[this.mapperUtils.mapToAdapterFieldName(mapping, 'subtypes_ss')];
         if (subtypeField !== undefined && Array.isArray(subtypeField)) {
             values['subtypes'] = subtypeField.join(',');
@@ -122,6 +139,15 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
             .replace(/[,]+/g, ',').split(',').join(', ');
         values['subtype'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'subtype_s', undefined);
         values['type'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'type_s', undefined);
+
+        // page
+        values['css'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'css_s', undefined);
+        values['heading'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'heading_s', undefined);
+        values['image'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'image_s', undefined);
+        values['key'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'key_s', undefined);
+        values['langkey'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'langkey_s', undefined);
+        values['teaser'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'teaser_s', undefined);
+        values['theme'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'theme_s', undefined);
 
         // console.log('mapResponseDocument values:', values);
         const record: PDocRecord = <PDocRecord>mapper.createRecord(

@@ -15,8 +15,8 @@ describe('StaticPagesDataService', () => {
         datastore = new StaticPagesDataStore(new SearchParameterUtils());
         service = new StaticPagesDataService(datastore);
         service.setWritable(true);
-        pDoc1 = new PDocRecord({desc: '', name: 'TestpDoc1', persons: '', id: '1'});
-        pDoc2 = new PDocRecord({desc: '', name: 'TestpDoc2', persons: '', id: '2'});
+        pDoc1 = new PDocRecord({desc: '', name: 'TestpDoc1', persons: '', id: '1', langkey: 'de', key: 'key1'});
+        pDoc2 = new PDocRecord({desc: '', name: 'TestpDoc2', persons: '', id: '2', langkey: 'de', key: 'key1'});
     });
 
     it('should ...', done => {
@@ -162,7 +162,7 @@ describe('StaticPagesDataService', () => {
                 service.addMany([pDoc1, pDoc2]),
                 service.getAll(),
                 service.updateById('1', {
-                    id: '1', name: 'new name', type: 'page'
+                    id: '1', name: 'new name', type: 'page', langkey: 'de', key: 'key1'
                 }),
                 service.getById('1')
             ).subscribe(
@@ -190,7 +190,7 @@ describe('StaticPagesDataService', () => {
                 service.addMany([pDoc1, pDoc2]),
                 service.getAll(),
                 service.updateById('26', {
-                    id: '26', name: 'new name', type: 'page'
+                    id: '26', name: 'new name', type: 'page', langkey: 'de', key: 'key1'
                 }),
                 service.getById('26')
             ).subscribe(

@@ -137,6 +137,9 @@ export class BaseEntityRecordValidator {
         const errors = [];
         this.validateMyFieldRules(doc, errors, '', errFieldPrefix);
         this.validateMyRelationRules(doc, errors, errFieldPrefix);
+        if (errors && errors.length > 0) {
+            console.debug('validation-errors:', errors);
+        }
 
         return errors;
     }

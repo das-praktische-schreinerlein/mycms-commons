@@ -13,7 +13,9 @@ export interface PDocRecordType extends CommonDocRecordType {
     flags?: string[];
     heading: string;
     image: string;
+    key: string;
     keywords: string;
+    langkey: string;
     name: string;
     subSectionIds: string;
     teaser: string;
@@ -38,8 +40,10 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
     flgShowDashboard?: boolean;
     flags?: string[];
     heading: string;
+    key: string;
     image: string;
     keywords: string;
+    langkey: string;
     name: string;
     subSectionIds: string;
     teaser: string;
@@ -49,7 +53,13 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
     static pdocRelationNames: any[];
     static pdocValidationRelationNames: any[];
     static pdocFields: {
+        css: BaseEntityRecordFieldConfig;
+        heading: BaseEntityRecordFieldConfig;
+        key: BaseEntityRecordFieldConfig;
+        langkey: BaseEntityRecordFieldConfig;
         pageId: BaseEntityRecordFieldConfig;
+        teaser: BaseEntityRecordFieldConfig;
+        theme: BaseEntityRecordFieldConfig;
     };
     static cloneToSerializeToJsonObj(baseRecord: PDocRecord, anonymizeMedia?: boolean): {};
     toString(): string;

@@ -119,6 +119,9 @@ var BaseEntityRecordValidator = /** @class */ (function () {
         var errors = [];
         this.validateMyFieldRules(doc, errors, '', errFieldPrefix);
         this.validateMyRelationRules(doc, errors, errFieldPrefix);
+        if (errors && errors.length > 0) {
+            console.debug('validation-errors:', errors);
+        }
         return errors;
     };
     BaseEntityRecordValidator.prototype.validateMyValueRelationRules = function (values, errors, fieldPrefix, errFieldPrefix) {

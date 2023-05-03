@@ -1,10 +1,7 @@
 import {TableConfig} from '../../../search-commons/services/sql-query.builder';
-import {ActionTagBlockTableConfigType} from '../../../action-commons/actiontags/common-sql-actiontag-block.adapter';
 import {ActionTagReplaceTableConfigType} from '../../../action-commons/actiontags/common-sql-actiontag-replace.adapter';
 import {ActionTagAssignTableConfigType} from '../../../action-commons/actiontags/common-sql-actiontag-assign.adapter';
 import {AdapterFilterActions} from '../../../search-commons/services/mapper.utils';
-import {KeywordModelConfigJoinType} from '../../../action-commons/actions/common-sql-keyword.adapter';
-import {PlaylistModelConfigJoinType} from '../../../action-commons/actions/common-sql-playlist.adapter';
 
 // TODO sync with model
 export class SqlPageConfig {
@@ -32,18 +29,15 @@ export class SqlPageConfig {
             'CONCAT("PAGE", "_", page.pg_id) AS id',
             'pg_key',
             'page.pg_id',
-            'page.pg_name',
-            'pg_descmd'
-            // TODO
-            //   pg_langkey VARCHAR(255) NOT NULL,
-            //   pg_name VARCHAR(255) NOT NULL,
-            //   pg_css TEXT,
-            //   pg_descmd TEXT,
-            //   pg_heading TEXT,
-            //   pg_image VARCHAR(255),
-            //   pg_teaser VARCHAR(255),
-            //   pg_theme VARCHAR(255),
-            //   pg_subtype VARCHAR(255),
+            'pg_name',
+            'pg_descmd',
+            'pg_langkey',
+            'pg_css',
+            'pg_heading',
+            'pg_image',
+            'pg_teaser',
+            'pg_theme',
+            'pg_subtype',
         ],
         facetConfigs: {
             // dashboard
@@ -83,18 +77,54 @@ export class SqlPageConfig {
                 constValues: ['page'],
                 filterField: '"page"',
                 selectLimit: 1
+            },
+            'key_ss': {
+                selectSql: 'SELECT COUNT(*) as count, ' +
+                    ' LOWER(pg_key) as value ' +
+                    'FROM page ' +
+                    'WHERE LENGTH(pg_key) > 0 ' +
+                    'GROUP BY LOWER(pg_key)' +
+                    'ORDER BY value',
+                filterField: 'page.pg_key',
+                action: AdapterFilterActions.IN
+            },
+            'langkey_ss': {
+                selectSql: 'SELECT COUNT(*) as count, ' +
+                    ' LOWER(pg_langkey) as value ' +
+                    'FROM page ' +
+                    'WHERE LENGTH(pg_langkey) > 0 ' +
+                    'GROUP BY LOWER(pg_langkey)' +
+                    'ORDER BY value',
+                filterField: 'page.pg_langkey',
+                action: AdapterFilterActions.IN
+            },
+            'subtype_ss': {
+                selectSql: 'SELECT COUNT(*) as count, ' +
+                    ' LOWER(pg_subtype) as value ' +
+                    'FROM page ' +
+                    'WHERE LENGTH(pg_subtype) > 0 ' +
+                    'GROUP BY LOWER(pg_subtype)' +
+                    'ORDER BY value',
+                filterField: 'page.pg_subtype',
+                action: AdapterFilterActions.IN
+            },
+            'theme_ss': {
+                selectSql: 'SELECT COUNT(*) as count, ' +
+                    ' LOWER(pg_theme) as value ' +
+                    'FROM page ' +
+                    'WHERE LENGTH(pg_theme) > 0 ' +
+                    'GROUP BY LOWER(pg_theme)' +
+                    'ORDER BY value',
+                filterField: 'page.pg_theme',
+                action: AdapterFilterActions.IN
             }
-            // TODO
-            //   pg_langkey VARCHAR(255) NOT NULL,
-            //   pg_subtype VARCHAR(255),
         },
         sortMapping: {
             'name': 'pg_name ASC',
             'type': 'pg_typ ASC, pg_name ASC',
-            // TODO
-            //   pg_langkey VARCHAR(255) NOT NULL,
-            //   pg_theme VARCHAR(255),
-            //   pg_subtype VARCHAR(255),
+            'langkey': 'pg_langkey ASC, pg_name ASC',
+            'subtype': 'pg_subtype ASC, pg_name ASC',
+            'theme': 'pg_theme ASC, pg_name ASC',
             'forExport': 'page.pg_id ASC, pg_name ASC',
             'relevance': 'page.pg_id DESC, pg_name ASC'
         },
@@ -107,28 +137,25 @@ export class SqlPageConfig {
             page_id_i: 'page.pg_id',
             page_id_is: 'page.pg_id',
             initial_s: 'SUBSTR(UPPER(pg_name), 1, 1)',
-            html: 'CONCAT(pg_name, " ", COALESCE(pg_descmd,""))',
+            html: 'CONCAT(pg_name, " ",' +
+                ' COALESCE(pg_subtype, ""), " ",' +
+                ' COALESCE(pg_heading, ""), " ",' +
+                ' COALESCE(pg_teaser, ""), " ",' +
+                ' COALESCE(pg_theme, ""), " ",' +
+                ' COALESCE(pg_descmd, ""))',
             htmlNameOnly: 'pg_name'
-            // TODO
-            //   pg_langkey VARCHAR(255) NOT NULL,
-            //   pg_name VARCHAR(255) NOT NULL,
-            //   pg_heading TEXT,
-            //   pg_teaser VARCHAR(255),
-            //   pg_theme VARCHAR(255),
-            //   pg_subtype VARCHAR(255),
         },
         writeMapping: {
             'page.pg_descmd': ':desc_txt:',
             'page.pg_subtype': ':subtype_s:',
             'page.pg_key': ':key_s:',
-            'page.pg_name': ':name_s:'
-            // TODO
-            //   pg_langkey VARCHAR(255) NOT NULL,
-            //   pg_css TEXT,
-            //   pg_heading TEXT,
-            //   pg_image VARCHAR(255),
-            //   pg_teaser VARCHAR(255),
-            //   pg_theme VARCHAR(255),
+            'page.pg_name': ':name_s:',
+            'page.pg_langkey': ':langkey_s:',
+            'page.pg_css': ':css_s:',
+            'page.pg_heading': ':heading_s:',
+            'page.pg_image': ':image_s:',
+            'page.pg_teaser': ':teaser_s:',
+            'page.pg_theme': ':theme_s:',
         },
         fieldMapping: {
             id: 'id',
@@ -139,15 +166,15 @@ export class SqlPageConfig {
             desc_html_txt: 'pg_descmd',
             keywords_txt: 'pg_keywords',
             name_s: 'pg_name',
-            type_s: 'type'
-            // TODO
-            //   pg_langkey VARCHAR(255) NOT NULL,
-            //   pg_css TEXT,
-            //   pg_heading TEXT,
-            //   pg_image VARCHAR(255),
-            //   pg_teaser VARCHAR(255),
-            //   pg_theme VARCHAR(255),
-            //   pg_subtype VARCHAR(255),
+            type_s: 'type',
+            subtype_s: 'pg_subtype',
+            key_s: 'pg_key',
+            langkey_s: 'pg_langkey',
+            css_s: 'pg_css',
+            heading_s: 'pg_heading',
+            image_s: 'pg_image',
+            teaser_s: 'pg_teaser',
+            theme_s: 'pg_theme'
         }
     };
 

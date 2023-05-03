@@ -1,5 +1,6 @@
 import {
-    BaseEntityRecord, BaseEntityRecordFieldConfig,
+    BaseEntityRecord,
+    BaseEntityRecordFieldConfig,
     BaseEntityRecordRelationsType
 } from '../../../search-commons/model/records/base-entity-record';
 import {
@@ -10,8 +11,10 @@ import {
 } from "../../../search-commons/model/records/cdoc-entity-record";
 import {isArray} from 'util';
 import {
-    DbIdValidationRule,
-    GenericValidatorDatatypes
+    GenericValidatorDatatypes,
+    HtmlValidationRule,
+    IdValidationRule,
+    MarkdownValidationRule
 } from '../../../search-commons/model/forms/generic-validator.util';
 
 export interface PDocRecordType extends CommonDocRecordType {
@@ -30,7 +33,9 @@ export interface PDocRecordType extends CommonDocRecordType {
     flags?: string[];
     heading: string;
     image: string;
+    key: string;
     keywords: string;
+    langkey: string;
     name: string;
     subSectionIds: string;
     teaser: string;
@@ -39,7 +44,6 @@ export interface PDocRecordType extends CommonDocRecordType {
 
     pageId: number;
 
-    // TODO locale
     // TODO profiles
     // TODO permissions
 }
@@ -68,14 +72,15 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
     flgShowDashboard?: boolean;
     flags?: string[];
     heading: string;
+    key: string;
     image: string;
     keywords: string;
+    langkey: string;
     name: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
     type: string;
-
 
     pageId: number;
 
@@ -93,7 +98,13 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
         }) : []);
 
     static pdocFields = {
-        pageId: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new DbIdValidationRule(false)),
+        css: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.HTML, new HtmlValidationRule(false)),
+        heading: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
+        key: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true)),
+        langkey: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true)),
+        pageId: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
+        teaser: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
+        theme: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
     };
 
     static cloneToSerializeToJsonObj(baseRecord: PDocRecord, anonymizeMedia?: boolean): {}  {
