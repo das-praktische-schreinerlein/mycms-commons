@@ -41,7 +41,7 @@ export class StringUtils {
         if (Array.isArray(config)) {
             for (const replacement of config) {
                 if (Array.isArray(replacement) && replacement.length === 2) {
-                    replacementConfig.push([new RegExp(replacement[0]), replacement[1]]);
+                    replacementConfig.push([new RegExp(replacement[0], 'g'), replacement[1]]);
                 }
             }
         }

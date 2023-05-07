@@ -41,7 +41,7 @@ var StringUtils = /** @class */ (function () {
             for (var _i = 0, config_1 = config; _i < config_1.length; _i++) {
                 var replacement = config_1[_i];
                 if (Array.isArray(replacement) && replacement.length === 2) {
-                    replacementConfig.push([new RegExp(replacement[0]), replacement[1]]);
+                    replacementConfig.push([new RegExp(replacement[0], 'g'), replacement[1]]);
                 }
             }
         }

@@ -9,6 +9,7 @@
 - moved track-colors to commons
 - improved SqlAdapter with remapFulltextFilter
 - improved BeanUtils with jsonStringify
+- fixed global RegExp in StringUtils.createReplacementsFromConfigArray
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
@@ -19,7 +20,7 @@
 - improved BeanUtils with jsonStringify
 
 ### bug fixes
-- none
+- fixed global RegExp in StringUtils.createReplacementsFromConfigArray
 
 ### breaking changes
 - bumped up deps
