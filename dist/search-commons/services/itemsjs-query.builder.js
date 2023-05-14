@@ -10,6 +10,10 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         var query = this.createAdapterSelectQuery(itemsJsConfig, method, adapterQuery, adapterOpts);
         // for debug only: const facetParams = this.getFacetParams(itemsJsConfig, adapterOpts);
         // for debug only: const spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
+        var spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
+        if (spatialParams !== undefined) {
+            query.spatialQuery = spatialParams;
+        }
         var sorts = this.getSortParams(itemsJsConfig, method, adapterQuery, adapterOpts);
         if (sorts !== undefined && sorts.length > 0) {
             query.sort = sorts;
@@ -76,17 +80,22 @@ var ItemsJsQueryBuilder = /** @class */ (function () {
         return sortKey;
     };
     ItemsJsQueryBuilder.prototype.getSpatialParams = function (itemsJsConfig, adapterQuery) {
-        var spatialParams = new Map();
-        if (this.isSpatialQuery(itemsJsConfig, adapterQuery)) {
-            throw new Error('Spatialserch not supported');
+        if (!this.isSpatialQuery(itemsJsConfig, adapterQuery)) {
+            return undefined;
         }
+        var _a = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/), lat = _a[0], lng = _a[1], distance = _a[2];
+        var spatialParams = {
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+            distance: parseFloat(distance)
+        };
         return spatialParams;
     };
     ItemsJsQueryBuilder.prototype.getAdapterSelectFields = function (itemsJsConfig, method, adapterQuery) {
         var fields = itemsJsConfig.searchableFields.slice(0);
         if (adapterQuery !== undefined && adapterQuery.spatial !== undefined && adapterQuery.spatial.geo_loc_p !== undefined &&
             adapterQuery.spatial.geo_loc_p.nearby !== undefined) {
-            fields.push('distance:geodist()');
+            fields.push('distance');
         }
         if (adapterQuery.loadTrack === true) {
             fields.push('gpstrack_src_s');

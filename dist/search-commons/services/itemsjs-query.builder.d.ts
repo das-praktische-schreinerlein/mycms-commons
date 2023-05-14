@@ -1,9 +1,15 @@
 import { AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
+export interface ItemsJsSelectSpatialQueryData {
+    lat: number;
+    lng: number;
+    distance: number;
+}
 export interface ItemsJsSelectQueryData {
     page: number;
     per_page: number;
     sort?: string;
     filters?: {};
+    spatialQuery?: ItemsJsSelectSpatialQueryData;
     query: string;
 }
 export interface ItemsJsConfig {
@@ -21,7 +27,7 @@ export declare class ItemsJsQueryBuilder {
     isSpatialQuery(itemsJsConfig: ItemsJsConfig, adapterQuery: AdapterQuery): boolean;
     protected createAdapterSelectQuery(itemsJsConfig: ItemsJsConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): ItemsJsSelectQueryData;
     protected getSortParams(itemsJsConfig: ItemsJsConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): string;
-    protected getSpatialParams(itemsJsConfig: ItemsJsConfig, adapterQuery: AdapterQuery): Map<string, any>;
+    protected getSpatialParams(itemsJsConfig: ItemsJsConfig, adapterQuery: AdapterQuery): ItemsJsSelectSpatialQueryData;
     protected getAdapterSelectFields(itemsJsConfig: ItemsJsConfig, method: string, adapterQuery: AdapterQuery): string[];
     protected getFacetParams(itemsJsConfig: ItemsJsConfig, adapterOpts: AdapterOpts): Map<string, any>;
     protected mapToAdapterFieldName(itemsJsConfig: ItemsJsConfig, fieldName: string): string;

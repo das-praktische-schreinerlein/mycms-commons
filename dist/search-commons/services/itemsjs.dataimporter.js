@@ -10,8 +10,9 @@ var ItemsJsDataImporter = /** @class */ (function () {
         this.itemsJsConfig = itemsJsConfig;
     }
     ItemsJsDataImporter.prepareConfiguration = function (itemsJsConfig) {
-        for (var aggreationName in itemsJsConfig.aggregations) {
-            var aggregation = itemsJsConfig.aggregations[aggreationName];
+        var aggregations = itemsJsConfig.aggregations;
+        for (var aggreationName in aggregations) {
+            var aggregation = aggregations[aggreationName];
             if (!aggregation['field']) {
                 aggregation['field'] = aggreationName;
             }
@@ -19,8 +20,8 @@ var ItemsJsDataImporter = /** @class */ (function () {
         for (var _i = 0, _a = itemsJsConfig.aggregationFields; _i < _a.length; _i++) {
             var fieldName = _a[_i];
             if (fieldName.endsWith('_i') || fieldName.endsWith('_s')) {
-                if (!itemsJsConfig.aggregations[fieldName]) {
-                    itemsJsConfig.aggregations[fieldName] = {
+                if (!aggregations[fieldName]) {
+                    aggregations[fieldName] = {
                         conjunction: false,
                         sort: 'term',
                         order: 'asc',
@@ -28,8 +29,8 @@ var ItemsJsDataImporter = /** @class */ (function () {
                         size: 9999
                     };
                 }
-                if (!itemsJsConfig.aggregations[fieldName + 's']) {
-                    itemsJsConfig.aggregations[fieldName + 's'] = {
+                if (!aggregations[fieldName + 's']) {
+                    aggregations[fieldName + 's'] = {
                         conjunction: false,
                         sort: 'term',
                         order: 'asc',
@@ -101,8 +102,9 @@ var ItemsJsDataImporter = /** @class */ (function () {
             var filterBase = _a[_i];
             values[filterBase + '_ss'] = values[filterBase + '_txt'];
         }
-        for (var aggreationName in this.itemsJsConfig.aggregations) {
-            var aggregation = this.itemsJsConfig.aggregations[aggreationName];
+        var aggregations = this.itemsJsConfig.aggregations;
+        for (var aggreationName in aggregations) {
+            var aggregation = aggregations[aggreationName];
             if (aggregation.filterFunction) {
                 values[aggreationName] = aggregation.filterFunction.call(this, values);
             }
@@ -147,6 +149,13 @@ var ItemsJsDataImporter = /** @class */ (function () {
             if ((key.endsWith('_ss') || key.endsWith('_is') || key.endsWith('_fs')) && internal_compatibility_1.isNumeric(values[key])) {
                 values[key] = values[key] + '';
             }
+        }
+        var spatialField = this.itemsJsConfig.spatialField;
+        if (spatialField && values[spatialField]) {
+            var _f = values[spatialField].split(/[;,]/), lat = _f[0], lng = _f[1], distance = _f[2];
+            values[spatialField + '_lat'] = parseFloat(lat);
+            values[spatialField + '_lng'] = parseFloat(lng);
+            values[spatialField + '_ele'] = parseFloat(distance);
         }
         return values;
     };

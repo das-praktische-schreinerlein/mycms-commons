@@ -10,10 +10,14 @@
 - improved SqlAdapter with remapFulltextFilter
 - improved BeanUtils with jsonStringify
 - fixed global RegExp in StringUtils.createReplacementsFromConfigArray
+- itemsjs: added spatial-search
+- geoutils: added distance-calculation
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
 - moved track-colors to commons
+- itemsjs: added spatial-search
+- geoutils: added distance-calculation
 
 ### improvements
 - improved SqlAdapter with remapFulltextFilter

@@ -32,8 +32,9 @@ export class ItemsJsDataImporter {
     protected itemsJsConfig: ExtendedItemsJsConfig;
 
     public static prepareConfiguration(itemsJsConfig: ExtendedItemsJsConfig) {
-        for (const aggreationName in itemsJsConfig.aggregations) {
-            const aggregation = itemsJsConfig.aggregations[aggreationName];
+        const aggregations = itemsJsConfig.aggregations;
+        for (const aggreationName in aggregations) {
+            const aggregation = aggregations[aggreationName];
             if (!aggregation['field']) {
                 aggregation['field'] = aggreationName;
             }
@@ -41,8 +42,8 @@ export class ItemsJsDataImporter {
 
         for (const fieldName of itemsJsConfig.aggregationFields) {
             if (fieldName.endsWith('_i') || fieldName.endsWith('_s')) {
-                if (!itemsJsConfig.aggregations[fieldName]) {
-                    itemsJsConfig.aggregations[fieldName] = {
+                if (!aggregations[fieldName]) {
+                    aggregations[fieldName] = {
                         conjunction: false,
                         sort: 'term',
                         order: 'asc',
@@ -51,8 +52,8 @@ export class ItemsJsDataImporter {
                     };
                 }
 
-                if (!itemsJsConfig.aggregations[fieldName + 's']) {
-                    itemsJsConfig.aggregations[fieldName + 's'] = {
+                if (!aggregations[fieldName + 's']) {
+                    aggregations[fieldName + 's'] = {
                         conjunction: false,
                         sort: 'term',
                         order: 'asc',
@@ -144,8 +145,9 @@ export class ItemsJsDataImporter {
             values[filterBase + '_ss'] = values[filterBase + '_txt'];
         }
 
-        for (const aggreationName in this.itemsJsConfig.aggregations) {
-            const aggregation = this.itemsJsConfig.aggregations[aggreationName];
+        const aggregations = this.itemsJsConfig.aggregations;
+        for (const aggreationName in aggregations) {
+            const aggregation = aggregations[aggreationName];
             if (aggregation.filterFunction) {
                 values[aggreationName] = aggregation.filterFunction.call(this, values);
             } else if (aggregation['mapField']) {
@@ -193,6 +195,14 @@ export class ItemsJsDataImporter {
             if ((key.endsWith('_ss') || key.endsWith('_is') || key.endsWith('_fs')) && isNumeric(values[key])) {
                 values[key] = values[key] + '';
             }
+        }
+
+        const spatialField = this.itemsJsConfig.spatialField;
+        if (spatialField && values[spatialField]) {
+            const [lat, lng, distance] = values[spatialField].split(/[;,]/);
+            values[spatialField + '_lat'] = parseFloat(lat);
+            values[spatialField + '_lng'] = parseFloat(lng);
+            values[spatialField + '_ele'] = parseFloat(distance);
         }
 
         return values;

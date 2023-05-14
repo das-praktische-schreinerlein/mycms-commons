@@ -18,6 +18,7 @@ var geojson_parser_1 = require("../services/geojson.parser");
 var geotxt_parser_1 = require("../services/geotxt.parser");
 var backend_geo_types_1 = require("./backend-geo.types");
 var xmldom_1 = require("@xmldom/xmldom");
+var geo_calcutils_1 = require("../services/geo-calcutils");
 var BackendGeoUtils = /** @class */ (function () {
     function BackendGeoUtils() {
     }
@@ -45,7 +46,7 @@ var BackendGeoUtils = /** @class */ (function () {
         return new backend_geo_types_1.BackendGeoElement(type, points, name);
     };
     BackendGeoUtils.calcDistance = function (from, to) {
-        return 0; // TODO do a calculation
+        return geo_calcutils_1.GeoCalcUtils.calcDegDistance(from.lat, from.lng, to.lat, to.lng);
     };
     return BackendGeoUtils;
 }());

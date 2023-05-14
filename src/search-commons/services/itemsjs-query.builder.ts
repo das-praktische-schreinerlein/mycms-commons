@@ -1,11 +1,18 @@
 import {AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils} from './mapper.utils';
 import {LogUtils} from '../../commons/utils/log.utils';
 
+export interface ItemsJsSelectSpatialQueryData {
+    lat: number;
+    lng: number;
+    distance: number;
+}
+
 export interface ItemsJsSelectQueryData {
     page: number;
     per_page: number;
     sort?: string;
     filters?: {};
+    spatialQuery?: ItemsJsSelectSpatialQueryData;
     query: string;
 }
 
@@ -29,6 +36,11 @@ export class ItemsJsQueryBuilder {
 
         // for debug only: const facetParams = this.getFacetParams(itemsJsConfig, adapterOpts);
         // for debug only: const spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
+
+        const spatialParams = this.getSpatialParams(itemsJsConfig, adapterQuery);
+        if (spatialParams !== undefined) {
+            query.spatialQuery = spatialParams;
+        }
 
         const sorts = this.getSortParams(itemsJsConfig, method, adapterQuery, adapterOpts);
         if (sorts !== undefined && sorts.length > 0) {
@@ -107,12 +119,17 @@ export class ItemsJsQueryBuilder {
         return sortKey;
     }
 
-    protected getSpatialParams(itemsJsConfig: ItemsJsConfig, adapterQuery: AdapterQuery): Map<string, any> {
-        const spatialParams = new Map<string, any>();
-
-        if (this.isSpatialQuery(itemsJsConfig, adapterQuery)) {
-            throw new Error ('Spatialserch not supported');
+    protected getSpatialParams(itemsJsConfig: ItemsJsConfig, adapterQuery: AdapterQuery): ItemsJsSelectSpatialQueryData {
+        if (!this.isSpatialQuery(itemsJsConfig, adapterQuery)) {
+            return undefined;
         }
+
+        const [lat, lng, distance] = this.mapperUtils.escapeAdapterValue(adapterQuery.spatial.geo_loc_p.nearby).split(/_/);
+        const spatialParams = {
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+            distance: parseFloat(distance)
+        };
 
         return spatialParams;
     }
@@ -122,7 +139,7 @@ export class ItemsJsQueryBuilder {
 
         if (adapterQuery !== undefined && adapterQuery.spatial !== undefined && adapterQuery.spatial.geo_loc_p !== undefined &&
             adapterQuery.spatial.geo_loc_p.nearby !== undefined) {
-            fields.push('distance:geodist()');
+            fields.push('distance');
         }
         if (adapterQuery.loadTrack === true) {
             fields.push('gpstrack_src_s');

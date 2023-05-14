@@ -5,6 +5,7 @@ import {AbstractGeoJsonParser} from '../services/geojson.parser';
 import {AbstractGeoTxtParser} from '../services/geotxt.parser';
 import {BackendGeoElement, BackendLatLng, BackendLatLngTime} from './backend-geo.types';
 import {DOMParser} from '@xmldom/xmldom';
+import {GeoCalcUtils} from '../services/geo-calcutils';
 
 export class BackendGeoUtils  {
     public static createLatLng(lat: string | number, lng: string | number, alt?: number, time?: Date): BackendLatLng {
@@ -32,7 +33,7 @@ export class BackendGeoUtils  {
     }
 
     public static calcDistance(from: BackendLatLng, to: BackendLatLng): number {
-        return 0; // TODO do a calculation
+        return GeoCalcUtils.calcDegDistance(from.lat, from.lng, to.lat, to.lng);
     }
 }
 
