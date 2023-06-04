@@ -2,12 +2,16 @@ import { CommonDocSearchForm } from "../../../search-commons/model/forms/cdoc-se
 import { GenericSearchFormFieldConfig } from '../../../search-commons/model/forms/generic-searchform';
 export declare class PDocSearchForm extends CommonDocSearchForm {
     static pdocFields: {
+        flags: GenericSearchFormFieldConfig;
         key: GenericSearchFormFieldConfig;
-        langkey: GenericSearchFormFieldConfig;
+        langkeys: GenericSearchFormFieldConfig;
+        profiles: GenericSearchFormFieldConfig;
         subtype: GenericSearchFormFieldConfig;
     };
+    flags: string;
     key: string;
-    langkey: string;
+    langkeys: string;
+    profiles: string;
     subtype: string;
     constructor(values: {});
     toString(): string;

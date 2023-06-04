@@ -5,23 +5,19 @@ export interface PDocRecordType extends CommonDocRecordType {
     descTxt: string;
     descMd: string;
     descHtml: string;
-    flgShowSearch?: boolean;
-    flgShowNews?: boolean;
-    flgShowTopTen?: boolean;
-    flgShowAdminArea?: boolean;
-    flgShowDashboard?: boolean;
-    flags?: string[];
     heading: string;
     image: string;
     key: string;
     keywords: string;
-    langkey: string;
+    langkeys: string;
     name: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
     type: string;
     pageId: number;
+    flags?: string;
+    profiles?: string;
 }
 export declare let PDocRecordRelation: BaseEntityRecordRelationsType;
 export declare class PDocRecord extends CommonDocRecord implements PDocRecordType {
@@ -33,18 +29,14 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
     descTxt: string;
     descMd: string;
     descHtml: string;
-    flgShowSearch?: boolean;
-    flgShowNews?: boolean;
-    flgShowTopTen?: boolean;
-    flgShowAdminArea?: boolean;
-    flgShowDashboard?: boolean;
-    flags?: string[];
+    flags?: string;
     heading: string;
     key: string;
     image: string;
     keywords: string;
-    langkey: string;
+    langkeys: string;
     name: string;
+    profiles: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
@@ -54,10 +46,13 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
     static pdocValidationRelationNames: any[];
     static pdocFields: {
         css: BaseEntityRecordFieldConfig;
+        flags: BaseEntityRecordFieldConfig;
         heading: BaseEntityRecordFieldConfig;
         key: BaseEntityRecordFieldConfig;
-        langkey: BaseEntityRecordFieldConfig;
+        langkeys: BaseEntityRecordFieldConfig;
         pageId: BaseEntityRecordFieldConfig;
+        profiles: BaseEntityRecordFieldConfig;
+        subSectionIds: BaseEntityRecordFieldConfig;
         teaser: BaseEntityRecordFieldConfig;
         theme: BaseEntityRecordFieldConfig;
     };

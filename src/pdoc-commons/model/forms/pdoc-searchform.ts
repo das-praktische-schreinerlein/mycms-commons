@@ -11,16 +11,18 @@ import {
 
 export class PDocSearchForm extends CommonDocSearchForm {
 
-    // TODO filter by profile
-    // TODO filter by permissions
     static pdocFields = {
+        flags: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
         key: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
-        langkey: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
+        langkeys: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
+        profiles: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
         subtype: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false))
     };
 
+    flags: string;
     key: string;
-    langkey: string;
+    langkeys: string;
+    profiles: string;
     subtype: string;
 
     constructor(values: {}) {

@@ -30,10 +30,13 @@ var SqlPageConfig = /** @class */ (function () {
             'page.pg_id',
             'pg_name',
             'pg_descmd',
-            'pg_langkey',
             'pg_css',
+            'pg_flags',
             'pg_heading',
             'pg_image',
+            'pg_langkeys',
+            'pg_profiles',
+            'pg_subsectionids',
             'pg_teaser',
             'pg_theme',
             'pg_subtype',
@@ -87,15 +90,35 @@ var SqlPageConfig = /** @class */ (function () {
                 filterField: 'page.pg_key',
                 action: mapper_utils_1.AdapterFilterActions.IN
             },
-            'langkey_ss': {
+            'flags_ss': {
                 selectSql: 'SELECT COUNT(*) as count, ' +
-                    ' LOWER(pg_langkey) as value ' +
+                    ' LOWER(pg_flags) as value ' +
                     'FROM page ' +
-                    'WHERE LENGTH(pg_langkey) > 0 ' +
-                    'GROUP BY LOWER(pg_langkey)' +
+                    'WHERE LENGTH(pg_flags) > 0 ' +
+                    'GROUP BY LOWER(pg_flags)' +
                     'ORDER BY value',
-                filterField: 'page.pg_langkey',
-                action: mapper_utils_1.AdapterFilterActions.IN
+                filterField: 'page.pg_flags',
+                action: mapper_utils_1.AdapterFilterActions.LIKE
+            },
+            'profiles_ss': {
+                selectSql: 'SELECT COUNT(*) as count, ' +
+                    ' LOWER(pg_profiles) as value ' +
+                    'FROM page ' +
+                    'WHERE LENGTH(pg_profiles) > 0 ' +
+                    'GROUP BY LOWER(pg_profiles)' +
+                    'ORDER BY value',
+                filterField: 'page.pg_profiles',
+                action: mapper_utils_1.AdapterFilterActions.LIKE
+            },
+            'langkeys_ss': {
+                selectSql: 'SELECT COUNT(*) as count, ' +
+                    ' LOWER(pg_langkeys) as value ' +
+                    'FROM page ' +
+                    'WHERE LENGTH(pg_langkeys) > 0 ' +
+                    'GROUP BY LOWER(pg_langkeys)' +
+                    'ORDER BY value',
+                filterField: 'page.pg_langkeys',
+                action: mapper_utils_1.AdapterFilterActions.LIKE
             },
             'subtype_ss': {
                 selectSql: 'SELECT COUNT(*) as count, ' +
@@ -121,7 +144,7 @@ var SqlPageConfig = /** @class */ (function () {
         sortMapping: {
             'name': 'pg_name ASC',
             'type': 'pg_typ ASC, pg_name ASC',
-            'langkey': 'pg_langkey ASC, pg_name ASC',
+            'langkeys': 'pg_langkeys ASC, pg_name ASC',
             'subtype': 'pg_subtype ASC, pg_name ASC',
             'theme': 'pg_theme ASC, pg_name ASC',
             'forExport': 'page.pg_id ASC, pg_name ASC',
@@ -149,10 +172,13 @@ var SqlPageConfig = /** @class */ (function () {
             'page.pg_subtype': ':subtype_s:',
             'page.pg_key': ':key_s:',
             'page.pg_name': ':name_s:',
-            'page.pg_langkey': ':langkey_s:',
             'page.pg_css': ':css_s:',
+            'page.pg_flags': ':flags_s:',
             'page.pg_heading': ':heading_s:',
             'page.pg_image': ':image_s:',
+            'page.pg_langkeys': ':langkeys_s:',
+            'page.pg_profiles': ':profiles_s:',
+            'page.pg_subsectionids': ':subsectionids_s:',
             'page.pg_teaser': ':teaser_s:',
             'page.pg_theme': ':theme_s:',
         },
@@ -168,10 +194,13 @@ var SqlPageConfig = /** @class */ (function () {
             type_s: 'type',
             subtype_s: 'pg_subtype',
             key_s: 'pg_key',
-            langkey_s: 'pg_langkey',
             css_s: 'pg_css',
+            flags_s: 'pg_flags',
             heading_s: 'pg_heading',
             image_s: 'pg_image',
+            langkeys_s: 'pg_langkeys',
+            profiles_s: 'pg_profiles',
+            subsectionids_s: 'pg_subsectionids',
             teaser_s: 'pg_teaser',
             theme_s: 'pg_theme'
         }

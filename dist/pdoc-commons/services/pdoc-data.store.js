@@ -31,7 +31,7 @@ var PDocDataStore = /** @class */ (function (_super) {
             doublettes: true,
             noSubType: true,
             key_ss: true,
-            langkey_ss: true,
+            langkeys_ss: true,
             initial_s: true,
             theme_ss: true,
             todoDesc: true,
@@ -87,6 +87,7 @@ var PDocDataStore = /** @class */ (function (_super) {
                 }
             }
         }
+        // TODO flags, profile, langkeys as filters
         // TODO
         //  filters
         if (filter !== undefined) {

@@ -152,6 +152,7 @@ var ItemsJsDataImporter = /** @class */ (function () {
         }
         var spatialField = this.itemsJsConfig.spatialField;
         if (spatialField && values[spatialField]) {
+            // TODO use rad instead of deg
             var _f = values[spatialField].split(/[;,]/), lat = _f[0], lng = _f[1], distance = _f[2];
             values[spatialField + '_lat'] = parseFloat(lat);
             values[spatialField + '_lng'] = parseFloat(lng);

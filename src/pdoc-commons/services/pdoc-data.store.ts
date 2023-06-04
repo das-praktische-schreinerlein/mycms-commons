@@ -19,7 +19,7 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
         doublettes: true,
         noSubType: true,
         key_ss: true,
-        langkey_ss: true,
+        langkeys_ss: true,
         initial_s: true,
         theme_ss: true,
         todoDesc: true,
@@ -83,6 +83,7 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
             }
         }
 
+        // TODO flags, profile, langkeys as filters
         // TODO
         //  filters
 

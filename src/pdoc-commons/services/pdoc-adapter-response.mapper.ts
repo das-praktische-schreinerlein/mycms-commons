@@ -41,10 +41,13 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
 
         // page
         values['css_s'] = props.css;
+        values['flags_s'] = props.flags;
         values['heading_s'] = props.heading;
         values['image_s'] = props.image;
         values['key_s'] = props.key;
-        values['langkey_s'] = props.langkey;
+        values['langkeys_s'] = props.langkeys;
+        values['profiles_s'] = props.profiles;
+        values['subsectionids_s'] = props.subSectionIds;
         values['teaser_s'] = props.teaser;
         values['theme_s'] = props.theme;
 
@@ -53,9 +56,11 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
             values['name_s'],
             values['heading_s'],
             values['teaser_s'],
+            values['flags_s'],
             values['key_s'],
-            values['langkey_s'],
+            values['langkeys_s'],
             values['keywords_txt'],
+            values['profile_s'],
             values['type_s'],
             values['subtype_s']
         ].join(' ');
@@ -142,10 +147,13 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
 
         // page
         values['css'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'css_s', undefined);
+        values['flags'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'flags_s', undefined);
         values['heading'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'heading_s', undefined);
         values['image'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'image_s', undefined);
         values['key'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'key_s', undefined);
-        values['langkey'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'langkey_s', undefined);
+        values['langkeys'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'langkeys_s', undefined);
+        values['profiles'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'profiles_s', undefined);
+        values['subSectionIds'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'subsectionids_s', undefined);
         values['teaser'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'teaser_s', undefined);
         values['theme'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'theme_s', undefined);
 

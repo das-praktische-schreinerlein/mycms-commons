@@ -199,6 +199,7 @@ export class ItemsJsDataImporter {
 
         const spatialField = this.itemsJsConfig.spatialField;
         if (spatialField && values[spatialField]) {
+            // TODO use rad instead of deg
             const [lat, lng, distance] = values[spatialField].split(/[;,]/);
             values[spatialField + '_lat'] = parseFloat(lat);
             values[spatialField + '_lng'] = parseFloat(lng);

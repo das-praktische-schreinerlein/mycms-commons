@@ -12,7 +12,7 @@ import {
 import {isArray} from 'util';
 import {
     GenericValidatorDatatypes,
-    HtmlValidationRule,
+    HtmlValidationRule, IdCsvValidationRule,
     IdValidationRule,
     MarkdownValidationRule
 } from '../../../search-commons/model/forms/generic-validator.util';
@@ -23,19 +23,11 @@ export interface PDocRecordType extends CommonDocRecordType {
     descMd: string;
     descHtml: string;
 
-    // TODO move flg to flags
-    flgShowSearch?: boolean;
-    flgShowNews?: boolean;
-    flgShowTopTen?: boolean;
-    flgShowAdminArea?: boolean;
-    flgShowDashboard?: boolean;
-
-    flags?: string[];
     heading: string;
     image: string;
     key: string;
     keywords: string;
-    langkey: string;
+    langkeys: string;
     name: string;
     subSectionIds: string;
     teaser: string;
@@ -44,8 +36,8 @@ export interface PDocRecordType extends CommonDocRecordType {
 
     pageId: number;
 
-    // TODO profiles
-    // TODO permissions
+    flags?: string;
+    profiles?: string;
 }
 
 export let PDocRecordRelation: BaseEntityRecordRelationsType = {
@@ -65,18 +57,14 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
     descTxt: string;
     descMd: string;
     descHtml: string;
-    flgShowSearch?: boolean;
-    flgShowNews?: boolean;
-    flgShowTopTen?: boolean;
-    flgShowAdminArea?: boolean;
-    flgShowDashboard?: boolean;
-    flags?: string[];
+    flags?: string;
     heading: string;
     key: string;
     image: string;
     keywords: string;
-    langkey: string;
+    langkeys: string;
     name: string;
+    profiles: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
@@ -99,10 +87,13 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
 
     static pdocFields = {
         css: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.HTML, new HtmlValidationRule(false)),
+        flags: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(false)),
         heading: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
         key: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true)),
-        langkey: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true)),
+        langkeys: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(true)),
         pageId: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
+        profiles: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(true)),
+        subSectionIds: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(false)),
         teaser: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
         theme: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
     };

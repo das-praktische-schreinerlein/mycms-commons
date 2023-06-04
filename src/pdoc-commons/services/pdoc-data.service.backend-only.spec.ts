@@ -38,8 +38,8 @@ describe('PDocDataService', () => {
         datastore = new PDocDataStore(new SearchParameterUtils());
         service = new PDocDataService(datastore);
         service.setWritable(true);
-        pdoc1 = new PDocRecord({desc: '', name: 'Testpdoc1', persons: '', id: '1', type: 'image', subtype: '5'});
-        pdoc2 = new PDocRecord({desc: '', name: 'Testpdoc2', persons: '', id: '2', type: 'image', subtype: '5'});
+        pdoc1 = new PDocRecord({desc: '', name: 'Testpdoc1', id: '1', type: 'image', subtype: '5'});
+        pdoc2 = new PDocRecord({desc: '', name: 'Testpdoc2', id: '2', type: 'image', subtype: '5'});
     });
 
 });
