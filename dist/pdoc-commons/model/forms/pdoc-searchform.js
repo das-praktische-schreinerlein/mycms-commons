@@ -20,6 +20,10 @@ var PDocSearchForm = /** @class */ (function (_super) {
     __extends(PDocSearchForm, _super);
     function PDocSearchForm(values) {
         var _this = _super.call(this, values) || this;
+        _this.flags = values['flags'] || '';
+        _this.key = values['key'] || '';
+        _this.langkeys = values['langkeys'] || '';
+        _this.profiles = values['profiles'] || '';
         _this.subtype = values['subtype'] || '';
         return _this;
     }
@@ -49,6 +53,10 @@ var PDocSearchFormFactory = /** @class */ (function () {
     }
     PDocSearchFormFactory.getSanitizedValues = function (values) {
         var sanitizedValues = cdoc_searchform_1.CommonDocSearchFormFactory.getSanitizedValues(values);
+        sanitizedValues.flags = PDocSearchForm.pdocFields.flags.validator.sanitize(values['flags']) || '';
+        sanitizedValues.key = PDocSearchForm.pdocFields.key.validator.sanitize(values['key']) || '';
+        sanitizedValues.langkeys = PDocSearchForm.pdocFields.langkeys.validator.sanitize(values['langkeys']) || '';
+        sanitizedValues.profiles = PDocSearchForm.pdocFields.profiles.validator.sanitize(values['profiles']) || '';
         sanitizedValues.subtype = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['subtype']) || '';
         return sanitizedValues;
     };
@@ -71,6 +79,10 @@ var PDocSearchFormValidator = /** @class */ (function () {
     }
     PDocSearchFormValidator.isValidValues = function (values) {
         var state = cdoc_searchform_1.CommonDocSearchFormValidator.isValidValues(values);
+        state = PDocSearchForm.pdocFields.flags.validator.isValid(values['flags']) && state;
+        state = PDocSearchForm.pdocFields.key.validator.isValid(values['key']) && state;
+        state = PDocSearchForm.pdocFields.langkeys.validator.isValid(values['langkeys']) && state;
+        state = PDocSearchForm.pdocFields.profiles.validator.isValid(values['profiles']) && state;
         state = PDocSearchForm.pdocFields.subtype.validator.isValid(values['subtype']) && state;
         return state;
     };

@@ -22,6 +22,7 @@ var pdoc_sql_utils_1 = require("./pdoc-sql.utils");
 var common_sql_actiontag_assign_adapter_1 = require("../../action-commons/actiontags/common-sql-actiontag-assign.adapter");
 var common_sql_actiontag_replace_adapter_1 = require("../../action-commons/actiontags/common-sql-actiontag-replace.adapter");
 var common_sql_actiontag_assignjoin_adapter_1 = require("../../action-commons/actiontags/common-sql-actiontag-assignjoin.adapter");
+var common_sql_keyword_adapter_1 = require("../../action-commons/actions/common-sql-keyword.adapter");
 // TODO sync with model
 var PDocSqlAdapter = /** @class */ (function (_super) {
     __extends(PDocSqlAdapter, _super);
@@ -29,6 +30,7 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
         var _this = _super.call(this, config, new pdoc_adapter_response_mapper_1.PDocAdapterResponseMapper(config), facetCacheUsageConfigurations) || this;
         _this.dbModelConfig = new pdoc_sql_config_1.PDocSqlConfig();
         _this.extendTableConfigs();
+        _this.commonKeywordAdapter = new common_sql_keyword_adapter_1.CommonSqlKeywordAdapter(config, _this.knex, _this.sqlQueryBuilder, _this.dbModelConfig.getKeywordModelConfigFor());
         _this.actionTagAssignAdapter = new common_sql_actiontag_assign_adapter_1.CommonSqlActionTagAssignAdapter(config, _this.knex, _this.sqlQueryBuilder, _this.dbModelConfig.getActionTagAssignConfig());
         _this.actionTagAssignJoinAdapter = new common_sql_actiontag_assignjoin_adapter_1.CommonSqlActionTagAssignJoinAdapter(config, _this.knex, _this.sqlQueryBuilder, _this.dbModelConfig.getActionTagAssignJoinConfig());
         _this.actionTagReplaceAdapter = new common_sql_actiontag_replace_adapter_1.CommonSqlActionTagReplaceAdapter(config, _this.knex, _this.sqlQueryBuilder, _this.dbModelConfig.getActionTagReplaceConfig());
@@ -94,10 +96,11 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
             sql = pdoc_sql_utils_1.PDocSqlUtils.transformToSqliteDialect(sql);
         }
         sql = _super.prototype.transformToSqlDialect.call(this, sql);
-        // console.error("transformToSqlDialect after sql", sql);
+        console.error("transformToSqlDialect after sql", sql);
         return sql;
     };
     PDocSqlAdapter.prototype.saveDetailData = function (method, mapper, id, props, opts) {
+        var _this = this;
         if (props.type === undefined) {
             return js_data_1.utils.resolve(false);
         }
@@ -109,6 +112,15 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
         if (tabKey === 'page') {
             return new Promise(function (allResolve, allReject) {
                 var promises = [];
+                var lstKeywords = [];
+                for (var _i = 0, _a = [props.profiles, props.flags, props.langkeys]; _i < _a.length; _i++) {
+                    var keywords = _a[_i];
+                    if (keywords == undefined || keywords.length == 0) {
+                        continue;
+                    }
+                    lstKeywords = lstKeywords.concat(keywords.split(','));
+                }
+                promises.push(_this.commonKeywordAdapter.setGenericKeywords('page', dbId, lstKeywords.join(','), opts, true));
                 return Promise.all(promises).then(function () {
                     return allResolve(true);
                 }).catch(function errorSearch(reason) {

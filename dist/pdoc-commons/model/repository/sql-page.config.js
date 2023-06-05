@@ -19,9 +19,30 @@ var SqlPageConfig = /** @class */ (function () {
                 triggerParams: ['doublettes'],
                 groupByFields: []
             },
+            {
+                from: 'LEFT JOIN page_props flag_page_props ON page.pg_id=flag_page_props.pg_id ' +
+                    'LEFT JOIN props flag_props ON flag_page_props.pr_id=flag_props.pr_id ' +
+                    'AND flag_props.pr_name LIKE "flg_%" ',
+                triggerParams: ['id', 'flags_ss'],
+                groupByFields: ['GROUP_CONCAT(DISTINCT flag_props.pr_name ORDER BY flag_props.pr_name SEPARATOR ", ") AS pg_flags']
+            },
+            {
+                from: 'LEFT JOIN page_props langkey_page_props ON page.pg_id=langkey_page_props.pg_id ' +
+                    'LEFT JOIN props langkey_props ON langkey_page_props.pr_id=langkey_props.pr_id ' +
+                    'AND langkey_props.pr_name LIKE "lang_%" ',
+                triggerParams: ['id', 'langkeys_ss'],
+                groupByFields: ['GROUP_CONCAT(DISTINCT langkey_props.pr_name ORDER BY langkey_props.pr_name SEPARATOR ", ") AS pg_langkeys']
+            },
+            {
+                from: 'LEFT JOIN page_props profile_page_props ON page.pg_id=profile_page_props.pg_id ' +
+                    'LEFT JOIN props profile_props ON profile_page_props.pr_id=profile_props.pr_id ' +
+                    'AND profile_props.pr_name LIKE "profile_%" ',
+                triggerParams: ['id', 'profiles_ss'],
+                groupByFields: ['GROUP_CONCAT(DISTINCT profile_props.pr_name ORDER BY profile_props.pr_name SEPARATOR ", ") AS pg_profiles']
+            }
         ],
         groupbBySelectFieldList: true,
-        groupbBySelectFieldListIgnore: [],
+        groupbBySelectFieldListIgnore: ['pg_flags', 'pg_langkeys', 'pg_profiles'],
         loadDetailData: [],
         selectFieldList: [
             '"PAGE" AS type',
@@ -31,11 +52,8 @@ var SqlPageConfig = /** @class */ (function () {
             'pg_name',
             'pg_descmd',
             'pg_css',
-            'pg_flags',
             'pg_heading',
             'pg_image',
-            'pg_langkeys',
-            'pg_profiles',
             'pg_subsectionids',
             'pg_teaser',
             'pg_theme',
@@ -70,10 +88,10 @@ var SqlPageConfig = /** @class */ (function () {
             'initial_s': {
                 selectSql: 'SELECT COUNT(*) as count, ' +
                     ' SUBSTR(UPPER(pg_name), 1, 1) as value ' +
-                    'FROM page ' +
-                    'WHERE LENGTH(pg_name) > 0 ' +
-                    'GROUP BY SUBSTR(UPPER(pg_name), 1, 1)' +
-                    'ORDER BY value',
+                    ' FROM page ' +
+                    ' WHERE LENGTH(pg_name) > 0 ' +
+                    ' GROUP BY SUBSTR(UPPER(pg_name), 1, 1)' +
+                    ' ORDER BY value',
             },
             'type_txt': {
                 constValues: ['page'],
@@ -82,61 +100,67 @@ var SqlPageConfig = /** @class */ (function () {
             },
             'key_ss': {
                 selectSql: 'SELECT COUNT(*) as count, ' +
-                    ' LOWER(pg_key) as value ' +
-                    'FROM page ' +
-                    'WHERE LENGTH(pg_key) > 0 ' +
-                    'GROUP BY LOWER(pg_key)' +
-                    'ORDER BY value',
+                    ' pg_key as value ' +
+                    ' FROM page ' +
+                    ' WHERE LENGTH(pg_key) > 0 ' +
+                    ' GROUP BY pg_key ' +
+                    ' ORDER BY value',
                 filterField: 'page.pg_key',
                 action: mapper_utils_1.AdapterFilterActions.IN
             },
             'flags_ss': {
-                selectSql: 'SELECT COUNT(*) as count, ' +
-                    ' LOWER(pg_flags) as value ' +
-                    'FROM page ' +
-                    'WHERE LENGTH(pg_flags) > 0 ' +
-                    'GROUP BY LOWER(pg_flags)' +
-                    'ORDER BY value',
-                filterField: 'page.pg_flags',
-                action: mapper_utils_1.AdapterFilterActions.LIKE
+                selectSql: 'SELECT COUNT(page.pg_id) AS count, pr_name AS value,' +
+                    ' pr_name AS label, pr_name AS id' +
+                    ' FROM page' +
+                    ' INNER JOIN page_props ON page.pg_id=page_props.pg_id' +
+                    ' INNER JOIN props ON page_props.pr_id=props.pr_id ' +
+                    ' WHERE props.pr_name LIKE "flg_%"' +
+                    ' GROUP BY value' +
+                    ' ORDER BY count desc',
+                filterField: 'flag_props.pr_name',
+                action: mapper_utils_1.AdapterFilterActions.IN
             },
             'profiles_ss': {
-                selectSql: 'SELECT COUNT(*) as count, ' +
-                    ' LOWER(pg_profiles) as value ' +
-                    'FROM page ' +
-                    'WHERE LENGTH(pg_profiles) > 0 ' +
-                    'GROUP BY LOWER(pg_profiles)' +
-                    'ORDER BY value',
-                filterField: 'page.pg_profiles',
-                action: mapper_utils_1.AdapterFilterActions.LIKE
+                selectSql: 'SELECT COUNT(page.pg_id) AS count, pr_name AS value,' +
+                    ' pr_name AS label, pr_name AS id' +
+                    ' FROM page' +
+                    ' INNER JOIN page_props ON page.pg_id=page_props.pg_id' +
+                    ' INNER JOIN props ON page_props.pr_id=props.pr_id ' +
+                    ' WHERE props.pr_name LIKE "profile_%"' +
+                    ' GROUP BY value' +
+                    ' ORDER BY count desc',
+                filterField: 'profile_props.pr_name',
+                action: mapper_utils_1.AdapterFilterActions.IN
             },
             'langkeys_ss': {
-                selectSql: 'SELECT COUNT(*) as count, ' +
-                    ' LOWER(pg_langkeys) as value ' +
-                    'FROM page ' +
-                    'WHERE LENGTH(pg_langkeys) > 0 ' +
-                    'GROUP BY LOWER(pg_langkeys)' +
-                    'ORDER BY value',
-                filterField: 'page.pg_langkeys',
-                action: mapper_utils_1.AdapterFilterActions.LIKE
+                selectSql: 'SELECT COUNT(page.pg_id) AS count, pr_name AS value,' +
+                    ' pr_name AS label, pr_name AS id' +
+                    ' FROM page' +
+                    ' INNER JOIN page_props ON page.pg_id=page_props.pg_id' +
+                    ' INNER JOIN props ON page_props.pr_id=props.pr_id ' +
+                    ' WHERE props.pr_name like "lang_%"' +
+                    ' GROUP BY value' +
+                    ' ORDER BY count desc',
+                filterField: 'langkey_props.pr_name',
+                action: mapper_utils_1.AdapterFilterActions.IN
             },
             'subtype_ss': {
                 selectSql: 'SELECT COUNT(*) as count, ' +
-                    ' LOWER(pg_subtype) as value ' +
-                    'FROM page ' +
-                    'WHERE LENGTH(pg_subtype) > 0 ' +
-                    'GROUP BY LOWER(pg_subtype)' +
-                    'ORDER BY value',
+                    ' pg_subtype as value ' +
+                    ' FROM page ' +
+                    ' WHERE LENGTH(pg_subtype) > 0 ' +
+                    ' GROUP BY pg_subtype ' +
+                    ' ORDER BY value',
                 filterField: 'page.pg_subtype',
                 action: mapper_utils_1.AdapterFilterActions.IN
             },
             'theme_ss': {
                 selectSql: 'SELECT COUNT(*) as count, ' +
-                    ' LOWER(pg_theme) as value ' +
-                    'FROM page ' +
-                    'WHERE LENGTH(pg_theme) > 0 ' +
-                    'GROUP BY LOWER(pg_theme)' +
-                    'ORDER BY value',
+                    ' pg_theme as value ' +
+                    ' FROM page ' +
+                    ' WHERE LENGTH(pg_theme) > 0 ' +
+                    ' GROUP BY pg_theme ' +
+                    ' ORDER BY value',
                 filterField: 'page.pg_theme',
                 action: mapper_utils_1.AdapterFilterActions.IN
             }
@@ -173,11 +197,8 @@ var SqlPageConfig = /** @class */ (function () {
             'page.pg_key': ':key_s:',
             'page.pg_name': ':name_s:',
             'page.pg_css': ':css_s:',
-            'page.pg_flags': ':flags_s:',
             'page.pg_heading': ':heading_s:',
             'page.pg_image': ':image_s:',
-            'page.pg_langkeys': ':langkeys_s:',
-            'page.pg_profiles': ':profiles_s:',
             'page.pg_subsectionids': ':subsectionids_s:',
             'page.pg_teaser': ':teaser_s:',
             'page.pg_theme': ':theme_s:',
@@ -205,6 +226,9 @@ var SqlPageConfig = /** @class */ (function () {
             theme_s: 'pg_theme'
         }
     };
+    SqlPageConfig.keywordModelConfigType = {
+        table: 'page', joinTable: 'page_props', fieldReference: 'pg_id'
+    };
     SqlPageConfig.actionTagAssignConfig = {
         table: 'page',
         idField: 'pg_id',
@@ -214,7 +238,9 @@ var SqlPageConfig = /** @class */ (function () {
         table: 'page',
         fieldId: 'pg_id',
         referenced: [],
-        joins: []
+        joins: [
+            { table: 'page_props', fieldReference: 'pg_id' },
+        ]
     };
     return SqlPageConfig;
 }());

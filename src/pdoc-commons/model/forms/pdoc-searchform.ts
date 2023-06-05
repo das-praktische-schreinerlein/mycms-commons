@@ -27,6 +27,10 @@ export class PDocSearchForm extends CommonDocSearchForm {
 
     constructor(values: {}) {
         super(values);
+        this.flags = values['flags'] || '';
+        this.key = values['key'] || '';
+        this.langkeys = values['langkeys'] || '';
+        this.profiles = values['profiles'] || '';
         this.subtype = values['subtype'] || '';
     }
 
@@ -47,6 +51,10 @@ export class PDocSearchFormFactory {
     static getSanitizedValues(values: {}): any  {
         const sanitizedValues = CommonDocSearchFormFactory.getSanitizedValues(values);
 
+        sanitizedValues.flags = PDocSearchForm.pdocFields.flags.validator.sanitize(values['flags']) || '';
+        sanitizedValues.key = PDocSearchForm.pdocFields.key.validator.sanitize(values['key']) || '';
+        sanitizedValues.langkeys = PDocSearchForm.pdocFields.langkeys.validator.sanitize(values['langkeys']) || '';
+        sanitizedValues.profiles = PDocSearchForm.pdocFields.profiles.validator.sanitize(values['profiles']) || '';
         sanitizedValues.subtype = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['subtype']) || '';
 
         return sanitizedValues;
@@ -73,6 +81,10 @@ export class PDocSearchFormValidator {
     static isValidValues(values: {}): boolean {
         let state = CommonDocSearchFormValidator.isValidValues(values);
 
+        state = PDocSearchForm.pdocFields.flags.validator.isValid(values['flags']) && state;
+        state = PDocSearchForm.pdocFields.key.validator.isValid(values['key']) && state;
+        state = PDocSearchForm.pdocFields.langkeys.validator.isValid(values['langkeys']) && state;
+        state = PDocSearchForm.pdocFields.profiles.validator.isValid(values['profiles']) && state;
         state = PDocSearchForm.pdocFields.subtype.validator.isValid(values['subtype']) && state;
 
         return state;

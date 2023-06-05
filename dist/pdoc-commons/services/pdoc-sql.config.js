@@ -7,6 +7,9 @@ var PDocSqlConfig = /** @class */ (function () {
     PDocSqlConfig.prototype.getTableConfigForTableKey = function (table) {
         return PDocSqlConfig.tableConfigs[table];
     };
+    PDocSqlConfig.prototype.getKeywordModelConfigFor = function () {
+        return PDocSqlConfig.keywordModelConfigType;
+    };
     PDocSqlConfig.prototype.getActionTagAssignConfig = function () {
         return PDocSqlConfig.actionTagAssignConfig;
     };
@@ -18,6 +21,14 @@ var PDocSqlConfig = /** @class */ (function () {
     };
     PDocSqlConfig.tableConfigs = {
         'page': sql_page_config_1.SqlPageConfig.tableConfig
+    };
+    PDocSqlConfig.keywordModelConfigType = {
+        table: 'props',
+        fieldId: 'pr_id',
+        fieldName: 'pr_name',
+        joins: {
+            'page': sql_page_config_1.SqlPageConfig.keywordModelConfigType,
+        }
     };
     PDocSqlConfig.actionTagAssignConfig = {
         tables: {

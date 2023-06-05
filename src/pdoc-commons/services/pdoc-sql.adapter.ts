@@ -28,6 +28,7 @@ import {
     CommonSqlActionTagAssignJoinAdapter
 } from '../../action-commons/actiontags/common-sql-actiontag-assignjoin.adapter';
 import {PDocRecord} from "../model/records/pdoc-record";
+import {CommonSqlKeywordAdapter} from '../../action-commons/actions/common-sql-keyword.adapter';
 
 // TODO sync with model
 
@@ -35,11 +36,14 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
     private readonly actionTagAssignAdapter: CommonSqlActionTagAssignAdapter;
     private readonly actionTagAssignJoinAdapter: CommonSqlActionTagAssignJoinAdapter;
     private readonly actionTagReplaceAdapter: CommonSqlActionTagReplaceAdapter;
+    private readonly commonKeywordAdapter: CommonSqlKeywordAdapter;
     private readonly dbModelConfig: PDocSqlConfig = new PDocSqlConfig();
 
     constructor(config: any, facetCacheUsageConfigurations: FacetCacheUsageConfigurations) {
         super(config, new PDocAdapterResponseMapper(config), facetCacheUsageConfigurations);
         this.extendTableConfigs();
+        this.commonKeywordAdapter = new CommonSqlKeywordAdapter(config, this.knex, this.sqlQueryBuilder,
+            this.dbModelConfig.getKeywordModelConfigFor());
         this.actionTagAssignAdapter = new CommonSqlActionTagAssignAdapter(config, this.knex, this.sqlQueryBuilder,
             this.dbModelConfig.getActionTagAssignConfig());
         this.actionTagAssignJoinAdapter = new CommonSqlActionTagAssignJoinAdapter(config, this.knex, this.sqlQueryBuilder,
@@ -122,7 +126,7 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
         }
 
         sql = super.transformToSqlDialect(sql);
-        // console.error("transformToSqlDialect after sql", sql);
+        console.error("transformToSqlDialect after sql", sql);
 
         return sql;
     }
@@ -140,6 +144,17 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
         if (tabKey === 'page') {
             return new Promise<boolean>((allResolve, allReject) => {
                 const promises = [];
+                let lstKeywords = [];
+                for (const keywords of [props.profiles, props.flags, props.langkeys]) {
+                    if (keywords == undefined || keywords.length == 0) {
+                        continue;
+                    }
+
+                    lstKeywords = lstKeywords.concat(keywords.split(','));
+                }
+
+                promises.push(
+                    this.commonKeywordAdapter.setGenericKeywords('page', dbId, lstKeywords.join(','), opts, true));
 
                 return Promise.all(promises).then(() => {
                     return allResolve(true);

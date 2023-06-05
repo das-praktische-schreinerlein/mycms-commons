@@ -67,6 +67,12 @@ var PDocDataService = /** @class */ (function (_super) {
                 name_s: {
                     'in': [record.name]
                 },
+                langkeys_ss: {
+                    'in': [record.langkeys]
+                },
+                profiles_ss: {
+                    'in': [record.profiles]
+                },
                 type_txt: {
                     'in': [record.type.toLowerCase()]
                 }

@@ -31,7 +31,9 @@ var PDocDataStore = /** @class */ (function (_super) {
             doublettes: true,
             noSubType: true,
             key_ss: true,
+            flags_ss: true,
             langkeys_ss: true,
+            profiles_ss: true,
             initial_s: true,
             theme_ss: true,
             todoDesc: true,
@@ -87,12 +89,28 @@ var PDocDataStore = /** @class */ (function (_super) {
                 }
             }
         }
-        // TODO flags, profile, langkeys as filters
-        // TODO
-        //  filters
+        if (searchForm.flags !== undefined && searchForm.flags.length > 0) {
+            filter = filter || {};
+            filter['flags_ss'] = {
+                'in': searchForm.flags.split(/,/)
+            };
+        }
+        if (searchForm.langkeys !== undefined && searchForm.langkeys.length > 0) {
+            filter = filter || {};
+            filter['langkeys_ss'] = {
+                'in': searchForm.langkeys.split(/,/)
+            };
+        }
+        if (searchForm.profiles !== undefined && searchForm.profiles.length > 0) {
+            filter = filter || {};
+            filter['profiles_ss'] = {
+                'in': searchForm.profiles.split(/,/)
+            };
+        }
         if (filter !== undefined) {
             query['where'] = filter;
         }
+        console.error("query", searchForm, query);
         return query;
     };
     PDocDataStore.prototype.createSearchResult = function (searchForm, recordCount, records, facets) {

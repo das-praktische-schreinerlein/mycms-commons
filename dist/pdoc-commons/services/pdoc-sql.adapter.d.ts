@@ -11,6 +11,7 @@ export declare class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSe
     private readonly actionTagAssignAdapter;
     private readonly actionTagAssignJoinAdapter;
     private readonly actionTagReplaceAdapter;
+    private readonly commonKeywordAdapter;
     private readonly dbModelConfig;
     constructor(config: any, facetCacheUsageConfigurations: FacetCacheUsageConfigurations);
     protected isActiveLoadDetailsMode(tableConfig: TableConfig, loadDetailDataConfig: LoadDetailDataConfig, loadDetailsMode: string): boolean;
