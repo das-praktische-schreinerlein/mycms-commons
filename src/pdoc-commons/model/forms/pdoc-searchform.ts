@@ -6,16 +6,16 @@ import {
 import {GenericSearchFormFieldConfig} from '../../../search-commons/model/forms/generic-searchform';
 import {
     GenericValidatorDatatypes,
-    IdCsvValidationRule
+    IdCsvValidationRule, KeywordValidationRule
 } from '../../../search-commons/model/forms/generic-validator.util';
 
 export class PDocSearchForm extends CommonDocSearchForm {
 
     static pdocFields = {
-        flags: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
+        flags: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new KeywordValidationRule(false)),
         key: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
-        langkeys: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
-        profiles: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
+        langkeys: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new KeywordValidationRule(false)),
+        profiles: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new KeywordValidationRule(false)),
         subtype: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false))
     };
 

@@ -43,13 +43,13 @@ describe('PDocAdapterResponseMapper', () => {
                 'html': 'Ausflug Liepnitzsee 01.01.2000 Jetzt ist wirklich Frühling.',
                 'pg_dateshow': '2000-01-01T22:00:00.000Z',
                 'pg_descmd': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
-                'pg_keywords': 'Ausflug, KW_Bootfahren, KW_Frühling'
+                'pg_flags': 'flg_ShowStart, flg_ShowMenu'
             };
             const expected  = {
                 'descTxt': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
                 'descMd': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
                 'descHtml': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
-                'keywords': 'Ausflug, KW_Bootfahren, KW_Frühling',
+                'flags': 'flg_ShowStart, flg_ShowMenu',
                 'name': 'Ausflug Liepnitzsee 01.01.2000',
                 'type': 'TRACK',
                 'id': 'TRACK_9'
@@ -71,8 +71,8 @@ describe('PDocAdapterResponseMapper', () => {
                 ],
                 'type_s': 'TRACK',
                 'id': 'TRACK_9',
-                'keywords_txt': [
-                    'KW_Bootfahren,,KW_Frühling,,KW_Kurztour'
+                'flags_s': [
+                    'flg_ShowStart,flg_ShowMenu'
                 ],
                 'desc_html_txt': [
                     '<p>Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.</p>'
@@ -89,7 +89,7 @@ describe('PDocAdapterResponseMapper', () => {
                 'descTxt': '\nJetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.\n',
                 'descMd': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
                 'descHtml': '<p>Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.</p>',
-                'keywords': 'KW_Bootfahren, KW_Frühling, KW_Kurztour',
+                'flags': 'flg_ShowStart,flg_ShowMenu',
                 'name': 'Ausflug Liepnitzsee 01.01.2000',
                 'type': 'TRACK',
                 'id': 'TRACK_9'

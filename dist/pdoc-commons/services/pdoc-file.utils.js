@@ -33,9 +33,6 @@ var PDocFileUtils = /** @class */ (function () {
             }
             record['id'] = idValidator.sanitize(record['id'] + '');
             record['subtype_s'] = record['subtype_s'] ? record['subtype_s'].replace(/[-a-zA-Z_]+/g, '') : '';
-            // clean keywords
-            record['keywords_txt'] = (record['keywords_txt'] !== undefined ?
-                record['keywords_txt'].replace(/^,/g, '').replace(/,$/g, '').replace(/,,/g, ',') : '');
             for (var _i = 0, _a = []; _i < _a.length; _i++) {
                 var dateField = _a[_i];
                 if (record[dateField] !== undefined && record[dateField] !== '') {

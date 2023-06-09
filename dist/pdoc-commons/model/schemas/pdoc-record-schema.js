@@ -22,7 +22,6 @@ exports.PDocRecordSchema = new js_data_1.Schema({
         heading: { type: 'string' },
         image: { type: 'string' },
         key: { type: 'string' },
-        keywords: { type: 'string' },
         langkeys: { type: 'string' },
         name: { type: 'string', minLength: 1, maxLength: 255 },
         profiles: { type: 'string' },

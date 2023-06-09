@@ -8,7 +8,6 @@ export interface PDocRecordType extends CommonDocRecordType {
     heading: string;
     image: string;
     key: string;
-    keywords: string;
     langkeys: string;
     name: string;
     subSectionIds: string;
@@ -23,7 +22,6 @@ export declare let PDocRecordRelation: BaseEntityRecordRelationsType;
 export declare class PDocRecord extends CommonDocRecord implements PDocRecordType {
     blocked: number;
     dateshow: Date;
-    playlists: string;
     subtype: string;
     css: string;
     descTxt: string;
@@ -33,7 +31,6 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
     heading: string;
     key: string;
     image: string;
-    keywords: string;
     langkeys: string;
     name: string;
     profiles: string;

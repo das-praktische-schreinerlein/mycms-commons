@@ -37,14 +37,38 @@ var PDocItemsJsAdapter = /** @class */ (function (_super) {
         refConfigs: [],
         searchableFields: ['id',
             'dateshow_dt', 'desc_txt', 'desc_md_txt', 'desc_html_txt',
-            'keywords_txt', 'name_s', 'type_s',
+            'flags_s', 'profiles_s', 'flagkeys_s', 'name_s', 'type_s',
             'subtype_s',
             'html'],
         aggregations: {
-            'keywords_txt': {
+            'flags_ss': {
                 filterFunction: function (record) {
-                    return record['keywords_txt']
-                        ? record['keywords_txt'].replace(',,', ',').split(',')
+                    return record['flags_s']
+                        ? record['flags_s'].replace(',,', ',').split(',')
+                        : undefined;
+                },
+                conjunction: false,
+                sort: 'term',
+                order: 'asc',
+                hide_zero_doc_count: true,
+                size: 1000
+            },
+            'profiles_ss': {
+                filterFunction: function (record) {
+                    return record['profiles_s']
+                        ? record['profiles_s'].replace(',,', ',').split(',')
+                        : undefined;
+                },
+                conjunction: false,
+                sort: 'term',
+                order: 'asc',
+                hide_zero_doc_count: true,
+                size: 1000
+            },
+            'langkeys_ss': {
+                filterFunction: function (record) {
+                    return record['langkeys_s']
+                        ? record['langkeys_s'].replace(',,', ',').split(',')
                         : undefined;
                 },
                 conjunction: false,

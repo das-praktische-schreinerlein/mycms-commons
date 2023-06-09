@@ -13,7 +13,7 @@ import {isArray} from 'util';
 import {
     GenericValidatorDatatypes,
     HtmlValidationRule, IdCsvValidationRule,
-    IdValidationRule,
+    IdValidationRule, KeywordValidationRule,
     MarkdownValidationRule
 } from '../../../search-commons/model/forms/generic-validator.util';
 
@@ -26,7 +26,6 @@ export interface PDocRecordType extends CommonDocRecordType {
     heading: string;
     image: string;
     key: string;
-    keywords: string;
     langkeys: string;
     name: string;
     subSectionIds: string;
@@ -50,7 +49,6 @@ export let PDocRecordRelation: BaseEntityRecordRelationsType = {
 export class PDocRecord extends CommonDocRecord implements PDocRecordType{
     blocked: number;
     dateshow: Date;
-    playlists: string;
     subtype: string;
 
     css: string;
@@ -61,7 +59,6 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
     heading: string;
     key: string;
     image: string;
-    keywords: string;
     langkeys: string;
     name: string;
     profiles: string;
@@ -87,13 +84,13 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
 
     static pdocFields = {
         css: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.HTML, new HtmlValidationRule(false)),
-        flags: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(false)),
+        flags: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(false)),
         heading: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
         key: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true)),
-        langkeys: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(true)),
+        langkeys: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(true)),
         pageId: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
-        profiles: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(true)),
-        subSectionIds: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdCsvValidationRule(false)),
+        profiles: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(true)),
+        subSectionIds: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(false)),
         teaser: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
         theme: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
     };

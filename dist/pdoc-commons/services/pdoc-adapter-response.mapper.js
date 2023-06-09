@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var pdoc_record_1 = require("../model/records/pdoc-record");
 var mapper_utils_1 = require("../../search-commons/services/mapper.utils");
-var bean_utils_1 = require("../../commons/utils/bean.utils");
 var object_utils_1 = require("../../commons/utils/object.utils");
 var PDocAdapterResponseMapper = /** @class */ (function () {
     function PDocAdapterResponseMapper(config) {
@@ -25,11 +24,7 @@ var PDocAdapterResponseMapper = /** @class */ (function () {
         values['desc_txt'] = props.descTxt;
         values['desc_md_txt'] = props.descMd;
         values['desc_html_txt'] = props.descHtml;
-        values['keywords_txt'] =
-            (props.keywords ? props.keywords.split(', ').join(',') : '');
         values['name_s'] = props.name;
-        values['playlists_txt'] =
-            (props.playlists ? props.playlists.split(', ').join(',,') : '');
         values['subtype_s'] = props.subtype;
         values['type_s'] = props.type;
         // page
@@ -51,7 +46,6 @@ var PDocAdapterResponseMapper = /** @class */ (function () {
             values['flags_s'],
             values['key_s'],
             values['langkeys_s'],
-            values['keywords_txt'],
             values['profile_s'],
             values['type_s'],
             values['subtype_s']
@@ -80,52 +74,7 @@ var PDocAdapterResponseMapper = /** @class */ (function () {
         values['descTxt'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_txt', undefined);
         values['descHtml'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_html_txt', undefined);
         values['descMd'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_md_txt', undefined);
-        var origKeywordsArr = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'keywords_txt', '').split(',');
-        var replaceKeywordPatterns = bean_utils_1.BeanUtils.getValue(this.config, 'mapperConfig.replaceKeywordPatterns');
-        var srcKeywordsArr = [];
-        if (replaceKeywordPatterns && replaceKeywordPatterns.length > 0) {
-            for (var _i = 0, origKeywordsArr_1 = origKeywordsArr; _i < origKeywordsArr_1.length; _i++) {
-                var keyword = origKeywordsArr_1[_i];
-                keyword = keyword.trim();
-                if (keyword === '') {
-                    continue;
-                }
-                for (var _a = 0, replaceKeywordPatterns_1 = replaceKeywordPatterns; _a < replaceKeywordPatterns_1.length; _a++) {
-                    var pattern = replaceKeywordPatterns_1[_a];
-                    keyword = keyword.replace(new RegExp(pattern[0]), pattern[1]);
-                }
-                srcKeywordsArr.push(keyword);
-            }
-        }
-        else {
-            srcKeywordsArr = [].concat(origKeywordsArr);
-        }
-        var allowedKeywordPatterns = bean_utils_1.BeanUtils.getValue(this.config, 'mapperConfig.allowedKeywordPatterns');
-        var newKeywordsArr = [];
-        for (var _b = 0, srcKeywordsArr_1 = srcKeywordsArr; _b < srcKeywordsArr_1.length; _b++) {
-            var keyword = srcKeywordsArr_1[_b];
-            keyword = keyword.trim();
-            if (keyword === '') {
-                continue;
-            }
-            if (allowedKeywordPatterns && allowedKeywordPatterns.length > 0) {
-                for (var _c = 0, allowedKeywordPatterns_1 = allowedKeywordPatterns; _c < allowedKeywordPatterns_1.length; _c++) {
-                    var pattern = allowedKeywordPatterns_1[_c];
-                    if (keyword.match(new RegExp(pattern))) {
-                        newKeywordsArr.push(keyword);
-                        break;
-                    }
-                }
-            }
-            else {
-                newKeywordsArr.push(keyword);
-            }
-        }
-        newKeywordsArr = object_utils_1.ObjectUtils.uniqueArray(newKeywordsArr);
-        values['keywords'] = newKeywordsArr.join(', ');
         values['name'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'name_s', undefined);
-        values['playlists'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'playlists_txt', '')
-            .replace(/[,]+/g, ',').split(',').join(', ');
         values['subtype'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'subtype_s', undefined);
         values['type'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'type_s', undefined);
         // page
@@ -146,8 +95,14 @@ var PDocAdapterResponseMapper = /** @class */ (function () {
     PDocAdapterResponseMapper.prototype.mapDetailResponseDocuments = function (mapper, profile, src, docs) {
         var record = src;
         switch (profile) {
-            case 'keywords':
-                record.keywords = object_utils_1.ObjectUtils.mergePropertyValues(docs, 'keywords', ', ', true);
+            case 'flags':
+                record.flags = object_utils_1.ObjectUtils.mergePropertyValues(docs, 'flags', ', ', true);
+                break;
+            case 'langkeys':
+                record.langkeys = object_utils_1.ObjectUtils.mergePropertyValues(docs, 'langkeys', ', ', true);
+                break;
+            case 'profiles':
+                record.profiles = object_utils_1.ObjectUtils.mergePropertyValues(docs, 'profiles', ', ', true);
                 break;
         }
     };

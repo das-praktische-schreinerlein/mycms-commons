@@ -126,7 +126,7 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
         }
 
         sql = super.transformToSqlDialect(sql);
-        console.error("transformToSqlDialect after sql", sql);
+        // console.error("transformToSqlDialect after sql", sql);
 
         return sql;
     }

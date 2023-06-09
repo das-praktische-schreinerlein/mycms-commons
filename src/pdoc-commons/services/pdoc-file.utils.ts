@@ -37,10 +37,6 @@ export class PDocFileUtils {
             record['id'] = idValidator.sanitize(record['id'] + '');
             record['subtype_s'] = record['subtype_s'] ? record['subtype_s'].replace(/[-a-zA-Z_]+/g, '') : '';
 
-            // clean keywords
-            record['keywords_txt'] = (record['keywords_txt'] !== undefined ?
-                record['keywords_txt'].replace(/^,/g, '').replace(/,$/g, '').replace(/,,/g, ',') : '');
-
             for (const dateField of []) {
                 if (record[dateField] !== undefined && record[dateField] !== '') {
                     record[dateField] = DateUtils.parseDateStringWithLocaltime(record[dateField]);

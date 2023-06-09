@@ -43,7 +43,32 @@ var SqlPageConfig = /** @class */ (function () {
         ],
         groupbBySelectFieldList: true,
         groupbBySelectFieldListIgnore: ['pg_flags', 'pg_langkeys', 'pg_profiles'],
-        loadDetailData: [],
+        loadDetailData: [
+            {
+                profile: 'flags',
+                sql: 'SELECT GROUP_CONCAT(DISTINCT flag_props.pr_name ORDER BY flag_props.pr_name SEPARATOR ", ") AS flags ' +
+                    'FROM page_props flag_page_props ' +
+                    ' INNER JOIN props flag_props ON flag_page_props.pr_id=flag_props.pr_id ' +
+                    'WHERE flag_page_props.pg_id in (:id) AND flag_props.pr_name LIKE "flg_%" ',
+                parameterNames: ['id'],
+            },
+            {
+                profile: 'langkeys',
+                sql: 'SELECT GROUP_CONCAT(DISTINCT langkey_props.pr_name ORDER BY langkey_props.pr_name SEPARATOR ", ") AS langkeys ' +
+                    'FROM page_props langkey_page_props ' +
+                    ' INNER JOIN props langkey_props ON langkey_page_props.pr_id=langkey_props.pr_id ' +
+                    'WHERE langkey_page_props.pg_id in (:id) AND langkey_props.pr_name LIKE "lang_%" ',
+                parameterNames: ['id'],
+            },
+            {
+                profile: 'profiles',
+                sql: 'SELECT GROUP_CONCAT(DISTINCT profile_props.pr_name ORDER BY profile_props.pr_name SEPARATOR ", ") AS profiles ' +
+                    'FROM page_props profile_page_props ' +
+                    ' INNER JOIN props profile_props ON profile_page_props.pr_id=profile_props.pr_id ' +
+                    'WHERE profile_page_props.pg_id in (:id) AND profile_props.pr_name LIKE "profile_%" ',
+                parameterNames: ['id'],
+            }
+        ],
         selectFieldList: [
             '"PAGE" AS type',
             'CONCAT("PAGE", "_", page.pg_id) AS id',
@@ -210,7 +235,6 @@ var SqlPageConfig = /** @class */ (function () {
             desc_txt: 'pg_descmd',
             desc_md_txt: 'pg_descmd',
             desc_html_txt: 'pg_descmd',
-            keywords_txt: 'pg_keywords',
             name_s: 'pg_name',
             type_s: 'type',
             subtype_s: 'pg_subtype',

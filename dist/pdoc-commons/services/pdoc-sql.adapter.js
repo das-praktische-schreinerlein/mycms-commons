@@ -96,7 +96,7 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
             sql = pdoc_sql_utils_1.PDocSqlUtils.transformToSqliteDialect(sql);
         }
         sql = _super.prototype.transformToSqlDialect.call(this, sql);
-        console.error("transformToSqlDialect after sql", sql);
+        // console.error("transformToSqlDialect after sql", sql);
         return sql;
     };
     PDocSqlAdapter.prototype.saveDetailData = function (method, mapper, id, props, opts) {

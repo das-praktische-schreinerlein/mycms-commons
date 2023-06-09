@@ -110,8 +110,6 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
             query['where'] = filter;
         }
 
-
-        console.error("query", searchForm, query);
         return query;
     }
 

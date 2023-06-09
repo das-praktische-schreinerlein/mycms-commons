@@ -110,7 +110,6 @@ var PDocDataStore = /** @class */ (function (_super) {
         if (filter !== undefined) {
             query['where'] = filter;
         }
-        console.error("query", searchForm, query);
         return query;
     };
     PDocDataStore.prototype.createSearchResult = function (searchForm, recordCount, records, facets) {

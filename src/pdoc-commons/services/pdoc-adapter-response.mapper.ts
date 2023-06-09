@@ -31,11 +31,7 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['desc_txt'] = props.descTxt;
         values['desc_md_txt'] = props.descMd;
         values['desc_html_txt'] = props.descHtml;
-        values['keywords_txt'] =
-            (props.keywords ? props.keywords.split(', ').join(',') : '');
         values['name_s'] = props.name;
-        values['playlists_txt'] =
-            (props.playlists ? props.playlists.split(', ').join(',,') : '');
         values['subtype_s'] = props.subtype;
         values['type_s'] = props.type;
 
@@ -59,7 +55,6 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
             values['flags_s'],
             values['key_s'],
             values['langkeys_s'],
-            values['keywords_txt'],
             values['profile_s'],
             values['type_s'],
             values['subtype_s']
@@ -96,52 +91,7 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['descHtml'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_html_txt', undefined);
         values['descMd'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_md_txt', undefined);
 
-        const origKeywordsArr = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'keywords_txt', '').split(',');
-        const replaceKeywordPatterns = BeanUtils.getValue(this.config, 'mapperConfig.replaceKeywordPatterns');
-        let srcKeywordsArr = [];
-        if (replaceKeywordPatterns && replaceKeywordPatterns.length > 0) {
-            for (let keyword of origKeywordsArr) {
-                keyword = keyword.trim();
-                if (keyword === '') {
-                    continue;
-                }
-
-                for (const pattern of replaceKeywordPatterns) {
-                    keyword = keyword.replace(new RegExp(pattern[0]), pattern[1]);
-                }
-
-                srcKeywordsArr.push(keyword);
-            }
-        } else {
-            srcKeywordsArr = [].concat(origKeywordsArr);
-        }
-
-        const allowedKeywordPatterns = BeanUtils.getValue(this.config, 'mapperConfig.allowedKeywordPatterns');
-        let newKeywordsArr = [];
-        for (let keyword of srcKeywordsArr) {
-            keyword = keyword.trim();
-            if (keyword === '') {
-                continue;
-            }
-
-            if (allowedKeywordPatterns && allowedKeywordPatterns.length > 0) {
-                for (const pattern of allowedKeywordPatterns) {
-                    if (keyword.match(new RegExp(pattern))) {
-                        newKeywordsArr.push(keyword);
-                        break;
-                    }
-                }
-            } else {
-                newKeywordsArr.push(keyword);
-            }
-        }
-
-        newKeywordsArr = ObjectUtils.uniqueArray(newKeywordsArr);
-        values['keywords'] = newKeywordsArr.join(', ');
-
         values['name'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'name_s', undefined);
-        values['playlists'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'playlists_txt', '')
-            .replace(/[,]+/g, ',').split(',').join(', ');
         values['subtype'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'subtype_s', undefined);
         values['type'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'type_s', undefined);
 
@@ -167,8 +117,14 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
     mapDetailResponseDocuments(mapper: Mapper, profile: string, src: Record, docs: any[]): void {
         const record: PDocRecord = <PDocRecord>src;
         switch (profile) {
-            case 'keywords':
-                record.keywords = ObjectUtils.mergePropertyValues(docs, 'keywords', ', ', true);
+            case 'flags':
+                record.flags = ObjectUtils.mergePropertyValues(docs, 'flags', ', ', true);
+                break;
+            case 'langkeys':
+                record.langkeys = ObjectUtils.mergePropertyValues(docs, 'langkeys', ', ', true);
+                break;
+            case 'profiles':
+                record.profiles = ObjectUtils.mergePropertyValues(docs, 'profiles', ', ', true);
                 break;
         }
     }
