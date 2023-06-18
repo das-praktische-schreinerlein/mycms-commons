@@ -82,10 +82,6 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['id'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'id', undefined);
 
         // commons
-        const subtypeField = doc[this.mapperUtils.mapToAdapterFieldName(mapping, 'subtypes_ss')];
-        if (subtypeField !== undefined && Array.isArray(subtypeField)) {
-            values['subtypes'] = subtypeField.join(',');
-        }
         values['blocked'] = this.mapperUtils.getMappedAdapterNumberValue(mapping, doc, 'blocked_i', undefined);
         values['dateshow'] = this.mapperUtils.getMappedAdapterDateTimeValue(mapping, doc, 'dateshow_dt', undefined);
         values['descTxt'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_txt', undefined);

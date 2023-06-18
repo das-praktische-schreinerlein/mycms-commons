@@ -2,42 +2,29 @@ import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordRelation
 import { CommonDocRecord, CommonDocRecordFactory, CommonDocRecordType, CommonDocRecordValidator } from "../../../search-commons/model/records/cdoc-entity-record";
 export interface PDocRecordType extends CommonDocRecordType {
     css: string;
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
+    flags?: string;
     heading: string;
     image: string;
     key: string;
     langkeys: string;
-    name: string;
+    profiles?: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
-    type: string;
     pageId: number;
-    flags?: string;
-    profiles?: string;
 }
 export declare let PDocRecordRelation: BaseEntityRecordRelationsType;
 export declare class PDocRecord extends CommonDocRecord implements PDocRecordType {
-    blocked: number;
-    dateshow: Date;
-    subtype: string;
     css: string;
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
     flags?: string;
     heading: string;
-    key: string;
     image: string;
+    key: string;
     langkeys: string;
-    name: string;
     profiles: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
-    type: string;
     pageId: number;
     static pdocRelationNames: any[];
     static pdocValidationRelationNames: any[];
@@ -45,6 +32,7 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
         css: BaseEntityRecordFieldConfig;
         flags: BaseEntityRecordFieldConfig;
         heading: BaseEntityRecordFieldConfig;
+        image: BaseEntityRecordFieldConfig;
         key: BaseEntityRecordFieldConfig;
         langkeys: BaseEntityRecordFieldConfig;
         pageId: BaseEntityRecordFieldConfig;

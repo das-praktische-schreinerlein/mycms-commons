@@ -35,7 +35,6 @@ export class PDocFileUtils {
                 record[fieldName] = record[mapping[fieldName]];
             }
             record['id'] = idValidator.sanitize(record['id'] + '');
-            record['subtype_s'] = record['subtype_s'] ? record['subtype_s'].replace(/[-a-zA-Z_]+/g, '') : '';
 
             for (const dateField of []) {
                 if (record[dateField] !== undefined && record[dateField] !== '') {

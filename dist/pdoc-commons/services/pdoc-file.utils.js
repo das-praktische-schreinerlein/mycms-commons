@@ -32,7 +32,6 @@ var PDocFileUtils = /** @class */ (function () {
                 record[fieldName] = record[mapping[fieldName]];
             }
             record['id'] = idValidator.sanitize(record['id'] + '');
-            record['subtype_s'] = record['subtype_s'] ? record['subtype_s'].replace(/[-a-zA-Z_]+/g, '') : '';
             for (var _i = 0, _a = []; _i < _a.length; _i++) {
                 var dateField = _a[_i];
                 if (record[dateField] !== undefined && record[dateField] !== '') {

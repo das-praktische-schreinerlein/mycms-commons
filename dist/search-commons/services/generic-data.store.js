@@ -231,7 +231,7 @@ var GenericDataStore = /** @class */ (function () {
                 limit: searchForm.perPage,
                 offset: searchForm.pageNum - 1,
                 // We want the newest posts first
-                orderBy: [['created_at', 'descTxt']]
+                orderBy: [['created_at', 'descTxt', 'descHtml', 'descMd']]
             };
             if (_this.getAdapterForMapper(mapperName) === undefined ||
                 (typeof me.getAdapterForMapper(mapperName)['search'] !== 'function') ||

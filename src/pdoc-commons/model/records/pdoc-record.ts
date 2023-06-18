@@ -12,31 +12,27 @@ import {
 import {isArray} from 'util';
 import {
     GenericValidatorDatatypes,
-    HtmlValidationRule, IdCsvValidationRule,
-    IdValidationRule, KeywordValidationRule,
-    MarkdownValidationRule
+    HtmlValidationRule,
+    IdValidationRule,
+    KeywordValidationRule,
+    MarkdownValidationRule,
+    SimpleConfigFilePathValidationRule
 } from '../../../search-commons/model/forms/generic-validator.util';
 
 export interface PDocRecordType extends CommonDocRecordType {
     css: string;
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
-
+    flags?: string;
     heading: string;
     image: string;
     key: string;
     langkeys: string;
-    name: string;
+    profiles?: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
-    type: string;
 
     pageId: number;
 
-    flags?: string;
-    profiles?: string;
 }
 
 export let PDocRecordRelation: BaseEntityRecordRelationsType = {
@@ -47,25 +43,16 @@ export let PDocRecordRelation: BaseEntityRecordRelationsType = {
 };
 
 export class PDocRecord extends CommonDocRecord implements PDocRecordType{
-    blocked: number;
-    dateshow: Date;
-    subtype: string;
-
     css: string;
-    descTxt: string;
-    descMd: string;
-    descHtml: string;
     flags?: string;
     heading: string;
-    key: string;
     image: string;
+    key: string;
     langkeys: string;
-    name: string;
     profiles: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
-    type: string;
 
     pageId: number;
 
@@ -86,6 +73,7 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
         css: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.HTML, new HtmlValidationRule(false)),
         flags: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(false)),
         heading: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
+        image: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.FILENAME, new SimpleConfigFilePathValidationRule(false)),
         key: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true)),
         langkeys: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(true)),
         pageId: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
