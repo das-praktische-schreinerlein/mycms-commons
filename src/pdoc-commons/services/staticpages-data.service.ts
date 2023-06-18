@@ -36,7 +36,6 @@ export class StaticPagesDataService extends CommonDocDataService<PDocRecord, PDo
     }
 
     protected onImportRecordNewRecordProcessDefaults(record: PDocRecord, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void {
-        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
     }
 
     protected remapBaseJoins(baseJoins: BaseJoinRecord[], refIdFieldName: any, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void {

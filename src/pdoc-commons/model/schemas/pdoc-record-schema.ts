@@ -28,6 +28,7 @@ export const PDocRecordSchema = new Schema({
         name: {type: 'string', minLength: 1, maxLength: 255},
         profiles: {type: 'string'},
         subSectionIds: {type: 'string'},
+        subtype: {type: 'string'},
         teaser: {type: 'string'},
         theme: {type: 'string'},
         type: {type: 'string'}

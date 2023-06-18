@@ -39,7 +39,6 @@ var StaticPagesDataService = /** @class */ (function (_super) {
         return {};
     };
     StaticPagesDataService.prototype.onImportRecordNewRecordProcessDefaults = function (record, recordIdMapping, recordRecoverIdMapping) {
-        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
     };
     StaticPagesDataService.prototype.remapBaseJoins = function (baseJoins, refIdFieldName, recordIdMapping, recordRecoverIdMapping) {
         if (baseJoins) {

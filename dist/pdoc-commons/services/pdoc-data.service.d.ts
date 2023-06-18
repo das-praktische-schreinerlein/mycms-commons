@@ -13,6 +13,7 @@ export declare class PDocDataService extends CommonDocDataService<PDocRecord, PD
     protected defineIdMappings(): string[];
     protected defineTypeMappings(): {};
     protected onImportRecordNewRecordProcessDefaults(record: PDocRecord, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void;
+    protected postProcessImportRecordRemapFields(record: PDocRecord): void;
     protected remapBaseJoins(baseJoins: BaseJoinRecord[], refIdFieldName: any, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void;
     protected generateImportRecordQuery(record: PDocRecord): {};
     protected addAdditionalActionTagForms(origRecord: PDocRecord, newRecord: PDocRecord, actionTagForms: ActionTagForm[]): void;

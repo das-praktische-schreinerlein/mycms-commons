@@ -296,7 +296,8 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
             return utils.resolve(record);
         }
 
-        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
+        this.postProcessImportRecordRemapFields(record);
+
         return this.updateById(record.id, record, opts).then(function recordsDone(newCdocRecord: R) {
             return utils.resolve(newCdocRecord);
         }).catch(function onError(error) {
@@ -310,6 +311,12 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
 
     isWritable(): boolean {
         return this.writable;
+    }
+
+    protected postProcessImportRecordRemapFields(record: R) {
+        record.subtype = record.subtype
+            ? record.subtype.replace(/[-a-zA-Z_]+/g, '')
+            : '';
     }
 
     protected doImportActionTags(origRecord: R, newRecord: R, opts?: {}): Promise<R> {

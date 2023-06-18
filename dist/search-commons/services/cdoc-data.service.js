@@ -237,7 +237,7 @@ var CommonDocDataService = /** @class */ (function () {
             console.log('new: ' + record.id + ' no ids to recover');
             return js_data_1.utils.resolve(record);
         }
-        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
+        this.postProcessImportRecordRemapFields(record);
         return this.updateById(record.id, record, opts).then(function recordsDone(newCdocRecord) {
             return js_data_1.utils.resolve(newCdocRecord);
         }).catch(function onError(error) {
@@ -249,6 +249,11 @@ var CommonDocDataService = /** @class */ (function () {
     };
     CommonDocDataService.prototype.isWritable = function () {
         return this.writable;
+    };
+    CommonDocDataService.prototype.postProcessImportRecordRemapFields = function (record) {
+        record.subtype = record.subtype
+            ? record.subtype.replace(/[-a-zA-Z_]+/g, '')
+            : '';
     };
     CommonDocDataService.prototype.doImportActionTags = function (origRecord, newRecord, opts) {
         if (newRecord.type.toLowerCase() !== 'image' && newRecord.type.toLowerCase() !== 'video') {

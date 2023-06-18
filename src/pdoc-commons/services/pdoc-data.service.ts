@@ -38,7 +38,9 @@ export class PDocDataService extends CommonDocDataService<PDocRecord, PDocSearch
     }
 
     protected onImportRecordNewRecordProcessDefaults(record: PDocRecord, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void {
-        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
+    }
+
+    protected postProcessImportRecordRemapFields(record: PDocRecord) {
     }
 
     protected remapBaseJoins(baseJoins: BaseJoinRecord[], refIdFieldName: any, recordIdMapping?: {}, recordRecoverIdMapping?: {}): void {

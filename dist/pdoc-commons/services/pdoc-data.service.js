@@ -41,7 +41,8 @@ var PDocDataService = /** @class */ (function (_super) {
         };
     };
     PDocDataService.prototype.onImportRecordNewRecordProcessDefaults = function (record, recordIdMapping, recordRecoverIdMapping) {
-        record.subtype = record.subtype ? record.subtype.replace(/[-a-zA-Z_]+/g, '') : '';
+    };
+    PDocDataService.prototype.postProcessImportRecordRemapFields = function (record) {
     };
     PDocDataService.prototype.remapBaseJoins = function (baseJoins, refIdFieldName, recordIdMapping, recordRecoverIdMapping) {
         if (baseJoins) {

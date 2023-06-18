@@ -50,6 +50,7 @@ export declare abstract class CommonDocDataService<R extends CommonDocRecord, F 
     postProcessImportRecord(record: R, recordIdMapping: {}, recordRecoverIdMapping: {}, opts?: any): Promise<R>;
     setWritable(writable: boolean): void;
     isWritable(): boolean;
+    protected postProcessImportRecordRemapFields(record: R): void;
     protected doImportActionTags(origRecord: R, newRecord: R, opts?: {}): Promise<R>;
     protected generateImportRecordQuery(record: R): {};
     protected generateImportRecordName(record: R): {};
