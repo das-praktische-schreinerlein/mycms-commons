@@ -218,7 +218,7 @@ export class SqlPageConfig {
             htmlNameOnly: 'pg_name'
         },
         writeMapping: {
-            'page.pg_descmd': ':desc_txt:',
+            'page.pg_descmd': ':desc_md_txt:',
             'page.pg_subtype': ':subtype_s:',
             'page.pg_key': ':key_s:',
             'page.pg_name': ':name_s:',
@@ -233,9 +233,7 @@ export class SqlPageConfig {
             id: 'id',
             page_id_i: 'pg_id',
             page_id_is: 'pg_id',
-            desc_txt: 'pg_descmd',
             desc_md_txt: 'pg_descmd',
-            desc_html_txt: 'pg_descmd',
             name_s: 'pg_name',
             type_s: 'type',
             subtype_s: 'pg_subtype',

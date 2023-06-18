@@ -248,7 +248,7 @@ export abstract class GenericDataStore <R extends Record, F extends GenericSearc
                 limit: searchForm.perPage,
                 offset: searchForm.pageNum - 1,
                 // We want the newest posts first
-                orderBy: [['created_at', 'descTxt']]
+                orderBy: [['created_at', 'descTxt', 'descHtml', 'descMd']]
             };
             if (this.getAdapterForMapper(mapperName) === undefined ||
                 (typeof me.getAdapterForMapper(mapperName)['search'] !== 'function') ||

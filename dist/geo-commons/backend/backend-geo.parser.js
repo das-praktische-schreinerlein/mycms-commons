@@ -27,20 +27,18 @@ var BackendGeoUtils = /** @class */ (function () {
             ? {
                 lat: Number(lat),
                 lng: Number(lng),
-                alt: Number(alt),
+                alt: alt !== undefined
+                    ? Number(alt)
+                    : undefined,
                 time: time
             }
-            : alt !== undefined
-                ? {
-                    lat: Number(lat),
-                    lng: Number(lng),
-                    alt: Number(alt)
-                }
-                : {
-                    lat: Number(lat),
-                    lng: Number(lng),
-                    alt: undefined
-                };
+            : {
+                lat: Number(lat),
+                lng: Number(lng),
+                alt: alt !== undefined
+                    ? Number(alt)
+                    : undefined
+            };
     };
     BackendGeoUtils.createGeoElement = function (type, points, name) {
         return new backend_geo_types_1.BackendGeoElement(type, points, name);

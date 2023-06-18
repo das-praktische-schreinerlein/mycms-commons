@@ -47,11 +47,12 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['teaser_s'] = props.teaser;
         values['theme_s'] = props.theme;
 
+        const desc =  props.descTxt || props.descHtml || props.descMd;
         values['html_txt'] = [
-            values['desc_txt'],
             values['name_s'],
             values['heading_s'],
             values['teaser_s'],
+            desc,
             values['flags_s'],
             values['key_s'],
             values['langkeys_s'],

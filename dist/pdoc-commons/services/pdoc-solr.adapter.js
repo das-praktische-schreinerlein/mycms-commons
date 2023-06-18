@@ -31,7 +31,8 @@ var PDocSolrAdapter = /** @class */ (function (_super) {
             name_txt: props.name,
             type_txt: props.type,
         };
-        values['html_txt'] = [values.desc_txt, values.name_txt, values.flags_s, values.type_txt].join(' ');
+        var desc = props.descTxt || props.descHtml || props.descMd;
+        values['html_txt'] = [values.name_txt, desc, values.flags_s, values.type_txt].join(' ');
         return values;
     };
     PDocSolrAdapter.prototype.mapResponseDocument = function (mapper, doc) {

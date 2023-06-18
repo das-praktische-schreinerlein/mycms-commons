@@ -117,11 +117,11 @@ export class DateUtils {
     }
 
     public static formatToFileNameDate(date: Date, dateSeparator: string, dateTimeSeparator: string, timeSeparator: string): string {
-        return [StringUtils.padStart(date.getDate().toString(), '00'),
+        return [date.getFullYear(),
             dateSeparator,
             StringUtils.padStart((date.getMonth() + 1).toString(), '00'),
             dateSeparator,
-            date.getFullYear(),
+            StringUtils.padStart(date.getDate().toString(), '00'),
             dateTimeSeparator,
             StringUtils.padStart(date.getHours().toString(), '00'),
             timeSeparator,

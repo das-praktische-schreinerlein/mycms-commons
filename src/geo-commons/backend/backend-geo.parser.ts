@@ -13,19 +13,17 @@ export class BackendGeoUtils  {
             ? <BackendLatLngTime> {
                 lat: Number(lat),
                 lng: Number(lng),
-                alt: Number(alt),
+                alt: alt !== undefined
+                    ? Number(alt)
+                    : undefined,
                 time: time}
-            : alt !== undefined
-                ? {
-                    lat: Number(lat),
-                    lng: Number(lng),
-                    alt: Number(alt)
-                }
-                : {
-                    lat: Number(lat),
-                    lng: Number(lng),
-                    alt: undefined
-                };
+            : {
+                lat: Number(lat),
+                lng: Number(lng),
+                alt: alt !== undefined
+                    ? Number(alt)
+                    : undefined
+            };
     }
 
     public static createGeoElement(type: GeoElementType, points: BackendLatLng[], name: string): BackendGeoElement {

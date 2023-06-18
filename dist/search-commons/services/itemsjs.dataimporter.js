@@ -96,7 +96,8 @@ var ItemsJsDataImporter = /** @class */ (function () {
         // remap fields with fallbacks
         values['actiontype_s'] = values['actiontype_s'] || values['subtype_s'];
         values['dateshow_dt'] = values['dateshow_dt'] || values['datestart_dt'];
-        values['html'] = values['name_s'] + ' ' + values['desc_txt'];
+        var desc = values['desc_txt'] || values['desc_html_txt'] || values['desc_md_txt'];
+        values['html'] = values['name_s'] + ' ' + desc;
         // prepare aggregations
         for (var _i = 0, _a = ['keywords', 'objects', 'persons', 'playlists']; _i < _a.length; _i++) {
             var filterBase = _a[_i];

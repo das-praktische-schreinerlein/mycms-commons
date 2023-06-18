@@ -95,11 +95,11 @@ var DateUtils = /** @class */ (function () {
         return start.toLocaleString('de-DE', formatOptionsLong);
     };
     DateUtils.formatToFileNameDate = function (date, dateSeparator, dateTimeSeparator, timeSeparator) {
-        return [string_utils_1.StringUtils.padStart(date.getDate().toString(), '00'),
+        return [date.getFullYear(),
             dateSeparator,
             string_utils_1.StringUtils.padStart((date.getMonth() + 1).toString(), '00'),
             dateSeparator,
-            date.getFullYear(),
+            string_utils_1.StringUtils.padStart(date.getDate().toString(), '00'),
             dateTimeSeparator,
             string_utils_1.StringUtils.padStart(date.getHours().toString(), '00'),
             timeSeparator,

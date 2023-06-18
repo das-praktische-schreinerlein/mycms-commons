@@ -69,7 +69,7 @@ var StringUtils = /** @class */ (function () {
         return res;
     };
     StringUtils.generateTechnicalName = function (name) {
-        return name ? name.replace(/[^-a-zA-Z0-9.+]+/g, ' ')
+        return name ? name.replace(/[^-a-zA-Z0-9]+/g, ' ')
             .replace(/ +/g, ' ')
             .replace(/ /g, '-')
             .trim()

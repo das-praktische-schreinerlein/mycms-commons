@@ -25,6 +25,10 @@
 
 ### bug fixes
 - fixed global RegExp in StringUtils.createReplacementsFromConfigArray
+- DateUtils.formatToFileNameDate: fix format to YYYYMMDD
+- StringUtils.generateTechnicalName: remove .+ from valid names (its used for filenames too)
+- GeoUtils: prevent from setting empty string as altitude
+- SearchCommon: improve usage of desc_txt, desc_md...
 
 ### breaking changes
 - bumped up deps

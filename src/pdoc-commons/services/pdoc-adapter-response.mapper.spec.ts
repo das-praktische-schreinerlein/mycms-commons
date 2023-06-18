@@ -46,9 +46,7 @@ describe('PDocAdapterResponseMapper', () => {
                 'pg_flags': 'flg_ShowStart, flg_ShowMenu'
             };
             const expected  = {
-                'descTxt': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
                 'descMd': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
-                'descHtml': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
                 'flags': 'flg_ShowStart, flg_ShowMenu',
                 'name': 'Ausflug Liepnitzsee 01.01.2000',
                 'type': 'TRACK',
@@ -74,21 +72,13 @@ describe('PDocAdapterResponseMapper', () => {
                 'flags_s': [
                     'flg_ShowStart,flg_ShowMenu'
                 ],
-                'desc_html_txt': [
-                    '<p>Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.</p>'
-                ],
                 'name_s': 'Ausflug Liepnitzsee 01.01.2000',
                 'track_id_i': 9,
-                'desc_txt': [
-                    '\nJetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.\n'
-                ],
                 'dateshow_dt': '2000-01-01T00:00:00Z',
             };
             const expected  = {
                 'dateshow': '2000-01-01T01:00:00',
-                'descTxt': '\nJetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.\n',
                 'descMd': 'Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.',
-                'descHtml': '<p>Jetzt ist wirklich Frühling und damit Zeit für eine 2h Wassertretertour auf dem Liepnitzsee.</p>',
                 'flags': 'flg_ShowStart,flg_ShowMenu',
                 'name': 'Ausflug Liepnitzsee 01.01.2000',
                 'type': 'TRACK',

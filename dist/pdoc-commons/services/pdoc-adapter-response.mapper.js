@@ -38,11 +38,12 @@ var PDocAdapterResponseMapper = /** @class */ (function () {
         values['subsectionids_s'] = props.subSectionIds;
         values['teaser_s'] = props.teaser;
         values['theme_s'] = props.theme;
+        var desc = props.descTxt || props.descHtml || props.descMd;
         values['html_txt'] = [
-            values['desc_txt'],
             values['name_s'],
             values['heading_s'],
             values['teaser_s'],
+            desc,
             values['flags_s'],
             values['key_s'],
             values['langkeys_s'],

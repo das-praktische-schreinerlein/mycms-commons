@@ -76,7 +76,7 @@ export class StringUtils {
     }
 
     public static generateTechnicalName(name: string): string {
-        return name ? name.replace(/[^-a-zA-Z0-9.+]+/g, ' ')
+        return name ? name.replace(/[^-a-zA-Z0-9]+/g, ' ')
             .replace(/ +/g, ' ')
             .replace(/ /g, '-')
             .trim()
