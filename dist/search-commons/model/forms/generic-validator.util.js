@@ -443,7 +443,7 @@ exports.ShowRouteValidationRule = ShowRouteValidationRule;
 var HtmlValidationRule = /** @class */ (function (_super) {
     __extends(HtmlValidationRule, _super);
     function HtmlValidationRule(required) {
-        return _super.call(this, required, XRegExp('^[' + RegExValidationReplaceRule.textRule + ']*$', 'gi'), XRegExp('[^' + RegExValidationReplaceRule.textRule + ']*', 'gi'), '', 10000) || this;
+        return _super.call(this, required, XRegExp('^[' + RegExValidationReplaceRule.textRule + ']*$', 'gi'), XRegExp('[^' + RegExValidationReplaceRule.textRule + ']*', 'gi'), '', 150000) || this;
     }
     return HtmlValidationRule;
 }(RegExValidationReplaceRule));

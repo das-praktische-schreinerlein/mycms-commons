@@ -427,7 +427,7 @@ export class HtmlValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean) {
         super(required,
             XRegExp('^[' + RegExValidationReplaceRule.textRule + ']*$', 'gi'),
-            XRegExp('[^' + RegExValidationReplaceRule.textRule + ']*', 'gi'), '', 10000);
+            XRegExp('[^' + RegExValidationReplaceRule.textRule + ']*', 'gi'), '', 150000);
     }
 }
 
