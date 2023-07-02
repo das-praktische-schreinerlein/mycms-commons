@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS props (
 
 CREATE TABLE IF NOT EXISTS page_props (
   ppr_id integer PRIMARY KEY,
-  pg_id int(11) NOT NULL DEFAULT '0',
-  pr_id int(11) NOT NULL DEFAULT '0',
-  CONSTRAINT page_props_ibfk_1 FOREIGN KEY (pg_id) REFERENCES page (pd_id) ON DELETE CASCADE,
+  pg_id int(11) NOT NULL,
+  pr_id int(11) NOT NULL,
+  CONSTRAINT page_props_ibfk_1 FOREIGN KEY (pg_id) REFERENCES page (pg_id) ON DELETE CASCADE,
   CONSTRAINT page_props_ibfk_2 FOREIGN KEY (pr_id) REFERENCES props (pr_id) ON DELETE CASCADE
 );

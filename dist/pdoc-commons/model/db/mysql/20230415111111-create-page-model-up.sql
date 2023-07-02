@@ -3,7 +3,7 @@
 -- ------------------------------------
 
 CREATE TABLE IF NOT EXISTS page (
-  pg_id INTEGER PRIMARY KEY,
+  pg_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   pg_key VARCHAR(255) NOT NULL,
   pg_name VARCHAR(255) NOT NULL,
   pg_css TEXT,
@@ -17,12 +17,12 @@ CREATE TABLE IF NOT EXISTS page (
 );
 
 CREATE TABLE IF NOT EXISTS props (
-  pr_id integer PRIMARY KEY,
+  pr_id integer PRIMARY KEY AUTO_INCREMENT,
   pr_name varchar(255)  DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS page_props (
-  ppr_id integer PRIMARY KEY,
+  ppr_id integer PRIMARY KEY AUTO_INCREMENT,
   pg_id int(11) NOT NULL,
   pr_id int(11) NOT NULL,
   CONSTRAINT page_props_ibfk_1 FOREIGN KEY (pg_id) REFERENCES page (pg_id) ON DELETE CASCADE,
