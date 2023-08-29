@@ -13,6 +13,7 @@
 - itemsjs: added spatial-search
 - geoutils: added distance-calculation
 - introduced fully featured markdown-support with extensions
+- commons: fixed SqlQueryBuilder.extendTableConfig
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
@@ -31,6 +32,7 @@
 - StringUtils.generateTechnicalName: remove .+ from valid names (its used for filenames too)
 - GeoUtils: prevent from setting empty string as altitude
 - SearchCommon: improve usage of desc_txt, desc_md...
+- commons: fixed SqlQueryBuilder.extendTableConfig
 
 ### breaking changes
 - bumped up deps

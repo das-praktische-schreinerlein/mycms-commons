@@ -117,17 +117,28 @@ export class SqlQueryBuilder {
                 if (facetConfig.triggerTables === undefined) {
                     facetConfig.triggerTables = sqlParts.tables;
                 }
+
                 if (facetConfig.withLabelField === undefined) {
                     facetConfig.withLabelField =
                         sqlParts.fields.indexOf('label') >= 0 || sqlParts.fieldAliases.indexOf('label') >= 0;
                 }
+
                 if (facetConfig.withIdField === undefined) {
                     facetConfig.withIdField =
                         sqlParts.fields.indexOf('id') >= 0 || sqlParts.fieldAliases.indexOf('id') >= 0;
                 }
+
                 if (facetConfig.cache === undefined) {
                     facetConfig.cache = {cachedSelectSql: undefined, useCache: "IF_VALID"};
                 }
+
+                if (facetConfig.cache.useCache !== false) {
+                    if (facetConfig.triggerTables.filter(triggerTable => !triggerTable.match(/^[a-zA-Z0-9_.]+$/gm)).length > 0) {
+                        console.error('table contains illegal charaacters', tableConfig.tableName, facetKey, facetConfig.triggerTables);
+                        throw new Error('table contains illegal charaacters');
+                    }
+                }
+
                 if (facetConfig.cache.cachedSelectSql === undefined) {
                     facetConfig.cache.cachedSelectSql = this.generateFacetCacheSql(tableConfig, facetKey, facetConfig);
                 }
