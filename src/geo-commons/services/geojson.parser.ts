@@ -64,7 +64,7 @@ export abstract class AbstractGeoJsonParser<T extends LatLngBase> extends Abstra
 
     protected createJson(name: string, type: string, pointSegments: string[]): string {
         return '{ "track": {' +
-            '"tName":"' + this.nameValidationRule.sanitize(name).replace('"', '') + '",' +
+            '"tName":"' + this.nameValidationRule.sanitize(name).replace(/"/g, '') + '",' +
             '"type":"' + type + '",' +
             '"header":["lat","lon","ele"],' +
             '"records":[' +

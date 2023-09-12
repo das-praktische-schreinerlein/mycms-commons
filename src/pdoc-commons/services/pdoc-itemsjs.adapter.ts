@@ -23,7 +23,7 @@ export class PDocItemsJsAdapter extends GenericItemsJsAdapter<PDocRecord, PDocSe
             'flags_ss': {
                 filterFunction: function(record) {
                     return record['flags_s']
-                        ? record['flags_s'].replace(',,', ',').split(',')
+                        ? record['flags_s'].replace(/,,/g, ',').split(',')
                         : undefined
                 },
                 conjunction: false,
@@ -35,7 +35,7 @@ export class PDocItemsJsAdapter extends GenericItemsJsAdapter<PDocRecord, PDocSe
             'profiles_ss': {
                 filterFunction: function(record) {
                     return record['profiles_s']
-                        ? record['profiles_s'].replace(',,', ',').split(',')
+                        ? record['profiles_s'].replace(/,,/g, ',').split(',')
                         : undefined
                 },
                 conjunction: false,
@@ -47,7 +47,7 @@ export class PDocItemsJsAdapter extends GenericItemsJsAdapter<PDocRecord, PDocSe
             'langkeys_ss': {
                 filterFunction: function(record) {
                     return record['langkeys_s']
-                        ? record['langkeys_s'].replace(',,', ',').split(',')
+                        ? record['langkeys_s'].replace(/,,/g, ',').split(',')
                         : undefined
                 },
                 conjunction: false,

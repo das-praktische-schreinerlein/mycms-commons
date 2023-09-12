@@ -336,7 +336,7 @@ export class Renderer extends marked.Renderer {
     let togglerType = 'icon',
         id;
     if (params.length > 0) {
-      id = params[0].replace(' ');
+      id = params[0].replace(/ /g);
       if (params.length > 1) {
         togglerType = params[1];
       }
@@ -369,7 +369,7 @@ export class Renderer extends marked.Renderer {
       }
 
       // split params elements:styles
-      const filter = params[0].replace(' ').split(':');
+      const filter = params[0].replace(/ /g).split(':');
       if (filter.length > 0) {
         tags = filter[0].split(' ');
         if (filter.length > 1) {

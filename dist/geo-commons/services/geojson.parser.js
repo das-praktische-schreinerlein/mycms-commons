@@ -69,7 +69,7 @@ var AbstractGeoJsonParser = /** @class */ (function (_super) {
     };
     AbstractGeoJsonParser.prototype.createJson = function (name, type, pointSegments) {
         return '{ "track": {' +
-            '"tName":"' + this.nameValidationRule.sanitize(name).replace('"', '') + '",' +
+            '"tName":"' + this.nameValidationRule.sanitize(name).replace(/"/g, '') + '",' +
             '"type":"' + type + '",' +
             '"header":["lat","lon","ele"],' +
             '"records":[' +

@@ -332,7 +332,7 @@ var Renderer = /** @class */ (function (_super) {
         var params = (attr || '').split(',');
         var togglerType = 'icon', id;
         if (params.length > 0) {
-            id = params[0].replace(' ');
+            id = params[0].replace(/ /g);
             if (params.length > 1) {
                 togglerType = params[1];
             }
@@ -359,7 +359,7 @@ var Renderer = /** @class */ (function (_super) {
                 togglerType = params[1];
             }
             // split params elements:styles
-            var filter = params[0].replace(' ').split(':');
+            var filter = params[0].replace(/ /g).split(':');
             if (filter.length > 0) {
                 tags = filter[0].split(' ');
                 if (filter.length > 1) {

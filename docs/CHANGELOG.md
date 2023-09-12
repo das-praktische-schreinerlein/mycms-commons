@@ -33,6 +33,7 @@
 - GeoUtils: prevent from setting empty string as altitude
 - SearchCommon: improve usage of desc_txt, desc_md...
 - commons: fixed SqlQueryBuilder.extendTableConfig
+- fixed string-replace
 
 ### breaking changes
 - bumped up deps
