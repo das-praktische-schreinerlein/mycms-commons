@@ -378,7 +378,7 @@ export class SolrValidationRule extends RegExValidationReplaceRule {
     constructor(required: boolean) {
         super(required,
             XRegExp('^[-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*$', 'gi'),
-            XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 100);
+            XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 250);
     }
 }
 

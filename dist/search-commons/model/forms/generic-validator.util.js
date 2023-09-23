@@ -392,7 +392,7 @@ exports.NameValidationRule = NameValidationRule;
 var SolrValidationRule = /** @class */ (function (_super) {
     __extends(SolrValidationRule, _super);
     function SolrValidationRule(required) {
-        return _super.call(this, required, XRegExp('^[-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*$', 'gi'), XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 100) || this;
+        return _super.call(this, required, XRegExp('^[-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*$', 'gi'), XRegExp('[^-A-Za-z0-9äöüßÄÖÜ+;,:._* ]*', 'gi'), '', 250) || this;
     }
     return SolrValidationRule;
 }(RegExValidationReplaceRule));
