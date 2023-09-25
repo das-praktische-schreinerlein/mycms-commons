@@ -80,6 +80,7 @@ export class SqlPageConfig {
             'pg_css',
             'pg_heading',
             'pg_image',
+            'pg_sortkey',
             'pg_subsectionids',
             'pg_teaser',
             'pg_theme',
@@ -192,13 +193,14 @@ export class SqlPageConfig {
             }
         },
         sortMapping: {
-            'name': 'pg_name ASC',
-            'type': 'pg_typ ASC, pg_name ASC',
-            'langkeys': 'pg_langkeys ASC, pg_name ASC',
-            'subtype': 'pg_subtype ASC, pg_name ASC',
-            'theme': 'pg_theme ASC, pg_name ASC',
-            'forExport': 'page.pg_id ASC, pg_name ASC',
-            'relevance': 'page.pg_id DESC, pg_name ASC'
+            'name': 'pg_name ASC, pg_sortkey ASC',
+            'type': 'pg_typ ASC, pg_name ASC, pg_sortkey ASC',
+            'langkeys': 'pg_langkeys ASC, pg_name ASC, pg_sortkey ASC',
+            'sortkey': 'pg_sortkey ASC, pg_name ASC',
+            'subtype': 'pg_subtype ASC, pg_name ASC, pg_sortkey ASC',
+            'theme': 'pg_theme ASC, pg_name ASC, pg_sortkey ASC',
+            'forExport': 'pg_sortkey ASC, page.pg_id ASC, pg_name ASC',
+            'relevance': 'pg_sortkey ASC, page.pg_id DESC, pg_name ASC'
         },
         filterMapping: {
             // dashboard
@@ -225,6 +227,7 @@ export class SqlPageConfig {
             'page.pg_css': ':css_s:',
             'page.pg_heading': ':heading_s:',
             'page.pg_image': ':image_s:',
+            'page.pg_sortkey': ':sortkey_s:',
             'page.pg_subsectionids': ':subsectionids_s:',
             'page.pg_teaser': ':teaser_s:',
             'page.pg_theme': ':theme_s:',
@@ -244,6 +247,7 @@ export class SqlPageConfig {
             image_s: 'pg_image',
             langkeys_s: 'pg_langkeys',
             profiles_s: 'pg_profiles',
+            sortkey_s: 'pg_sortkey',
             subsectionids_s: 'pg_subsectionids',
             teaser_s: 'pg_teaser',
             theme_s: 'pg_theme'

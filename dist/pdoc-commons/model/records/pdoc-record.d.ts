@@ -8,6 +8,7 @@ export interface PDocRecordType extends CommonDocRecordType {
     key: string;
     langkeys: string;
     profiles?: string;
+    sortkey: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
@@ -22,6 +23,7 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
     key: string;
     langkeys: string;
     profiles: string;
+    sortkey: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
@@ -37,6 +39,7 @@ export declare class PDocRecord extends CommonDocRecord implements PDocRecordTyp
         langkeys: BaseEntityRecordFieldConfig;
         pageId: BaseEntityRecordFieldConfig;
         profiles: BaseEntityRecordFieldConfig;
+        sortkey: BaseEntityRecordFieldConfig;
         subSectionIds: BaseEntityRecordFieldConfig;
         teaser: BaseEntityRecordFieldConfig;
         theme: BaseEntityRecordFieldConfig;

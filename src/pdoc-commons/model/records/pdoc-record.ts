@@ -27,6 +27,7 @@ export interface PDocRecordType extends CommonDocRecordType {
     key: string;
     langkeys: string;
     profiles?: string;
+    sortkey: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
@@ -50,6 +51,7 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
     key: string;
     langkeys: string;
     profiles: string;
+    sortkey: string;
     subSectionIds: string;
     teaser: string;
     theme: string;
@@ -78,6 +80,7 @@ export class PDocRecord extends CommonDocRecord implements PDocRecordType{
         langkeys: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(true)),
         pageId: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
         profiles: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(true)),
+        sortkey: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(false)),
         subSectionIds: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new KeywordValidationRule(false)),
         teaser: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.MARKDOWN, new MarkdownValidationRule(false)),
         theme: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),

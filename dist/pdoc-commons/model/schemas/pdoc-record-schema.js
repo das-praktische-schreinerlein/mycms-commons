@@ -25,6 +25,7 @@ exports.PDocRecordSchema = new js_data_1.Schema({
         langkeys: { type: 'string' },
         name: { type: 'string', minLength: 1, maxLength: 255 },
         profiles: { type: 'string' },
+        sortkey: { type: 'string' },
         subSectionIds: { type: 'string' },
         subtype: { type: 'string' },
         teaser: { type: 'string' },
