@@ -21,6 +21,7 @@
 - itemsjs: added spatial-search
 - geoutils: added distance-calculation
 - introduced fully featured markdown-support with extensions
+- frontend: make map-components generic
 
 ### improvements
 - improved SqlAdapter with remapFulltextFilter
