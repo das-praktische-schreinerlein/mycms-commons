@@ -14,6 +14,7 @@
 - geoutils: added distance-calculation
 - introduced fully featured markdown-support with extensions
 - commons: fixed SqlQueryBuilder.extendTableConfig
+- fixed filter-util if value is a array
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
@@ -35,6 +36,7 @@
 - SearchCommon: improve usage of desc_txt, desc_md...
 - commons: fixed SqlQueryBuilder.extendTableConfig
 - fixed string-replace
+- fixed filter-util if value is a array (from form)
 
 ### breaking changes
 - bumped up deps

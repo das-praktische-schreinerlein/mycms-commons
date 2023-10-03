@@ -38,9 +38,13 @@ export abstract class FilterUtils {
             return false;
         }
 
-        const value = BeanUtils.getValue(record, filter.property);
+        let value = BeanUtils.getValue(record, filter.property);
         if (value === undefined) {
             return false;
+        }
+
+        if (Array.isArray(value) && value.length === 1) {
+            value = value[0];
         }
 
         let values = [];

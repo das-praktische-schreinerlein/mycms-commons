@@ -37,6 +37,9 @@ var FilterUtils = /** @class */ (function () {
         if (value === undefined) {
             return false;
         }
+        if (Array.isArray(value) && value.length === 1) {
+            value = value[0];
+        }
         var values = [];
         switch (filter.command) {
             case SimpleFilterCommands.CSVIN:
