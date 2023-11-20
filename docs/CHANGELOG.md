@@ -42,6 +42,7 @@
 - bumped up deps
 - moved ValidationRules to commons
 - use StaticPagesDataService instead of PDocDataService
+- renamed GenericSearchFormSearchFormConverter -> GenericSearchFormConverter
 
 
 ## 5.7.0 (2023-03-18)

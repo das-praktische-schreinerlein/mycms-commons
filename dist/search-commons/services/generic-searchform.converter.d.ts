@@ -4,11 +4,14 @@ export interface HumanReadableFilter {
     prefix: string;
     values: string[];
 }
-export interface GenericSearchFormSearchFormConverter<F extends GenericSearchForm> {
+export interface GenericSearchFormConverter<F extends GenericSearchForm> {
     searchFormToUrl(baseUrl: string, searchForm: F): string;
     paramsToSearchForm(params: any, defaults: {}, searchForm: F, queryParams?: {}): void;
     isValid(searchForm: F): boolean;
     newSearchForm(valzes: {}): F;
     searchFormToHumanReadableFilter(searchForm: F): HumanReadableFilter[];
+    searchFormToValueMap(searchForm: F): {
+        [key: string]: string;
+    };
     getHrdIds(): {};
 }
