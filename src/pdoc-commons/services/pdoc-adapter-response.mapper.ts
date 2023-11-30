@@ -43,6 +43,7 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['key_s'] = props.key;
         values['langkeys_s'] = props.langkeys;
         values['profiles_s'] = props.profiles;
+        values['sortkey_s'] = props.sortkey;
         values['subsectionids_s'] = props.subSectionIds;
         values['teaser_s'] = props.teaser;
         values['theme_s'] = props.theme;
@@ -100,6 +101,7 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['key'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'key_s', undefined);
         values['langkeys'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'langkeys_s', undefined);
         values['profiles'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'profiles_s', undefined);
+        values['sortkey'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'sortkey_s', undefined);
         values['subSectionIds'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'subsectionids_s', undefined);
         values['teaser'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'teaser_s', undefined);
         values['theme'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'theme_s', undefined);

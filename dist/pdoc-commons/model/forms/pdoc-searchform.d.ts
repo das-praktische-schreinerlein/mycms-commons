@@ -6,12 +6,14 @@ export declare class PDocSearchForm extends CommonDocSearchForm {
         key: GenericSearchFormFieldConfig;
         langkeys: GenericSearchFormFieldConfig;
         profiles: GenericSearchFormFieldConfig;
+        sortkey: GenericSearchFormFieldConfig;
         subtype: GenericSearchFormFieldConfig;
     };
     flags: string;
     key: string;
     langkeys: string;
     profiles: string;
+    sortkey: string;
     subtype: string;
     constructor(values: {});
     toString(): string;

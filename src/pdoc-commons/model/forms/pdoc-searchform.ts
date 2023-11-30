@@ -6,7 +6,8 @@ import {
 import {GenericSearchFormFieldConfig} from '../../../search-commons/model/forms/generic-searchform';
 import {
     GenericValidatorDatatypes,
-    IdCsvValidationRule, KeywordValidationRule
+    IdCsvValidationRule,
+    KeywordValidationRule
 } from '../../../search-commons/model/forms/generic-validator.util';
 
 export class PDocSearchForm extends CommonDocSearchForm {
@@ -16,6 +17,7 @@ export class PDocSearchForm extends CommonDocSearchForm {
         key: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false)),
         langkeys: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new KeywordValidationRule(false)),
         profiles: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new KeywordValidationRule(false)),
+        sortkey: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.NAME, new KeywordValidationRule(false)),
         subtype: new GenericSearchFormFieldConfig(GenericValidatorDatatypes.ID_CSV, new IdCsvValidationRule(false))
     };
 
@@ -23,6 +25,7 @@ export class PDocSearchForm extends CommonDocSearchForm {
     key: string;
     langkeys: string;
     profiles: string;
+    sortkey: string;
     subtype: string;
 
     constructor(values: {}) {
@@ -31,6 +34,7 @@ export class PDocSearchForm extends CommonDocSearchForm {
         this.key = values['key'] || '';
         this.langkeys = values['langkeys'] || '';
         this.profiles = values['profiles'] || '';
+        this.sortkey = values['sortkey'] || '';
         this.subtype = values['subtype'] || '';
     }
 
@@ -55,6 +59,7 @@ export class PDocSearchFormFactory {
         sanitizedValues.key = PDocSearchForm.pdocFields.key.validator.sanitize(values['key']) || '';
         sanitizedValues.langkeys = PDocSearchForm.pdocFields.langkeys.validator.sanitize(values['langkeys']) || '';
         sanitizedValues.profiles = PDocSearchForm.pdocFields.profiles.validator.sanitize(values['profiles']) || '';
+        sanitizedValues.sortkey = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['sortkey']) || '';
         sanitizedValues.subtype = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['subtype']) || '';
 
         return sanitizedValues;
@@ -85,6 +90,7 @@ export class PDocSearchFormValidator {
         state = PDocSearchForm.pdocFields.key.validator.isValid(values['key']) && state;
         state = PDocSearchForm.pdocFields.langkeys.validator.isValid(values['langkeys']) && state;
         state = PDocSearchForm.pdocFields.profiles.validator.isValid(values['profiles']) && state;
+        state = PDocSearchForm.pdocFields.sortkey.validator.isValid(values['sortkey']) && state;
         state = PDocSearchForm.pdocFields.subtype.validator.isValid(values['subtype']) && state;
 
         return state;

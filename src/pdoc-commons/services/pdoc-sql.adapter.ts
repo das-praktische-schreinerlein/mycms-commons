@@ -87,7 +87,7 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
         }
 
         // fallback for several types
-        const types = params.where['type_txt'];
+        const types = params.where['type_ss'];
         if (types === undefined || types.in === undefined ||
             !Array.isArray(types.in) || types.in.length < 1) {
             return undefined;
@@ -102,7 +102,7 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
         facet.facet = ['page']
             .map(value => {return [value, 0]; });
         facet.selectLimit = 1;
-        facets.facets.set('type_txt', facet);
+        facets.facets.set('type_ss', facet);
         facet = new Facet();
         facet.facet = ['relevance'].map(value => {return [value, 0]; });
         facets.facets.set('sorts', facet);

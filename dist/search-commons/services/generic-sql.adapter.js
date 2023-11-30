@@ -178,7 +178,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                 }).then(function (done) {
                     var query = {
                         where: {
-                            type_txt: {
+                            type_ss: {
                                 'in': [props.type.toLowerCase()]
                             }
                         }
@@ -369,7 +369,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                 }).then(function (done) {
                     var query = {
                         where: {
-                            type_txt: {
+                            type_ss: {
                                 'in': [props.type.toLowerCase()]
                             }
                         }
@@ -558,7 +558,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             return undefined;
         }
         var tabKey;
-        var types = params.where['type_txt'];
+        var types = params.where['type_ss'];
         if (types !== undefined && types.in !== undefined) {
             tabKey = this.extractSingleElement(types.in);
             if (tabKey !== undefined) {

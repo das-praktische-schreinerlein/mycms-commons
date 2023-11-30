@@ -64,7 +64,7 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
             return tabKey;
         }
         // fallback for several types
-        var types = params.where['type_txt'];
+        var types = params.where['type_ss'];
         if (types === undefined || types.in === undefined ||
             !Array.isArray(types.in) || types.in.length < 1) {
             return undefined;
@@ -77,7 +77,7 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
         facet.facet = ['page']
             .map(function (value) { return [value, 0]; });
         facet.selectLimit = 1;
-        facets.facets.set('type_txt', facet);
+        facets.facets.set('type_ss', facet);
         facet = new facets_1.Facet();
         facet.facet = ['relevance'].map(function (value) { return [value, 0]; });
         facets.facets.set('sorts', facet);

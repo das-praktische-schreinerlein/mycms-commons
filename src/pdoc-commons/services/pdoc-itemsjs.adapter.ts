@@ -56,6 +56,14 @@ export class PDocItemsJsAdapter extends GenericItemsJsAdapter<PDocRecord, PDocSe
                 hide_zero_doc_count: true,
                 size: 1000
             },
+            'sortkey_ss': {
+                mapField: 'sortkey_s',
+                conjunction: false,
+                sort: 'term',
+                order: 'asc',
+                hide_zero_doc_count: true,
+                size: 1000
+            },
             'subtype_ss': {
                 mapField: 'subtype_s',
                 conjunction: false,
@@ -64,7 +72,7 @@ export class PDocItemsJsAdapter extends GenericItemsJsAdapter<PDocRecord, PDocSe
                 hide_zero_doc_count: true,
                 size: 1000
             },
-            'type_txt': {
+            'type_ss': {
                 mapField: 'type_s',
                 conjunction: false,
                 sort: 'term',

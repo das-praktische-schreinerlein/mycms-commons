@@ -15,6 +15,7 @@
 - introduced fully featured markdown-support with extensions
 - commons: fixed SqlQueryBuilder.extendTableConfig
 - fixed filter-util if value is a array
+- fixed naming of attributes/filter: type_s)
 
 ### new features
 - introduced fully featured pdoc-services derived from cdoc
@@ -43,6 +44,7 @@
 - moved ValidationRules to commons
 - use StaticPagesDataService instead of PDocDataService
 - renamed GenericSearchFormSearchFormConverter -> GenericSearchFormConverter
+- fixed naming of attributes/filter: type_s)
 
 
 ## 5.7.0 (2023-03-18)

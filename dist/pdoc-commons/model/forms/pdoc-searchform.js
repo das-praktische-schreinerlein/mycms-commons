@@ -24,6 +24,7 @@ var PDocSearchForm = /** @class */ (function (_super) {
         _this.key = values['key'] || '';
         _this.langkeys = values['langkeys'] || '';
         _this.profiles = values['profiles'] || '';
+        _this.sortkey = values['sortkey'] || '';
         _this.subtype = values['subtype'] || '';
         return _this;
     }
@@ -43,6 +44,7 @@ var PDocSearchForm = /** @class */ (function (_super) {
         key: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID_CSV, new generic_validator_util_1.IdCsvValidationRule(false)),
         langkeys: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID_CSV, new generic_validator_util_1.KeywordValidationRule(false)),
         profiles: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID_CSV, new generic_validator_util_1.KeywordValidationRule(false)),
+        sortkey: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.NAME, new generic_validator_util_1.KeywordValidationRule(false)),
         subtype: new generic_searchform_1.GenericSearchFormFieldConfig(generic_validator_util_1.GenericValidatorDatatypes.ID_CSV, new generic_validator_util_1.IdCsvValidationRule(false))
     };
     return PDocSearchForm;
@@ -57,6 +59,7 @@ var PDocSearchFormFactory = /** @class */ (function () {
         sanitizedValues.key = PDocSearchForm.pdocFields.key.validator.sanitize(values['key']) || '';
         sanitizedValues.langkeys = PDocSearchForm.pdocFields.langkeys.validator.sanitize(values['langkeys']) || '';
         sanitizedValues.profiles = PDocSearchForm.pdocFields.profiles.validator.sanitize(values['profiles']) || '';
+        sanitizedValues.sortkey = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['sortkey']) || '';
         sanitizedValues.subtype = PDocSearchForm.pdocFields.subtype.validator.sanitize(values['subtype']) || '';
         return sanitizedValues;
     };
@@ -83,6 +86,7 @@ var PDocSearchFormValidator = /** @class */ (function () {
         state = PDocSearchForm.pdocFields.key.validator.isValid(values['key']) && state;
         state = PDocSearchForm.pdocFields.langkeys.validator.isValid(values['langkeys']) && state;
         state = PDocSearchForm.pdocFields.profiles.validator.isValid(values['profiles']) && state;
+        state = PDocSearchForm.pdocFields.sortkey.validator.isValid(values['sortkey']) && state;
         state = PDocSearchForm.pdocFields.subtype.validator.isValid(values['subtype']) && state;
         return state;
     };

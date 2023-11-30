@@ -158,11 +158,11 @@ export class ItemsJsDataImporter {
         }
 
         // override some aggregations
-        values['type_txt'] = values['type_txt']
-            ? values['type_txt']
+        values['type_ss'] = values['type_ss']
+            ? values['type_ss']
             : values['type_s'];
-        values['type_txt'] = values['type_txt']
-            ? values['type_txt'].toLowerCase()
+        values['type_ss'] = values['type_ss']
+            ? values['type_ss'].toLowerCase()
             : '';
 
         values['year_is'] = values['dateshow_dt']

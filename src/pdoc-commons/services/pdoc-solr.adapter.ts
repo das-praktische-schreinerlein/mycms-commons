@@ -8,7 +8,7 @@ import {SolrConfig} from '../../search-commons/services/solr-query.builder';
 export class PDocSolrAdapter extends GenericSolrAdapter<PDocRecord, PDocSearchForm, PDocSearchResult> {
     public static solrConfig: SolrConfig = {
         fieldList: ['id', 'desc_txt', 'desc_md_txt', 'desc_html_txt',
-            'flags_s', 'profiles_s', 'langkeys_s', 'name_txt', 'type_txt'],
+            'flags_s', 'profiles_s', 'langkeys_s', 'name_s', 'type_s'],
         facetConfigs: {
             'flags_txt': {
                 'f.flags_txt.facet.prefix': 'kw_',
@@ -25,10 +25,10 @@ export class PDocSolrAdapter extends GenericSolrAdapter<PDocRecord, PDocSearchFo
                 'f.profiles_txt.facet.limit': '-1',
                 'f.profiles_txt.facet.sort': 'count'
             },
-            'type_txt': {}
+            'type_ss': {}
         },
         commonSortOptions: {
-            'qf': 'name_txt^10.0 desc_txt^8.0 langkeys_txt^6.0 profiles_txt^6.0 flags_txt^6.0',
+            'qf': 'name_s^10.0 desc_txt^8.0 langkeys_txt^6.0 profiles_txt^6.0 flags_txt^6.0',
             'defType': 'edismax'
         },
         sortMapping: {
@@ -54,12 +54,12 @@ export class PDocSolrAdapter extends GenericSolrAdapter<PDocRecord, PDocSearchFo
             flags_s: (props.flags ? props.flags.split(', ').join(',,flg_') : ''),
             langkeys_s: (props.langkeys_d ? props.langkeys.split(', ').join(',,lang_') : ''),
             profiles_s: (props.profiles ? props.profiles.split(', ').join(',,profile_') : ''),
-            name_txt: props.name,
-            type_txt: props.type,
+            name_s: props.name,
+            type_s: props.type,
         };
 
         const desc =  props.descTxt || props.descHtml || props.descMd;
-        values['html_txt'] = [values.name_txt, desc, values.flags_s, values.type_txt].join(' ');
+        values['html_txt'] = [values.name_s, desc, values.flags_s, values.type_s].join(' ');
 
         return values;
     }
@@ -74,8 +74,8 @@ export class PDocSolrAdapter extends GenericSolrAdapter<PDocRecord, PDocSearchFo
         values['flags'] = this.mapperUtils.getAdapterValue(doc, 'flags_s', '').split(',,').join(', ').replace(/flg_/g, '');
         values['langkeys'] = this.mapperUtils.getAdapterValue(doc, 'langkeys_s', '').split(',,').join(', ').replace(/lang_/g, '');
         values['profiles'] = this.mapperUtils.getAdapterValue(doc, 'profiles_s', '').split(',,').join(', ').replace(/profile_/g, '');
-        values['name'] = this.mapperUtils.getAdapterValue(doc, 'name_txt', undefined);
-        values['type'] = this.mapperUtils.getAdapterValue(doc, 'type_txt', undefined);
+        values['name'] = this.mapperUtils.getAdapterValue(doc, 'name_s', undefined);
+        values['type'] = this.mapperUtils.getAdapterValue(doc, 'type_s', undefined);
 
         // console.log('mapResponseDocument values:', values);
 

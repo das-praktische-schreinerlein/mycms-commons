@@ -120,7 +120,7 @@ export class SqlPageConfig {
                     ' GROUP BY SUBSTR(UPPER(pg_name), 1, 1)' +
                     ' ORDER BY value',
             },
-            'type_txt': {
+            'type_ss': {
                 constValues: ['page'],
                 filterField: '"page"',
                 selectLimit: 1
@@ -171,6 +171,15 @@ export class SqlPageConfig {
                 filterField: 'langkey_props.pr_name',
                 action: AdapterFilterActions.IN
             },
+            'sortkey_ss': {
+                selectSql: 'SELECT COUNT(*) as count, ' +
+                    ' pg_sortkey as value ' +
+                    ' FROM page ' +
+                    ' GROUP BY pg_sortkey ' +
+                    ' ORDER BY value',
+                filterField: 'page.pg_sortkey',
+                action: AdapterFilterActions.IN
+            },
             'subtype_ss': {
                 selectSql: 'SELECT COUNT(*) as count, ' +
                     ' pg_subtype as value ' +
@@ -194,7 +203,6 @@ export class SqlPageConfig {
         },
         sortMapping: {
             'name': 'pg_name ASC, pg_sortkey ASC',
-            'type': 'pg_typ ASC, pg_name ASC, pg_sortkey ASC',
             'langkeys': 'pg_langkeys ASC, pg_name ASC, pg_sortkey ASC',
             'sortkey': 'pg_sortkey ASC, pg_name ASC',
             'subtype': 'pg_subtype ASC, pg_name ASC, pg_sortkey ASC',

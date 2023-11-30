@@ -356,7 +356,7 @@ export abstract class CommonDocDataService<R extends CommonDocRecord, F extends 
                 name_s: {
                     'in': [record.name]
                 },
-                type_txt: {
+                type_ss: {
                     'in': [record.type.toLowerCase()]
                 }
             }

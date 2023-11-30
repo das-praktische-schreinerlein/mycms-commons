@@ -23,6 +23,7 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
         langkeys_ss: true,
         profiles_ss: true,
         initial_s: true,
+        sortkey_ss: true,
         theme_ss: true,
         todoDesc: true,
         todoKeywords: true
@@ -49,7 +50,7 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
 
         if (searchForm.type !== undefined && searchForm.type.length > 0) {
             filter = filter || {};
-            filter['type_txt'] = {
+            filter['type_ss'] = {
                 'in': searchForm.type.split(/,/)
             };
         }
@@ -105,7 +106,14 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
                 'in': searchForm.profiles.split(/,/)
             };
         }
-        
+
+        if (searchForm.sortkey !== undefined && searchForm.sortkey.length > 0) {
+            filter = filter || {};
+            filter['sortkey_ss'] = {
+                'in': searchForm.sortkey.split(/,/)
+            };
+        }
+
         if (filter !== undefined) {
             query['where'] = filter;
         }

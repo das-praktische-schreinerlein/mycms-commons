@@ -74,7 +74,7 @@ var PDocDataService = /** @class */ (function (_super) {
                 profiles_ss: {
                     'in': [record.profiles]
                 },
-                type_txt: {
+                type_ss: {
                     'in': [record.type.toLowerCase()]
                 }
             }

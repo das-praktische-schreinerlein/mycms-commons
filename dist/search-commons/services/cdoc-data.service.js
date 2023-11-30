@@ -288,7 +288,7 @@ var CommonDocDataService = /** @class */ (function () {
                 name_s: {
                     'in': [record.name]
                 },
-                type_txt: {
+                type_ss: {
                     'in': [record.type.toLowerCase()]
                 }
             }

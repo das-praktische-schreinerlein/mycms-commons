@@ -208,7 +208,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                     }).then(done => {
                         const query = {
                             where: {
-                                type_txt: {
+                                type_ss: {
                                     'in': [props.type.toLowerCase()]
                                 }
                             }
@@ -422,7 +422,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                     }).then(done => {
                         const query = {
                             where: {
-                                type_txt: {
+                                type_ss: {
                                     'in': [props.type.toLowerCase()]
                                 }
                             }
@@ -640,7 +640,7 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
         }
 
         let tabKey;
-        const types = params.where['type_txt'];
+        const types = params.where['type_ss'];
         if (types !== undefined && types.in !== undefined) {
             tabKey = this.extractSingleElement(types.in);
             if (tabKey !== undefined) {

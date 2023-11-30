@@ -35,6 +35,7 @@ var PDocDataStore = /** @class */ (function (_super) {
             langkeys_ss: true,
             profiles_ss: true,
             initial_s: true,
+            sortkey_ss: true,
             theme_ss: true,
             todoDesc: true,
             todoKeywords: true
@@ -55,7 +56,7 @@ var PDocDataStore = /** @class */ (function (_super) {
         }
         if (searchForm.type !== undefined && searchForm.type.length > 0) {
             filter = filter || {};
-            filter['type_txt'] = {
+            filter['type_ss'] = {
                 'in': searchForm.type.split(/,/)
             };
         }
@@ -105,6 +106,12 @@ var PDocDataStore = /** @class */ (function (_super) {
             filter = filter || {};
             filter['profiles_ss'] = {
                 'in': searchForm.profiles.split(/,/)
+            };
+        }
+        if (searchForm.sortkey !== undefined && searchForm.sortkey.length > 0) {
+            filter = filter || {};
+            filter['sortkey_ss'] = {
+                'in': searchForm.sortkey.split(/,/)
             };
         }
         if (filter !== undefined) {

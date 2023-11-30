@@ -64,7 +64,7 @@ var StaticPagesDataService = /** @class */ (function (_super) {
                 name_s: {
                     'in': [record.name]
                 },
-                type_txt: {
+                type_ss: {
                     'in': [record.type.toLowerCase()]
                 }
             }
