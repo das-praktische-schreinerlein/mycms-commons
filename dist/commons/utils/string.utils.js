@@ -113,6 +113,18 @@ var StringUtils = /** @class */ (function () {
         }
         return src.replace(/[ \r\n\t]+/g, '');
     };
+    StringUtils.nullSafeStringCompare = function (a, b) {
+        if (a !== undefined && b !== undefined) {
+            return a.localeCompare(b);
+        }
+        if (a === undefined && b === undefined) {
+            return 0;
+        }
+        if (a === undefined) {
+            return -1;
+        }
+        return 1;
+    };
     return StringUtils;
 }());
 exports.StringUtils = StringUtils;

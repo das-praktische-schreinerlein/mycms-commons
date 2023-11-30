@@ -8,6 +8,7 @@ import {BaseJoinRecord} from "../../search-commons/model/records/basejoin-record
 import {PDocAdapterResponseMapper} from "./pdoc-adapter-response.mapper";
 import {ActionTagForm} from "../../commons/utils/actiontag.utils";
 import {StaticPagesDataStore} from "./staticpages-data.store";
+import {StringUtils} from '../../commons/utils/string.utils';
 
 export class StaticPagesDataService extends CommonDocDataService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: StaticPagesDataStore) {
@@ -87,6 +88,8 @@ export class StaticPagesDataService extends CommonDocDataService<PDocRecord, PDo
                 // console.warn('getSubSections: section not found:', LogUtils.sanitizeLogMsg(id));
             }
         }
+
+        sections.sort((a, b) => StringUtils.nullSafeStringCompare(a.sortkey, b.sortkey));
 
         return sections;
     }

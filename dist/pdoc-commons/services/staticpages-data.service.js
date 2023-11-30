@@ -18,6 +18,7 @@ var pdoc_search_service_1 = require("./pdoc-search.service");
 var pdoc_record_schema_1 = require("../model/schemas/pdoc-record-schema");
 var cdoc_data_service_1 = require("../../search-commons/services/cdoc-data.service");
 var pdoc_adapter_response_mapper_1 = require("./pdoc-adapter-response.mapper");
+var string_utils_1 = require("../../commons/utils/string.utils");
 var StaticPagesDataService = /** @class */ (function (_super) {
     __extends(StaticPagesDataService, _super);
     function StaticPagesDataService(dataStore) {
@@ -89,6 +90,7 @@ var StaticPagesDataService = /** @class */ (function (_super) {
                 // console.warn('getSubSections: section not found:', LogUtils.sanitizeLogMsg(id));
             }
         }
+        sections.sort(function (a, b) { return string_utils_1.StringUtils.nullSafeStringCompare(a.sortkey, b.sortkey); });
         return sections;
     };
     StaticPagesDataService.prototype.addAdditionalActionTagForms = function (origRecord, newRecord, actionTagForms) {

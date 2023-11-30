@@ -11,4 +11,5 @@ export declare class StringUtils {
     static formatToShortFileNameDate(date: Date, dateSeparator: string): string;
     static normalizeWhiteSpaceForParser(src: string): string;
     static removeWhitespaces(src: string): string;
+    static nullSafeStringCompare(a: string, b: string): number;
 }

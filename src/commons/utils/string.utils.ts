@@ -126,4 +126,20 @@ export class StringUtils {
 
         return src.replace(/[ \r\n\t]+/g, '');
     }
+
+    public static nullSafeStringCompare(a: string, b: string): number {
+        if (a !== undefined && b !== undefined) {
+            return a.localeCompare(b);
+        }
+
+        if (a === undefined && b === undefined) {
+            return 0;
+        }
+
+        if (a === undefined) {
+            return -1;
+        }
+
+        return 1;
+    }
 }
