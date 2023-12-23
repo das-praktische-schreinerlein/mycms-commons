@@ -59,7 +59,7 @@
     "itemsjs": "2.1.20",
     "js-data": "3.0.8",
     "js-data-http": "3.0.1",
-    "knex": "0.20.10",
+    "knex": "2.4.0",
     "promise-serial": "0.1.5",
     "rxjs": "6.6.0",
     "tz-lookup": "6.1.25",
