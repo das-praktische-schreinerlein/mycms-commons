@@ -1,19 +1,33 @@
 export class StringUtils {
+    public static readonly UMLAUTMAP = {
+        '\u00dc': 'UE',
+        '\u00c4': 'AE',
+        '\u00d6': 'OE',
+        '\u00fc': 'ue',
+        '\u00e4': 'ae',
+        '\u00f6': 'oe',
+        '\u00df': 'ss'
+    };
+
     public static trimKeywords(src: string): string {
         if (src === undefined) {
             return '';
         }
 
-        return src.replace(/[^-a-zA-Z_0-9äöüßÄÖÜ,:.]+/g, '').replace(/^[,;]*/g, '').replace(/[,;]*$/g, '');
+        return src.replace(/[^-a-zA-Z_0-9äöüßÄÖÜ,:.]+/g, '')
+            .replace(/^[,;]*/g, '')
+            .replace(/[,;]*$/g, '');
     }
 
     public static uniqueKeywords(src: string): string[] {
         const keywordsList = [];
-        StringUtils.trimKeywords(src).split(/[,;]+/).map(keyword => {
-            if (keyword !== '' && keywordsList.indexOf(keyword) < 0) {
-                keywordsList.push(keyword);
-            }
-        });
+        StringUtils.trimKeywords(src)
+            .split(/[,;]+/)
+            .map(keyword => {
+                if (keyword !== '' && keywordsList.indexOf(keyword) < 0) {
+                    keywordsList.push(keyword);
+                }
+            });
 
         return keywordsList;
     }
@@ -75,12 +89,27 @@ export class StringUtils {
         return res;
     }
 
+    public static replaceUmlauts(src: string) {
+        return src
+            .replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, (a) => {
+                const big = StringUtils.UMLAUTMAP[a.slice(0, 1)];
+                return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
+            })
+            .replace(new RegExp('['+Object.keys(StringUtils.UMLAUTMAP).join('|')+']',"g"),
+                (a) => StringUtils.UMLAUTMAP[a]
+            );
+    }
+
     public static generateTechnicalName(name: string): string {
-        return name ? name.replace(/[^-a-zA-Z0-9]+/g, ' ')
-            .replace(/ +/g, ' ')
-            .replace(/ /g, '-')
-            .trim()
-            .toLowerCase() : '';
+        return name
+            ? StringUtils.replaceUmlauts(name)
+                .replace(/[^-a-zA-Z0-9]+/g, ' ')
+                .replace(/[^-a-zA-Z0-9]+/g, ' ')
+                .replace(/ +/g, ' ')
+                .replace(/ /g, '-')
+                .trim()
+                .toLowerCase()
+            : '';
     }
 
     public static findNeedle(source: string, needle: string, findIdx: number): number {

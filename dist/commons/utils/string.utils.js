@@ -7,11 +7,15 @@ var StringUtils = /** @class */ (function () {
         if (src === undefined) {
             return '';
         }
-        return src.replace(/[^-a-zA-Z_0-9äöüßÄÖÜ,:.]+/g, '').replace(/^[,;]*/g, '').replace(/[,;]*$/g, '');
+        return src.replace(/[^-a-zA-Z_0-9äöüßÄÖÜ,:.]+/g, '')
+            .replace(/^[,;]*/g, '')
+            .replace(/[,;]*$/g, '');
     };
     StringUtils.uniqueKeywords = function (src) {
         var keywordsList = [];
-        StringUtils.trimKeywords(src).split(/[,;]+/).map(function (keyword) {
+        StringUtils.trimKeywords(src)
+            .split(/[,;]+/)
+            .map(function (keyword) {
             if (keyword !== '' && keywordsList.indexOf(keyword) < 0) {
                 keywordsList.push(keyword);
             }
@@ -68,12 +72,24 @@ var StringUtils = /** @class */ (function () {
         } while (code > 0);
         return res;
     };
+    StringUtils.replaceUmlauts = function (src) {
+        return src
+            .replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, function (a) {
+            var big = StringUtils.UMLAUTMAP[a.slice(0, 1)];
+            return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
+        })
+            .replace(new RegExp('[' + Object.keys(StringUtils.UMLAUTMAP).join('|') + ']', "g"), function (a) { return StringUtils.UMLAUTMAP[a]; });
+    };
     StringUtils.generateTechnicalName = function (name) {
-        return name ? name.replace(/[^-a-zA-Z0-9]+/g, ' ')
-            .replace(/ +/g, ' ')
-            .replace(/ /g, '-')
-            .trim()
-            .toLowerCase() : '';
+        return name
+            ? StringUtils.replaceUmlauts(name)
+                .replace(/[^-a-zA-Z0-9]+/g, ' ')
+                .replace(/[^-a-zA-Z0-9]+/g, ' ')
+                .replace(/ +/g, ' ')
+                .replace(/ /g, '-')
+                .trim()
+                .toLowerCase()
+            : '';
     };
     StringUtils.findNeedle = function (source, needle, findIdx) {
         var lastPos = -needle.length;
@@ -124,6 +140,15 @@ var StringUtils = /** @class */ (function () {
             return -1;
         }
         return 1;
+    };
+    StringUtils.UMLAUTMAP = {
+        '\u00dc': 'UE',
+        '\u00c4': 'AE',
+        '\u00d6': 'OE',
+        '\u00fc': 'ue',
+        '\u00e4': 'ae',
+        '\u00f6': 'oe',
+        '\u00df': 'ss',
     };
     return StringUtils;
 }());

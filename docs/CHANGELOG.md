@@ -3,12 +3,13 @@
 # Versions
 
 ## 6.1.0
+- stringutils: added replaceUmlauts and improved generateTechnicalName
 
 ### new features
 - none
 
 ### improvements
-- none
+- stringutils: added replaceUmlauts and improved generateTechnicalName
 
 ### bug fixes
 - none
