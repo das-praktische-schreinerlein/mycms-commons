@@ -4,12 +4,14 @@
 
 ## 6.1.0
 - stringutils: added replaceUmlauts and improved generateTechnicalName
+- playlistservice: add csv-export
 
 ### new features
 - none
 
 ### improvements
 - stringutils: added replaceUmlauts and improved generateTechnicalName
+- playlistservice: add csv-export
 
 ### bug fixes
 - none
