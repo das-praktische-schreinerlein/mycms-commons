@@ -2,6 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var CommonDocPlaylistService = /** @class */ (function () {
     function CommonDocPlaylistService() {
+        this.exportProfiles = {
+            'default': {
+                profileName: 'default',
+                headerNames: ['id', 'name'],
+                fieldNames: ['id', 'name']
+            }
+        };
     }
     CommonDocPlaylistService.prototype.generateM3uForRecords = function (pathPrefix, records) {
         var _this = this;
@@ -39,6 +46,38 @@ var CommonDocPlaylistService = /** @class */ (function () {
             return undefined;
         }
         return '#EXTINF:-1,' + record.name;
+    };
+    CommonDocPlaylistService.prototype.generateCsvForRecords = function (profileConfig, pathPrefix, records) {
+        var _this = this;
+        var values = [this.generateCsvHeader(profileConfig)];
+        if (records) {
+            records.forEach(function (record) {
+                values.push(_this.generateCsvEntryForRecord(profileConfig, pathPrefix, record));
+            });
+        }
+        return values.filter(function (value) {
+            return value !== undefined && value !== '';
+        }).join('\n');
+    };
+    CommonDocPlaylistService.prototype.generateCsvHeader = function (profileConfig) {
+        return profileConfig.headerNames.join('\t');
+    };
+    CommonDocPlaylistService.prototype.generateCsvEntryForRecord = function (profileConfig, pathPrefix, record) {
+        var _this = this;
+        if (!record) {
+            return undefined;
+        }
+        return profileConfig.fieldNames.map(function (csvFieldName) {
+            return _this.generateFieldValue(pathPrefix, record, csvFieldName);
+        }).join('\t');
+    };
+    CommonDocPlaylistService.prototype.generateFieldValue = function (pathPrefix, record, csvFieldName) {
+        return record[csvFieldName] !== undefined && record[csvFieldName] !== null
+            ? record[csvFieldName]
+            : '';
+    };
+    CommonDocPlaylistService.prototype.getCsvExportProfile = function (profile) {
+        return this.exportProfiles[profile];
     };
     return CommonDocPlaylistService;
 }());
