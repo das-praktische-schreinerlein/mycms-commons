@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_1 = require("js-data");
-var Promise_serial = require("promise-serial");
 var generic_validator_util_1 = require("../../search-commons/model/forms/generic-validator.util");
 var sql_utils_1 = require("../../search-commons/services/sql-utils");
 var CommonSqlActionTagAssignJoinAdapter = /** @class */ (function () {
@@ -48,19 +47,17 @@ var CommonSqlActionTagAssignJoinAdapter = /** @class */ (function () {
                 ' WHERE ' + assignConfig.idField + '=' + '?' + '',
             parameters: [id]
         };
-        var checkNewValueSqlQuery = undefined;
-        var insertSqlQueries = [];
-        checkNewValueSqlQuery = { sql: 'SELECT ' + referenceConfig.joinedIdField + ' AS id' +
+        var checkNewValueSqlQuery = { sql: 'SELECT ' + referenceConfig.joinedIdField + ' AS id' +
                 ' FROM ' + referenceConfig.joinedTable +
                 ' WHERE ' + referenceConfig.joinedIdField + '=' + '?' + '',
             parameters: [newId] };
-        insertSqlQueries.push({ sql: 'INSERT INTO ' + referenceConfig.joinTable +
+        var insertSqlQuery = { sql: 'INSERT INTO ' + referenceConfig.joinTable +
                 ' (' + referenceConfig.joinBaseIdField + ', ' + referenceConfig.joinReferenceField + ')' +
                 ' SELECT ?, ? WHERE NOT EXISTS' +
                 '    (SELECT ' + referenceConfig.joinBaseIdField + ', ' + referenceConfig.joinReferenceField +
                 '     FROM ' + referenceConfig.joinTable +
                 '     WHERE ' + referenceConfig.joinBaseIdField + '=? AND ' + referenceConfig.joinReferenceField + '=?)',
-            parameters: [id, newId, id, newId] });
+            parameters: [id, newId, id, newId] };
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
             ? this.knex
             : opts.transaction;
@@ -76,17 +73,19 @@ var CommonSqlActionTagAssignJoinAdapter = /** @class */ (function () {
                 if (records === undefined || records.length !== 1 || records[0]['id'] !== newId) {
                     return js_data_1.utils.reject('_doActionTag assignjoin ' + table + ' failed: newId not found ' + newId);
                 }
-                var insertSqlQueryPromises = [];
-                var _loop_1 = function (updateSql) {
-                    insertSqlQueryPromises.push(function () {
-                        return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSql);
-                    });
-                };
-                for (var _i = 0, insertSqlQueries_1 = insertSqlQueries; _i < insertSqlQueries_1.length; _i++) {
-                    var updateSql = insertSqlQueries_1[_i];
-                    _loop_1(updateSql);
+                return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery);
+            }).then(function () {
+                var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('update', assignConfig.table, assignConfig.idField, assignConfig.changelogConfig, id);
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
                 }
-                return Promise_serial(insertSqlQueryPromises, { parallelize: 1 });
+                return Promise.resolve(true);
+            }).then(function () {
+                var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('update', referenceConfig.joinedTable, referenceConfig.joinedIdField, referenceConfig.changelogConfig, newId);
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve(true);
             }).then(function () {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {

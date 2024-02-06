@@ -4,7 +4,7 @@ import {PDocDataService} from './pdoc-data.service';
 import {PDocDataStore} from './pdoc-data.store';
 import {SearchParameterUtils} from '../../search-commons/services/searchparameter.utils';
 import {TestHelper} from '../../testing/test-helper';
-import {PDocSqlAdapter} from "./pdoc-sql.adapter";
+import {PDocSqlAdapter} from './pdoc-sql.adapter';
 
 describe('PDocDataService', () => {
     let pdoc1: PDocRecord = undefined;

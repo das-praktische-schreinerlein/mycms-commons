@@ -4,7 +4,6 @@ import {ActionTagAssignTableConfigType} from '../../../action-commons/actiontags
 import {AdapterFilterActions} from '../../../search-commons/services/mapper.utils';
 import {KeywordModelConfigJoinType} from '../../../action-commons/actions/common-sql-keyword.adapter';
 
-// TODO sync with model
 export class SqlPageConfig {
     public static readonly tableConfig: TableConfig = {
         key: 'page',
@@ -71,12 +70,14 @@ export class SqlPageConfig {
             }
         ],
         selectFieldList: [
+            // common
             '"PAGE" AS type',
             'CONCAT("PAGE", "_", page.pg_id) AS id',
             'pg_key',
             'page.pg_id',
             'pg_name',
             'pg_descmd',
+            // page
             'pg_css',
             'pg_heading',
             'pg_image',
@@ -85,6 +86,10 @@ export class SqlPageConfig {
             'pg_teaser',
             'pg_theme',
             'pg_subtype',
+            // changelog
+            'pg_createdat',
+            'pg_updatedat',
+            'pg_updateversion'
         ],
         facetConfigs: {
             // dashboard
@@ -207,8 +212,10 @@ export class SqlPageConfig {
             'sortkey': 'pg_sortkey ASC, pg_name ASC',
             'subtype': 'pg_subtype ASC, pg_name ASC, pg_sortkey ASC',
             'theme': 'pg_theme ASC, pg_name ASC, pg_sortkey ASC',
-            'forExport': 'pg_sortkey ASC, page.pg_id ASC, pg_name ASC',
-            'relevance': 'pg_sortkey ASC, page.pg_id DESC, pg_name ASC'
+            'forExport': 'pg_sortkey ASC, page.pg_id ASC',
+            'relevance': 'pg_sortkey ASC, page.pg_id DESC',
+            'createdAt': 'pg_createdat DESC, page.pg_id DESC',
+            'updatedAt': 'pg_updatedat DESC, page.pg_id DESC',
         },
         filterMapping: {
             // dashboard
@@ -219,6 +226,8 @@ export class SqlPageConfig {
             page_id_i: 'page.pg_id',
             page_id_is: 'page.pg_id',
             initial_s: 'SUBSTR(UPPER(pg_name), 1, 1)',
+            createdafter_dt: 'pg_createdat',
+            updatedafter_dt: 'pg_updatedat',
             html: 'CONCAT(pg_name, " ",' +
                 ' COALESCE(pg_subtype, ""), " ",' +
                 ' COALESCE(pg_heading, ""), " ",' +
@@ -241,6 +250,7 @@ export class SqlPageConfig {
             'page.pg_theme': ':theme_s:',
         },
         fieldMapping: {
+            // common
             id: 'id',
             page_id_i: 'pg_id',
             page_id_is: 'pg_id',
@@ -248,6 +258,11 @@ export class SqlPageConfig {
             name_s: 'pg_name',
             type_s: 'type',
             subtype_s: 'pg_subtype',
+            // changelog
+            createdat_dt: 'pg_createdat',
+            updatedat_dt: 'pg_updatedat',
+            updateversion_i: 'pg_updateversion',
+            // page
             key_s: 'pg_key',
             css_s: 'pg_css',
             flags_s: 'pg_flags',
@@ -259,11 +274,19 @@ export class SqlPageConfig {
             subsectionids_s: 'pg_subsectionids',
             teaser_s: 'pg_teaser',
             theme_s: 'pg_theme'
+        },
+        changelogConfig: {
+            createDateField: 'pg_createdat',
+            updateDateField: 'pg_updatedat',
+            updateVersionField: 'pg_updateversion',
+            table: 'page',
+            fieldId: 'pg_id'
         }
     };
 
     public static readonly keywordModelConfigType: KeywordModelConfigJoinType = {
-        table: 'page', joinTable: 'page_props', fieldReference: 'pg_id'
+        table: 'page', joinTable: 'page_props', fieldReference: 'pg_id',
+        changelogConfig: SqlPageConfig.tableConfig.changelogConfig
     };
 
     public static readonly actionTagAssignConfig: ActionTagAssignTableConfigType = {
@@ -279,7 +302,8 @@ export class SqlPageConfig {
         referenced: [],
         joins: [
             { table: 'page_props', fieldReference: 'pg_id' },
-        ]
+        ],
+        changelogConfig: SqlPageConfig.tableConfig.changelogConfig
     };
 }
 

@@ -86,7 +86,7 @@ export class CommonSqlObjectDetectionAdapter {
                     return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery);
                 }
 
-                return utils.resolve(true);
+                return Promise.resolve(true);
             }).then(() => {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {
@@ -252,17 +252,17 @@ export class CommonSqlObjectDetectionAdapter {
                 if (insertObjectNameSqlQuery) {
                     return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertObjectNameSqlQuery);
                 }
-                return utils.resolve(true);
+                return Promise.resolve(true);
             }).then(() => {
                 if (deleteObjectKeySqlQuery) {
                     return SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteObjectKeySqlQuery);
                 }
-                return utils.resolve(true);
+                return Promise.resolve(true);
             }).then(() => {
                 if (insertObjectKeySqlQuery) {
                     return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertObjectKeySqlQuery);
                 }
-                return utils.resolve(true);
+                return Promise.resolve(true);
             }).then(() => {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {

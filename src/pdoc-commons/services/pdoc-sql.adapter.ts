@@ -27,10 +27,8 @@ import {
     AssignJoinActionTagForm,
     CommonSqlActionTagAssignJoinAdapter
 } from '../../action-commons/actiontags/common-sql-actiontag-assignjoin.adapter';
-import {PDocRecord} from "../model/records/pdoc-record";
+import {PDocRecord} from '../model/records/pdoc-record';
 import {CommonSqlKeywordAdapter} from '../../action-commons/actions/common-sql-keyword.adapter';
-
-// TODO sync with model
 
 export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm, PDocSearchResult> {
     private readonly actionTagAssignAdapter: CommonSqlActionTagAssignAdapter;
@@ -112,7 +110,7 @@ export class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm
 
     protected queryTransformToAdapterWriteQuery(method: string, mapper: Mapper, props: any, opts: any): WriteQueryData {
         const query = super.queryTransformToAdapterWriteQuery(method, mapper, props, opts);
-        if (!query && !query.tableConfig && !query.tableConfig.key) {
+        if (!query || !query.tableConfig || !query.tableConfig.key) {
             return query;
         }
 

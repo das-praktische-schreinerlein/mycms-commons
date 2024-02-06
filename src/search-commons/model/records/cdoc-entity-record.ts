@@ -30,6 +30,9 @@ export interface CommonDocRecordType extends BaseEntityRecordType {
     playlists: string;
     subtype: string;
     type: string;
+    createdAt: Date;
+    updatedAt: Date;
+    updateVersion: number;
 
     toSerializableJsonObj(anonymizeMedia?: boolean): {};
 }
@@ -45,7 +48,10 @@ export class CommonDocRecord extends BaseEntityRecord implements CommonDocRecord
         name: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NAME, new NameValidationRule(true)),
         playlists: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.WHAT_KEY_CSV, new TextValidationRule(false)),
         subtype: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(false)),
-        type: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true))
+        type: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.ID, new IdValidationRule(true)),
+        createdAt: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.DATE, new DateValidationRule(false)),
+        updatedAt: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.DATE, new DateValidationRule(false)),
+        updateVersion: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, undefined, undefined)),
     };
 
     blocked: number;
@@ -58,6 +64,9 @@ export class CommonDocRecord extends BaseEntityRecord implements CommonDocRecord
     playlists: string;
     subtype: string;
     type: string;
+    createdAt: Date;
+    updatedAt: Date;
+    updateVersion: number;
 
     static cloneToSerializeToJsonObj(baseRecord: CommonDocRecord, anonymizeMedia?: boolean): {}  {
         const record  = {};

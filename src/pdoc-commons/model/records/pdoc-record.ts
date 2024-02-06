@@ -8,7 +8,7 @@ import {
     CommonDocRecordFactory,
     CommonDocRecordType,
     CommonDocRecordValidator
-} from "../../../search-commons/model/records/cdoc-entity-record";
+} from '../../../search-commons/model/records/cdoc-entity-record';
 import {isArray} from 'util';
 import {
     GenericValidatorDatatypes,

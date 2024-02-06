@@ -1,9 +1,10 @@
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
+import { ChangelogDataConfig, SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export interface ActionTagAssignReferenceTableConfigType {
     table: string;
     idField: string;
     referenceField: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface ActionTagAssignReferenceTableConfigsType {
     [key: string]: ActionTagAssignReferenceTableConfigType;
@@ -12,6 +13,7 @@ export interface ActionTagAssignTableConfigType {
     table: string;
     idField: string;
     references: ActionTagAssignReferenceTableConfigsType;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface ActionTagAssignTableConfigsType {
     [key: string]: ActionTagAssignTableConfigType;

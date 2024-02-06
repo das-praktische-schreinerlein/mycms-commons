@@ -1,10 +1,10 @@
 import { PDocRecord } from '../model/records/pdoc-record';
-import { CommonDocDataService } from "../../search-commons/services/cdoc-data.service";
-import { PDocSearchForm } from "../model/forms/pdoc-searchform";
-import { PDocSearchResult } from "../model/container/pdoc-searchresult";
-import { BaseJoinRecord } from "../../search-commons/model/records/basejoin-record";
-import { ActionTagForm } from "../../commons/utils/actiontag.utils";
-import { StaticPagesDataStore } from "./staticpages-data.store";
+import { CommonDocDataService } from '../../search-commons/services/cdoc-data.service';
+import { PDocSearchForm } from '../model/forms/pdoc-searchform';
+import { PDocSearchResult } from '../model/container/pdoc-searchresult';
+import { BaseJoinRecord } from '../../search-commons/model/records/basejoin-record';
+import { ActionTagForm } from '../../commons/utils/actiontag.utils';
+import { StaticPagesDataStore } from './staticpages-data.store';
 export declare class StaticPagesDataService extends CommonDocDataService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: StaticPagesDataStore);
     createRecord(props: any, opts: any): PDocRecord;

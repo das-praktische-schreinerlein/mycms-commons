@@ -2,12 +2,12 @@ import {PDocRecord, PDocRecordRelation} from '../model/records/pdoc-record';
 import {PDocDataStore} from './pdoc-data.store';
 import {PDocSearchService} from './pdoc-search.service';
 import {PDocRecordSchema} from '../model/schemas/pdoc-record-schema';
-import {CommonDocDataService} from "../../search-commons/services/cdoc-data.service";
-import {PDocSearchForm} from "../model/forms/pdoc-searchform";
-import {PDocSearchResult} from "../model/container/pdoc-searchresult";
-import {BaseJoinRecord} from "../../search-commons/model/records/basejoin-record";
-import {PDocAdapterResponseMapper} from "./pdoc-adapter-response.mapper";
-import {ActionTagForm} from "../../commons/utils/actiontag.utils";
+import {CommonDocDataService} from '../../search-commons/services/cdoc-data.service';
+import {PDocSearchForm} from '../model/forms/pdoc-searchform';
+import {PDocSearchResult} from '../model/container/pdoc-searchresult';
+import {BaseJoinRecord} from '../../search-commons/model/records/basejoin-record';
+import {PDocAdapterResponseMapper} from './pdoc-adapter-response.mapper';
+import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 
 export class PDocDataService extends CommonDocDataService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: PDocDataStore) {

@@ -1,7 +1,7 @@
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {IdValidationRule, KeywordValidationRule} from '../../search-commons/model/forms/generic-validator.util';
 import {utils} from 'js-data';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import * as Promise_serial from 'promise-serial';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
 
@@ -9,6 +9,7 @@ export interface ActionTagAssignReferenceTableConfigType {
     table: string;
     idField: string;
     referenceField: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface ActionTagAssignReferenceTableConfigsType {
@@ -19,6 +20,7 @@ export interface ActionTagAssignTableConfigType {
     table: string;
     idField: string;
     references: ActionTagAssignReferenceTableConfigsType;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface ActionTagAssignTableConfigsType {
@@ -147,6 +149,22 @@ export class CommonSqlActionTagAssignAdapter {
                     });
                 }
                 return Promise_serial(updateSqlQueryPromises, {parallelize: 1});
+            }).then(() => {
+                const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                    'update', assignConfig.table, assignConfig.idField, assignConfig.changelogConfig, id);
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve(true);
+            }).then(() => {
+                const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                    'update', referenceConfig.table, referenceConfig.idField, referenceConfig.changelogConfig, newId);
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve(true);
             }).then(() => {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {

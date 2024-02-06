@@ -1,6 +1,6 @@
 import {FacetCacheConfiguration} from './facetcache.configuration';
 import {FacetCacheAdapter} from './facetcache.adapter';
-import {DatabaseService} from "../../commons/services/database.service";
+import {DatabaseService} from '../../commons/services/database.service';
 
 export class Sqlite3FacetCacheAdapter implements FacetCacheAdapter {
     protected sqlScriptPath: string;

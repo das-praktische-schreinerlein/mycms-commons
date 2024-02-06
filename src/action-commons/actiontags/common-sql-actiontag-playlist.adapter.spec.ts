@@ -4,6 +4,7 @@ import {TestHelper} from '../../testing/test-helper';
 import {CommonSqlActionTagPlaylistAdapter} from './common-sql-actiontag-playlist.adapter';
 import {CommonSqlPlaylistAdapter, PlaylistModelConfigType} from '../actions/common-sql-playlist.adapter';
 import {TestActionFormHelper} from '../testing/test-actionform-helper';
+import {DateUtils} from '../../commons/utils/date.utils';
 
 describe('CommonDocSqlActionTagPlaylistAdapter', () => {
     const modelConfigType: PlaylistModelConfigType = {
@@ -13,6 +14,14 @@ describe('CommonDocSqlActionTagPlaylistAdapter', () => {
         joins: {
             'image': {
                 table: 'image', joinTable: 'image_playlist', fieldReference: 'i_id'
+            },
+            'video': {
+                table: 'video', joinTable: 'video_playlist', fieldReference: 'v_id',
+                changelogConfig: {
+                    createDateField: 'vcreated',
+                    updateDateField: 'vupdated',
+                    fieldId: 'v_id'
+                }
             }
         }
     };
@@ -151,6 +160,61 @@ describe('CommonDocSqlActionTagPlaylistAdapter', () => {
                 ],
                 [
                     ['playlist', 5]
+                ],
+                done);
+        });
+
+        it('executeActionTagPlaylist should set playlist with changelog', done => {
+            const id: any = 5;
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'video', id, {
+                    payload: {
+                        playlistkey: 'playlist',
+                        set: true,
+                    },
+                    deletes: false,
+                    key: 'playlist',
+                    recordId: id,
+                    type: 'tag'
+                },
+                true,
+                [
+                    'DELETE FROM video_playlist'
+                    + ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND v_id = ?',
+                    'INSERT INTO video_playlist (p_id, v_id)'
+                    + ' SELECT p_id AS p_id,     ? AS v_id FROM playlist     WHERE p_name IN (?)',
+                    'UPDATE video SET vupdated=? WHERE v_id=?'
+                ],
+                [
+                    ['playlist', 5],
+                    [5, 'playlist'],
+                    // TODO fingers crossed for a fast computer ;-)
+                    [DateUtils.dateToLocalISOString(new Date()), 5]
+                ],
+                done);
+        });
+
+        it('executeActionTagPlaylist should unset playlist with changelog', done => {
+            const id: any = 5;
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagPlaylist', 'video', id, {
+                    payload: {
+                        playlistkey: 'playlist',
+                        set: false,
+                    },
+                    deletes: false,
+                    key: 'playlist',
+                    recordId: id,
+                    type: 'tag'
+                },
+                true,
+                [
+                    'DELETE FROM video_playlist'
+                    + ' WHERE p_id IN     (SELECT p_id FROM playlist      WHERE p_name IN (?)) AND v_id = ?',
+                    'UPDATE video SET vupdated=? WHERE v_id=?'
+                ],
+                [
+                    ['playlist', 5],
+                    // TODO fingers crossed for a fast computer ;-)
+                    [DateUtils.dateToLocalISOString(new Date()), 5]
                 ],
                 done);
         });

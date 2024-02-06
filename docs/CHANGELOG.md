@@ -5,9 +5,12 @@
 ## 6.1.0
 - stringutils: added replaceUmlauts and improved generateTechnicalName
 - playlistservice: add csv-export
+- added optional changelog to common-entity and services
+- added changelog to page-model
 
 ### new features
-- none
+- added optional changelog to common-entity and services
+- added changelog to page-model
 
 ### improvements
 - stringutils: added replaceUmlauts and improved generateTechnicalName

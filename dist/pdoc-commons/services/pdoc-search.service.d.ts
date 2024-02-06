@@ -3,7 +3,7 @@ import { PDocSearchResult } from '../model/container/pdoc-searchresult';
 import { PDocSearchForm } from '../model/forms/pdoc-searchform';
 import { PDocDataStore } from './pdoc-data.store';
 import { Facets } from '../../search-commons/model/container/facets';
-import { CommonDocSearchService } from "../../search-commons/services/cdoc-search.service";
+import { CommonDocSearchService } from '../../search-commons/services/cdoc-search.service';
 export declare class PDocSearchService extends CommonDocSearchService<PDocRecord, PDocSearchForm, PDocSearchResult> {
     constructor(dataStore: PDocDataStore);
     createDefaultSearchForm(): PDocSearchForm;

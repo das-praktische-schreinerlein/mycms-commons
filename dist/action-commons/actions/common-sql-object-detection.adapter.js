@@ -72,7 +72,7 @@ var CommonSqlObjectDetectionAdapter = /** @class */ (function () {
                 if (set) {
                     return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery);
                 }
-                return js_data_1.utils.resolve(true);
+                return Promise.resolve(true);
             }).then(function () {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {
@@ -219,17 +219,17 @@ var CommonSqlObjectDetectionAdapter = /** @class */ (function () {
                 if (insertObjectNameSqlQuery) {
                     return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertObjectNameSqlQuery);
                 }
-                return js_data_1.utils.resolve(true);
+                return Promise.resolve(true);
             }).then(function () {
                 if (deleteObjectKeySqlQuery) {
                     return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteObjectKeySqlQuery);
                 }
-                return js_data_1.utils.resolve(true);
+                return Promise.resolve(true);
             }).then(function () {
                 if (insertObjectKeySqlQuery) {
                     return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertObjectKeySqlQuery);
                 }
-                return js_data_1.utils.resolve(true);
+                return Promise.resolve(true);
             }).then(function () {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {

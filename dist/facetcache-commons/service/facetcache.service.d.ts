@@ -1,7 +1,7 @@
 import { FacetCacheConfiguration, FacetCacheServiceConfiguration } from '../model/facetcache.configuration';
 import { FacetCacheAdapter } from '../model/facetcache.adapter';
-import { DatabaseService } from "../../commons/services/database.service";
-import { SqlQueryBuilder } from "../../search-commons/services/sql-query.builder";
+import { DatabaseService } from '../../commons/services/database.service';
+import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export declare class FacetCacheService {
     protected knex: any;
     protected sqlQueryBuilder: SqlQueryBuilder;

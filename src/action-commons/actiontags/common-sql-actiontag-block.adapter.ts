@@ -1,6 +1,6 @@
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {utils} from 'js-data';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
 import {NumberValidationRule} from '../../search-commons/model/forms/generic-validator.util';
 
@@ -8,6 +8,7 @@ export interface ActionTagBlockTableConfigType {
     table: string;
     idField: string;
     blockField: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface ActionTagBlockTableConfigsType {
@@ -81,8 +82,16 @@ export class CommonSqlActionTagBlockAdapter {
         const rawUpdate = SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         const result = new Promise((resolve, reject) => {
             rawUpdate.then(() => {
+                const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                    'update', blockConfig.table, blockConfig.idField, blockConfig.changelogConfig, id);
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve(true);
+            }).then(() => {
                 return resolve(true);
-            }).catch(function errorPlaylist(reason) {
+            }).catch(function errorBlock(reason) {
                 console.error('_doActionTag update ' + tableName + ' blocked failed:', reason);
                 return reject(reason);
             });

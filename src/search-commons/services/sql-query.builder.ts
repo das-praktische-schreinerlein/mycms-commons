@@ -3,7 +3,7 @@ import {isDate} from 'util';
 import {DateUtils} from '../../commons/utils/date.utils';
 import {LogUtils} from '../../commons/utils/log.utils';
 import {FacetUtils, FacetValueType} from '../model/container/facets';
-import {SqlUtils} from './sql-utils';
+import {RawSqlQueryData, SqlUtils} from './sql-utils';
 
 export interface SelectQueryData {
     where: string[];
@@ -58,6 +58,22 @@ export interface LoadDetailDataConfig {
     modes?: string[];
 }
 
+export interface SpatialDataConfig {
+    lat: string;
+    lon: string;
+    spatialField: string;
+    spatialSortKey: string;
+}
+
+export interface ChangelogDataConfig {
+    table?: string;
+    fieldId?: string;
+    createDateField?: string;
+    updateDateField?: string;
+    updateVersionField?: string;
+}
+
+
 export interface TableConfig {
     key: string;
     tableName: string;
@@ -73,12 +89,8 @@ export interface TableConfig {
     groupbBySelectFieldListIgnore?: string[];
     optionalGroupBy?: OptionalGroupByConfig[];
     loadDetailData?: LoadDetailDataConfig[];
-    spartialConfig?: {
-        lat: string;
-        lon: string;
-        spatialField: string;
-        spatialSortKey: string;
-    };
+    spartialConfig?: SpatialDataConfig;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface TableConfigs {
@@ -169,6 +181,50 @@ export class SqlQueryBuilder {
         return sql;
     }
 
+    public updateChangelogSqlQuery(mode: string, table: string, idField: string, changelogDataConfig: ChangelogDataConfig, id: any): RawSqlQueryData {
+        if (!changelogDataConfig
+            || (changelogDataConfig.createDateField === undefined
+                && changelogDataConfig.updateDateField === undefined
+                && changelogDataConfig.updateVersionField === undefined)
+            || (changelogDataConfig.fieldId === undefined && idField === undefined)
+            || (changelogDataConfig.table === undefined && table === undefined)) {
+            return;
+        }
+
+        const updateFields = [];
+        const parameters = [];
+        const now =  DateUtils.dateToLocalISOString(new Date());
+        if (mode === 'create' && changelogDataConfig.createDateField !== undefined) {
+            updateFields.push(changelogDataConfig.createDateField + '=?');
+            parameters.push(now);
+        }
+        if (changelogDataConfig.updateDateField !== undefined) {
+            updateFields.push(changelogDataConfig.updateDateField + '=?');
+            parameters.push(now);
+        }
+        if (changelogDataConfig.updateVersionField !== undefined) {
+            updateFields.push(changelogDataConfig.updateVersionField +
+                '=COALESCE(' + changelogDataConfig.updateVersionField + ', 0)+1');
+        }
+
+        if (updateFields.length < 1) {
+            return;
+        }
+
+        const sql = 'UPDATE ' +
+            (changelogDataConfig.table !== undefined ? changelogDataConfig.table : table) + ' ' +
+            'SET ' +
+            updateFields.join(', ') + ' ' +
+            'WHERE ' +
+            (changelogDataConfig.fieldId !== undefined ? changelogDataConfig.fieldId : idField) + '=?';
+        parameters.push(id);
+
+        return {
+            sql: sql,
+            parameters: parameters
+        };
+    }
+
     public queryTransformToAdapterWriteQuery(tableConfig: TableConfig, method: string, props: any,
                                              adapterOpts: AdapterOpts): WriteQueryData {
         const query: WriteQueryData = {
@@ -207,7 +263,9 @@ export class SqlQueryBuilder {
                     } else {
                         for (const replacer of replacers) {
                             const propKey = replacer.replace(/^:(.*):$/, '$1');
-                            value = value.replace(replacer, props[propKey]);
+                            value = value.replace(replacer, props[propKey]); // TODO -> I think this should be removed
+
+                            // TODO this block is same as the before before???
                             if (props.hasOwnProperty(propKey) && props[propKey] !== undefined) {
                                 propValue = props[propKey];
                                 if (isDate(propValue)) {

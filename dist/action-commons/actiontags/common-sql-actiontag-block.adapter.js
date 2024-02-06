@@ -12,6 +12,7 @@ var CommonSqlActionTagBlockAdapter = /** @class */ (function () {
         this.blockConfigs = blockConfigs;
     }
     CommonSqlActionTagBlockAdapter.prototype.executeActionTagBlock = function (table, id, actionTagForm, opts) {
+        var _this = this;
         opts = opts || {};
         if (!js_data_1.utils.isInteger(id)) {
             return js_data_1.utils.reject('actiontag ' + actionTagForm.key + ' id not an integer');
@@ -47,8 +48,14 @@ var CommonSqlActionTagBlockAdapter = /** @class */ (function () {
         var rawUpdate = sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         var result = new Promise(function (resolve, reject) {
             rawUpdate.then(function () {
+                var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('update', blockConfig.table, blockConfig.idField, blockConfig.changelogConfig, id);
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve(true);
+            }).then(function () {
                 return resolve(true);
-            }).catch(function errorPlaylist(reason) {
+            }).catch(function errorBlock(reason) {
                 console.error('_doActionTag update ' + tableName + ' blocked failed:', reason);
                 return reject(reason);
             });

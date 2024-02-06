@@ -21,6 +21,7 @@ var util_1 = require("util");
 var mapper_utils_1 = require("./mapper.utils");
 var sql_query_builder_1 = require("./sql-query.builder");
 var log_utils_1 = require("../../commons/utils/log.utils");
+var sql_utils_1 = require("./sql-utils");
 var GenericSqlAdapter = /** @class */ (function (_super) {
     __extends(GenericSqlAdapter, _super);
     function GenericSqlAdapter(config, mapper, facetCacheConfig) {
@@ -155,6 +156,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
         return js_data_1.utils.resolve(true);
     };
     GenericSqlAdapter.prototype._create = function (mapper, props, opts) {
+        var _this = this;
         if (opts.realSource) {
             props = opts.realSource;
         }
@@ -174,6 +176,12 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     .returning(idField_1)
                     .then(function (values) {
                     dbId_1 = values[0];
+                    var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('create', undefined, undefined, writeQuery.tableConfig.changelogConfig, dbId_1);
+                    if (updateSqlQuery) {
+                        return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                    }
+                    return Promise.resolve(true);
+                }).then(function (done) {
                     return me.saveDetailData('create', mapper, dbId_1, props, opts);
                 }).then(function (done) {
                     var query = {
@@ -365,6 +373,12 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                     .where(idField_2, dbId_2)
                     .returning(idField_2)
                     .then(function (values) {
+                    var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('update', undefined, undefined, writeQuery.tableConfig.changelogConfig, dbId_2);
+                    if (updateSqlQuery) {
+                        return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                    }
+                    return Promise.resolve(true);
+                }).then(function (done) {
                     return me.saveDetailData('update', mapper, dbId_2, props, opts);
                 }).then(function (done) {
                     var query = {

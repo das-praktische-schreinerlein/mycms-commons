@@ -10,6 +10,9 @@ export interface CommonDocRecordType extends BaseEntityRecordType {
     playlists: string;
     subtype: string;
     type: string;
+    createdAt: Date;
+    updatedAt: Date;
+    updateVersion: number;
     toSerializableJsonObj(anonymizeMedia?: boolean): {};
 }
 export declare class CommonDocRecord extends BaseEntityRecord implements CommonDocRecordType {
@@ -24,6 +27,9 @@ export declare class CommonDocRecord extends BaseEntityRecord implements CommonD
         playlists: BaseEntityRecordFieldConfig;
         subtype: BaseEntityRecordFieldConfig;
         type: BaseEntityRecordFieldConfig;
+        createdAt: BaseEntityRecordFieldConfig;
+        updatedAt: BaseEntityRecordFieldConfig;
+        updateVersion: BaseEntityRecordFieldConfig;
     };
     blocked: number;
     dateshow: Date;
@@ -35,6 +41,9 @@ export declare class CommonDocRecord extends BaseEntityRecord implements CommonD
     playlists: string;
     subtype: string;
     type: string;
+    createdAt: Date;
+    updatedAt: Date;
+    updateVersion: number;
     static cloneToSerializeToJsonObj(baseRecord: CommonDocRecord, anonymizeMedia?: boolean): {};
     toString(): string;
     toSerializableJsonObj(anonymizeMedia?: boolean): {};

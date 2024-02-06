@@ -2,7 +2,7 @@ import {PDocRecord} from '../model/records/pdoc-record';
 import {PDocSearchForm} from '../model/forms/pdoc-searchform';
 import {PDocSearchResult} from '../model/container/pdoc-searchresult';
 import {GenericSearchHttpAdapter} from '../../search-commons/services/generic-search-http.adapter';
-import {PDocAdapterResponseMapper} from "./pdoc-adapter-response.mapper";
+import {PDocAdapterResponseMapper} from './pdoc-adapter-response.mapper';
 import {Mapper} from 'js-data';
 
 export class PDocHttpAdapter extends GenericSearchHttpAdapter<PDocRecord, PDocSearchForm, PDocSearchResult> {

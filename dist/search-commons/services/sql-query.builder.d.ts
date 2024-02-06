@@ -1,5 +1,6 @@
 import { AdapterFilterActions, AdapterOpts, AdapterQuery, MapperUtils } from './mapper.utils';
 import { FacetValueType } from '../model/container/facets';
+import { RawSqlQueryData } from './sql-utils';
 export interface SelectQueryData {
     where: string[];
     offset: number;
@@ -48,6 +49,19 @@ export interface LoadDetailDataConfig {
     parameterNames: string[];
     modes?: string[];
 }
+export interface SpatialDataConfig {
+    lat: string;
+    lon: string;
+    spatialField: string;
+    spatialSortKey: string;
+}
+export interface ChangelogDataConfig {
+    table?: string;
+    fieldId?: string;
+    createDateField?: string;
+    updateDateField?: string;
+    updateVersionField?: string;
+}
 export interface TableConfig {
     key: string;
     tableName: string;
@@ -73,12 +87,8 @@ export interface TableConfig {
     groupbBySelectFieldListIgnore?: string[];
     optionalGroupBy?: OptionalGroupByConfig[];
     loadDetailData?: LoadDetailDataConfig[];
-    spartialConfig?: {
-        lat: string;
-        lon: string;
-        spatialField: string;
-        spatialSortKey: string;
-    };
+    spartialConfig?: SpatialDataConfig;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface TableConfigs {
     [key: string]: TableConfig;
@@ -98,6 +108,7 @@ export declare class SqlQueryBuilder {
     extendTableConfig(tableConfig: TableConfig): void;
     transformToSqlDialect(sql: string, client: string): string;
     selectQueryTransformToSql(query: SelectQueryData): string;
+    updateChangelogSqlQuery(mode: string, table: string, idField: string, changelogDataConfig: ChangelogDataConfig, id: any): RawSqlQueryData;
     queryTransformToAdapterWriteQuery(tableConfig: TableConfig, method: string, props: any, adapterOpts: AdapterOpts): WriteQueryData;
     queryTransformToAdapterSelectQuery(tableConfig: TableConfig, method: string, adapterQuery: AdapterQuery, adapterOpts: AdapterOpts): SelectQueryData;
     getFacetSql(tableConfig: TableConfig, facetCacheUsageConfigurations: FacetCacheUsageConfigurations, adapterOpts: AdapterOpts): Map<string, string>;

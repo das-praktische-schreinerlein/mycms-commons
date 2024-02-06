@@ -6,7 +6,7 @@ import { AdapterQuery } from '../../search-commons/services/mapper.utils';
 import { Facets } from '../../search-commons/model/container/facets';
 import { Mapper } from 'js-data';
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
-import { PDocRecord } from "../model/records/pdoc-record";
+import { PDocRecord } from '../model/records/pdoc-record';
 export declare class PDocSqlAdapter extends GenericSqlAdapter<PDocRecord, PDocSearchForm, PDocSearchResult> {
     private readonly actionTagAssignAdapter;
     private readonly actionTagAssignJoinAdapter;

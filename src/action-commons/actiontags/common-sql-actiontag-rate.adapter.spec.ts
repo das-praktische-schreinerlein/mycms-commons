@@ -4,6 +4,7 @@ import {TestHelper} from '../../testing/test-helper';
 import {CommonSqlActionTagRateAdapter} from './common-sql-actiontag-rate.adapter';
 import {CommonSqlRateAdapter, RateModelConfigType} from '../actions/common-sql-rate.adapter';
 import {TestActionFormHelper} from '../testing/test-actionform-helper';
+import {DateUtils} from '../../commons/utils/date.utils';
 
 describe('CommonDocSqlActionTagRateAdapter', () => {
     const modelConfigType: RateModelConfigType = {
@@ -17,6 +18,20 @@ describe('CommonDocSqlActionTagRateAdapter', () => {
                     'wichtigkeit': 'i_rate_wichtigkeit'
                 },
                 fieldSum: 'i_rate'
+            },
+            'imagewithchangelog': {
+                fieldId: 'i_id',
+                table: 'image',
+                rateFields: {
+                    'gesamt': 'i_rate',
+                    'motive': 'i_rate_motive',
+                    'wichtigkeit': 'i_rate_wichtigkeit'
+                },
+                fieldSum: 'i_rate',
+                changelogConfig: {
+                    createDateField: 'imgcreated',
+                    updateDateField: 'imgupdated'
+                }
             }
         }
     };
@@ -142,6 +157,34 @@ describe('CommonDocSqlActionTagRateAdapter', () => {
                 ],
                 [
                     [15, 5]
+                ],
+                done);
+        });
+
+        it('executeActionTagRate should set gesamt with changelog', done => {
+            const id: any = 5;
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagRate', 'imagewithchangelog', id, {
+                    payload: {
+                        ratekey: 'gesamt',
+                        value: 15,
+                    },
+                    deletes: false,
+                    key: 'rate',
+                    recordId: id,
+                    type: 'tag'
+                },
+                true,
+                [
+                    'UPDATE image SET'
+                    + ' i_rate=GREATEST(COALESCE(-1, -1), ?),'
+                    + ' i_rate=GREATEST(COALESCE(i_rate, -1), COALESCE(i_rate_motive, -1), COALESCE(i_rate_wichtigkeit, -1))'
+                    + '  WHERE i_id = ?',
+                    'UPDATE image SET imgupdated=? WHERE i_id=?'
+                ],
+                [
+                    [15, 5],
+                    // TODO fingers crossed for a fast computer ;-)
+                    [DateUtils.dateToLocalISOString(new Date()), 5]
                 ],
                 done);
         });

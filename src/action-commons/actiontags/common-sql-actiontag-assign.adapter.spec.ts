@@ -3,6 +3,7 @@ import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {TestHelper} from '../../testing/test-helper';
 import {ActionTagAssignConfigType, CommonSqlActionTagAssignAdapter} from './common-sql-actiontag-assign.adapter';
 import {TestActionFormHelper} from '../testing/test-actionform-helper';
+import {DateUtils} from '../../commons/utils/date.utils';
 
 describe('CommonSqlActionTagAssignAdapter', () => {
     const sqlQueryBuilder: SqlQueryBuilder = new SqlQueryBuilder();
@@ -19,9 +20,27 @@ describe('CommonSqlActionTagAssignAdapter', () => {
                         table: 'location', idField: 'l_id', referenceField: 'l_id'
                     }
                 }
+            },
+            'track': {
+                table: 'kategorie',
+                idField: 'k_id',
+                references: {
+                    'loc_lochirarchie_txt': {
+                        table: 'location', idField: 'l_id', referenceField: 'l_id',
+                        changelogConfig: {
+                            createDateField: 'loccreated',
+                            updateDateField: 'locupdated'
+                        }
+                    }
+                },
+                changelogConfig: {
+                    createDateField: 'trkcreated',
+                    updateDateField: 'trkupdated'
+                }
             }
         }
     };
+
     const localTestHelper = {
         createService: function (knex) {
             const config = {
@@ -267,6 +286,43 @@ describe('CommonSqlActionTagAssignAdapter', () => {
                 [
                     [[{id: 5}]],
                     [[]]
+                ]);
+        });
+
+        it('executeActionTagAssign should set newId with changelog', done => {
+            const id: any = 5;
+            const newId: any = '10';
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagAssign', 'track', id, {
+                    payload: {
+                        newId: newId,
+                        newIdSetNull: false,
+                        referenceField: 'loc_lochirarchie_txt'
+                    },
+                    deletes: false,
+                    key: 'assign',
+                    recordId: id,
+                    type: 'tag'
+                },
+                true,
+                [
+                    'SELECT k_id AS id FROM kategorie WHERE k_id=?',
+                    'SELECT l_id AS id FROM location WHERE l_id=?',
+                    'UPDATE kategorie SET l_id=? WHERE k_id=?',
+                    'UPDATE kategorie SET trkupdated=? WHERE k_id=?',
+                    'UPDATE location SET locupdated=? WHERE l_id=?'
+                ],
+                [
+                    [5],
+                    [10],
+                    [10, 5],
+                    // TODO fingers crossed for a fast computer ;-)
+                    [DateUtils.dateToLocalISOString(new Date()), 5],
+                    [DateUtils.dateToLocalISOString(new Date()), 10]
+                ],
+                done,
+                [
+                    [[{id: 5}]],
+                    [[{id: 10}]]
                 ]);
         });
 

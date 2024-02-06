@@ -12,8 +12,12 @@ exports.PDocRecordSchema = new js_data_1.Schema({
         // TODO sync with model
         pageId: { type: 'number' },
         blocked: { type: 'number' },
-        // TODO: add type validation ifor date in later version -> but date-values can be string|Date
+        // TODO: add type validation for date in later version -> but date-values can be string|Date
         dateshow: {},
+        // TODO: add type validation for date in later version -> but date-values can be string|Date
+        createdAt: {},
+        updatedAt: {},
+        updateVersion: { type: 'number' },
         css: { type: 'string' },
         descTxt: { type: 'string' },
         descMd: { type: 'string' },

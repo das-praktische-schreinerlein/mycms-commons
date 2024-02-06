@@ -2,7 +2,7 @@ import {utils} from 'js-data';
 import * as Promise_serial from 'promise-serial';
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {IdValidationRule, KeywordValidationRule} from '../../search-commons/model/forms/generic-validator.util';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
 
 export interface ActionTagAssignJoinReferenceTableConfigType {
@@ -11,6 +11,7 @@ export interface ActionTagAssignJoinReferenceTableConfigType {
     joinTable: string;
     joinBaseIdField: string;
     joinReferenceField: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface ActionTagAssignJoinReferenceTableConfigsType {
@@ -21,6 +22,7 @@ export interface ActionTagAssignJoinTableConfigType {
     table: string;
     idField: string;
     references: ActionTagAssignJoinReferenceTableConfigsType;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface ActionTagAssignJoinTableConfigsType {
@@ -92,21 +94,18 @@ export class CommonSqlActionTagAssignJoinAdapter {
                 ' FROM ' + assignConfig.table +
                 ' WHERE ' + assignConfig.idField + '=' + '?' + '',
             parameters: [id]};
-        let checkNewValueSqlQuery: RawSqlQueryData = undefined;
-        const insertSqlQueries: RawSqlQueryData[] = [];
-        checkNewValueSqlQuery = {sql: 'SELECT ' + referenceConfig.joinedIdField + ' AS id' +
+        const checkNewValueSqlQuery: RawSqlQueryData = {sql: 'SELECT ' + referenceConfig.joinedIdField + ' AS id' +
                 ' FROM ' + referenceConfig.joinedTable +
                 ' WHERE ' + referenceConfig.joinedIdField + '=' + '?' + '',
             parameters: [newId]};
-        insertSqlQueries.push({sql:
+        const insertSqlQuery: RawSqlQueryData = {sql:
                 'INSERT INTO ' + referenceConfig.joinTable +
                 ' (' + referenceConfig.joinBaseIdField + ', ' + referenceConfig.joinReferenceField + ')' +
                 ' SELECT ?, ? WHERE NOT EXISTS' +
                 '    (SELECT ' + referenceConfig.joinBaseIdField + ', ' + referenceConfig.joinReferenceField +
                 '     FROM ' + referenceConfig.joinTable +
                 '     WHERE ' + referenceConfig.joinBaseIdField + '=? AND ' + referenceConfig.joinReferenceField + '=?)',
-            parameters: [id, newId, id, newId]}
-        );
+            parameters: [id, newId, id, newId]};
 
         const sqlBuilder = utils.isUndefined(opts.transaction)
             ? this.knex
@@ -125,13 +124,23 @@ export class CommonSqlActionTagAssignJoinAdapter {
                     return utils.reject('_doActionTag assignjoin ' + table + ' failed: newId not found ' + newId);
                 }
 
-                const insertSqlQueryPromises = [];
-                for (const updateSql of insertSqlQueries) {
-                    insertSqlQueryPromises.push(function () {
-                        return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSql);
-                    });
+                return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery);
+            }).then(() => {
+                const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                    'update', assignConfig.table, assignConfig.idField, assignConfig.changelogConfig, id);
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
                 }
-                return Promise_serial(insertSqlQueryPromises, {parallelize: 1});
+
+                return Promise.resolve(true);
+            }).then(() => {
+                const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                    'update', referenceConfig.joinedTable, referenceConfig.joinedIdField, referenceConfig.changelogConfig, newId);
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve(true);
             }).then(() => {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {

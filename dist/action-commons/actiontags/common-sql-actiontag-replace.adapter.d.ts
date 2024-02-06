@@ -1,14 +1,16 @@
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
+import { ChangelogDataConfig, SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export interface ActionTagReplaceReferenceTableConfigType {
     table: string;
     fieldReference: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface ActionTagReplaceTableConfigType {
     fieldId: string;
     joins: ActionTagReplaceReferenceTableConfigType[];
     referenced: ActionTagReplaceReferenceTableConfigType[];
     table: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface ActionTagReplaceTableConfigsType {
     [key: string]: ActionTagReplaceTableConfigType;

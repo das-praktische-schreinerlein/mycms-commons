@@ -12,6 +12,7 @@ var CommonSqlRateAdapter = /** @class */ (function () {
         this.rateModelConfig = rateModelConfig;
     }
     CommonSqlRateAdapter.prototype.setRates = function (rateTableKey, dbId, rates, checkGreatestHimself, opts) {
+        var _this = this;
         if (!js_data_1.utils.isInteger(dbId)) {
             return js_data_1.utils.reject('setRates ' + rateTableKey + ' id not an integer');
         }
@@ -62,8 +63,14 @@ var CommonSqlRateAdapter = /** @class */ (function () {
         var rawUpdate = sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         var result = new Promise(function (resolve, reject) {
             rawUpdate.then(function () {
+                var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('update', rateConfig.table, rateConfig.fieldId, rateConfig.changelogConfig, dbId);
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve(true);
+            }).then(function () {
                 return resolve(true);
-            }).catch(function errorPlaylist(reason) {
+            }).catch(function errorRate(reason) {
                 console.error('_doActionTag update ' + rateConfig.table + ' rate failed:', reason);
                 return reject(reason);
             });

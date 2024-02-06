@@ -25,13 +25,17 @@ var CommonSqlKeywordAdapter = /** @class */ (function () {
         var keywordTable = this.keywordModelConfig.table;
         var keywordNameField = this.keywordModelConfig.fieldName;
         var keywordIdField = this.keywordModelConfig.fieldId;
-        var joinTable = this.keywordModelConfig.joins[joinTableKey].joinTable;
-        var joinBaseIdField = this.keywordModelConfig.joins[joinTableKey].fieldReference;
+        var joinConfig = this.keywordModelConfig.joins[joinTableKey];
+        var joinTable = joinConfig.joinTable;
+        var joinBaseIdField = joinConfig.fieldReference;
         var newKeywords = string_utils_1.StringUtils.uniqueKeywords(keywords).join(',');
-        var deleteNotUsedKeywordSqlQuery = deleteOld ? {
-            sql: 'DELETE FROM ' + joinTable + ' WHERE ' + joinBaseIdField + ' IN (' + '?' + ')',
-            parameters: [dbId]
-        } : { sql: 'SELECT 1', parameters: [] };
+        var deleteNotUsedKeywordSqlQuery = deleteOld
+            ? {
+                sql: 'DELETE FROM ' + joinTable + ' WHERE ' + joinBaseIdField + ' IN (' + '?' + ')',
+                parameters: [dbId]
+            }
+            : { sql: 'SELECT 1', parameters: [] };
+        var updateSqlQuery = this.sqlQueryBuilder.updateChangelogSqlQuery('update', joinConfig.table, joinConfig.fieldReference, joinConfig.changelogConfig, dbId);
         var insertNewKeywordsSqlQuery;
         var insertNewKeywordJoinSqlQuery;
         if (this.knex.client['config']['client'] !== 'mysql') {
@@ -103,9 +107,14 @@ var CommonSqlKeywordAdapter = /** @class */ (function () {
         var result = new Promise(function (resolve, reject) {
             sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSqlQuery).then(function () {
                 return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertNewKeywordsSqlQuery);
-            }).then(function (insertResults) {
+            }).then(function (deleteResults) {
                 return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertNewKeywordJoinSqlQuery);
             }).then(function (insertResults) {
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve();
+            }).then(function (updateResults) {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {
                 return reject(reason);
@@ -126,9 +135,11 @@ var CommonSqlKeywordAdapter = /** @class */ (function () {
         var keywordTable = this.keywordModelConfig.table;
         var keywordNameField = this.keywordModelConfig.fieldName;
         var keywordIdField = this.keywordModelConfig.fieldId;
-        var joinTable = this.keywordModelConfig.joins[joinTableKey].joinTable;
-        var joinBaseIdField = this.keywordModelConfig.joins[joinTableKey].fieldReference;
+        var joinConfig = this.keywordModelConfig.joins[joinTableKey];
+        var joinTable = joinConfig.joinTable;
+        var joinBaseIdField = joinConfig.fieldReference;
         var newKeywords = string_utils_1.StringUtils.uniqueKeywords(keywords).join(',');
+        var updateSqlQuery = this.sqlQueryBuilder.updateChangelogSqlQuery('update', joinConfig.table, undefined, joinConfig.changelogConfig, dbId);
         var deleteNotUsedKeywordSql;
         if (this.knex.client['config']['client'] !== 'mysql') {
             var keywordSplitParameter = newKeywords.replace(/[ \\"']/g, '');
@@ -172,7 +183,12 @@ var CommonSqlKeywordAdapter = /** @class */ (function () {
             : opts.transaction;
         var result = new Promise(function (resolve, reject) {
             sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSql).then(function () {
-            }).then(function (insertResults) {
+            }).then(function (deleteResults) {
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve();
+            }).then(function (updateResults) {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {
                 return reject(reason);

@@ -1,8 +1,9 @@
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
+import { ChangelogDataConfig, SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export interface KeywordModelConfigJoinType {
     joinTable: string;
     fieldReference: string;
     table: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface KeywordModelConfigJoinsType {
     [key: string]: KeywordModelConfigJoinType;

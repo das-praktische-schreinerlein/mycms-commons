@@ -1,13 +1,15 @@
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {IdValidationRule} from '../../search-commons/model/forms/generic-validator.util';
 import {utils} from 'js-data';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import * as Promise_serial from 'promise-serial';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
+import {DateUtils} from '../../commons/utils/date.utils';
 
 export interface ActionTagReplaceReferenceTableConfigType {
     table: string;
     fieldReference: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface ActionTagReplaceTableConfigType {
@@ -15,6 +17,7 @@ export interface ActionTagReplaceTableConfigType {
     joins: ActionTagReplaceReferenceTableConfigType[];
     referenced: ActionTagReplaceReferenceTableConfigType[];
     table: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface ActionTagReplaceTableConfigsType {
@@ -98,6 +101,32 @@ export class CommonSqlActionTagReplaceAdapter {
         };
         let checkNewValueSqlQuery: RawSqlQueryData = undefined;
         const updateSqlQueries: RawSqlQueryData[] = [];
+        for (const referenceConfig of referenceConfigs) {
+            const changelogDataConfig = referenceConfig.changelogConfig;
+            if (changelogDataConfig && (changelogDataConfig.updateDateField !== undefined || changelogDataConfig.updateVersionField !== undefined)) {
+                const updateFields = [];
+                const parameters = [];
+                if (changelogDataConfig.updateDateField !== undefined) {
+                    updateFields.push(changelogDataConfig.updateDateField + '=?');
+                    parameters.push(DateUtils.dateToLocalISOString(new Date()));
+                }
+                if (changelogDataConfig.updateVersionField !== undefined) {
+                    updateFields.push(changelogDataConfig.updateVersionField +
+                        '=COALESCE(' + changelogDataConfig.updateVersionField + ', 0)+1');
+                }
+
+                parameters.push(id)
+                updateSqlQueries.push({
+                    sql:
+                        'UPDATE ' + referenceConfig.table + ' ' +
+                        'SET ' +
+                        updateFields.join(', ') + ' ' +
+                        'WHERE ' + referenceConfig.fieldReference + '=?',
+                    parameters: parameters}
+                );
+            }
+        }
+
         if (newIdSetNull) {
             checkNewValueSqlQuery = {
                 sql: 'SELECT null AS id',
@@ -143,7 +172,16 @@ export class CommonSqlActionTagReplaceAdapter {
                     parameters: [newId, id]}
                 );
             }
+
+            if (replaceConfig.changelogConfig && replaceConfig.changelogConfig.updateDateField !== undefined) {
+                const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                    'update', replaceConfig.table, replaceConfig.fieldId, replaceConfig.changelogConfig, newId);
+                if (updateSqlQuery) {
+                    updateSqlQueries.push(updateSqlQuery);
+                }
+            }
         }
+
         const deleteSqlQuery: RawSqlQueryData = {
             sql: 'DELETE FROM ' + replaceConfig.table +
                 ' WHERE ' + replaceConfig.fieldId + '=' + '?' + '',

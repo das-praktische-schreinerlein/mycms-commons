@@ -3,6 +3,7 @@ import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {TestHelper} from '../../testing/test-helper';
 import {ActionTagReplaceConfigType, CommonSqlActionTagReplaceAdapter} from './common-sql-actiontag-replace.adapter';
 import {TestActionFormHelper} from '../testing/test-actionform-helper';
+import {DateUtils} from '../../commons/utils/date.utils';
 
 describe('CommonDocSqlActionTagReplaceAdapter', () => {
     const sqlQueryBuilder: SqlQueryBuilder = new SqlQueryBuilder();
@@ -17,6 +18,35 @@ describe('CommonDocSqlActionTagReplaceAdapter', () => {
                     {table: 'image_playlist', fieldReference: 'i_id'},
                     {table: 'image_keyword', fieldReference: 'i_id'}
                 ]
+            },
+            'track': {
+                table: 'kategorie',
+                fieldId: 'k_id',
+                referenced: [
+                    { table: 'image', fieldReference: 'k_id' ,
+                        changelogConfig: {
+                            createDateField: 'icreated',
+                            updateDateField: 'iupdated',
+                            updateVersionField: 'iupdateversion'
+                        }
+                    },
+                    { table: 'tour', fieldReference: 'k_id' ,
+                        changelogConfig: {
+                            createDateField: 'rtecreated',
+                            updateDateField: 'rteupdated'
+                        }
+                    }
+                ],
+                joins: [
+                    { table: 'kategorie_keyword', fieldReference: 'k_id' },
+                    { table: 'kategorie_tour', fieldReference: 'k_id' }
+                ],
+                changelogConfig: {
+                    createDateField: 'trkcreated',
+                    updateDateField: 'trkupdated',
+                    updateVersionField: 'trkupdateversion'
+                }
+
             }
         }
     };
@@ -235,6 +265,96 @@ describe('CommonDocSqlActionTagReplaceAdapter', () => {
                 [
                     [[{id: 5}]],
                     [[]]
+                ]);
+        });
+
+        it('executeActionTagReplace should set newId with changelog', done => {
+            const id: any = 5;
+            const newId: any = '10';
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagReplace', 'track', id, {
+                    payload: {
+                        newId: newId,
+                        newIdSetNull: false
+                    },
+                    deletes: false,
+                    key: 'replace',
+                    recordId: id,
+                    type: 'tag'
+                },
+                true,
+                [
+                    'SELECT k_id AS id FROM kategorie WHERE k_id=?',
+                    'SELECT k_id AS id FROM kategorie WHERE k_id=?',
+                    'UPDATE image SET iupdated=?, iupdateversion=COALESCE(iupdateversion, 0)+1 WHERE k_id=?',
+                    'UPDATE tour SET rteupdated=? WHERE k_id=?',
+                    'UPDATE image SET k_id=? WHERE k_id=?',
+                    'UPDATE tour SET k_id=? WHERE k_id=?',
+                    'UPDATE kategorie_keyword SET k_id=? WHERE k_id=?',
+                    'UPDATE kategorie_tour SET k_id=? WHERE k_id=?',
+                    'UPDATE kategorie SET trkupdated=?, trkupdateversion=COALESCE(trkupdateversion, 0)+1 WHERE k_id=?',
+                    'DELETE FROM kategorie WHERE k_id=?'
+                ],
+                [
+                    [5],
+                    [10],
+                    [DateUtils.dateToLocalISOString(new Date()), 5],
+                    [DateUtils.dateToLocalISOString(new Date()), 5],
+                    [10, 5],
+                    [10, 5],
+                    [10, 5],
+                    [10, 5],
+                    // TODO fingers crossed for a fast computer ;-)
+                    [DateUtils.dateToLocalISOString(new Date()), 10],
+                    [5]
+                ],
+                done,
+                [
+                    [[{id: 5}]],
+                    [[{id: 10}]]
+                ]);
+        });
+
+        it('executeActionTagReplace should set newId null with changelog', done => {
+            const id: any = 5;
+            const newId: any = null;
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagReplace', 'track', id, {
+                    payload: {
+                        newId: newId,
+                        newIdSetNull: true
+                    },
+                    deletes: false,
+                    key: 'replace',
+                    recordId: id,
+                    type: 'tag'
+                },
+                true,
+                [
+                    'SELECT k_id AS id FROM kategorie WHERE k_id=?',
+                    'SELECT null AS id',
+                    'UPDATE image SET iupdated=?, iupdateversion=COALESCE(iupdateversion, 0)+1 WHERE k_id=?',
+                    'UPDATE tour SET rteupdated=? WHERE k_id=?',
+                    'UPDATE image SET k_id=null WHERE k_id=?',
+                    'UPDATE tour SET k_id=null WHERE k_id=?',
+                    'DELETE FROM kategorie_keyword WHERE k_id=?',
+                    'DELETE FROM kategorie_tour WHERE k_id=?',
+                    'DELETE FROM kategorie WHERE k_id=?'
+                ],
+                [
+                    [5],
+                    [],
+                    // TODO fingers crossed for a fast computer ;-)
+                    [DateUtils.dateToLocalISOString(new Date()), 5],
+                    [DateUtils.dateToLocalISOString(new Date()), 5],
+                    [5],
+                    [5],
+                    [5],
+                    [5],
+                    [5]
+                ],
+                done,
+                [
+                    [[{id: 5}]],
+                    [[{id: null}]]
                 ]);
         });
 

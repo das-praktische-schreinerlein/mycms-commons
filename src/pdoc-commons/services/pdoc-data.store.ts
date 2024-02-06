@@ -74,14 +74,20 @@ export class PDocDataStore extends GenericDataStore<PDocRecord, PDocSearchForm, 
             for (const index in moreFilters) {
                 const moreFilter = moreFilters[index];
                 const [filterName, values] = moreFilter.split(/:/);
-                if (filterName && values && this.validMoreNumberFilterNames[filterName] === true) {
-                    filter[filterName] = {
-                        'in_number': values.split(/,/)
-                    };
-                } else if (filterName && values && this.validMoreInFilterNames[filterName] === true) {
-                    filter[filterName] = {
-                        'in': values.split(/,/)
-                    };
+                if (filterName && values) {
+                    if (this.validMoreNumberFilterNames[filterName] === true) {
+                        filter[filterName] = {
+                            'in_number': values.split(/,/)
+                        };
+                    } else if (this.validMoreInFilterNames[filterName] === true) {
+                        filter[filterName] = {
+                            'in': values.split(/,/)
+                        };
+                    } else if (filterName === 'createdafter_dt' || filterName === 'updatedafter_dt') {
+                        filter[filterName] = {
+                            'gt': values[0]
+                        };
+                    }
                 }
             }
         }

@@ -1,13 +1,13 @@
 import {PDocRecord, PDocRecordRelation} from '../model/records/pdoc-record';
 import {PDocSearchService} from './pdoc-search.service';
 import {PDocRecordSchema} from '../model/schemas/pdoc-record-schema';
-import {CommonDocDataService} from "../../search-commons/services/cdoc-data.service";
-import {PDocSearchForm} from "../model/forms/pdoc-searchform";
-import {PDocSearchResult} from "../model/container/pdoc-searchresult";
-import {BaseJoinRecord} from "../../search-commons/model/records/basejoin-record";
-import {PDocAdapterResponseMapper} from "./pdoc-adapter-response.mapper";
-import {ActionTagForm} from "../../commons/utils/actiontag.utils";
-import {StaticPagesDataStore} from "./staticpages-data.store";
+import {CommonDocDataService} from '../../search-commons/services/cdoc-data.service';
+import {PDocSearchForm} from '../model/forms/pdoc-searchform';
+import {PDocSearchResult} from '../model/container/pdoc-searchresult';
+import {BaseJoinRecord} from '../../search-commons/model/records/basejoin-record';
+import {PDocAdapterResponseMapper} from './pdoc-adapter-response.mapper';
+import {ActionTagForm} from '../../commons/utils/actiontag.utils';
+import {StaticPagesDataStore} from './staticpages-data.store';
 import {StringUtils} from '../../commons/utils/string.utils';
 
 export class StaticPagesDataService extends CommonDocDataService<PDocRecord, PDocSearchForm, PDocSearchResult> {

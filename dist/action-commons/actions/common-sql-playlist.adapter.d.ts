@@ -1,10 +1,11 @@
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
+import { ChangelogDataConfig, SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export interface PlaylistModelConfigJoinType {
     table: string;
     joinTable: string;
     fieldReference: string;
     positionField?: string;
     detailsField?: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface PlaylistModelConfigJoinsType {
     [key: string]: PlaylistModelConfigJoinType;

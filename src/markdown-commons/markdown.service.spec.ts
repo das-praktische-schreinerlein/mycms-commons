@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 import {MarkdownService} from './markdown.service';
 import {MarkdownDefaultExtensions} from './extensions/markdown.extensions';
-import {DefaultOptions} from "./options";
+import {DefaultOptions} from './options';
 
 describe('MarkdownService', () => {
     const service = new MarkdownService(DefaultOptions.getDefault(), MarkdownDefaultExtensions);

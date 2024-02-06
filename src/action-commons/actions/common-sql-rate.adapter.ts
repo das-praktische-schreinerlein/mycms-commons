@@ -1,6 +1,6 @@
 import {utils} from 'js-data';
 import {NumberValidationRule} from '../../search-commons/model/forms/generic-validator.util';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
 
 export interface RateModelConfigRateType {
@@ -12,6 +12,7 @@ export interface RateModelConfigTableType {
     fieldSum: string;
     rateFields: RateModelConfigRateType;
     table: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface RateModelConfigTablesType {
@@ -94,8 +95,16 @@ export class CommonSqlRateAdapter {
         const rawUpdate = SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
         const result = new Promise((resolve, reject) => {
             rawUpdate.then(() => {
+                const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                    'update', rateConfig.table, rateConfig.fieldId, rateConfig.changelogConfig, dbId);
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve(true);
+            }).then(() => {
                 return resolve(true);
-            }).catch(function errorPlaylist(reason) {
+            }).catch(function errorRate(reason) {
                 console.error('_doActionTag update ' + rateConfig.table + ' rate failed:', reason);
                 return reject(reason);
             });

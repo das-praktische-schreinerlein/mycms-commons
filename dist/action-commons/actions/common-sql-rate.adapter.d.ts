@@ -1,4 +1,4 @@
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
+import { ChangelogDataConfig, SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export interface RateModelConfigRateType {
     [key: string]: string;
 }
@@ -7,6 +7,7 @@ export interface RateModelConfigTableType {
     fieldSum: string;
     rateFields: RateModelConfigRateType;
     table: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface RateModelConfigTablesType {
     [key: string]: RateModelConfigTableType;

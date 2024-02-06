@@ -7,6 +7,7 @@ import {
 } from './common-sql-actiontag-assignjoin.adapter';
 import {TestHelper} from '../../testing/test-helper';
 import {TestActionFormHelper} from '../testing/test-actionform-helper';
+import {DateUtils} from '../../commons/utils/date.utils';
 
 describe('CommonSqlActionTagAssignJoinAdapter', () => {
     const sqlQueryBuilder: SqlQueryBuilder = new SqlQueryBuilder();
@@ -23,6 +24,28 @@ describe('CommonSqlActionTagAssignJoinAdapter', () => {
                         joinBaseIdField: 't_id',
                         joinReferenceField: 'if_id'
                     }
+                }
+            },
+            'track': {
+                table: 'kategorie',
+                idField: 'k_id',
+                references: {
+                    'route_id_is': {
+                        joinedTable: 'route',
+                        joinedIdField: 't_id',
+                        joinTable: 'kategorie_tour',
+                        joinBaseIdField: 'k_id',
+                        joinReferenceField: 't_id',
+                        changelogConfig: {
+                            createDateField: 'rtecreated',
+                            updateDateField: 'rteupdated'
+                        }
+
+                    }
+                },
+                changelogConfig: {
+                    createDateField: 'trkcreated',
+                    updateDateField: 'trkupdated'
                 }
             }
         }
@@ -216,6 +239,42 @@ describe('CommonSqlActionTagAssignJoinAdapter', () => {
                 [
                     [[{id: 5}]],
                     [[]]
+                ]);
+        });
+
+        it('executeActionTagAssignJoin should set newId with changelog', done => {
+            const id: any = 5;
+            const newId: any = '10';
+            TestActionFormHelper.doActionTagTestSuccessTest(knex, service, 'executeActionTagAssignJoin', 'track', id, {
+                    payload: {
+                        newId: newId,
+                        referenceField: 'route_id_is'
+                    },
+                    deletes: false,
+                    key: 'assignjoin',
+                    recordId: id,
+                    type: 'tag'
+                },
+                true,
+                [
+                    'SELECT k_id AS id FROM kategorie WHERE k_id=?',
+                    'SELECT t_id AS id FROM route WHERE t_id=?',
+                    'INSERT INTO kategorie_tour (k_id, t_id) SELECT ?, ? WHERE NOT EXISTS    (SELECT k_id, t_id     FROM kategorie_tour     WHERE k_id=? AND t_id=?)',
+                    'UPDATE kategorie SET trkupdated=? WHERE k_id=?',
+                    'UPDATE route SET rteupdated=? WHERE t_id=?'
+                ],
+                [
+                    [5],
+                    [10],
+                    [5, 10, 5, 10],
+                    // TODO fingers crossed for a fast computer ;-)
+                    [DateUtils.dateToLocalISOString(new Date()), 5],
+                    [DateUtils.dateToLocalISOString(new Date()), 10]
+                ],
+                done,
+                [
+                    [[{id: 5}]],
+                    [[{id: 10}]]
                 ]);
         });
 

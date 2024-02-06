@@ -1,6 +1,6 @@
 import {utils} from 'js-data';
 import {KeywordValidationRule} from '../../search-commons/model/forms/generic-validator.util';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {StringUtils} from '../../commons/utils/string.utils';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
 
@@ -8,6 +8,7 @@ export interface KeywordModelConfigJoinType {
     joinTable: string;
     fieldReference: string;
     table: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface KeywordModelConfigJoinsType {
@@ -51,13 +52,18 @@ export class CommonSqlKeywordAdapter {
         const keywordTable = this.keywordModelConfig.table;
         const keywordNameField = this.keywordModelConfig.fieldName;
         const keywordIdField = this.keywordModelConfig.fieldId;
-        const joinTable = this.keywordModelConfig.joins[joinTableKey].joinTable;
-        const joinBaseIdField = this.keywordModelConfig.joins[joinTableKey].fieldReference;
+        const joinConfig = this.keywordModelConfig.joins[joinTableKey];
+        const joinTable = joinConfig.joinTable;
+        const joinBaseIdField = joinConfig.fieldReference;
         const newKeywords = StringUtils.uniqueKeywords(keywords).join(',');
-        const deleteNotUsedKeywordSqlQuery: RawSqlQueryData = deleteOld ? {
-            sql: 'DELETE FROM ' + joinTable + ' WHERE ' + joinBaseIdField + ' IN (' + '?' + ')',
-            parameters: [dbId]
-        } : { sql: 'SELECT 1', parameters: []};
+        const deleteNotUsedKeywordSqlQuery: RawSqlQueryData = deleteOld
+            ? {
+                sql: 'DELETE FROM ' + joinTable + ' WHERE ' + joinBaseIdField + ' IN (' + '?' + ')',
+                parameters: [dbId]}
+            : { sql: 'SELECT 1', parameters: []};
+        const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+            'update', joinConfig.table, joinConfig.fieldReference, joinConfig.changelogConfig, dbId);
+
         let insertNewKeywordsSqlQuery: RawSqlQueryData;
         let insertNewKeywordJoinSqlQuery: RawSqlQueryData;
         if (this.knex.client['config']['client'] !== 'mysql') {
@@ -131,9 +137,15 @@ export class CommonSqlKeywordAdapter {
         const result = new Promise((resolve, reject) => {
             SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSqlQuery).then(() => {
                 return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertNewKeywordsSqlQuery);
-            }).then(insertResults => {
+            }).then(deleteResults => {
                 return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertNewKeywordJoinSqlQuery);
             }).then(insertResults => {
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve();
+            }).then(updateResults => {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {
                 return reject(reason);
@@ -158,9 +170,13 @@ export class CommonSqlKeywordAdapter {
         const keywordTable = this.keywordModelConfig.table;
         const keywordNameField = this.keywordModelConfig.fieldName;
         const keywordIdField = this.keywordModelConfig.fieldId;
-        const joinTable = this.keywordModelConfig.joins[joinTableKey].joinTable;
-        const joinBaseIdField = this.keywordModelConfig.joins[joinTableKey].fieldReference;
+        const joinConfig = this.keywordModelConfig.joins[joinTableKey];
+        const joinTable = joinConfig.joinTable;
+        const joinBaseIdField = joinConfig.fieldReference;
         const newKeywords = StringUtils.uniqueKeywords(keywords).join(',');
+        const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+            'update', joinConfig.table, undefined, joinConfig.changelogConfig, dbId);
+
         let deleteNotUsedKeywordSql: RawSqlQueryData;
         if (this.knex.client['config']['client'] !== 'mysql') {
             const keywordSplitParameter = newKeywords.replace(/[ \\"']/g, '');
@@ -205,7 +221,13 @@ export class CommonSqlKeywordAdapter {
             : opts.transaction;
         const result = new Promise((resolve, reject) => {
             SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteNotUsedKeywordSql).then(() => {
-            }).then(insertResults => {
+            }).then(deleteResults => {
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve();
+            }).then(updateResults => {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {
                 return reject(reason);

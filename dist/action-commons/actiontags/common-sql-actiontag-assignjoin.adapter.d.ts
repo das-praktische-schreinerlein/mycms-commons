@@ -1,11 +1,12 @@
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
+import { ChangelogDataConfig, SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export interface ActionTagAssignJoinReferenceTableConfigType {
     joinedTable: string;
     joinedIdField: string;
     joinTable: string;
     joinBaseIdField: string;
     joinReferenceField: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface ActionTagAssignJoinReferenceTableConfigsType {
     [key: string]: ActionTagAssignJoinReferenceTableConfigType;
@@ -14,6 +15,7 @@ export interface ActionTagAssignJoinTableConfigType {
     table: string;
     idField: string;
     references: ActionTagAssignJoinReferenceTableConfigsType;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface ActionTagAssignJoinTableConfigsType {
     [key: string]: ActionTagAssignJoinTableConfigType;

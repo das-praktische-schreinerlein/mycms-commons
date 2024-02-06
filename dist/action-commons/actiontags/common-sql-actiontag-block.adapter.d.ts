@@ -1,9 +1,10 @@
 import { ActionTagForm } from '../../commons/utils/actiontag.utils';
-import { SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
+import { ChangelogDataConfig, SqlQueryBuilder } from '../../search-commons/services/sql-query.builder';
 export interface ActionTagBlockTableConfigType {
     table: string;
     idField: string;
     blockField: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 export interface ActionTagBlockTableConfigsType {
     [key: string]: ActionTagBlockTableConfigType;

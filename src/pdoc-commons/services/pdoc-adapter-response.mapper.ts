@@ -35,6 +35,11 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['subtype_s'] = props.subtype;
         values['type_s'] = props.type;
 
+        // changelog
+        values['createdat_dt'] = props.createdAt;
+        values['updatedat_dt'] = props.updatedAt;
+        values['updateversion_i'] = props.updateVersion;
+
         // page
         values['css_s'] = props.css;
         values['flags_s'] = props.flags;
@@ -88,10 +93,14 @@ export class PDocAdapterResponseMapper implements GenericAdapterResponseMapper {
         values['descTxt'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_txt', undefined);
         values['descHtml'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_html_txt', undefined);
         values['descMd'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'desc_md_txt', undefined);
-
         values['name'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'name_s', undefined);
         values['subtype'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'subtype_s', undefined);
         values['type'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'type_s', undefined);
+
+        // changelog
+        values['createdAt'] = this.mapperUtils.getMappedAdapterDateTimeValue(mapping, doc, 'createdat_dt', undefined);
+        values['updatedAt'] = this.mapperUtils.getMappedAdapterDateTimeValue(mapping, doc, 'updatedat_dt', undefined);
+        values['updateVersion'] = this.mapperUtils.getMappedAdapterNumberValue(mapping, doc, 'updateversion_i', undefined);
 
         // page
         values['css'] = this.mapperUtils.getMappedAdapterValue(mapping, doc, 'css_s', undefined);

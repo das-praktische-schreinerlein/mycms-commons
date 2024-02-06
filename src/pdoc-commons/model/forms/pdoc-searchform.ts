@@ -2,7 +2,7 @@ import {
     CommonDocSearchForm,
     CommonDocSearchFormFactory,
     CommonDocSearchFormValidator
-} from "../../../search-commons/model/forms/cdoc-searchform";
+} from '../../../search-commons/model/forms/cdoc-searchform';
 import {GenericSearchFormFieldConfig} from '../../../search-commons/model/forms/generic-searchform';
 import {
     GenericValidatorDatatypes,

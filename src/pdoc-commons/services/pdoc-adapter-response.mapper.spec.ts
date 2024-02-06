@@ -5,7 +5,7 @@ import {Mapper} from 'js-data';
 import {PDocDataStore} from './pdoc-data.store';
 import {SearchParameterUtils} from '../../search-commons/services/searchparameter.utils';
 import {PDocRecordSchema} from '../model/schemas/pdoc-record-schema';
-import {PDocSqlConfig} from "./pdoc-sql.config";
+import {PDocSqlConfig} from './pdoc-sql.config';
 
 describe('PDocAdapterResponseMapper', () => {
     let datastore: PDocDataStore;

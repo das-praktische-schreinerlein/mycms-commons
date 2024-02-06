@@ -1,5 +1,5 @@
 import { BaseEntityRecord, BaseEntityRecordFieldConfig, BaseEntityRecordRelationsType } from '../../../search-commons/model/records/base-entity-record';
-import { CommonDocRecord, CommonDocRecordFactory, CommonDocRecordType, CommonDocRecordValidator } from "../../../search-commons/model/records/cdoc-entity-record";
+import { CommonDocRecord, CommonDocRecordFactory, CommonDocRecordType, CommonDocRecordValidator } from '../../../search-commons/model/records/cdoc-entity-record';
 export interface PDocRecordType extends CommonDocRecordType {
     css: string;
     flags?: string;

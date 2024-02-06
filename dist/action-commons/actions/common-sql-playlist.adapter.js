@@ -37,9 +37,11 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
         var playlistTable = this.playlistModelConfig.table;
         var playlistNameField = this.playlistModelConfig.fieldName;
         var playlistIdField = this.playlistModelConfig.fieldId;
-        var joinTable = this.playlistModelConfig.joins[joinTableKey].joinTable;
-        var joinBaseIdField = this.playlistModelConfig.joins[joinTableKey].fieldReference;
-        var positionField = this.playlistModelConfig.joins[joinTableKey].positionField;
+        var joinConfig = this.playlistModelConfig.joins[joinTableKey];
+        var joinTable = joinConfig.joinTable;
+        var joinBaseIdField = joinConfig.fieldReference;
+        var positionField = joinConfig.positionField;
+        var updateSqlQuery = this.sqlQueryBuilder.updateChangelogSqlQuery('update', joinConfig.table, undefined, joinConfig.changelogConfig, dbId);
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
             ? this.knex
             : opts.transaction;
@@ -63,9 +65,14 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
                 if (set) {
                     return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertMultiPlaylistsSqlQuery_1);
                 }
-                return js_data_1.utils.resolve(true);
+                return Promise.resolve(true);
             }).then(function () {
-                return js_data_1.utils.resolve(true);
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve(true);
+            }).then(function () {
+                return Promise.resolve(true);
             }).catch(function errorPlaylist(reason) {
                 console.error('_doActionTag delete/insert ' + joinTable + ' failed:', reason);
                 return js_data_1.utils.reject(reason);
@@ -101,10 +108,15 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
             }
             return Promise_serial(promises, { parallelize: 1 });
         }).then(function () {
-            return js_data_1.utils.resolve(true);
+            if (updateSqlQuery) {
+                return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+            }
+            return Promise.resolve(true);
+        }).then(function () {
+            return Promise.resolve(true);
         }).catch(function errorPlaylist(reason) {
             console.error('setPlaylists ' + joinTable + ' failed:', reason);
-            return js_data_1.utils.reject(reason);
+            return Promise.reject(reason);
         });
     };
     CommonSqlPlaylistAdapter.prototype.setPlaylist = function (joinTableKey, dbId, playlistKey, opts, set, position, details, oldRecord) {
@@ -124,10 +136,11 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
         var playlistTable = this.playlistModelConfig.table;
         var playlistNameField = this.playlistModelConfig.fieldName;
         var playlistIdField = this.playlistModelConfig.fieldId;
-        var joinTable = this.playlistModelConfig.joins[joinTableKey].joinTable;
-        var joinBaseIdField = this.playlistModelConfig.joins[joinTableKey].fieldReference;
-        var positionField = this.playlistModelConfig.joins[joinTableKey].positionField;
-        var detailsField = this.playlistModelConfig.joins[joinTableKey].detailsField;
+        var joinConfig = this.playlistModelConfig.joins[joinTableKey];
+        var joinTable = joinConfig.joinTable;
+        var joinBaseIdField = joinConfig.fieldReference;
+        var positionField = joinConfig.positionField;
+        var detailsField = joinConfig.detailsField;
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
             ? this.knex
             : opts.transaction;
@@ -208,7 +221,7 @@ var CommonSqlPlaylistAdapter = /** @class */ (function () {
         }
         return Promise_serial(promises, { parallelize: 1 }).then(function (value) {
             if (!set) {
-                return js_data_1.utils.resolve(value);
+                return Promise.resolve(value);
             }
             var sql = 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' +
                 (detailsField && details ? detailsField + ', ' : '') +

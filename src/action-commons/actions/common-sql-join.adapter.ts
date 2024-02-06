@@ -1,7 +1,8 @@
 import {utils} from 'js-data';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {BaseJoinRecordType} from '../../search-commons/model/records/basejoin-record';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
+import * as Promise_serial from 'promise-serial';
 
 
 export interface JoinFieldMappingConfigJoinType {
@@ -12,6 +13,7 @@ export interface JoinModelConfigTableType {
     baseTableIdField: string;
     joinTable: string;
     joinFieldMappings: JoinFieldMappingConfigJoinType;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface JoinModelConfigTablesType {
@@ -68,7 +70,6 @@ export class CommonSqlJoinAdapter {
         const sqlBuilder = utils.isUndefined(opts.transaction)
             ? this.knex
             : opts.transaction;
-        const rawDelete = SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery);
 
         for (const joinRecord of joinRecords) {
             const fields = [baseTableIdField];
@@ -82,12 +83,22 @@ export class CommonSqlJoinAdapter {
                 sql: 'INSERT INTO ' + joinTable + ' (' + fields.join(', ') + ') ' +
                     'VALUES(' + SqlUtils.mapParametersToPlaceholderString(values) + ')',
                 parameters: [].concat(values)};
-            promises.push(SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery));
+            promises.push(function () {
+                return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery)
+            });
+        }
+
+        if (joinedTableConfig.changelogConfig) {
+            const updateSqlQuery = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                'update', baseTableKey, baseTableIdField, joinedTableConfig.changelogConfig, dbId);
+            promises.push(function () {
+                return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+            });
         }
 
         const result = new Promise((resolve, reject) => {
-            rawDelete.then(() => {
-                return Promise.all(promises).then(() => {
+            SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery).then(() => {
+                return Promise_serial(promises, {parallelize: 1}).then(() => {
                     return resolve(true);
                 }).catch(function errorJoinDetails(reason) {
                     console.error('_doJoin delete/insert ' + joinTable + ' failed:', reason);

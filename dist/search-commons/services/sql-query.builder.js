@@ -69,6 +69,45 @@ var SqlQueryBuilder = /** @class */ (function () {
         // console.error("sql:", sql);
         return sql;
     };
+    SqlQueryBuilder.prototype.updateChangelogSqlQuery = function (mode, table, idField, changelogDataConfig, id) {
+        if (!changelogDataConfig
+            || (changelogDataConfig.createDateField === undefined
+                && changelogDataConfig.updateDateField === undefined
+                && changelogDataConfig.updateVersionField === undefined)
+            || (changelogDataConfig.fieldId === undefined && idField === undefined)
+            || (changelogDataConfig.table === undefined && table === undefined)) {
+            return;
+        }
+        var updateFields = [];
+        var parameters = [];
+        var now = date_utils_1.DateUtils.dateToLocalISOString(new Date());
+        if (mode === 'create' && changelogDataConfig.createDateField !== undefined) {
+            updateFields.push(changelogDataConfig.createDateField + '=?');
+            parameters.push(now);
+        }
+        if (changelogDataConfig.updateDateField !== undefined) {
+            updateFields.push(changelogDataConfig.updateDateField + '=?');
+            parameters.push(now);
+        }
+        if (changelogDataConfig.updateVersionField !== undefined) {
+            updateFields.push(changelogDataConfig.updateVersionField +
+                '=COALESCE(' + changelogDataConfig.updateVersionField + ', 0)+1');
+        }
+        if (updateFields.length < 1) {
+            return;
+        }
+        var sql = 'UPDATE ' +
+            (changelogDataConfig.table !== undefined ? changelogDataConfig.table : table) + ' ' +
+            'SET ' +
+            updateFields.join(', ') + ' ' +
+            'WHERE ' +
+            (changelogDataConfig.fieldId !== undefined ? changelogDataConfig.fieldId : idField) + '=?';
+        parameters.push(id);
+        return {
+            sql: sql,
+            parameters: parameters
+        };
+    };
     SqlQueryBuilder.prototype.queryTransformToAdapterWriteQuery = function (tableConfig, method, props, adapterOpts) {
         var query = {
             from: tableConfig.tableName,
@@ -109,7 +148,8 @@ var SqlQueryBuilder = /** @class */ (function () {
                         for (var _a = 0, replacers_2 = replacers; _a < replacers_2.length; _a++) {
                             var replacer = replacers_2[_a];
                             var propKey = replacer.replace(/^:(.*):$/, '$1');
-                            value = value.replace(replacer, props[propKey]);
+                            value = value.replace(replacer, props[propKey]); // TODO -> I think this should be removed
+                            // TODO this block is same as the before before???
                             if (props.hasOwnProperty(propKey) && props[propKey] !== undefined) {
                                 propValue = props[propKey];
                                 if (util_1.isDate(propValue)) {

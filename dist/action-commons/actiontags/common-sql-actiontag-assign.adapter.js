@@ -107,6 +107,18 @@ var CommonSqlActionTagAssignAdapter = /** @class */ (function () {
                 }
                 return Promise_serial(updateSqlQueryPromises, { parallelize: 1 });
             }).then(function () {
+                var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('update', assignConfig.table, assignConfig.idField, assignConfig.changelogConfig, id);
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve(true);
+            }).then(function () {
+                var updateSqlQuery = _this.sqlQueryBuilder.updateChangelogSqlQuery('update', referenceConfig.table, referenceConfig.idField, referenceConfig.changelogConfig, newId);
+                if (updateSqlQuery) {
+                    return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+                return Promise.resolve(true);
+            }).then(function () {
                 return resolve(true);
             }).catch(function errorPlaylist(reason) {
                 console.error('_doActionTag assign ' + table + ' failed:', reason);

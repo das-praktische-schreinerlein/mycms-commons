@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var js_data_1 = require("js-data");
 var sql_utils_1 = require("../../search-commons/services/sql-utils");
+var Promise_serial = require("promise-serial");
 var CommonSqlJoinAdapter = /** @class */ (function () {
     function CommonSqlJoinAdapter(config, knex, sqlQueryBuilder, joinModelConfig) {
         this.config = config;
@@ -33,9 +34,7 @@ var CommonSqlJoinAdapter = /** @class */ (function () {
         var sqlBuilder = js_data_1.utils.isUndefined(opts.transaction)
             ? this.knex
             : opts.transaction;
-        var rawDelete = sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery);
-        for (var _i = 0, joinRecords_1 = joinRecords; _i < joinRecords_1.length; _i++) {
-            var joinRecord = joinRecords_1[_i];
+        var _loop_1 = function (joinRecord) {
             var fields = [baseTableIdField];
             var values = [dbId];
             for (var destField in joinFields) {
@@ -48,11 +47,23 @@ var CommonSqlJoinAdapter = /** @class */ (function () {
                     'VALUES(' + sql_utils_1.SqlUtils.mapParametersToPlaceholderString(values) + ')',
                 parameters: [].concat(values)
             };
-            promises.push(sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery));
+            promises.push(function () {
+                return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, insertSqlQuery);
+            });
+        };
+        for (var _i = 0, joinRecords_1 = joinRecords; _i < joinRecords_1.length; _i++) {
+            var joinRecord = joinRecords_1[_i];
+            _loop_1(joinRecord);
+        }
+        if (joinedTableConfig.changelogConfig) {
+            var updateSqlQuery_1 = this.sqlQueryBuilder.updateChangelogSqlQuery('update', baseTableKey, baseTableIdField, joinedTableConfig.changelogConfig, dbId);
+            promises.push(function () {
+                return sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery_1);
+            });
         }
         var result = new Promise(function (resolve, reject) {
-            rawDelete.then(function () {
-                return Promise.all(promises).then(function () {
+            sql_utils_1.SqlUtils.executeRawSqlQueryData(sqlBuilder, deleteSqlQuery).then(function () {
+                return Promise_serial(promises, { parallelize: 1 }).then(function () {
                     return resolve(true);
                 }).catch(function errorJoinDetails(reason) {
                     console.error('_doJoin delete/insert ' + joinTable + ' failed:', reason);

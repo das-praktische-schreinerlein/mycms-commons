@@ -4,7 +4,7 @@ import {
     KeywordValidationRule,
     NumberValidationRule
 } from '../../search-commons/model/forms/generic-validator.util';
-import {SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
+import {ChangelogDataConfig, SqlQueryBuilder} from '../../search-commons/services/sql-query.builder';
 import {StringUtils} from '../../commons/utils/string.utils';
 import {RawSqlQueryData, SqlUtils} from '../../search-commons/services/sql-utils';
 import * as Promise_serial from 'promise-serial';
@@ -13,8 +13,9 @@ export interface PlaylistModelConfigJoinType {
     table: string;
     joinTable: string;
     fieldReference: string;
-    positionField ?: string;
-    detailsField ?: string;
+    positionField?: string;
+    detailsField?: string;
+    changelogConfig?: ChangelogDataConfig;
 }
 
 export interface PlaylistModelConfigJoinsType {
@@ -75,9 +76,12 @@ export class CommonSqlPlaylistAdapter {
         const playlistTable = this.playlistModelConfig.table;
         const playlistNameField = this.playlistModelConfig.fieldName;
         const playlistIdField = this.playlistModelConfig.fieldId;
-        const joinTable = this.playlistModelConfig.joins[joinTableKey].joinTable;
-        const joinBaseIdField = this.playlistModelConfig.joins[joinTableKey].fieldReference;
-        const positionField = this.playlistModelConfig.joins[joinTableKey].positionField;
+        const joinConfig = this.playlistModelConfig.joins[joinTableKey];
+        const joinTable = joinConfig.joinTable;
+        const joinBaseIdField = joinConfig.fieldReference;
+        const positionField = joinConfig.positionField;
+        const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+            'update', joinConfig.table, undefined, joinConfig.changelogConfig, dbId);
 
         const sqlBuilder = utils.isUndefined(opts.transaction)
             ? this.knex
@@ -104,9 +108,15 @@ export class CommonSqlPlaylistAdapter {
                     return SqlUtils.executeRawSqlQueryData(sqlBuilder, insertMultiPlaylistsSqlQuery);
                 }
 
-                return utils.resolve(true);
+                return Promise.resolve(true);
             }).then(() => {
-                return utils.resolve(true);
+                if (updateSqlQuery) {
+                    return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                }
+
+                return Promise.resolve(true);
+            }).then(() => {
+                return Promise.resolve(true);
             }).catch(function errorPlaylist(reason) {
                 console.error('_doActionTag delete/insert ' + joinTable + ' failed:', reason);
                 return utils.reject(reason);
@@ -141,10 +151,16 @@ export class CommonSqlPlaylistAdapter {
 
             return Promise_serial(promises, {parallelize: 1})
         }).then(() => {
-            return utils.resolve(true);
+            if (updateSqlQuery) {
+                return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+            }
+
+            return Promise.resolve(true);
+        }).then(() => {
+            return Promise.resolve(true);
         }).catch(function errorPlaylist(reason) {
             console.error('setPlaylists ' + joinTable + ' failed:', reason);
-            return utils.reject(reason);
+            return Promise.reject(reason);
         });
     }
 
@@ -167,10 +183,11 @@ export class CommonSqlPlaylistAdapter {
         const playlistTable = this.playlistModelConfig.table;
         const playlistNameField = this.playlistModelConfig.fieldName;
         const playlistIdField = this.playlistModelConfig.fieldId;
-        const joinTable = this.playlistModelConfig.joins[joinTableKey].joinTable;
-        const joinBaseIdField = this.playlistModelConfig.joins[joinTableKey].fieldReference;
-        const positionField = this.playlistModelConfig.joins[joinTableKey].positionField;
-        const detailsField = this.playlistModelConfig.joins[joinTableKey].detailsField;
+        const joinConfig = this.playlistModelConfig.joins[joinTableKey];
+        const joinTable = joinConfig.joinTable;
+        const joinBaseIdField = joinConfig.fieldReference;
+        const positionField = joinConfig.positionField;
+        const detailsField = joinConfig.detailsField;
 
         const sqlBuilder = utils.isUndefined(opts.transaction)
             ? this.knex
@@ -245,7 +262,7 @@ export class CommonSqlPlaylistAdapter {
 
         return Promise_serial(promises, {parallelize: 1}).then((value) => {
             if (!set) {
-                return utils.resolve(value);
+                return Promise.resolve(value);
             }
 
             const sql = 'INSERT INTO ' + joinTable + ' (' + playlistIdField + ', ' +

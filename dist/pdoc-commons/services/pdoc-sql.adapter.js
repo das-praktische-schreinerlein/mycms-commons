@@ -23,7 +23,6 @@ var common_sql_actiontag_assign_adapter_1 = require("../../action-commons/action
 var common_sql_actiontag_replace_adapter_1 = require("../../action-commons/actiontags/common-sql-actiontag-replace.adapter");
 var common_sql_actiontag_assignjoin_adapter_1 = require("../../action-commons/actiontags/common-sql-actiontag-assignjoin.adapter");
 var common_sql_keyword_adapter_1 = require("../../action-commons/actions/common-sql-keyword.adapter");
-// TODO sync with model
 var PDocSqlAdapter = /** @class */ (function (_super) {
     __extends(PDocSqlAdapter, _super);
     function PDocSqlAdapter(config, facetCacheUsageConfigurations) {
@@ -85,7 +84,7 @@ var PDocSqlAdapter = /** @class */ (function (_super) {
     };
     PDocSqlAdapter.prototype.queryTransformToAdapterWriteQuery = function (method, mapper, props, opts) {
         var query = _super.prototype.queryTransformToAdapterWriteQuery.call(this, method, mapper, props, opts);
-        if (!query && !query.tableConfig && !query.tableConfig.key) {
+        if (!query || !query.tableConfig || !query.tableConfig.key) {
             return query;
         }
         return query;

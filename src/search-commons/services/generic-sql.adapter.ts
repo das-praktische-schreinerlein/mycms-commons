@@ -18,6 +18,7 @@ import {
 } from './sql-query.builder';
 import {ActionTagForm} from '../../commons/utils/actiontag.utils';
 import {LogUtils} from '../../commons/utils/log.utils';
+import {RawSqlQueryData, SqlUtils} from "./sql-utils";
 
 export abstract class GenericSqlAdapter <R extends Record, F extends GenericSearchForm, S extends GenericSearchResult<R, F>>
     extends Adapter implements GenericFacetAdapter<R, F, S> {
@@ -203,7 +204,14 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                     .returning(idField)
                     .then(values => {
                         dbId = values[0];
+                        const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                            'create', undefined, undefined, writeQuery.tableConfig.changelogConfig, dbId);
+                        if (updateSqlQuery) {
+                            return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                        }
 
+                        return Promise.resolve(true);
+                    }).then(done => {
                         return me.saveDetailData('create', mapper, dbId, props, opts);
                     }).then(done => {
                         const query = {
@@ -418,6 +426,14 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
                     .where(idField, dbId)
                     .returning(idField)
                     .then(values => {
+                        const updateSqlQuery: RawSqlQueryData = this.sqlQueryBuilder.updateChangelogSqlQuery(
+                            'update', undefined, undefined, writeQuery.tableConfig.changelogConfig, dbId);
+                        if (updateSqlQuery) {
+                            return SqlUtils.executeRawSqlQueryData(sqlBuilder, updateSqlQuery);
+                        }
+
+                        return Promise.resolve(true);
+                    }).then(done => {
                         return me.saveDetailData('update', mapper, dbId, props, opts);
                     }).then(done => {
                         const query = {
