@@ -29,4 +29,5 @@ export declare class BackendGeoService implements AbstractBackendGeoService {
     exportJsonToFile(entity: GeoEntity, force: boolean): Promise<GeoEntity>;
     generateGeoFileName(entity: GeoEntity): string;
     protected generateBaseSqlForTable(geoEntityDbMapping: GeoEntityDbMapping): string;
+    protected checkIfFileShouldUpdated(mdoc: GeoEntity, absDestPath: string): boolean;
 }

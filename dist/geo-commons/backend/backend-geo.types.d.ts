@@ -21,6 +21,9 @@ export interface GeoEntity {
     gpsTrackTxt?: string;
     gpsTrackSrc: string;
     gpsTrackBasefile: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    updateVersion?: number;
 }
 export interface GeoEntityFieldMapping {
     type: string;

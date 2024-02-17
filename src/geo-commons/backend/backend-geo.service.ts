@@ -355,7 +355,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
         }
 
         const existsFileCheck = FileUtils.checkFilePath(filePath, false, false, true, true, false);
-        if (force || existsFileCheck) {
+        if (force || existsFileCheck || this.checkIfFileShouldUpdated(entity, filePath)) {
             try {
                 fs.writeFileSync(filePath, entity.gpsTrackSrc);
             } catch (err) {
@@ -399,7 +399,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
         }
 
         const existsFileCheck = FileUtils.checkFilePath(filePath, false, false, true, true, false);
-        if (force || existsFileCheck) {
+        if (force || existsFileCheck || this.checkIfFileShouldUpdated(entity, filePath)) {
             let trackSrc = undefined;
             let geoElements = this.gpxParser.parse(entity.gpsTrackSrc, {});
             switch (entity.type) {
@@ -471,5 +471,20 @@ export class BackendGeoService implements AbstractBackendGeoService {
             geoEntityDbMapping.fields.locHirarchie + ' as locHirarchie ' +
             '  FROM ' + geoEntityDbMapping.selectFrom +
             ' ';
+    }
+
+    protected checkIfFileShouldUpdated(mdoc: GeoEntity, absDestPath: string): boolean {
+        if (!fs.existsSync(absDestPath)) {
+            return true;
+        }
+
+        const fileUpdateDate = fs.statSync(absDestPath).ctimeMs;
+        if (mdoc.updatedAt !== undefined && new Date(mdoc.updatedAt).getTime() < fileUpdateDate) {
+            const msg = 'HINT doc.updatedAt' + mdoc.updatedAt + ' < fileUpdateDate:' + new Date(fileUpdateDate);
+            console.log(msg)
+            return false
+        }
+
+        return true;
     }
 }

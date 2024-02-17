@@ -308,7 +308,7 @@ var BackendGeoService = /** @class */ (function () {
             return Promise.reject('no valid gpx-filePath:' + filePath);
         }
         var existsFileCheck = file_utils_1.FileUtils.checkFilePath(filePath, false, false, true, true, false);
-        if (force || existsFileCheck) {
+        if (force || existsFileCheck || this.checkIfFileShouldUpdated(entity, filePath)) {
             try {
                 fs.writeFileSync(filePath, entity.gpsTrackSrc);
             }
@@ -344,7 +344,7 @@ var BackendGeoService = /** @class */ (function () {
             return Promise.reject('no valid json-filePath:' + filePath);
         }
         var existsFileCheck = file_utils_1.FileUtils.checkFilePath(filePath, false, false, true, true, false);
-        if (force || existsFileCheck) {
+        if (force || existsFileCheck || this.checkIfFileShouldUpdated(entity, filePath)) {
             var trackSrc = undefined;
             var geoElements = this.gpxParser.parse(entity.gpsTrackSrc, {});
             switch (entity.type) {
@@ -405,6 +405,18 @@ var BackendGeoService = /** @class */ (function () {
             geoEntityDbMapping.fields.locHirarchie + ' as locHirarchie ' +
             '  FROM ' + geoEntityDbMapping.selectFrom +
             ' ';
+    };
+    BackendGeoService.prototype.checkIfFileShouldUpdated = function (mdoc, absDestPath) {
+        if (!fs.existsSync(absDestPath)) {
+            return true;
+        }
+        var fileUpdateDate = fs.statSync(absDestPath).ctimeMs;
+        if (mdoc.updatedAt !== undefined && new Date(mdoc.updatedAt).getTime() < fileUpdateDate) {
+            var msg = 'HINT doc.updatedAt' + mdoc.updatedAt + ' < fileUpdateDate:' + new Date(fileUpdateDate);
+            console.log(msg);
+            return false;
+        }
+        return true;
     };
     return BackendGeoService;
 }());

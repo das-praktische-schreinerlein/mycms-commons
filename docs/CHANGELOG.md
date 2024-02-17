@@ -7,6 +7,7 @@
 - playlistservice: add csv-export
 - added optional changelog to common-entity and services
 - added changelog to page-model
+- improved geoUtils to check updatedatewhen generating files
 
 ### new features
 - added optional changelog to common-entity and services
@@ -15,6 +16,7 @@
 ### improvements
 - stringutils: added replaceUmlauts and improved generateTechnicalName
 - playlistservice: add csv-export
+- improved geoUtils to check updatedatewhen generating files
 
 ### bug fixes
 - none
