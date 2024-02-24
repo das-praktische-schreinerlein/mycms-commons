@@ -37,7 +37,10 @@ var BackendGeoService = /** @class */ (function () {
                     id: undefined,
                     locHirarchie: undefined,
                     name: undefined,
-                    type: undefined
+                    type: undefined,
+                    createdAt: undefined,
+                    updatedAt: undefined,
+                    updateVersion: undefined
                 };
                 for (var key in dbResult[i]) {
                     if (dbResult[i].hasOwnProperty(key)) {
@@ -411,7 +414,7 @@ var BackendGeoService = /** @class */ (function () {
             return true;
         }
         var fileUpdateDate = fs.statSync(absDestPath).ctimeMs;
-        if (mdoc.updatedAt !== undefined && new Date(mdoc.updatedAt).getTime() < fileUpdateDate) {
+        if (mdoc.updatedAt === undefined || new Date(mdoc.updatedAt).getTime() < fileUpdateDate) {
             var msg = 'HINT doc.updatedAt' + mdoc.updatedAt + ' < fileUpdateDate:' + new Date(fileUpdateDate);
             console.log(msg);
             return false;

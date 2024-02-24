@@ -42,7 +42,10 @@ export interface GeoEntityFieldMapping {
     locHirarchie?: string;
     gpsTrackTxt?: string,
     gpsTrackSrc: string,
-    gpsTrackBasefile: string
+    gpsTrackBasefile: string,
+    createdAt?: string,
+    updatedAt?: string,
+    updateVersion?: string
 }
 
 export interface GeoPointEntityFieldMapping {

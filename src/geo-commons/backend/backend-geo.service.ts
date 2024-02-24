@@ -31,7 +31,10 @@ export class BackendGeoService implements AbstractBackendGeoService {
                     id: undefined,
                     locHirarchie: undefined,
                     name: undefined,
-                    type: undefined
+                    type: undefined,
+                    createdAt: undefined,
+                    updatedAt: undefined,
+                    updateVersion: undefined
                 };
                 for (const key in dbResult[i]) {
                     if (dbResult[i].hasOwnProperty(key)) {
@@ -479,7 +482,7 @@ export class BackendGeoService implements AbstractBackendGeoService {
         }
 
         const fileUpdateDate = fs.statSync(absDestPath).ctimeMs;
-        if (mdoc.updatedAt !== undefined && new Date(mdoc.updatedAt).getTime() < fileUpdateDate) {
+        if (mdoc.updatedAt === undefined || new Date(mdoc.updatedAt).getTime() < fileUpdateDate) {
             const msg = 'HINT doc.updatedAt' + mdoc.updatedAt + ' < fileUpdateDate:' + new Date(fileUpdateDate);
             console.log(msg)
             return false
