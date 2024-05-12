@@ -2,7 +2,7 @@
  
 # Versions
 
-## 6.1.0
+## 6.1.0 (2024-05-12)
 - stringutils: added replaceUmlauts and improved generateTechnicalName
 - playlistservice: add csv-export
 - added optional changelog to common-entity and services
