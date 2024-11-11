@@ -2,6 +2,23 @@
  
 # Versions
 
+## 6.2.0
+- added new fields to model (details, parent, description)
+- fixed geoparser if point has no altitude
+
+### new features
+- none
+
+### improvements
+- added new fields to model (details, parent, description)
+
+### bug fixes
+- fixed geoparser if point has no altitude 
+
+### breaking changes
+- none
+
+
 ## 6.1.0 (2024-05-12)
 - stringutils: added replaceUmlauts and improved generateTechnicalName
 - playlistservice: add csv-export
