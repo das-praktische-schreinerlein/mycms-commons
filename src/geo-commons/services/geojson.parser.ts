@@ -80,7 +80,7 @@ export abstract class AbstractGeoJsonParser<T extends LatLngBase> extends Abstra
     protected createJsonPoint(point: T): string {
         const alt = point['alt'] !== undefined &&  point['alt'] !== null && (<any> point['alt']) !== ''
             ? point['alt']
-            : undefined;
+            : 'null';
 
         return '[' + [point.lat, point.lng, alt].join(',') + ']';
     }

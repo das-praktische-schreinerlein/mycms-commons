@@ -84,7 +84,7 @@ var AbstractGeoJsonParser = /** @class */ (function (_super) {
     AbstractGeoJsonParser.prototype.createJsonPoint = function (point) {
         var alt = point['alt'] !== undefined && point['alt'] !== null && point['alt'] !== ''
             ? point['alt']
-            : undefined;
+            : 'null';
         return '[' + [point.lat, point.lng, alt].join(',') + ']';
     };
     AbstractGeoJsonParser.prototype.parseJsonObj = function (obj, options) {
