@@ -24,8 +24,8 @@ export declare abstract class AbstractDetectorResultCacheService {
     protected readonly readonly: boolean;
     protected readonly forceUpdate: boolean;
     constructor(readOnly: boolean, forceUpdate: boolean);
-    abstract readImageCache(imagePath: string, returnEmtyIfNotExists: boolean): DetectorResultsCacheType;
-    abstract writeImageCache(imagePath: string, detectorResultCache: DetectorResultsCacheType): void;
+    abstract readImageCache(imagePath: string, returnEmtyIfNotExists: boolean): Promise<DetectorResultsCacheType>;
+    abstract writeImageCache(imagePath: string, detectorResultCache: DetectorResultsCacheType): Promise<boolean>;
     getImageCacheEntry(detectorResultCache: DetectorResultsCacheType, detectorId: string, imagePath: string): DetectorResultCacheEntry;
     setImageCacheEntry(detectorResultCache: DetectorResultsCacheType, detectorId: string, imagePath: string, detectedObjects: ObjectDetectionDetectedObjectType[]): DetectorResultsCacheType;
 }

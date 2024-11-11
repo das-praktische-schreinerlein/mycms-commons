@@ -44,6 +44,11 @@ export interface ObjectDetectionDetectedObjectType {
     objY: number;
     objWidth: number;
     objHeight: number;
+    objType?: string;
+    objId?: string;
+    objParentId?: string;
+    objDescriptor?: string;
+    objDetails?: string;
     precision: number;
     fileName: string;
 }
@@ -90,6 +95,11 @@ export class ObjectDetectionDetectedObject implements ObjectDetectionDetectedObj
     objY: number;
     objWidth: number;
     objHeight: number;
+    objType?: string;
+    objId?: string;
+    objParentId?: string;
+    objDescriptor?: string;
+    objDetails?: string;
     precision: number;
     fileName: string;
 }

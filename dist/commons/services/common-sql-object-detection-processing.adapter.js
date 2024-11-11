@@ -198,6 +198,7 @@ var CommonSqlObjectDetectionProcessingAdapter = /** @class */ (function () {
     };
     CommonSqlObjectDetectionProcessingAdapter.prototype.createObjectKey = function (detector, key, category, tableConfig) {
         var _this = this;
+        // FIXME implement additional fields: objType
         var insertObjectSqlQuery = {
             sql: 'INSERT INTO ' + this.objectDetectionModelConfig.objectTable.table +
                 '   (' + [this.objectDetectionModelConfig.objectTable.fieldCategory,
@@ -252,6 +253,7 @@ var CommonSqlObjectDetectionProcessingAdapter = /** @class */ (function () {
     };
     CommonSqlObjectDetectionProcessingAdapter.prototype.processDetectionWithResult = function (detector, detectionResult, tableConfig) {
         var _this = this;
+        // FIXME implement additional fields: objType, objId, objParentId, objDetails,
         var keySuggestion = this.generateKey(detectionResult.keySuggestion);
         var detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
             detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,

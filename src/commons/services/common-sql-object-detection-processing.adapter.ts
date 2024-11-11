@@ -229,6 +229,7 @@ export class CommonSqlObjectDetectionProcessingAdapter implements CommonObjectDe
 
     public createObjectKey(detector: string, key: string, category: string,
                            tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any> {
+        // FIXME implement additional fields: objType
         const insertObjectSqlQuery: RawSqlQueryData = {
             sql: 'INSERT INTO ' + this.objectDetectionModelConfig.objectTable.table +
                 '   (' + [this.objectDetectionModelConfig.objectTable.fieldCategory,
@@ -287,6 +288,7 @@ export class CommonSqlObjectDetectionProcessingAdapter implements CommonObjectDe
 
     public processDetectionWithResult(detector: string, detectionResult: ObjectDetectionDetectedObjectType,
                                       tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any> {
+        // FIXME implement additional fields: objType, objId, objParentId, objDetails,
         const keySuggestion = this.generateKey(detectionResult.keySuggestion);
         const detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
             detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,

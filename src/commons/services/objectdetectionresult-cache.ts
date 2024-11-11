@@ -31,9 +31,9 @@ export abstract class AbstractDetectorResultCacheService {
         this.forceUpdate = forceUpdate;
     }
 
-    public abstract readImageCache(imagePath: string, returnEmtyIfNotExists: boolean): DetectorResultsCacheType;
+    public abstract readImageCache(imagePath: string, returnEmtyIfNotExists: boolean): Promise<DetectorResultsCacheType>;
 
-    public abstract writeImageCache(imagePath: string, detectorResultCache: DetectorResultsCacheType): void;
+    public abstract writeImageCache(imagePath: string, detectorResultCache: DetectorResultsCacheType): Promise<boolean>;
 
     public getImageCacheEntry(detectorResultCache: DetectorResultsCacheType, detectorId: string, imagePath: string): DetectorResultCacheEntry {
         if (this.forceUpdate) {
