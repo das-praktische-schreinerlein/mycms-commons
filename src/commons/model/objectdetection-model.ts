@@ -23,6 +23,7 @@ export interface ObjectDetectionRequestType {
     keySuggestions: string[];
     imgWidth: number;
     imgHeight: number;
+    imgOrientation: string;
     objX: number;
     objY: number;
     objWidth: number;
@@ -40,6 +41,7 @@ export interface ObjectDetectionDetectedObjectType {
     state: ObjectDetectionState;
     imgWidth: number;
     imgHeight: number;
+    imgOrientation: string;
     objX: number;
     objY: number;
     objWidth: number;
@@ -74,6 +76,7 @@ export class ObjectDetectionRequest implements ObjectDetectionRequestType {
     keySuggestions: string[];
     imgWidth: number;
     imgHeight: number;
+    imgOrientation: string;
     objX: number;
     objY: number;
     objWidth: number;
@@ -91,6 +94,7 @@ export class ObjectDetectionDetectedObject implements ObjectDetectionDetectedObj
     state: ObjectDetectionState;
     imgWidth: number;
     imgHeight: number;
+    imgOrientation: string;
     objX: number;
     objY: number;
     objWidth: number;

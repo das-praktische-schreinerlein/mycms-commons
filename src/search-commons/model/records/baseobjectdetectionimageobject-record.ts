@@ -16,6 +16,7 @@ export class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implem
         state: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NAME, new NameValidationRule(true)),
         imgWidth: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
         imgHeight: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
+        imgOrientation: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NAME, new NameValidationRule(false)),
         objX: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
         objY: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
         objWidth: new BaseEntityRecordFieldConfig(GenericValidatorDatatypes.NUMBER, new NumberValidationRule(false, 0, 999999, 0)),
@@ -31,6 +32,7 @@ export class BaseObjectDetectionImageObjectRecord extends BaseImageRecord implem
     state: ObjectDetectionState;
     imgWidth: number;
     imgHeight: number;
+    imgOrientation: string;
     objX: number;
     objY: number;
     objWidth: number;

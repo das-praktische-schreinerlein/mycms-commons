@@ -288,7 +288,7 @@ export class CommonSqlObjectDetectionProcessingAdapter implements CommonObjectDe
 
     public processDetectionWithResult(detector: string, detectionResult: ObjectDetectionDetectedObjectType,
                                       tableConfig: ObjectDetectionSqlTableConfiguration): Promise<any> {
-        // FIXME implement additional fields: objType, objId, objParentId, objDetails,
+        // FIXME implement additional fields: objType, objId, objParentId, objDetails, imgOrientation
         const keySuggestion = this.generateKey(detectionResult.keySuggestion);
         const detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
             detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,

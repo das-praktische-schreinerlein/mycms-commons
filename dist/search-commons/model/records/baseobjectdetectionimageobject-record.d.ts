@@ -13,6 +13,7 @@ export declare class BaseObjectDetectionImageObjectRecord extends BaseImageRecor
         state: BaseEntityRecordFieldConfig;
         imgWidth: BaseEntityRecordFieldConfig;
         imgHeight: BaseEntityRecordFieldConfig;
+        imgOrientation: BaseEntityRecordFieldConfig;
         objX: BaseEntityRecordFieldConfig;
         objY: BaseEntityRecordFieldConfig;
         objWidth: BaseEntityRecordFieldConfig;
@@ -27,6 +28,7 @@ export declare class BaseObjectDetectionImageObjectRecord extends BaseImageRecor
     state: ObjectDetectionState;
     imgWidth: number;
     imgHeight: number;
+    imgOrientation: string;
     objX: number;
     objY: number;
     objWidth: number;

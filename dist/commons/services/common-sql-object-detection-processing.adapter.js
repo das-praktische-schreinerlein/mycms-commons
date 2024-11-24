@@ -253,7 +253,7 @@ var CommonSqlObjectDetectionProcessingAdapter = /** @class */ (function () {
     };
     CommonSqlObjectDetectionProcessingAdapter.prototype.processDetectionWithResult = function (detector, detectionResult, tableConfig) {
         var _this = this;
-        // FIXME implement additional fields: objType, objId, objParentId, objDetails,
+        // FIXME implement additional fields: objType, objId, objParentId, objDetails, imgOrientation
         var keySuggestion = this.generateKey(detectionResult.keySuggestion);
         var detailValues = [keySuggestion, detectionResult.imgWidth, detectionResult.imgHeight,
             detectionResult.objX, detectionResult.objY, detectionResult.objWidth, detectionResult.objHeight,

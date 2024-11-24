@@ -410,6 +410,7 @@ describe('CommonSqlObjectDetectionProcessingAdapter', () => {
                             keyCorrection: 'keyCorrectionBlam',
                             imgWidth: 100,
                             imgHeight: 200,
+                            imgOrientation: undefined,
                             objX: 1,
                             objY: 2,
                             objWidth: 10,
