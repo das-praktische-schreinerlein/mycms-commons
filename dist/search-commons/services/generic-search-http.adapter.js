@@ -258,6 +258,9 @@ var GenericSearchHttpAdapter = /** @class */ (function (_super) {
         ret['showForm'] = opts.showForm || false;
         ret['showFacets'] = opts.showFacets || false;
         ret['loadTrack'] = opts.loadTrack || false;
+        if (opts.loadDetailsMode !== undefined) {
+            ret['loadDetailsMode'] = opts.loadDetailsMode;
+        }
         return ret;
     };
     GenericSearchHttpAdapter.prototype.buildUrl = function (url, params) {

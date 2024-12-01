@@ -532,6 +532,7 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
                             return;
                         }
                     }
+
                     var sql = _this.transformToSqlDialect(loadDetailDataConfig.sql);
                     loadDetailDataConfig.parameterNames.forEach(function (parameterName) {
                         var value = _this.mapperUtils.prepareSingleValue(record[parameterName], '_');

@@ -272,6 +272,11 @@ export abstract class GenericSearchHttpAdapter <R extends Record, F extends Gene
         ret['showForm'] = opts.showForm || false;
         ret['showFacets'] = opts.showFacets || false;
         ret['loadTrack'] = opts.loadTrack || false;
+
+        if (opts.loadDetailsMode !== undefined) {
+            ret['loadDetailsMode'] = opts.loadDetailsMode;
+        }
+
         return ret;
     }
 
