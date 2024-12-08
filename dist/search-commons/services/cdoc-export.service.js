@@ -43,12 +43,13 @@ var CommonDocDocExportService = /** @class */ (function () {
             return Promise.resolve('');
         }
         var readAllRecordsForSearchForm = function (recursiveSearchForm, results) {
-            return me.dataService.search(recursiveSearchForm, {
+            var searchOptions = {
                 showFacets: false,
                 showForm: false,
                 loadDetailsMode: 'full',
                 loadTrack: true
-            }).then(function searchDone(searchResult) {
+            };
+            return me.dataService.search(recursiveSearchForm, searchOptions).then(function searchDone(searchResult) {
                 results = results.concat(searchResult.currentRecords);
                 console.log('DONE ' + recursiveSearchForm.pageNum
                     + ' from ' + (searchResult.recordCount / recursiveSearchForm.perPage + 1)

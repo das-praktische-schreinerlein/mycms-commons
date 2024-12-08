@@ -49,12 +49,15 @@ export abstract class CommonDocSearchService<R extends CommonDocRecord, F extend
                 typeSearchForm.perPage = this.maxPerRun;
                 typeSearchForm.pageNum = 1;
                 typeSearchForm.sort = 'dateAsc';
+
+                const searchOptions: GenericSearchOptions = {
+                    showFacets: false,
+                    showForm: false,
+                    loadDetailsMode: 'full',
+                    loadTrack: true};
+
                 promises.push(function () {
-                    return me.search(typeSearchForm, {
-                        showFacets: false,
-                        loadTrack: true,
-                        showForm: false
-                    });
+                    return me.search(typeSearchForm, searchOptions);
                 });
 
             }

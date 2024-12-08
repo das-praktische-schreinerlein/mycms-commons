@@ -6,6 +6,7 @@
 - added new fields to model (details, parent, description)
 - fixed geoparser if point has no altitude
 - set parameter loadDetailsMode of GenericSearchOptions on http-requests
+- make loadDetailsMode optional: log a warning but loadDetails if empty -> not skipping as before 
 
 ### new features
 - none
@@ -18,6 +19,7 @@
 
 ### breaking changes
 - set parameter loadDetailsMode of GenericSearchOptions on http-requests
+- make loadDetailsMode optional: log a warning but loadDetails if empty -> not skipping as before
 
 
 ## 6.1.0 (2024-05-12)

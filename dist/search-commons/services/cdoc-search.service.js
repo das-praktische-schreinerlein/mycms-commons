@@ -51,12 +51,14 @@ var CommonDocSearchService = /** @class */ (function (_super) {
                 typeSearchForm.perPage = this_1.maxPerRun;
                 typeSearchForm.pageNum = 1;
                 typeSearchForm.sort = 'dateAsc';
+                var searchOptions = {
+                    showFacets: false,
+                    showForm: false,
+                    loadDetailsMode: 'full',
+                    loadTrack: true
+                };
                 promises.push(function () {
-                    return me.search(typeSearchForm, {
-                        showFacets: false,
-                        loadTrack: true,
-                        showForm: false
-                    });
+                    return me.search(typeSearchForm, searchOptions);
                 });
             };
             var this_1 = this;

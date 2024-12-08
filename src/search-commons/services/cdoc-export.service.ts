@@ -6,6 +6,7 @@ import {GenericAdapterResponseMapper} from './generic-adapter-response.mapper';
 import {ProcessingOptions} from './cdoc-search.service';
 import {CommonDocDataService} from './cdoc-data.service';
 import * as fs from 'fs';
+import {GenericSearchOptions} from './generic-search.service';
 
 export interface ExportProcessingOptions {
     directoryProfile: string;
@@ -86,11 +87,12 @@ export abstract class CommonDocDocExportService<R extends CommonDocRecord, F ext
 
         const readAllRecordsForSearchForm = function (recursiveSearchForm: F, results: R[])
             : Promise<R[]> {
-            return me.dataService.search(recursiveSearchForm, {
+            const searchOptions: GenericSearchOptions = {
                 showFacets: false,
                 showForm: false,
                 loadDetailsMode: 'full',
-                loadTrack: true}).then(
+                loadTrack: true};
+            return me.dataService.search(recursiveSearchForm, searchOptions).then(
                 function searchDone(searchResult: S) {
                     results = results.concat(searchResult.currentRecords);
                     console.log('DONE ' + recursiveSearchForm.pageNum

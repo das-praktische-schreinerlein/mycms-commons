@@ -4,6 +4,7 @@ import {CommonDocSearchResult} from '../model/container/cdoc-searchresult';
 import {CommonDocSearchForm} from '../model/forms/cdoc-searchform';
 import {CommonDocRecord} from '../model/records/cdoc-entity-record';
 import {CommonDocPlaylistService} from './cdoc-playlist.service';
+import {GenericSearchOptions} from './generic-search.service';
 
 export interface CommonDocPlaylistExporterConfig {
     maxAllowed: number;
@@ -21,9 +22,14 @@ export class CommonDocPlaylistExporter <R extends CommonDocRecord, F extends Com
         searchForm.perPage = 100;
         searchForm.pageNum = 1;
         const cDocPlaylistChunks = [this.playlistGenerator.generateM3uHeader()];
+        const searchOptions: GenericSearchOptions = {
+            showFacets: false,
+            showForm: false,
+            loadDetailsMode: 'none',
+            loadTrack: false};
 
         const createNextPlaylist = function(): Promise<any> {
-            return me.dataService.search(searchForm).then(
+            return me.dataService.search(searchForm, searchOptions).then(
                 function searchDone(searchResult: S) {
                     if (playlistExportConfig.maxAllowed < searchResult.recordCount) {
                         console.error('to much records');
@@ -64,9 +70,14 @@ export class CommonDocPlaylistExporter <R extends CommonDocRecord, F extends Com
         }
 
         const cDocPlaylistChunks = [this.playlistGenerator.generateCsvHeader(profile)];
+        const searchOptions: GenericSearchOptions = {
+            showFacets: false,
+            showForm: false,
+            loadDetailsMode: 'none',
+            loadTrack: false};
 
         const createNextPlaylist = function(): Promise<any> {
-            return me.dataService.search(searchForm).then(
+            return me.dataService.search(searchForm, searchOptions).then(
                 function searchDone(searchResult: S) {
                     if (playlistExportConfig.maxAllowed < searchResult.recordCount) {
                         console.error('to much records');

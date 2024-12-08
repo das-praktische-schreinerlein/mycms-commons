@@ -11,8 +11,14 @@ var CommonDocPlaylistExporter = /** @class */ (function () {
         searchForm.perPage = 100;
         searchForm.pageNum = 1;
         var cDocPlaylistChunks = [this.playlistGenerator.generateM3uHeader()];
+        var searchOptions = {
+            showFacets: false,
+            showForm: false,
+            loadDetailsMode: 'none',
+            loadTrack: false
+        };
         var createNextPlaylist = function () {
-            return me.dataService.search(searchForm).then(function searchDone(searchResult) {
+            return me.dataService.search(searchForm, searchOptions).then(function searchDone(searchResult) {
                 if (playlistExportConfig.maxAllowed < searchResult.recordCount) {
                     console.error('to much records');
                     throw new Error('records to export as playlist exceeds maximum allowed '
@@ -48,8 +54,14 @@ var CommonDocPlaylistExporter = /** @class */ (function () {
             js_data_1.utils.reject('exportProfile not found ' + playlistExportConfig.exportProfile);
         }
         var cDocPlaylistChunks = [this.playlistGenerator.generateCsvHeader(profile)];
+        var searchOptions = {
+            showFacets: false,
+            showForm: false,
+            loadDetailsMode: 'none',
+            loadTrack: false
+        };
         var createNextPlaylist = function () {
-            return me.dataService.search(searchForm).then(function searchDone(searchResult) {
+            return me.dataService.search(searchForm, searchOptions).then(function searchDone(searchResult) {
                 if (playlistExportConfig.maxAllowed < searchResult.recordCount) {
                     console.error('to much records');
                     throw new Error('records to export as playlist exceeds maximum allowed '

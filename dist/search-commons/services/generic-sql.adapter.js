@@ -523,16 +523,15 @@ var GenericSqlAdapter = /** @class */ (function (_super) {
             records.forEach(function (record) {
                 loadDetailDataConfigs.forEach(function (loadDetailDataConfig) {
                     if (loadDetailDataConfig.modes) {
-                        if (!opts || !opts.loadDetailsMode) {
-                            // mode required but no mode set on options
-                            return;
-                        }
-                        if (loadDetailDataConfig.modes.indexOf(opts.loadDetailsMode) < 0) {
+                        if (opts && opts.loadDetailsMode && loadDetailDataConfig.modes.indexOf(opts.loadDetailsMode) < 0) {
                             // mode not set on options
                             return;
                         }
+                        if (!opts || !opts.loadDetailsMode) {
+                            // mode required but no mode set on options
+                            console.log("no loadDetailsMode but loadDetailDataConfig", method, tableConfig.key, loadDetailDataConfig.profile, loadDetailDataConfig.modes, params);
+                        }
                     }
-
                     var sql = _this.transformToSqlDialect(loadDetailDataConfig.sql);
                     loadDetailDataConfig.parameterNames.forEach(function (parameterName) {
                         var value = _this.mapperUtils.prepareSingleValue(record[parameterName], '_');

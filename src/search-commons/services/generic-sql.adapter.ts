@@ -600,13 +600,14 @@ export abstract class GenericSqlAdapter <R extends Record, F extends GenericSear
             records.forEach(record => {
                 loadDetailDataConfigs.forEach((loadDetailDataConfig) => {
                     if (loadDetailDataConfig.modes) {
-                        if (!opts || !opts.loadDetailsMode) {
-                            // mode required but no mode set on options
-                            return;
-                        }
-                        if (loadDetailDataConfig.modes.indexOf(opts.loadDetailsMode) < 0) {
+                        if (opts &&  opts.loadDetailsMode && loadDetailDataConfig.modes.indexOf(opts.loadDetailsMode) < 0) {
                             // mode not set on options
                             return;
+                        }
+
+                        if (!opts || !opts.loadDetailsMode) {
+                            // mode required but no mode set on options
+                            console.log("no loadDetailsMode but loadDetailDataConfig", method, tableConfig.key, loadDetailDataConfig.profile, loadDetailDataConfig.modes, params);
                         }
                     }
 
