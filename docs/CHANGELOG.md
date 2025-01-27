@@ -2,7 +2,7 @@
  
 # Versions
 
-## 6.2.0
+## 6.2.0 (2025-01-27)
 - added new fields to model (details, parent, description)
 - fixed geoparser if point has no altitude
 - set parameter loadDetailsMode of GenericSearchOptions on http-requests
