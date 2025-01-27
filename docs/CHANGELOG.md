@@ -2,6 +2,22 @@
  
 # Versions
 
+## 6.3.0
+- none
+
+### new features
+- none
+
+### improvements
+- none
+
+### bug fixes
+- none
+
+### breaking changes
+- none
+
+
 ## 6.2.0 (2025-01-27)
 - added new fields to model (details, parent, description)
 - fixed geoparser if point has no altitude
