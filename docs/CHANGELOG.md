@@ -3,13 +3,13 @@
 # Versions
 
 ## 6.3.0
-- none
+- improved objectutils
 
 ### new features
 - none
 
 ### improvements
-- none
+- improved objectutils
 
 ### bug fixes
 - none

@@ -72,4 +72,28 @@ export class ObjectUtils {
         return result;
     }
 
+    public static splitArrayIntoTable(src: any[], splitByRowCount: number, maxColumnsToSplit: number): any[] {
+        const res = [];
+        if (splitByRowCount <= 0) {
+            return res;
+        }
+
+        if (splitByRowCount > 0 && src.length <= splitByRowCount) {
+            res[0] = src;
+            return res;
+        }
+
+        const columnCount = Math.min(
+            Math.ceil(src.length / splitByRowCount),
+            Math.max(1, maxColumnsToSplit));
+        const rowCount = Math.ceil(src.length / columnCount);
+        for (let i = 0; i < columnCount; i++) {
+            res[i] = src.slice(
+                i * rowCount,
+                Math.min((i + 1) * rowCount, src.length));
+        }
+
+        return res;
+    }
+
 }

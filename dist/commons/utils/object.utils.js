@@ -66,6 +66,22 @@ var ObjectUtils = /** @class */ (function () {
         }
         return result;
     };
+    ObjectUtils.splitArrayIntoTable = function (src, splitByRowCount, maxColumnsToSplit) {
+        var res = [];
+        if (splitByRowCount <= 0) {
+            return res;
+        }
+        if (splitByRowCount > 0 && src.length <= splitByRowCount) {
+            res[0] = src;
+            return res;
+        }
+        var columnCount = Math.min(Math.ceil(src.length / splitByRowCount), Math.max(1, maxColumnsToSplit));
+        var rowCount = Math.ceil(src.length / columnCount);
+        for (var i = 0; i < columnCount; i++) {
+            res[i] = src.slice(i * rowCount, Math.min((i + 1) * rowCount, src.length));
+        }
+        return res;
+    };
     return ObjectUtils;
 }());
 exports.ObjectUtils = ObjectUtils;

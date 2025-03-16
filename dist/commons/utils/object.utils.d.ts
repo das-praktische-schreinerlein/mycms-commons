@@ -3,4 +3,5 @@ export declare class ObjectUtils {
     static explodeValueToObjects(srcValue: string, objectSeparator: string, fieldSeparator: string, valueSeparator: string, unique?: boolean): {}[];
     static mergePropertyValues(detailDocs: {}[], property: string, joiner: string, unique?: boolean): string;
     static uniqueArray(arr: any[]): any[];
+    static splitArrayIntoTable(src: any[], splitByRowCount: number, maxColumnsToSplit: number): any[];
 }
