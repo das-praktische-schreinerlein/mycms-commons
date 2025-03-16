@@ -74,11 +74,11 @@ export class ObjectUtils {
 
     public static splitArrayIntoTable(src: any[], splitByRowCount: number, maxColumnsToSplit: number): any[] {
         const res = [];
-        if (splitByRowCount <= 0) {
+        if (src == undefined || src.length === 0) {
             return res;
         }
 
-        if (splitByRowCount > 0 && src.length <= splitByRowCount) {
+        if (splitByRowCount <= 0 || src.length <= splitByRowCount) {
             res[0] = src;
             return res;
         }

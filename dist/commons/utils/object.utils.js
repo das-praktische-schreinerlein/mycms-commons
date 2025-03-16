@@ -68,10 +68,10 @@ var ObjectUtils = /** @class */ (function () {
     };
     ObjectUtils.splitArrayIntoTable = function (src, splitByRowCount, maxColumnsToSplit) {
         var res = [];
-        if (splitByRowCount <= 0) {
+        if (src == undefined || src.length === 0) {
             return res;
         }
-        if (splitByRowCount > 0 && src.length <= splitByRowCount) {
+        if (splitByRowCount <= 0 || src.length <= splitByRowCount) {
             res[0] = src;
             return res;
         }
