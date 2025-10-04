@@ -2,7 +2,7 @@
  
 # Versions
 
-## 6.3.0
+## 6.3.0 (2025-10-04)
 - improved objectutils
 
 ### new features
